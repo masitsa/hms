@@ -1,0 +1,969 @@
+@charset "utf-8";
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	background-image:url(images/main_bg.jpg);
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+
+/* ~~ Element/tag selectors ~~ */
+ul, ol, dl { /* Due to variations between browsers, it's best practices to zero padding and margin on lists. For consistency, you can either specify the amounts you want here, or on the list items (LI, DT, DD) they contain. Remember that what you do here will cascade to the .nav list unless you write a more specific selector. */
+	padding: 0;
+	margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+	color:#3ab7f7;
+	margin-top: 0;	 /* removing the top margin gets around an issue where margins can escape from their containing div. The remaining bottom margin will hold it away from any elements that follow. */
+	padding-right: 15px;
+	padding-left: 15px; /* adding the padding to the sides of the elements within the divs, instead of the divs themselves, gets rid of any box model math. A nested div with side padding can also be used as an alternate method. */
+}
+a img { /* this selector removes the default blue border displayed in some browsers around an image when it is surrounded by a link */
+	border: none;
+}
+
+/* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
+a:link {
+	color:#414958;
+	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
+}
+a:visited {
+	color: #4E5869;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
+	text-decoration: none;
+}
+
+/* ~~ this container surrounds all other divs giving them their percentage-based width ~~ */
+.container {
+	width: 80%;
+	max-width: 1260px;/* a max-width may be desirable to keep this layout from getting too wide on a large monitor. This keeps line length more readable. IE6 does not respect this declaration. */
+	min-width: 780px;/* a min-width may be desirable to keep this layout from getting too narrow. This keeps line length more readable in the side columns. IE6 does not respect this declaration. */
+	background: #c5eafd;
+	margin: 0 auto; /* the auto value on the sides, coupled with the width, centers the layout. It is not needed if you set the .container's width to 100%. */
+}
+
+.header {
+	background: #3ab7f7;
+}
+
+.sidebar1 {
+	float: left;
+	width: 20%;
+	background: #93A5C4;
+	padding-bottom: 10px;
+}
+.content {
+	padding: 10px 0;
+	width: 80%;
+	float: left;
+	border:medium;
+	border-color:#06F;
+}
+
+.content ul, .content ol { 
+	padding: 0 15px 15px 40px; 
+}
+
+/* ~~ The navigation list styles (can be removed if you choose to use a premade flyout menu like Spry) ~~ */
+ul.nav {
+	list-style: none; /* this removes the list marker */
+	border-top: 1px solid #666; /* this creates the top border for the links - all others are placed using a bottom border on the LI */
+	margin-bottom: 15px; /* this creates the space between the navigation on the content below */
+}
+ul.nav li {
+	border-bottom: 1px solid #666; /* this creates the button separation */
+}
+ul.nav a, ul.nav a:visited { /* grouping these selectors makes sure that your links retain their button look even after being visited */
+	padding: 5px 5px 5px 15px;
+	display: block; /* this gives the link block properties causing it to fill the whole LI containing it. This causes the entire area to react to a mouse click. */
+	text-decoration: none;
+	background: #8090AB;
+	color: #000;
+}
+ul.nav a:hover, ul.nav a:active, ul.nav a:focus { /* this changes the background and text color for both mouse and keyboard navigators */
+	background: #6F7D94;
+	color: #FFF;
+}
+
+ul li.current a {
+	background-color: #59FF59;
+	background-position: 0 -60px;
+	color: #fff;
+	font-weight: bold;
+}
+
+/* ~~ The footer ~~ */
+.footer {
+	padding: 10px 0;
+	background: #6F7D94;
+	position: relative;/* this gives IE6 hasLayout to properly clear */
+	clear: both; /* this clear property forces the .container to understand where the columns end and contain them */
+}
+
+/* ~~ miscellaneous float/clear classes ~~ */
+.fltrt {  /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* this class can be used to float an element left in your page. The floated element must precede the element it should be next to on the page. */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* this class can be placed on a <br /> or empty div as the final element following the last floated div (within the #container) if the #footer is removed or taken out of the #container */
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+
+div.content2 {
+    border: #48f solid 3px;
+    clear: left;
+    padding: 1em;
+	margin-bottom:30px;
+}
+
+.border{
+    border-left:1px solid #0C0;
+    border-right:1px solid #0C0;
+    border-bottom:3px solid #0C0;
+	margin-bottom:30px;
+	font-size:12px;
+	
+}
+.border2{
+    border-left:1px solid #0C0;
+    border-right:1px solid #0C0;
+    border-bottom:3px solid #0C0;
+	margin-bottom:30px;
+	font-size:12px;
+	height:400px;
+	
+}
+
+ol#toc {
+    height: 2em;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ol#toc a {
+    background: #bdf url(tabs.gif);
+    color: #008;
+    display: block;
+    float: left;
+    height: 2em;
+    padding-left: 10px;
+    text-decoration: none;
+}
+
+ol#toc a:hover {
+    background-color: #3af;
+    background-position: 0 -120px;
+}
+
+ol#toc a:hover span {
+    background-position: 100% -120px;
+}
+
+ol#toc li {
+    float: left;
+    margin: 0 1px 0 0;
+}
+
+ol#toc li.current a {
+    background-color: #48f;
+    background-position: 0 -60px;
+    color: #fff;
+    font-weight: bold;
+}
+
+ol#toc li.current span {
+    background-position: 100% -60px;
+}
+
+ol#toc span {
+    background: url(tabs.gif) 100% 0;
+    display: block;
+    line-height: 2em;
+    padding-right: 10px;
+}
+
+ul#toc {
+}
+
+ul#toc a {
+    /*background: #bdf url(tabs.gif);
+    color: #008;
+    display: block;
+    float: left;
+    height: 2em;
+    padding-left: 10px;
+    text-decoration: none;*/
+}
+
+ul#toc a:hover {
+    /*background-color: #3af;
+    background-position: 0 -120px;*/
+}
+
+ul#toc a:hover span {
+    /*background-position: 100% -120px;*/
+}
+
+ul#toc li {
+    /*float: left;
+    margin: 0 1px 0 0;*/
+}
+
+ul#toc li.current2 a {
+    background-color: #48f;
+    background-position: 0 -60px;
+    color: #fff;
+    font-weight: bold;
+}
+
+ul#toc li.current2 span {
+    background-image:url(images/hover.gif);
+}
+
+ul#toc span {
+    /*background: url(tabs.gif) 100% 0;
+    display: block;
+    line-height: 2em;
+    padding-right: 10px;*/
+}
+
+.head{
+	background-repeat:no-repeat;
+	
+	height:188px;
+}
+
+.wrapper{
+	margin:10px;
+}
+
+.sec1H{
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	vertical-align: middle;
+	font-family: Verdana, Geneva, sans-serif;
+	font-style: oblique;
+	font-weight: bold;
+	text-transform: capitalize;
+	color: #FFF;
+	text-decoration: underline;
+}
+
+.sec1B{
+    border-left:1px solid #23c6fc;
+    border-right:1px solid #23c6fc;
+    border-bottom:3px solid #23c6fc;
+    width: 380px;
+}
+
+.sec2H{
+	width: 510px;
+	height: 50px;
+	background-image:url(images/head2.jpg);
+	text-align: center;
+	vertical-align: middle;
+	font-family: Verdana, Geneva, sans-serif;
+	font-style: oblique;
+	font-weight: bold;
+	text-transform: capitalize;
+	color: #FFF;
+	text-decoration: underline;
+}
+
+.sec2B{
+    border-left:1px solid #23c6fc;
+    border-right:1px solid #23c6fc;
+    border-bottom:3px solid #23c6fc;
+    width: 510px;
+}
+
+.welcome{
+	text-align:center;
+	text-shadow:#666;
+	height: !important;
+	border:thick;
+	border-color:#09F;
+	background-color:#0CF;
+}
+
+.trytowork{
+	background-color:#4e94d7;
+	float:left;
+	width:100%;
+	height:50px;
+	text-decoration: underline;
+	text-align: center;
+	color: #FFF;
+}
+
+.container23{
+	background-color: #FFF;
+	border: thin solid #3ab7f7;
+	width: 50%;
+	max-width: 300px;
+	min-width: 200px;
+	float: right;
+	margin-top: 100px;
+	margin-right: 100px;
+	margin-bottom: auto;
+	margin-left: auto;
+}
+
+.content23{
+	background-color: #3ab7f7;
+	margin: 5px;
+	max-width:inherit;
+	min-width:inherit;
+	max-height:inherit;
+	min-height:inherit;
+	height: 300px;
+	vertical-align: middle;	
+}
+
+.bod {
+	background-image:url(images/Final.jpg);
+	margin: 0;
+	padding: 0;
+	color: #000;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+
+.rightcolumn{
+    width:220px;
+    padding-top:20px;
+    padding-bottom:20px;
+    padding-right:20px;
+    float:left;
+	height:500px;
+}
+
+.rightcolumn ul{
+    list-style-type: none;
+    padding-left:0;
+    margin:0;
+    /*text-align: left;*/
+    /*width:100%;*/
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    padding-top:5px;
+}
+
+.rightcolumn ul li{
+    padding-top:6px;
+    padding-bottom:6px;
+    border-bottom:1px solid #0C0;
+    margin:0;
+	
+}
+
+.rightcolumn ul li a{
+    text-align: left;
+    padding-left: 20px;
+    font-size:11px;
+    text-decoration: none;
+    color: #06C;
+}
+
+.rightcolumn ul li a:hover{
+    color: #06C;
+    padding-left: 20px;
+    text-decoration:underline;
+}
+
+.identity{
+	top: 10%;
+	right: 50%;	
+}
+
+.leftcolumn{
+    width:220px;
+    padding-top:20px;
+    padding-bottom:20px;
+    padding-right:20px;
+    float:right;
+}
+
+h1{
+	color: #47f76c;
+	margin:0;
+	overflow: hidden;
+	font-size: 16px;
+	text-decoration:underline;
+}
+
+h1 a:link, h1 a:hover, h1 a:visited, h1 a:active{
+    display: block;
+    width:201px;
+    height:83px;
+    text-indent: -100000px;
+	alignment-baseline:central;
+}
+.wrap{
+	background:#FFF;
+	width:100%;
+}
+
+.menu {
+width: 150px;
+padding: 10px 0 0 0;
+}
+.menu ul {
+margin: 0;
+padding: 0;
+list-style-type: none;
+}
+.menu li {
+margin: 0 0 .1em 0;
+}
+.menu a {
+border-left : 5px solid #7BA1B8;
+display: block;
+font-size: 12px;
+color: #435A6C;
+background:#ddd;
+width: 120px;
+padding : 1em .5em;
+text-decoration: none;
+}
+.menu a:hover {
+border-left : 5px solid #333;
+background: #7BA1B8 url(images/hover.gif) no-repeat;
+color: #000;
+}
+
+.slider { 
+	margin:0 auto; 
+	padding:0; 
+	height:348px; 
+}
+.slider2 { 
+	margin:0 auto; 
+	padding:0; 
+}
+.slice12 { 
+	margin:0 auto; 
+	width:966px; 
+	padding:0; 
+	background:url(images/bg_simple2.gif) top no-repeat; 
+	height:93px; 
+}
+.slice12 h2 { 
+	font: normal 40px Georgia, "Times New Roman", Times, serif; 
+	color:#1c1d1c; 
+	padding:20px 40px; 
+	margin:0; 
+}
+.slider div.slice1 { 
+	margin:0 auto; 
+	width:966px; 
+	padding:0; 
+}
+.slider div.slice1 div.slice2 { 
+	margin:0 auto; 
+	padding:1px; 
+}
+.slider div div div {
+	padding:0;
+	width:966px;
+	height:348px; 
+	background:url(images/bg_simple.gif) top no-repeat;
+	margin-top: 0;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+}
+.slider div div div h2 { 
+	width:300px; 
+	float:left;
+	font:normal 40px Georgia, "Times New Roman", Times, serif; 
+	color:#1c1d1c; 
+	padding:30px 0 0 40px; 
+	margin:0; 
+	line-height:1.2em; 
+}
+.slider div div div p { 
+	width:300px; 
+	float:left; 
+	font:normal 11px Georgia, "Times New Roman", Times, serif; 
+	color:#262626; 
+	margin:0; 
+	padding:10px 0 0 40px; 
+	line-height:1.8em; 
+}
+.slider div div div p.img { 
+	width:590px; 
+	float:right; 
+	padding:40px 0 0 0; 
+	margin:0; 
+}
+
+.slider div div div a { 
+	color:#333;
+	text-decoration:none;
+	text-align: center;
+}
+
+.slider div div div a:hover { 
+	text-decoration:none;
+}
+
+.itemsbar{
+	background-color:#206bf5;
+	width:100%;
+	height:45px;
+	padding:2px;
+}
+
+.itemsbar ul {
+	margin: 0;
+	list-style-type: none;
+	padding-top:5px;
+	padding-left:5px;
+}
+
+.itemsbar ul li {
+	float:left;
+	padding-right:35px;
+}
+
+.it{
+	float:left;
+	padding-right:5px;
+	background: none;
+	vertical-align: middle;
+	padding-top:10px;
+	list-style-type: none;
+}
+
+.gallery {
+	background-image:url(../images/hover.gif);
+	background-repeat: no-repeat;
+	width:100px;
+	height:35px;
+	list-style-type: none;
+}
+ 
+.gallery a{
+	background-image:url(../images/button.gif);
+	background-repeat: no-repeat;
+	display: block;
+	width:100px;
+	height:35px;
+	color:#000000;
+	text-align: center;
+	vertical-align: middle;
+	text-decoration:none;
+}
+ 
+.gallery a:hover{
+	background: none;
+}
+
+.inside {
+    list-style: none;
+	color:#FFF;
+}
+
+.column{
+	width:45%;
+	float:right;
+	font-size:17px;
+	padding-top:15%;
+	padding-right: 5px;
+	position: relative;
+}
+
+.column ul{
+	list-style-type: none;
+}
+
+.patient{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size: 12px;
+	text-transform: capitalize;
+	color: #FFF;
+	background-color: #06C;
+	text-align: center;
+	vertical-align: middle;	
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+.patient_head{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size: 12px;
+	text-transform: capitalize;
+	color: #06C;
+	vertical-align: middle;	
+}
+
+.patient_head ul {
+	margin: 0;
+	list-style-type: none;
+}
+
+.patient_head ul li {
+	float:left;
+}
+
+.stock_item{
+	width:40%;
+}
+
+.units_ordered{
+	width: 20%;
+}
+
+.text_padding{
+	padding-right:40%;
+}
+
+.prescription{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size: 12px;
+	text-transform: capitalize;
+	color: #06C;
+	vertical-align: middle;	
+}
+
+.schedule_bar{
+	background:url(../images/ui-bg_diagonals-thick_18_b81900_40x40.png) repeat;
+	width:100%;
+	height:100%;
+	padding:2px;
+}
+
+.schedule_bar ul {
+	margin: 0;
+	list-style-type: none;
+	margin-bottom:8%;
+	width:100%;
+}
+
+.schedule_time_bar{
+	background: #FFF url(../images/schedule.gif) repeat-x;
+	float:left;
+	width: 130px;
+	height:70px;
+	text-align: center;
+	color:#000;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 13px;
+	font-weight: bold;
+	margin-right:1%;
+	margin-left:0.5%;
+}
+
+.schedule_time_bar a, .schedule_time_bar a:visited{
+	background:url(../images/schedule2.gif) repeat-x;
+	width: 130px;
+	height:70px;
+	text-align: center;
+	color:#000;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 13px;
+	font-weight: bold;
+	display: block;
+	text-decoration: none;
+}
+
+.schedule_time_bar p{
+	text-align: center;
+	padding-top: 25px;
+	padding-left:10px;
+	font-weight: bold;
+}
+
+.schedule_time_bar a:hover{
+	background: none;
+}
+
+.consultation_room{
+	background:url(../images/schedule.gif);
+	height:97px;
+}
+
+.schedule_bar_gallery {
+	background-image:url(../images/hover.gif);
+	background-repeat: no-repeat;
+	width:100px;
+	height:35px;
+}
+ 
+.schedule_bar_gallery a{
+	background-image:url(../images/button.gif);
+	background-repeat: no-repeat;
+	display: block;
+	width:100px;
+	height:35px;
+	color:#000000;
+	text-align: center;
+	vertical-align: middle;
+	text-decoration:none;
+}
+ 
+.schedule_bar_gallery a:hover{
+	background: none;
+}
+
+.calender{
+	
+	text-align: center;
+	vertical-align: middle;
+	padding:20px;
+}
+
+.schedule_bar_head{
+	background:url(../images/ui-bg_diagonals-thick_18_b81900_40x40.png) repeat;
+	width:100%;
+	height:90px;
+	padding:2px;
+}
+
+.schedule_bar_head ul {
+	margin: 0;
+	list-style-type: none;
+	padding-top:18px;
+	padding-left:5px;
+	height: 90px;
+	width:100%;
+}
+
+.schedule_bar_head ul li {
+	background:url(../images/consultation_room.gif);
+	float:left;
+	padding-top: 30px;
+	padding-left:10px;
+	padding-right:25px;
+	width: 9%;
+	height:70%;
+	text-align: center;
+	color:#FFF;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 13px;
+	font-weight: bold;
+	margin-right:16px;
+}
+
+.output{
+	font-family:Arial;
+	font-size: 10pt;
+	color:black;
+	padding-left: 3px;
+	padding-top: 3px;
+	border: 1px solid #000000;
+	width: 180px;
+	background: #fff;
+}
+
+.shadow{
+	width:182px;
+	position:relative;
+	top: 2px;
+	left: 2px;
+	background: #555;
+}
+
+.shadow div{
+	position:relative;
+	top: -2px;
+	left: -2px;
+}
+
+.patients{
+	float:right;
+	width:35%;
+}
+
+.patients ul{
+	margin: 0;
+	list-style-type: none;
+}
+
+.patients li{
+	float:none;
+	width:100%;
+}
+
+.patients_details{
+	width:65%;
+	border-right:#009 thin solid;
+	height:100%;
+}
+
+.patients_history{
+	float:right;
+	width:30%;
+}
+
+
+.patients_history_head{
+	background-color: #039;
+	color:#FFF;
+	width:100%;
+	height:20px;
+	margin-top:10px;
+	text-align:center;
+}
+
+.patients_history_head_inner{
+	background-color: #039;
+	color:#FFF;
+	width:100%;
+	height:20px;
+	margin-top:10px;
+	text-align:center;
+	margin-top:20px;
+}
+
+.patients_history_head_inner2{
+	background-color:#099;
+	color:#FFF;
+	width:100%;
+	height:20px;
+	margin-top:10px;
+	text-align:center;
+	margin-top:20px;
+}
+
+.patients_history_content{
+	padding-left:10px;
+	
+}
+.patient_date{
+	padding-left:0px;
+	background-color:#039;
+	width:25%;
+	color:#fff;
+	}
+.patient_dated_history{
+	float:right;
+	width:75%;
+	background-color:#039;
+	color:#fff;
+	
+	}
+	
+.patients_current{
+	width:70%;
+	border-right-width: thick;
+	border-right-style: solid;
+	border-right-color: #039;	
+	border-bottom-width: thin;
+	border-bottom-style: solid;
+	border-bottom-color: #039;
+	padding-bottom:10px;
+}
+.patients_prescrition{
+	font:"Times New Roman", Times, serif;
+	font-size:12px;
+	width:auto;
+	text-align:center;
+	position:relative;
+}
+
+.h4{
+	color:#BD171C;
+}
+
+.stockguage{
+	background-image:url(../images/stock_guage_balance.gif);
+	width:200px;
+	height:15px;
+}
+
+.itemsbar2{
+	background-color:#0080FF;
+	width:100%;
+	height:60px;
+	padding:2px;
+}
+
+.control_head{
+	color:#FFF;
+	font-weight:bolder;
+	text-align:center;
+	padding-left:170px;
+	padding-top:20px;
+	font-size:16px;
+}
+
+.float_left{
+	float:left;
+}
+
+.float_right{
+	float:right;
+}
+
+.username{
+	color:#FFF;
+	font-weight:bold;
+}
+
+.block_border{
+	width:100%;
+	height:100%;
+	padding:2px;
+}
+
+.block_border ul {
+	margin: 0;
+	list-style-type: none;
+	padding-top:5px;
+	padding-left:5px;
+}
+
+.block_border ul li {
+	float:left;
+	padding-right:35px;
+}
+
+.it2{
+	float:left;
+	padding-right:5px;
+	background: none;
+	vertical-align: middle;
+	padding-top:10px;
+}
+
+.gallery2{
+	background-image:url(../images/control.gif);
+	background-repeat: no-repeat;
+	width:140px;
+	height:140px;
+}
+ 
+.gallery2 a{
+	background-image:url(../images/control_back.gif);
+	background-repeat: no-repeat;
+	display: block;
+	width:140px;
+	height:140px;
+	color:#ffffff;
+	font-weight:bold;
+	text-align: center;
+	vertical-align: middle;
+	text-decoration:none;
+	padding-top:20%;
+}
+ 
+.gallery2 a:hover{
+	background: none;
+}
+h5{
+	font-size:12px;
+	color:#0C6;
+	}

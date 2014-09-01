@@ -1,0 +1,119 @@
+/*
+	@@ Uploader
+*/
+#uploader {
+	background: #fff;
+	width: 498px;
+	min-height: 395px;
+	max-height: 395px;
+	font-size: 11px;
+}
+
+#filelist_header {
+	width: 498px;
+	border-bottom: 1px dotted #e3e3e8;
+}
+
+#filelist_header div {
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 12px;
+	padding: 8px 0;
+}
+
+#filelist {
+	width: 498px;
+	height: 300px;
+}
+
+.fileerror {
+	padding: 4px;
+	color: red;
+}
+
+.filename {
+	width: 288px;
+	float: left;
+	overflow: hidden !important;
+	margin: 0 10px;
+}
+
+.filesize {
+	float: left;
+	width: 70px;
+}
+
+.filestatus {
+	float: left;
+	width: 70px;
+}
+
+.filedel {
+	float: left;
+	width: 50px;
+}
+
+#filelist .filecontainer {
+	margin-top: 5px;
+	height: 20px;
+}
+
+.action-btns {
+	text-align: center;
+	margin: 20px 0;
+}
+
+#upload_info {
+	display: none;
+	margin: 20px 0;
+}
+
+#upload_info_inner {
+	height: 16px;
+	margin-bottom: 5px;
+}
+
+.progressbg {
+	background-image: url('../img/uploader/upload_status.gif');
+	height: 16px;
+	width: 420px;
+	border: 1px solid #b3b3b3;
+	text-align: left !important;
+}
+
+.progress {
+	background-image: url('../img/uploader/progressbar.gif');
+	height: 16px;
+	width: 0%;
+}
+
+#unknown {
+	font-size: 11px;
+	text-align: center;
+	color: #555555;
+	font-weight: bold;
+}
+
+#time2go { float: right; }
+
+.start-message {
+	width: 100%;
+	padding: 10px 0;
+	text-align: center;
+	background-color: #ed4e2a;
+	color: #fff;
+}
+
+.upload-message {
+	margin-top: 150px;
+	text-align: center;
+	line-height: 20px;
+	font-size: 20px;
+	padding: 10px 0;
+}
+
+.complete {
+	margin: 20px 0;
+	font-size: 12px;
+	color: #000;
+}
