@@ -89,34 +89,80 @@ $('.wclose').click(function(e){
 /* Calendar */
 
   $(document).ready(function() {
-	  $.ajax({
-		type:'POST',
-		url: config_url+"/calender/get_appointments",
-		cache:false,
-		contentType: false,
-		processData: false,
-		dataType: "json",
-		success:function(data){
-			
-			var appointments = [];
-
-			for(var i in data)
-				appointments.push([i, data [i]]);
-			
-			$('#appointments').fullCalendar({
-				  header: {
-					left: 'prev',
-					center: 'title',
-					right: 'month,agendaWeek,agendaDay,next'
-				  },
-				  editable: true,
-				  events: appointments
-				});
-		},
-		error: function(xhr, status, error) {
-			alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
-		}
-	});
+  
+    var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+    
+    $('#calendar').fullCalendar({
+      header: {
+        left: 'prev',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay,next'
+      },
+      editable: true,
+      events: [
+        {
+          title: 'All Day Event',
+          start: new Date(y, m, 1),
+          backgroundColor: '#FFB848',
+          borderColor: '#FFB848'
+        },
+        {
+          title: 'Long Event',
+          start: new Date(y, m, d-5),
+          end: new Date(y, m, d-2),
+          backgroundColor: '#94B86E',
+          borderColor: '#94B86E'
+        },
+        {
+          id: 999,
+          title: 'Repeating Event',
+          start: new Date(y, m, d-3, 16, 0),
+          allDay: false,
+          backgroundColor: '#E25856',
+          borderColor: '#E25856'
+        },
+        {
+          id: 999,
+          title: 'Repeating Event',
+          start: new Date(y, m, d+4, 16, 0),
+          allDay: false,
+          backgroundColor: '#94B86E',
+          borderColor: '#94B86E'
+        },
+        {
+          title: 'Meeting',
+          start: new Date(y, m, d, 10, 30),
+          allDay: false
+        },
+        {
+          title: 'Lunch',
+          start: new Date(y, m, d, 12, 0),
+          end: new Date(y, m, d, 14, 0),
+          allDay: false,
+          backgroundColor: '#555555',
+          borderColor: '#555555'
+        },
+        {
+          title: 'Birthday Party',
+          start: new Date(y, m, d+1, 19, 0),
+          end: new Date(y, m, d+1, 22, 30),
+          allDay: false,
+          backgroundColor: '#852B99',
+          borderColor: '#852B99'
+        },
+        {
+          title: 'Click for Google',
+          start: new Date(y, m, 28),
+          end: new Date(y, m, 29),
+          url: 'http://google.com/',
+          backgroundColor: '#FFB848',
+          borderColor: '#FFB848'
+        }
+      ]
+    });
     
   });
 
@@ -231,7 +277,7 @@ $(document).ready(function(){
 
     /* Auto notification */
 
-    /*setTimeout(function() {
+    setTimeout(function() {
 
         var unique_id = $.gritter.add({
             // (string | mandatory) the heading of the notification
@@ -256,7 +302,7 @@ $(document).ready(function(){
             });
         }, 10000);
 
-    }, 4000);*/
+    }, 4000);
 
 
     /* On click notification. Refer ui.html file */

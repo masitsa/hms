@@ -2,7 +2,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <!-- Title and other stuffs -->
-  <title>Dashboard - HMS</title>
+  <title>SUMC | <?php echo $title;?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="keywords" content="">
@@ -46,3 +46,4 @@
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="img/favicon/favicon.png">
+<script src="<?php echo base_url()."assets/bluish/"?>js/jquery.js"></script> <!-- jQuery -->

@@ -38,8 +38,24 @@
 |
 */
 
-$route['default_controller'] = "welcome";
+$route['default_controller'] = "auth";
 $route['404_override'] = '';
+
+/*
+*	Auth Routes
+*/
+$route['login'] = 'auth/login/login_user';
+$route['logout'] = 'auth/login/logout_user';
+$route['control-panel/(:num)'] = 'auth/control_panel/$1';
+
+/*
+*	Reception Routes
+*/
+$route['reception/all-patients'] = 'reception/patients';
+$route['reception/all-patients/(:num)'] = 'reception/patients/$1';
+$route['reception/add-patient'] = 'reception/add_patient';
+
+
 
 
 /* End of file routes.php */

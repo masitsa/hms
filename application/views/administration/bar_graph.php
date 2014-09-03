@@ -28,3 +28,4 @@
               </div>
             </div>
           </div>
+<script src="<?php echo base_url()."assets/bluish/"?>js/reports.js"></script> <!-- Custom chart codes -->

@@ -1,5 +1,12 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,600,400italic,600italic,700,700italic,800,800italic);
-
+.center-align{margin:0 auto; text-align:center;}
+.hide_section{display: none;}
+.show_section{display: block;}
+img.control_panel_img{height: 100px;}
+.control_panel_form{margin: 0 auto;max-width: 100%;}
+.control_panel_form .thumbnail{margin-top: 20px;}
+.float_left{float: left;}
+.float_right{float: right;}
+.thumbnail .caption{height: 90px; background-color:#f3f3f3;}
 
 *{
 	border-radius: 0 !important;
@@ -1426,6 +1433,7 @@ font-weight: 600;
     text-transform: uppercase;
 }
 .page-header .page-stats li .summary h3 {
+
     color: #555555;
     font-size: 20px;
     font-weight: 600;

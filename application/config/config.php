@@ -16,8 +16,6 @@
 */
 //$config['base_url']	= 'http://sagana/hms/';
 $config['base_url']	= 'http://localhost/hms/';
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', 0);
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -28,7 +26,7 @@ ini_set('display_errors', 0);
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -247,7 +245,7 @@ $config['encryption_key'] = 'strathmoreuniversitymedicalcenter';
 |
 */
 $config['sess_cookie_name']		= 'ci_session';
-$config['sess_expiration']		= 0;
+$config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= FALSE;
 $config['sess_use_database']	= FALSE;
@@ -358,6 +356,17 @@ $config['rewrite_short_tags'] = FALSE;
 |
 */
 $config['proxy_ips'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| CI Modular Extension
+|--------------------------------------------------------------------------
+|
+|
+*/
+$config['modules_locations'] = array(
+		APPPATH.'modules/' => '../modules/',
+	);
 
 
 /* End of file config.php */

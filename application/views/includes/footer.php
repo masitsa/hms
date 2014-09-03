@@ -9,7 +9,6 @@
     <span class="totop"><a href="#"><i class="icon-chevron-up"></i></a></span> 
 
 <!-- JS -->
-<script src="<?php echo base_url()."assets/bluish/"?>js/jquery.js"></script> <!-- jQuery -->
 <script src="<?php echo base_url()."assets/bluish/"?>js/bootstrap.js"></script> <!-- Bootstrap -->
 <script src="<?php echo base_url()."assets/bluish/"?>js/jquery-ui-1.10.2.custom.min.js"></script> <!-- jQuery UI -->
 <script src="<?php echo base_url()."assets/bluish/"?>js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
@@ -32,7 +31,6 @@
 <script src="<?php echo base_url()."assets/bluish/"?>js/filter.js"></script> <!-- Filter for support page -->
 <script src="<?php echo base_url()."assets/bluish/"?>js/custom.js"></script> <!-- Custom codes -->
 <script src="<?php echo base_url()."assets/bluish/"?>js/charts.js"></script> <!-- Custom chart codes -->
-<script src="<?php echo base_url()."assets/bluish/"?>js/reports.js"></script> <!-- Custom chart codes -->
 <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.mousewheel.js"></script> <!-- Mouse Wheel -->
 <script src="<?php echo base_url()."assets/bluish/"?>js/jquery.horizontal.scroll.js"></script> <!-- horizontall scroll with mouse wheel -->
 <script type="text/javascript" src="<?php echo base_url()."assets/bluish/"?>js/jquery.slimscroll.min.js"></script> <!-- vertical scroll with mouse wheel -->
