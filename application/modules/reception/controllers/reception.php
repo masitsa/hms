@@ -122,4 +122,36 @@ class Reception extends auth
 			echo 'SUCCESS :-)';
 		}
 	}
+	public function search_staff()
+	{
+		$query = $this->reception_model->get_staff($this->input->post('staff_number'));
+		
+		if ($query->num_rows() > 0)
+		{
+			$v_data['query'] = $query;
+			$v_data['page'] = $page;
+			$data['content'] = $this->load->view('all_patients', $v_data, true);
+		}
+		
+		else
+		{
+			$query = $this->strathmore_population->get_hr_staff($this->input->post('staff_number'));
+		}
+	}
+	
+	public function search_student()
+	{	
+		$query = $this->reception_model->get_student($this->input->post('student_number'));
+		
+		if ($query->num_rows() > 0)
+		{
+			
+			echo 'SUCCESS :-)';
+		}
+		
+		else
+		{
+			$query = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
+		}
+	}
 }
