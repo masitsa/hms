@@ -7,8 +7,8 @@ class Reception extends auth
 	function __construct()
 	{
 		parent:: __construct();
-		$this->load->model('reception/reception_model');
-		$this->load->model('reception/strathmore_population');
+		$this->load->model('reception_model');
+		$this->load->model('strathmore_population');
 	}
 	
 	public function patients()
@@ -115,6 +115,7 @@ class Reception extends auth
 		//if form conatins invalid data
 		if ($this->form_validation->run() == FALSE)
 		{
+
 			$this->add_patient();
 		}
 		

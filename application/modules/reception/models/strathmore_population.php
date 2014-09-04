@@ -1,6 +1,6 @@
 <?php
 
-class Starthmore_population_model extends CI_Model 
+class Strathmore_population extends CI_Model 
 {
 	/*
 	*	Count all items from a table

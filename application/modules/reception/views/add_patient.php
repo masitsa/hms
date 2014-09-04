@@ -57,7 +57,7 @@
                         <input type="text" class="form-control" name="staff_number" placeholder="">
                       </div>
                       <div class="col-lg-2">
-                      	<button class="btn btn-info btn-lg" type="button">Search</button>
+                      	<button class="btn btn-info btn-lg" type="submit">Search</button>
                       </div>
                     </div>
                   </form>
@@ -72,7 +72,7 @@
                         <input type="text" class="form-control" name="student_number" placeholder="">
                       </div>
                       <div class="col-lg-2">
-                      	<button class="btn btn-info btn-lg" type="button">Search</button>
+                      	<button class="btn btn-info btn-lg" type="submit">Search</button>
                       </div>
                     </div>
                   </form>
