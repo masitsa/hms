@@ -16,13 +16,14 @@ class Strathmore_population extends CI_Model
 			trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
 		
 		}else{
-			$sql = "SELECT * FROM   GAOWNER.VIEW_STUDENT_DETAILS WHERE STUDENT_NO='$student_id'  ";
+			$sql = "SELECT * FROM   GAOWNER.VIEW_STUDENT_DETAILS WHERE STUDENT_NO='$student_id'";
 		
-			$rs4 = OCIParse($conn, $sql);
-	   		OCIExecute($rs4, OCI_DEFAULT);
+			$rs4 = oci_parse($conn, $sql);
+	   		oci_execute($rs4);
 			$rows = oci_num_rows($rs4);	
+		
 			$t=0;
-			if($rows > 0){
+			
 				while (OCIFetch($rs4)) {
 					$t++;
 						$name1=ociresult($rs4, "SURNAME");
@@ -42,7 +43,9 @@ class Strathmore_population extends CI_Model
 						$oname=str_replace("'", "", "$oname1");
 						$GUARDIAN_NAME=str_replace("'", "", "$GUARDIAN_NAME1");
 
-						$data = array('title'=>'','Surname'=>$name,'Other_names'=>$oname,'DOB'=>$dob,'contact'=>$MOBILE_NO,'gender'=>$gender,'student_Number'=>$STUDENT_NO,'courses'=>$COURSES,'GUARDIAN_NAME'=>$GUARDIAN_NAME,'created'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
+						if(!empty($STUDENT_NO)){
+
+						$data = array('title'=>'','Surname'=>$name,'Other_names'=>$oname,'DOB'=>$dob,'contact'=>$MOBILE_NO,'gender'=>$gender,'student_Number'=>$STUDENT_NO,'courses'=>$COURSES,'GUARDIAN_NAME'=>$GUARDIAN_NAME);
 
 						$this->db->insert('student', $data);
 						
@@ -50,15 +53,16 @@ class Strathmore_population extends CI_Model
 
 						//  data for patients patient date, visit type, strath number created by and modified by fields
 
-						$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>'$date','visit_type_id'=>1,'strath_no'=>$STUDENT_NO,'created'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
+						$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>'$date','visit_type_id'=>1,'strath_no'=>$STUDENT_NO,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
 
 						$this->db->insert('patients', $patient_data);
+						}else{
+							$this->session->set_userdata("error_message","Student could not be found");
+						}
 						
 
 				}
-			}else{
-				$this->session->set_userdata("error_message","Student could not be found");
-			}
+			
 
 		}
 				
@@ -94,11 +98,11 @@ class Strathmore_population extends CI_Model
 				$Tel_1=mysql_result($rs1, $a,'Tel_1');
 				
 				//  insert data into the staff table
-				$data = array('title'=>$Title,'Surname'=>$Surname1,'Other_names'=>$Other_Name1,'DOB'=>$DOB,'contact'=>$Tel_1,'gender'=>$Gender,'Staff_Number'=>$Employee_Code,'staff_system_id'=>$E_ID,'created'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
+				$data = array('title'=>$Title,'Surname'=>$Surname1,'Other_names'=>$Other_Name1,'DOB'=>$DOB,'contact'=>$Tel_1,'gender'=>$Gender,'Staff_Number'=>$Employee_Code,'staff_system_id'=>$E_ID);
 				$this->db->insert('staff', $data);
 				//  instert data into the patients table
 				$date = date("Y-m-d H:i:s");
-				$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>'$date','visit_type_id'=>2,'strath_no'=>$Employee_Code,'created'=>date('Y-m-d H:i:s'),'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
+				$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>'$date','visit_type_id'=>2,'strath_no'=>$Employee_Code,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
 				$this->db->insert('patients', $patient_data);
 
 
