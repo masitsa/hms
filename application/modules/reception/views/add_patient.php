@@ -26,11 +26,11 @@
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
                 <div class="tab-pane" id="staff">
                   <p class="center-align">Enter a staff's number to search for them</p>
-                  <form class="form-horizontal" role="form" method="POST">
+                  <form class="form-horizontal" role="form" method="POST" action="<?php echo site_url().'reception/search_staff'?>">
                     <div class="form-group">
                       <label class="col-lg-2 control-label">Staff Number</label>
                       <div class="col-lg-8">
-                        <input type="text" class="form-control" name="student_number" placeholder="">
+                        <input type="text" class="form-control" name="staff_number" placeholder="">
                       </div>
                       <div class="col-lg-2">
                       	<button class="btn btn-info btn-lg" type="button">Search</button>
@@ -41,11 +41,11 @@
                 
                 <div class="tab-pane active" id="student">
                   <p class="center-align">Enter a student's number to search for them</p>
-                  <form class="form-horizontal" role="form" method="POST">
+                  <form class="form-horizontal" role="form" method="POST" action="<?php echo site_url().'reception/search_student'?>">
                     <div class="form-group">
                       <label class="col-lg-2 control-label">Student Number</label>
                       <div class="col-lg-8">
-                        <input type="text" class="form-control" name="staff_number" placeholder="">
+                        <input type="text" class="form-control" name="student_number" placeholder="">
                       </div>
                       <div class="col-lg-2">
                       	<button class="btn btn-info btn-lg" type="button">Search</button>
