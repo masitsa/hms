@@ -71,7 +71,7 @@
 							$dependants_result = $dependant_query->row();
 							
 							$patient_othernames = $dependants_result->other_names;
-							$patient_surname = $dependants_result->surname;
+							$patient_surname = $dependants_result->names;
 							$patient_date_of_birth = $dependants_result->DOB;
 							$relationship = $dependants_result->relation;
 							$gender = $dependants_result->Gender;

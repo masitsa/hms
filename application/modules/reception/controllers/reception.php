@@ -9,6 +9,7 @@ class Reception extends auth
 		parent:: __construct();
 		$this->load->model('reception_model');
 		$this->load->model('strathmore_population');
+		$this->load->model('database');
 	}
 	
 	public function patients()
@@ -126,12 +127,13 @@ class Reception extends auth
 			
 			if($patient_id != FALSE)
 			{
-				echo 'SUCCESS :-)';
+				$this->set_visit($patient_id);
 			}
 			
 			else
 			{
-				echo 'Failure';
+				$this->session->set_userdata("error_message","Could not add patient. Please try again");
+				$this->add_patient();	
 			}
 		}
 	}
@@ -142,14 +144,34 @@ class Reception extends auth
 		
 		if (($query->num_rows() > 0) && (!isset($_POST['dependant'])))
 		{
-			$v_data['query'] = $query;
-			$v_data['page'] = $page;
-			$data['content'] = $this->load->view('all_patients', $v_data, true);
+			$query_staff = $this->reception_model->get_patient_staff($this->input->post('staff_number'));
+			
+			if ($query_staff->num_rows() > 0)
+			{
+				$result_patient = $query->row();
+				$patient_id = $result_patient->patient_id;
+
+				$this->set_visit($patient_id);
+			}
+			else
+			{
+				var_dump($query_staff);
+				$this->session->set_userdata("error_message","Could not add patient. Please try again");
+				//$this->add_patient();	
+			}
+			
 		}
 		
 		else if (!isset($_POST['dependant']))
 		{
-			$query = $this->strathmore_population->get_hr_staff($this->input->post('staff_number'));
+			$patient_id = $this->strathmore_population->get_hr_staff($this->input->post('staff_number'));
+			if($patient_id != FALSE){
+				$this->set_visit($patient_id);
+			}else{
+				$this->session->set_userdata("error_message","Could not add patient. Please try again");
+				$this->add_patient();
+			}
+
 		}
 		
 		//case of a dependant
@@ -166,12 +188,110 @@ class Reception extends auth
 		if ($query->num_rows() > 0)
 		{
 			
-			echo 'SUCCESS :-)';
+			$query_staff = $this->reception_model->get_patient_staff($this->input->post('student_number'));
+			
+			if ($query_staff->num_rows() > 0)
+			{
+				$result_patient = $query->row();
+				$patient_id = $result_patient->patient_id;
+
+				$this->set_visit($patient_id);
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add patient. Please try again");
+				$this->add_patient();	
+			}
 		}
 		
 		else
 		{
-			$query = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
+			$patient_id = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
+			if($patient_id != FALSE){
+				$this->set_visit($patient_id);
+			}else{
+				$this->session->set_userdata("error_message","Could not add patient. Please try again");
+				$this->add_patient();
+			}
+
+		}
+	}
+	/*
+	*	Add a visit
+	*
+	*/
+	public function set_visit($primary_key)
+	{
+
+		$v_data["patient_id"] = $primary_key;
+		$v_data['charge'] = $this->get_service_charges($primary_key);
+		$v_data['doctor'] = $this->get_doctor();
+		$v_data['type'] = $this->get_types();
+		$v_data['patient'] = $this->patient_names2($primary_key);
+		$v_data['patient_insurance'] = $this->get_patient_insurance($primary_key);
+
+		$data['content'] = $this->load->view('initiate_visit', $v_data, true);
+		
+		$data['title'] = 'Add Patients';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+
+	public function save_visit($patient_id)
+	{
+		$this->load->library('form_validation');
+		
+		$this->form_validation->set_rules('visit_date', 'Visit Date', 'required');
+		
+		$this->form_validation->set_rules('doctor', 'Doctor', 'required');
+		
+		$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required');
+		
+		$patient_insurance_id = $this->input->post("patient_insurance_id");
+			$patient_insurance_number = $this->input->post("insurance_id");
+						$patient_type = $this->input->post("patient_type"); 
+		if($patient_type==4){
+		
+				$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
+				
+					$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
+				//$this->initiate_visit($patient_id);
+			}
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->initiate_visit($patient_id);
+		}
+		else
+		{
+			$doc_name = $this->input->post("doctor");
+
+			$service_charge_id = $this->input->post("service_charge_name");
+		
+			$doc_rs = $this->get_doctor2($doc_name);
+			foreach ($doc_rs as $rs1):
+				$doctor_id = $rs1->personnel_id;
+			endforeach;
+			//$visit_type = $this->get_visit_type($type_name);
+			$visit_date = $this->input->post("visit_date");
+			$timepicker_start = $this->input->post("timepicker_start");
+			$timepicker_end = $this->input->post("timepicker_end");
+			
+			$appointment_id;
+			$close_card;	
+			if(($timepicker_end=="")||($timepicker_start=="")){
+			$appointment_id=0;	
+			$close_card=0;
+			}else{
+			$appointment_id=1;
+			$close_card=2;		
+				}
+	
+			$this->save_visit_table($patient_id, $visit_date, $doc_name , $timepicker_start,$timepicker_end,$appointment_id, $patient_type, $patient_insurance_id,$patient_insurance_number,$close_card);
+			$visit_id = $this->select_max("visit", "visit_id");
+			///$service_charge_id = $this->get_service_charge_id(1, $visit_type, $service_charge_name);
+			$service_charge = $this->get_service_charge($service_charge_id);
+			$this->save_consultation_charge($visit_id, $service_charge_id, $service_charge);
+			$this->visit_list();
 		}
 	}
 	

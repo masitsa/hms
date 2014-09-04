@@ -70,6 +70,20 @@ class Reception_model extends CI_Model
 	}
 	
 	/*
+	*	Retrieve a single staff
+	*	@param int $strath_no
+	*
+	*/
+	public function get_patient_staff($strath_no)
+	{
+		$this->db->from('patients');
+		$this->db->select('*');
+		$this->db->where('strath_no = '.$strath_no);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	/*
 	*	Retrieve a single student
 	*	@param int $strath_no
 	*
@@ -224,6 +238,175 @@ class Reception_model extends CI_Model
 		else{
 			return FALSE;
 		}
+	}
+	
+	public function get_service_charges($patient_id)
+	{
+		$table = "service_charge";
+		$where = "service_charge.service_id = 1 AND service_charge.visit_type_id = (SELECT visit_type_id FROM patients WHERE patient_id = $patient_id)";
+		$items = "service_charge.service_charge_name, service_charge_id";
+		$order = "service_charge_name";
+		
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	
+	private function get_doctor()
+	{
+		$table = "personnel, job_title";
+		$where = "job_title.job_title_id = personnel.job_title_id AND job_title.job_title_id = 2";
+		$items = "personnel.personnel_onames, personnel.personnel_fname, personnel.personnel_id";
+		$order = "personnel_onames";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}	
+	
+	private function get_types()
+	{
+		$table = "visit_type";
+		$where = "visit_type_id > 0";
+		$items = "visit_type_name,visit_type_id";
+		$order = "visit_type_name";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	
+	public function patient_names2($patient_id)
+	{
+		$table = "patients";
+		$where = "patient_id = $patient_id";
+		$items = "patients.strath_no, patients.patient_surname, patients.patient_othernames, patients.visit_type_id";
+		$order = "patient_surname";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		foreach ($result as $row)
+			{
+				$patient_id = $row->patient_id;
+				$dependant_id = $row->dependant_id;
+				$strath_no = $row->strath_no;
+				$created_by = $row->created_by;
+				$modified_by = $row->modified_by;
+				$visit_type_id = $row->visit_type_id;
+				$created = $row->patient_date;
+				$last_modified = $row->last_modified;
+				$last_visit = $row->last_visit;
+				
+				//staff & dependant
+				if($visit_type_id == 2)
+				{
+					//dependant
+					if($dependant_id > 0)
+					{
+						$patient_type = 'Dependant';
+						$dependant_query = $this->reception_model->get_dependant($strath_no);
+						
+						if($dependant_query->num_rows() > 0)
+						{
+							$dependants_result = $dependant_query->row();
+							
+							$patient_othernames = $dependants_result->other_names;
+							$patient_surname = $dependants_result->names;
+							$patient_date_of_birth = $dependants_result->DOB;
+							$relationship = $dependants_result->relation;
+							$gender = $dependants_result->Gender;
+						}
+						
+						else
+						{
+							$patient_othernames = '<span class="label label-important">Dependant not found</span>';
+							$patient_surname = '';
+							$patient_date_of_birth = '';
+							$relationship = '';
+							$gender = '';
+						}
+					}
+					
+					//staff
+					else
+					{
+						$patient_type = 'Staff';
+						$staff_query = $this->reception_model->get_staff($strath_no);
+						
+						if($staff_query->num_rows() > 0)
+						{
+							$staff_result = $staff_query->row();
+							
+							$patient_surname = $staff_result->Surname;
+							$patient_othernames = $staff_result->Other_names;
+							$patient_date_of_birth = $staff_result->DOB;
+							$patient_phone1 = $staff_result->contact;
+							$gender = $staff_result->gender;
+						}
+						
+						else
+						{
+							$patient_othernames = '<span class="label label-important">Staff not found</span>';
+							$patient_surname = '';
+							$patient_date_of_birth = '';
+							$relationship = '';
+							$gender = '';
+							$patient_type = '';
+						}
+					}
+				}
+				
+				//student
+				else if($visit_type_id == 1)
+				{
+					$student_query = $this->reception_model->get_student($strath_no);
+					$patient_type = 'Student';
+					
+					if($student_query->num_rows() > 0)
+					{
+						$student_result = $student_query->row();
+						
+						$patient_surname = $student_result->Surname;
+						$patient_othernames = $student_result->Other_names;
+						$patient_date_of_birth = $student_result->DOB;
+						$patient_phone1 = $student_result->contact;
+						$gender = $student_result->gender;
+					}
+					
+					else
+					{
+						$patient_othernames = '<span class="label label-important">Student not found</span>';
+						$patient_surname = '';
+						$patient_date_of_birth = '';
+						$relationship = '';
+						$gender = '';
+					}
+				}
+				
+				//other patient
+				else
+				{
+					$patient_type = 'Other';
+					
+					$patient_othernames = $row->patient_othernames;
+					$patient_surname = $row->patient_surname;
+					
+				}
+		}
+
+		return $patient_surname." ".$patient_othernames;
+	}
+	
+	private function get_patient_insurance($patient_id)
+	{
+		$table = "patient_insurance, company_insuarance";
+		$where = "patient_insurance.patient_id = $patient_id AND company_insuarance.company_insurance_id = patient_insurance.company_insurance_id";
+		$items = "patient_insurance_id, company_name, insurance_company_name";
+		$order = "company_name";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
 	}
 }
 ?>
