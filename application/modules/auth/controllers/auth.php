@@ -14,6 +14,11 @@ class Auth extends MX_Controller
 		}
 	}
 	
+	public function index()
+	{
+		$this->control_panel($this->session->userdata('personnel_id'));
+	}
+	
 	public function control_panel($personnel_id)
 	{
 		$data['personnel_id'] = $personnel_id;

@@ -50,7 +50,7 @@
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
                 <div class="tab-pane" id="staff">
                   <p class="center-align">Enter a staff's number to search for them</p>
-                  <form class="form-horizontal" role="form" method="POST" action="<?php echo site_url().'reception/search_staff'?>">
+                  <form class="form-horizontal" role="form" method="POST" action="<?php echo site_url().'/reception/search_staff'?>">
                     <div class="form-group">
                       <label class="col-lg-2 control-label">Staff Number</label>
                       <div class="col-lg-8">
@@ -65,7 +65,7 @@
                 
                 <div class="tab-pane active" id="student">
                   <p class="center-align">Enter a student's number to search for them</p>
-                  <form class="form-horizontal" role="form" method="POST" action="<?php echo site_url().'reception/search_student'?>">
+                  <form class="form-horizontal" role="form" method="POST" action="<?php echo site_url().'/reception/search_student'?>">
                     <div class="form-group">
                       <label class="col-lg-2 control-label">Student Number</label>
                       <div class="col-lg-8">

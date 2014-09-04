@@ -7,7 +7,8 @@ class Reception extends auth
 	function __construct()
 	{
 		parent:: __construct();
-		$this->load->model('reception_model');
+		$this->load->model('reception/reception_model');
+		$this->load->model('reception/strathmore_population');
 	}
 	
 	public function patients()
@@ -119,7 +120,17 @@ class Reception extends auth
 		
 		else
 		{
-			echo 'SUCCESS :-)';
+			$patient_id = $this->reception_model->save_other_patient();
+			
+			if($patient_id != FALSE)
+			{
+				echo 'SUCCESS :-)';
+			}
+			
+			else
+			{
+				echo 'Failure';
+			}
 		}
 	}
 	public function search_staff()

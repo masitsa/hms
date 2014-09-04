@@ -19,7 +19,7 @@
           <div class="padd">
 <?php
 		
-		$result = '<a href="'.site_url().'reception/add-patient" class="btn btn-success pull-right">Add Patient</a>';
+		$result = '<a href="'.site_url().'/reception/add-patient" class="btn btn-success pull-right">Add Patient</a>';
 		
 		//if users exist display them
 		if ($query->num_rows() > 0)

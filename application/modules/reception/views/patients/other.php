@@ -52,7 +52,13 @@
             <label class="col-lg-4 control-label">Date of Birth: </label>
             
             <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_dob" placeholder="Date of Birth">
+                <div id="datetimepicker1" class="input-append">
+                    <input data-format="yyyy-MM-dd" class="form-control" type="text" placeholder="Date of Birth">
+                    <span class="add-on">
+                        &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                        </i>
+                    </span>
+                </div>
             </div>
         </div>
         

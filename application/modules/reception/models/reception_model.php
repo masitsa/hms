@@ -159,7 +159,7 @@ class Reception_model extends CI_Model
 			'patient_surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
 			'patient_othernames'=>ucwords(strtolower($this->input->post('patient_othernames'))),
 			'title_id'=>$this->input->post('title_id'),
-			'patient_dob'=>$this->input->post('patient_dob'),
+			'patient_date_of_birth'=>$this->input->post('patient_dob'),
 			'gender_id'=>$this->input->post('gender_id'),
 			'religion_id'=>$this->input->post('religion_id'),
 			'civil_status_id'=>$this->input->post('civil_status_id'),
@@ -174,13 +174,14 @@ class Reception_model extends CI_Model
 			'relationship_id'=>$this->input->post('relationship_id'),
 			'patient_national_id'=>$this->input->post('patient_national_id'),
 			'patient_date'=>date('Y-m-d H:i:s'),
+			'patient_number'=>$this->strathmore_population->create_patient_number(),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id')
 		);
 		
 		if($this->db->insert('patients', $data))
 		{
-			return TRUE;
+			return $this->db->insert_id();
 		}
 		else{
 			return FALSE;

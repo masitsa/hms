@@ -15,7 +15,7 @@
 			$departments_display .= '
 			<div class="col-sm-4 col-md-2">
 				<div class="thumbnail">
-					<a href="'.site_url().$department_url.'">
+					<a href="'.site_url().'/'.$department_url.'">
 						<img src="'.base_url().'images/icons/'.$department_image.'" alt="'.$department_name.'." class="control_panel_img">
 						<div class="caption">
 							<p><h3>'.$department_name.'</h3></p>

@@ -8,9 +8,9 @@
             <ul class="navi">
 
                 <!-- Use the class nred, ngreen, nblue, nlightblue, nviolet or norange to add background color. You need to use this in <li> tag. -->
-                <li class="current"><a href="<?php echo base_url();?>index.php/welcome/control_panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-home"></i> Control Panel</a></li>
+                <li class="current"><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-home"></i> Control Panel</a></li>
                 
-                <li class="current"><a href="<?php echo base_url();?>index.php/welcome/control_panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-list"></i> Appointments</a></li>
+                <!--<li class="current"><a href="<?php echo base_url();?>index.php/welcome/control_panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-list"></i> Appointments</a></li>-->
 
                 <!-- Menu with sub menu -->
                 <li class="has_submenu">
@@ -19,8 +19,8 @@
                         <i class="icon-th"></i> Patients
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>reception/all-patients">All Patients</a></li>
-                        <li><a href="<?php echo site_url();?>reception/add-patient">Add Patients</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/all-patients">All Patients</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/add-patient">Add Patients</a></li>
                     </ul>
                 </li>
 
@@ -31,8 +31,8 @@
                         <i class="icon-th"></i> Visits
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>reception/all-patients">Ongoing Visits</a></li>
-                        <li><a href="<?php echo site_url();?>reception/add-patient">Visit History</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/all-patients">Ongoing Visits</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/add-patient">Visit History</a></li>
                     </ul>
                 </li>
 
