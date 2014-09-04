@@ -56,8 +56,10 @@ class Strathmore_population extends CI_Model
 						$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>'$date','visit_type_id'=>1,'strath_no'=>$STUDENT_NO,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
 
 						$this->db->insert('patients', $patient_data);
+						return $this->db->insert_id();
 						}else{
 							$this->session->set_userdata("error_message","Student could not be found");
+						return FALSE;
 						}
 						
 
@@ -104,11 +106,12 @@ class Strathmore_population extends CI_Model
 				$date = date("Y-m-d H:i:s");
 				$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>'$date','visit_type_id'=>2,'strath_no'=>$Employee_Code,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
 				$this->db->insert('patients', $patient_data);
-
+				return $this->db->insert_id();
 
 			}
 		}else{
 			$this->session->set_userdata("error_message","Staff could not be found");
+			return FALSE;
 		}
 	}
 	public function create_patient_number()
