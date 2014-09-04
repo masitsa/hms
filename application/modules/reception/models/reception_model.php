@@ -88,5 +88,103 @@ class Reception_model extends CI_Model
 	{
 		
 	}
+	
+	/*
+	*	Retrieve gender
+	*
+	*/
+	public function get_gender()
+	{
+		$this->db->order_by('gender_name');
+		$query = $this->db->get('gender');
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve title
+	*
+	*/
+	public function get_title()
+	{
+		$this->db->order_by('title_name');
+		$query = $this->db->get('title');
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve civil_status
+	*
+	*/
+	public function get_civil_status()
+	{
+		$this->db->order_by('civil_status_name');
+		$query = $this->db->get('civil_status');
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve religion
+	*
+	*/
+	public function get_religion()
+	{
+		$this->db->order_by('religion_name');
+		$query = $this->db->get('religion');
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve relationship
+	*
+	*/
+	public function get_relationship()
+	{
+		$this->db->order_by('relationship_name');
+		$query = $this->db->get('relationship');
+		
+		return $query;
+	}
+	
+	/*
+	*	Save other patient
+	*
+	*/
+	public function save_other_patient()
+	{
+		$data = array(
+			'patient_surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
+			'patient_othernames'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+			'title_id'=>$this->input->post('title_id'),
+			'patient_dob'=>$this->input->post('patient_dob'),
+			'gender_id'=>$this->input->post('gender_id'),
+			'religion_id'=>$this->input->post('religion_id'),
+			'civil_status_id'=>$this->input->post('civil_status_id'),
+			'patient_email'=>$this->input->post('patient_email'),
+			'patient_address'=>$this->input->post('patient_address'),
+			'patient_postalcode'=>$this->input->post('patient_postalcode'),
+			'patient_town'=>$this->input->post('patient_town'),
+			'patient_phone1'=>$this->input->post('patient_phone1'),
+			'patient_phone2'=>$this->input->post('patient_phone2'),
+			'patient_kin_sname'=>$this->input->post('patient_kin_sname'),
+			'patient_kin_othernames'=>$this->input->post('patient_kin_othernames'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'patient_national_id'=>$this->input->post('patient_national_id'),
+			'patient_date'=>date('Y-m-d H:i:s'),
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('patients', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
 }
 ?>
