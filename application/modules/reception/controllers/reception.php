@@ -8,6 +8,7 @@ class Reception extends auth
 	{
 		parent:: __construct();
 		$this->load->model('reception_model');
+		$this->load->model('strathmore_population');
 	}
 	
 	public function patients()
@@ -82,9 +83,7 @@ class Reception extends auth
 		
 		if ($query->num_rows() > 0)
 		{
-			$v_data['query'] = $query;
-			$v_data['page'] = $page;
-			$data['content'] = $this->load->view('all_patients', $v_data, true);
+			
 		}
 		
 		else

@@ -15,7 +15,7 @@
 |
 */
 //$config['base_url']	= 'http://sagana/hms/';
-$config['base_url']	= 'http://localhost/hms/';
+$config['base_url']	= 'http://localhost/sumc/';
 /*
 |--------------------------------------------------------------------------
 | Index File
