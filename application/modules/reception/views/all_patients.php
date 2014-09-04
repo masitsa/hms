@@ -1,9 +1,4 @@
-<div class="row">
-    <div class="col-md-12">
-    <?php echo $this->load->view('administration/line_graph');?>
-    </div>
-</div>  
-                    
+                   
 <div class="row">
     <div class="col-md-12">
 
@@ -24,7 +19,7 @@
           <div class="padd">
 <?php
 		
-		$result = '<a href="'.site_url().'add-brand" class="btn btn-success pull-right">Add Patient</a>';
+		$result = '<a href="'.site_url().'reception/add-patient" class="btn btn-success pull-right">Add Patient</a>';
 		
 		//if users exist display them
 		if ($query->num_rows() > 0)
@@ -233,13 +228,15 @@
 		
 		echo $result;
 ?>
-          </div><div class="widget-foot">
+          </div>
+          
+          <div class="widget-foot">
                                 
-                                	<?php if(isset($links)){echo $links;}?>
-                                
-                                	<div class="clearfix"></div> 
-                                
-                                </div>
+				<?php if(isset($links)){echo $links;}?>
+            
+                <div class="clearfix"></div> 
+            
+            </div>
         </div>
         <!-- Widget ends -->
 

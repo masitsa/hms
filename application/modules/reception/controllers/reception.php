@@ -71,8 +71,9 @@ class Reception extends auth
 	
 	public function add_patient()
 	{
-		$data['title'] = 'All Patients';
+		$data['title'] = 'Add Patients';
 		$data['sidebar'] = 'reception_sidebar';
+		$data['content'] = $this->load->view('add_patient', '', true);
 		
 		$this->load->view('auth/template_sidebar', $data);	
 	}
