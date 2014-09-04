@@ -1,4 +1,19 @@
-<?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
+<?php 
+	$staff_query = $this->reception_model->get_staff($dependant_staff);
+	
+	if($staff_query->num_rows() > 0)
+	{
+		$staff_result = $staff_query->row();
+		
+		$patient_surname = $staff_result->Surname;
+		$patient_othernames = $staff_result->Other_names;
+	}
+	echo form_open("reception/register-dependant-patient/".$dependant_staff, array("class" => "form-horizontal"));
+?>
+<div style="margin-bottom:20px;">
+	<h3 class="center-align">Add Depandant for <?php echo $patient_surname;?> <?php echo $patient_othernames;?></h3>
+</div>
+
 <div class="row">
 	<div class="col-md-6">
         <div class="form-group">
@@ -61,6 +76,9 @@
                 </div>
             </div>
         </div>
+	
+    </div>
+    <div class="col-md-6">
         
         <div class="form-group">
             <label class="col-lg-4 control-label">Gender: </label>
@@ -156,83 +174,7 @@
         </div>
         
         <div class="form-group">
-            <label class="col-lg-4 control-label">Email Address: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_email" placeholder="Email Address">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">National ID: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_national_id" placeholder="National ID">
-            </div>
-        </div>
-        
-	</div>
-    
-    <div class="col-md-6">
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Postal Address: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_address" placeholder="Address">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Post Code: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_postalcode" placeholder="Post Code">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Town: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_town" placeholder="Town">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Primary Phone: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_phone1" placeholder="Primary Phone">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Other Phone: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_phone2" placeholder="Other Phone">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Next of Kin Surname: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_kin_sname" placeholder="Kin Surname">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Next of Kin Other Names: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_kin_othernames" placeholder="Kin Other Names">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Relationship To Kin: </label>
+            <label class="col-lg-4 control-label">Relationship To Staff: </label>
             
             <div class="col-lg-8">
             	<select class="form-control" name="relationship_id">
@@ -262,7 +204,7 @@
             </div>
         </div>
         
-    </div>
+	</div>
 </div>
 
 <div class="center-align">

@@ -187,5 +187,43 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	/*
+	*	Save dependant patient
+	*
+	*/
+	public function save_dependant_patient($dependant_staff)
+	{
+		$data = array(
+			'other_names'=>ucwords(strtolower($this->input->post('patient_surname'))),
+			'names'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+			'title_id'=>$this->input->post('title_id'),
+			'DOB'=>$this->input->post('patient_dob'),
+			'gender_id'=>$this->input->post('gender_id'),
+			'religion_id'=>$this->input->post('religion_id'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'staff_id'=>$dependant_staff,
+			'civil_status_id'=>$this->input->post('civil_status_id')
+		);
+		$this->db->insert('staff_dependants', $data);
+		
+		$data = array(
+			'strath_no'=>$this->db->insert_id(),
+			'dependant_id'=>$dependant_staff,
+			'visit_type_id'=>2,
+			'patient_date'=>date('Y-m-d H:i:s'),
+			'patient_number'=>$this->strathmore_population->create_patient_number(),
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('patients', $data))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
 }
 ?>

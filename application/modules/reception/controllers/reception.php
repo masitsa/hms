@@ -73,13 +73,14 @@ class Reception extends auth
 	*	Add a new patient
 	*
 	*/
-	public function add_patient()
+	public function add_patient($dependant_staff = NULL)
 	{
 		$v_data['relationships'] = $this->reception_model->get_relationship();
 		$v_data['religions'] = $this->reception_model->get_religion();
 		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
 		$v_data['titles'] = $this->reception_model->get_title();
 		$v_data['genders'] = $this->reception_model->get_gender();
+		$v_data['dependant_staff'] = $dependant_staff;
 		$data['content'] = $this->load->view('add_patient', $v_data, true);
 		
 		$data['title'] = 'Add Patients';
@@ -134,20 +135,27 @@ class Reception extends auth
 			}
 		}
 	}
+	
 	public function search_staff()
 	{
 		$query = $this->reception_model->get_staff($this->input->post('staff_number'));
 		
-		if ($query->num_rows() > 0)
+		if (($query->num_rows() > 0) && (!isset($_POST['dependant'])))
 		{
 			$v_data['query'] = $query;
 			$v_data['page'] = $page;
 			$data['content'] = $this->load->view('all_patients', $v_data, true);
 		}
 		
-		else
+		else if (!isset($_POST['dependant']))
 		{
 			$query = $this->strathmore_population->get_hr_staff($this->input->post('staff_number'));
+		}
+		
+		//case of a dependant
+		else
+		{
+			$this->add_patient($this->input->post('staff_number'));
 		}
 	}
 	
@@ -164,6 +172,57 @@ class Reception extends auth
 		else
 		{
 			$query = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
+		}
+	}
+	
+	/*
+	*	Register dependant patient
+	*
+	*/
+	public function register_dependant_patient($dependant_staff)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
+		$this->form_validation->set_rules('patient_surname', 'Surname', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_othernames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_dob', 'Date of Birth', 'trim|xss_clean');
+		$this->form_validation->set_rules('gender_id', 'Gender', 'trim|xss_clean');
+		$this->form_validation->set_rules('religion_id', 'Religion', 'trim|xss_clean');
+		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
+
+			$this->add_patient($dependant_staff);
+		}
+		
+		else
+		{
+			$patient_id = $this->reception_model->save_dependant_patient($dependant_staff);
+			
+			if($patient_id != FALSE)
+			{
+				echo 'SUCCESS :-)';
+			}
+			
+			else
+			{
+				echo 'Failure';
+			}
+		}
+	}
+	
+	public function update_patient_number()
+	{
+		if($this->strathmore_population->update_patient_numbers())
+		{
+			echo 'SUCCESS :-)';
+		}
+		
+		else
+		{
+			echo 'Failure';
 		}
 	}
 }
