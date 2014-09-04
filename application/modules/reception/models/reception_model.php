@@ -78,7 +78,7 @@ class Reception_model extends CI_Model
 	{
 		$this->db->from('patients');
 		$this->db->select('*');
-		$this->db->where('stath_no = '.$strath_no);
+		$this->db->where('strath_no = '.$strath_no);
 		$query = $this->db->get();
 		
 		return $query;
@@ -201,6 +201,45 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	/*
+	*	Save dependant patient
+	*
+	*/
+	public function save_dependant_patient($dependant_staff)
+	{
+		$data = array(
+			'other_names'=>ucwords(strtolower($this->input->post('patient_surname'))),
+			'names'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+			'title_id'=>$this->input->post('title_id'),
+			'DOB'=>$this->input->post('patient_dob'),
+			'gender_id'=>$this->input->post('gender_id'),
+			'religion_id'=>$this->input->post('religion_id'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'staff_id'=>$dependant_staff,
+			'civil_status_id'=>$this->input->post('civil_status_id')
+		);
+		$this->db->insert('staff_dependants', $data);
+		
+		$data = array(
+			'strath_no'=>$this->db->insert_id(),
+			'dependant_id'=>$dependant_staff,
+			'visit_type_id'=>2,
+			'patient_date'=>date('Y-m-d H:i:s'),
+			'patient_number'=>$this->strathmore_population->create_patient_number(),
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('patients', $data))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
 	public function get_service_charges($patient_id)
 	{
 		$table = "service_charge";
@@ -213,6 +252,7 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
+	
 	private function get_doctor()
 	{
 		$table = "personnel, job_title";
@@ -224,6 +264,7 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}	
+	
 	private function get_types()
 	{
 		$table = "visit_type";
@@ -235,13 +276,13 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
+	
 	public function patient_names2($patient_id)
 	{
 		$table = "patients";
 		$where = "patient_id = $patient_id";
 		$items = "patients.strath_no, patients.patient_surname, patients.patient_othernames, patients.visit_type_id";
 		$order = "patient_surname";
-		
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		foreach ($result as $row)
@@ -355,6 +396,7 @@ class Reception_model extends CI_Model
 
 		return $patient_surname." ".$patient_othernames;
 	}
+	
 	private function get_patient_insurance($patient_id)
 	{
 		$table = "patient_insurance, company_insuarance";
@@ -366,6 +408,5 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
-	
 }
 ?>

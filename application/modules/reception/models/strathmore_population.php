@@ -114,6 +114,7 @@ class Strathmore_population extends CI_Model
 			return FALSE;
 		}
 	}
+	
 	public function create_patient_number()
 	{
 		//select product code
@@ -123,21 +124,42 @@ class Strathmore_population extends CI_Model
 
 		if($query->num_rows() > 0)
 		{
-		$result = $query->result();
-		$number =  $result[0]->number;
-		$number++;//go to the next number
+			$result = $query->result();
+			$number =  $result[0]->number;
+			$number++;//go to the next number
 
-		if($number == 1){
-		$number = "ORD"."/001";
-		}
+			if($number == 1){
+				$number = "SUMC/001";
+			}
 		}
 		else{//start generating receipt numbers
-		$number = "ORD"."/001";
+			$number = "SUMC/001";
 		}
 
 		return $number;
-		}
-
 	}
+	
+	public function update_patient_numbers()
+	{
+		/*$data['patient_number'] = '';
+		$this->db->update('patients', $data);*/
+			
+		$query = $this->db->get('patients');
+		
+		$result = $query->result();
+		
+		foreach($result as $res)
+		{
+			$patient_id = $res->patient_id;
+			
+			$data['patient_number'] = $this->create_patient_number();
+			
+			$this->db->where('patient_id', $patient_id);
+			$this->db->update('patients', $data);
+		}
+		
+		return TRUE;
+	}
+}
 
 ?>
