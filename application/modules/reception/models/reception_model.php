@@ -84,6 +84,21 @@ class Reception_model extends CI_Model
 		return $query;
 	}
 	/*
+	*	Retrieve a insert patient information
+	*	@param int $strath_no
+	*
+	*/
+	public function insert_into_patients($strath_no,$visit_type)
+	{
+		//  instert data into the patients table
+		$date = date("Y-m-d H:i:s");
+		$patient_data = array('patient_number'=>$this->strathmore_population->create_patient_number(),'patient_date'=>'$date','visit_type_id'=>$visit_type,'strath_no'=>$strath_no,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
+		$this->db->insert('patients', $patient_data);
+		return $this->db->insert_id();
+		
+	}
+
+	/*
 	*	Retrieve a single student
 	*	@param int $strath_no
 	*
@@ -253,7 +268,7 @@ class Reception_model extends CI_Model
 		return $result;
 	}
 	
-	private function get_doctor()
+	public function get_doctor()
 	{
 		$table = "personnel, job_title";
 		$where = "job_title.job_title_id = personnel.job_title_id AND job_title.job_title_id = 2";
@@ -265,7 +280,7 @@ class Reception_model extends CI_Model
 		return $result;
 	}	
 	
-	private function get_types()
+	public function get_types()
 	{
 		$table = "visit_type";
 		$where = "visit_type_id > 0";
@@ -281,7 +296,7 @@ class Reception_model extends CI_Model
 	{
 		$table = "patients";
 		$where = "patient_id = $patient_id";
-		$items = "patients.strath_no, patients.patient_surname, patients.patient_othernames, patients.visit_type_id";
+		$items = "*";
 		$order = "patient_surname";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -397,7 +412,7 @@ class Reception_model extends CI_Model
 		return $patient_surname." ".$patient_othernames;
 	}
 	
-	private function get_patient_insurance($patient_id)
+	public function get_patient_insurance($patient_id)
 	{
 		$table = "patient_insurance, company_insuarance";
 		$where = "patient_insurance.patient_id = $patient_id AND company_insuarance.company_insurance_id = patient_insurance.company_insurance_id";
@@ -408,5 +423,6 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
+	
 }
 ?>

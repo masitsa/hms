@@ -148,17 +148,17 @@ class Reception extends auth
 			
 			if ($query_staff->num_rows() > 0)
 			{
-				$result_patient = $query->row();
+				$result_patient = $query_staff->row();
 				$patient_id = $result_patient->patient_id;
 
-				$this->set_visit($patient_id);
+				
 			}
 			else
 			{
-				var_dump($query_staff);
-				$this->session->set_userdata("error_message","Could not add patient. Please try again");
-				//$this->add_patient();	
+				$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
+				
 			}
+			$this->set_visit($patient_id);
 			
 		}
 		
@@ -192,16 +192,16 @@ class Reception extends auth
 			
 			if ($query_staff->num_rows() > 0)
 			{
-				$result_patient = $query->row();
+				$result_patient = $query_staff->row();
 				$patient_id = $result_patient->patient_id;
 
-				$this->set_visit($patient_id);
+				
 			}
 			else
 			{
-				$this->session->set_userdata("error_message","Could not add patient. Please try again");
-				$this->add_patient();	
+				$patient_id = $this->reception_model->insert_into_patients($this->input->post('student_number'),1);	
 			}
+			$this->set_visit($patient_id);
 		}
 		
 		else
@@ -224,11 +224,11 @@ class Reception extends auth
 	{
 
 		$v_data["patient_id"] = $primary_key;
-		$v_data['charge'] = $this->get_service_charges($primary_key);
-		$v_data['doctor'] = $this->get_doctor();
-		$v_data['type'] = $this->get_types();
-		$v_data['patient'] = $this->patient_names2($primary_key);
-		$v_data['patient_insurance'] = $this->get_patient_insurance($primary_key);
+		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
+		$v_data['doctor'] = $this->reception_model->get_doctor();
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['patient'] = $this->reception_model->patient_names2($primary_key);
+		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
 
 		$data['content'] = $this->load->view('initiate_visit', $v_data, true);
 		
@@ -255,11 +255,11 @@ class Reception extends auth
 				$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
 				
 					$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
-				//$this->initiate_visit($patient_id);
+				//$this->set_visit($patient_id);
 			}
 		if ($this->form_validation->run() == FALSE)
 		{
-			$this->initiate_visit($patient_id);
+			$this->set_visit($patient_id);
 		}
 		else
 		{
