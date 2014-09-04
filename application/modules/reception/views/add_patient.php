@@ -16,6 +16,30 @@
         <!-- Widget content -->
         <div class="widget-content">
           <div class="padd">
+          <div class="center-align">
+          	<?php
+            	$error = $this->session->userdata('error_message');
+            	$validation_error = validation_errors();
+				$success = $this->session->userdata('success_message');
+				
+				if(!empty($error))
+				{
+					echo '<div class="alert alert-danger">'.$error.'</div>';
+					$this->session->unset_userdata('error_message');
+				}
+				
+				if(!empty($validation_error))
+				{
+					echo '<div class="alert alert-danger">'.$validation_error.'</div>';
+				}
+				
+				if(!empty($success))
+				{
+					echo '<div class="alert alert-success">'.$success.'</div>';
+					$this->session->unset_userdata('success_message');
+				}
+			?>
+          </div>
 			<div class="tabbable" style="margin-bottom: 18px;">
               <ul class="nav nav-tabs">
                 <li><a href="#staff" data-toggle="tab">Staff</a></li>
@@ -70,7 +94,9 @@
                 </div>
                 
                 <div class="tab-pane" id="other">
-                  <p>I'm in Section 1.</p>
+                  
+                  <?php echo $this->load->view("patients/other");?>
+                  
                 </div>
                 
               </div>

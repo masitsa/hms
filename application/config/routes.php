@@ -54,6 +54,7 @@ $route['control-panel/(:num)'] = 'auth/control_panel/$1';
 $route['reception/all-patients'] = 'reception/patients';
 $route['reception/all-patients/(:num)'] = 'reception/patients/$1';
 $route['reception/add-patient'] = 'reception/add_patient';
+$route['reception/register-other-patient'] = 'reception/register_other_patient';
 
 
 

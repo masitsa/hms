@@ -12,7 +12,6 @@ class Reception extends auth
 	
 	public function patients()
 	{
-		
 		$where = 'patient_id > 0';
 		$table = 'patients';
 		//pagination
@@ -69,12 +68,58 @@ class Reception extends auth
 		$this->load->view('auth/template_sidebar', $data);
 	}
 	
+	/*
+	*	Add a new patient
+	*
+	*/
 	public function add_patient()
 	{
+		$v_data['relationships'] = $this->reception_model->get_relationship();
+		$v_data['religions'] = $this->reception_model->get_religion();
+		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
+		$v_data['titles'] = $this->reception_model->get_title();
+		$v_data['genders'] = $this->reception_model->get_gender();
+		$data['content'] = $this->load->view('add_patient', $v_data, true);
+		
 		$data['title'] = 'Add Patients';
 		$data['sidebar'] = 'reception_sidebar';
-		$data['content'] = $this->load->view('add_patient', '', true);
-		
 		$this->load->view('auth/template_sidebar', $data);	
+	}
+	
+	/*
+	*	Register other patient
+	*
+	*/
+	public function register_other_patient()
+	{
+		//form validation rules
+		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
+		$this->form_validation->set_rules('patient_surname', 'Surname', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_othernames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_dob', 'Date of Birth', 'trim|xss_clean');
+		$this->form_validation->set_rules('gender_id', 'Gender', 'trim|xss_clean');
+		$this->form_validation->set_rules('religion_id', 'Religion', 'trim|xss_clean');
+		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_email', 'Email Address', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_address', 'Postal Address', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_postalcode', 'Postal Code', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_town', 'Town', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_phone1', 'Primary Phone', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_phone2', 'Other Phone', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_kin_sname', 'Next of Kin Surname', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_kin_othernames', 'Next of Kin Other Names', 'trim|xss_clean');
+		$this->form_validation->set_rules('relationship_id', 'Relationship With Kin', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_national_id', 'National ID', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->add_patient();
+		}
+		
+		else
+		{
+			echo 'SUCCESS :-)';
+		}
 	}
 }
