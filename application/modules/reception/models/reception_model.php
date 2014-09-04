@@ -78,7 +78,7 @@ class Reception_model extends CI_Model
 	{
 		$this->db->from('patients');
 		$this->db->select('*');
-		$this->db->where('starth_no = '.$strath_no);
+		$this->db->where('stath_no = '.$strath_no);
 		$query = $this->db->get();
 		
 		return $query;
