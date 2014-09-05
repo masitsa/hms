@@ -627,40 +627,83 @@ class Reception extends auth
 	}
 	public function save_initiate_lab($primary_key)
 	{
-	$visit_type_id = $this->input->post("patient_type");
-	$patient_insurance_number = $this->input->post("insurance_id");
-	$patient_insurance_id = $this->input->post("patient_insurance_id");
-		$insert = array(
-        	"close_card" => 0,
-        	"patient_id" => $primary_key,
-        	"visit_type" => $visit_type_id,
-			"patient_insurance_id" => $patient_insurance_id,
-			"patient_insurance_number" => $patient_insurance_number,
-        	"visit_date" => date("y-m-d"),
-        	"lab_visit" => 5
-    	);
-		$this->database->insert_entry('visit', $insert);
-	}
-	
-	public function save_initiate_pharmacy($patient_id)
-	{
-		$visit_type_id = $this->input->post("patient_type");
+		$this->form_validation->set_rules('patient_type', 'Patient Type', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('insurance_id', 'Insurance Company', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_insurance_id', 'Patient Insurance Number', 'trim|xss_clean');
 		
-		$patient_insurance_number = $this->input->post("insurance_id");
-		$patient_insurance_id = $this->input->post("patient_insurance_id");
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
+
+			$this->initiate_lab($primary_key);
+		}
+		
+		else
+		{
+			$visit_type_id = $this->input->post("patient_type");
+			$patient_insurance_number = $this->input->post("insurance_id");
+			$patient_insurance_id = $this->input->post("patient_insurance_id");
 			$insert = array(
 				"close_card" => 0,
-				"patient_id" => $patient_id,
+				"patient_id" => $primary_key,
 				"visit_type" => $visit_type_id,
 				"patient_insurance_id" => $patient_insurance_id,
 				"patient_insurance_number" => $patient_insurance_number,
 				"visit_date" => date("y-m-d"),
-				"visit_time" => date("Y-m-d H:i:s"),
-				"pharmarcy" => 5
+				"lab_visit" => 5
 			);
-		$table = "visit";
-		$this->database->insert_entry($table, $insert);
+			$this->database->insert_entry('visit', $insert);
+	
+			$this->visit_list(0);
+		}
+	}
+	
+	public function save_initiate_pharmacy($patient_id)
+	{
+		$this->form_validation->set_rules('patient_type', 'Patient Type', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('insurance_id', 'Insurance Company', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_insurance_id', 'Patient Insurance Number', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
 
-    	$this->visit_list(0);
+			$this->initiate_pharmacy($primary_key);
+		}
+		
+		else
+		{
+			$visit_type_id = $this->input->post("patient_type");
+			$patient_insurance_number = $this->input->post("insurance_id");
+			$patient_insurance_id = $this->input->post("patient_insurance_id");
+				$insert = array(
+					"close_card" => 0,
+					"patient_id" => $patient_id,
+					"visit_type" => $visit_type_id,
+					"patient_insurance_id" => $patient_insurance_id,
+					"patient_insurance_number" => $patient_insurance_number,
+					"visit_date" => date("y-m-d"),
+					"visit_time" => date("Y-m-d H:i:s"),
+					"pharmarcy" => 5
+				);
+			$table = "visit";
+			$this->database->insert_entry($table, $insert);
+	
+			$this->visit_list(0);
+		}
+	}
+	
+	public function close_visit_search($visit)
+	{
+		$this->session->unset_userdata('visit_search');
+		
+		$this->visit_list($visit);
+	}
+	
+	public function close_patient_search()
+	{
+		$this->session->unset_userdata('patient_search');
+		
+		$this->patients();
 	}
 }

@@ -2,7 +2,7 @@
 //var host = "http://192.168.178.118/hms/";
 //var host = "http://sagana/hms/";
 var host = 'http://localhost/sumc/';
-window.alert(host);
+
 function vitals_interface(visit_id){
 	var XMLHttpRequestObject = false;
 		

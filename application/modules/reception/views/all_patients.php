@@ -21,6 +21,12 @@
         <div class="widget-content">
           <div class="padd">
 <?php
+		$search = $this->session->userdata('patient_search');
+		
+		if(!empty($search))
+		{
+			echo '<a href="'.site_url().'/reception/close_patient_search" class="btn btn-warning">Close Search</a>';
+		}
 		
 		$result = '<a href="'.site_url().'/reception/add-patient" class="btn btn-success pull-right">Add Patient</a>';
 		

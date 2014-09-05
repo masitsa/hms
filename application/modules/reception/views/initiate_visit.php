@@ -159,7 +159,7 @@
 					            <label class="col-lg-4 control-label">End time : </label>
 					            
 					            <div class="col-lg-8">				            
-									<div id="datetimepicker2" class="input-append">
+									<div id="datetimepicker3" class="input-append">
 				                       <input data-format="hh:mm" class="picker" id="timepicker_end" name="timepicker_end"  type="text" class="form-control">
 				                       <span class="add-on">
 				                         &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">

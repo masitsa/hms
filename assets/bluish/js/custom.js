@@ -397,10 +397,14 @@ $(document).ready(function(){
     });
   });
 
-
-
    $(function() {
     $('#datetimepicker2').datetimepicker({
+      pickDate: false
+    });
+  });
+
+   $(function() {
+    $('#datetimepicker3').datetimepicker({
       pickDate: false
     });
   });

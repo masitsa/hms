@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="other.php" server="192.168.170.16/sumc/" local="130543052491960997" remote="130542980400000000" Dst="0" />
+<file name="other.php" server="192.168.170.16/sumc/" local="130543176699725275" remote="130543937400000000" Dst="0" />
+<file name="dependants.php" server="192.168.170.16/sumc/" local="130543176636151639" remote="130543937400000000" Dst="0" />
+<file name="search_patient.php" server="192.168.170.16/sumc/" local="130543927069692221" remote="130543937400000000" Dst="0" />
+<file name="search_visit.php" server="192.168.170.16/sumc/" local="130544003506604162" remote="130543937400000000" Dst="0" />
 </dwsync>

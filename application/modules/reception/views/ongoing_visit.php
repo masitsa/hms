@@ -20,8 +20,14 @@
         <!-- Widget content -->
         <div class="widget-content">
           <div class="padd">
+          
 <?php
+		$search = $this->session->userdata('visit_search');
 		
+		if(!empty($search))
+		{
+			echo '<a href="'.site_url().'/reception/close_visit_search/'.$visit.'" class="btn btn-warning">Close Search</a>';
+		}
 		$result = '';
 		
 		//if users exist display them

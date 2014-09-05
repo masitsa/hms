@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="all_patients.php" server="192.168.170.16/sumc/" local="130543087507773787" remote="130542980400000000" Dst="0" />
-<file name="add_patient.php" server="192.168.170.16/sumc/" local="130543098116820590" remote="130542989400000000" Dst="0" />
+<file name="all_patients.php" server="192.168.170.16/sumc/" local="130544034055061434" remote="130543937400000000" Dst="0" />
+<file name="add_patient.php" server="192.168.170.16/sumc/" local="130543142651487827" remote="130543937400000000" Dst="0" />
+<file name="initiate_lab.php" server="192.168.170.16/sumc/" local="130544046889055497" remote="130543937400000000" Dst="0" />
+<file name="initiate_pharmacy.php" server="192.168.170.16/sumc/" local="130544045313575384" remote="130543937400000000" Dst="0" />
+<file name="initiate_visit.php" server="192.168.170.16/sumc/" local="130544026994387587" remote="130543937400000000" Dst="0" />
+<file name="ongoing_visit.php" server="192.168.170.16/sumc/" local="130544032824821068" remote="130543937400000000" Dst="0" />
+<file name="service_charges_pertype.php" server="192.168.170.16/sumc/" local="130544026994407588" remote="130543937400000000" Dst="0" />
+<file name="show_schedule.php" server="192.168.170.16/sumc/" local="130543938529217668" remote="130543937400000000" Dst="0" />
 </dwsync>

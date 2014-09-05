@@ -39,7 +39,7 @@
                             <label class="col-lg-4 control-label">Patient Type: </label>
                     
                             <div class="col-lg-8">
-                                <select name="patient_type" id="patient_type" class="form-control"  onChange='insurance_company("patient_type","insured");' >
+                                <select name="patient_type" id="patient_type" onChange='insurance_company("patient_type","insured");' class="form-control">
                                     <option value="">--- Select Patient Type---</option>
                                     <?php
                                         if(count($type) > 0){
@@ -59,10 +59,10 @@
                                 if(count($patient_insurance) > 0){
                             ?>
                             <div class="form-group">
-                                <label class="col-lg-4 control-label">Patient Insurance Name: </label>
+                                <label class="col-lg-4 control-label">Insurance Company: </label>
                         
                                 <div class="col-lg-8">
-                                    <select name="patient_insurance_id">
+                                    <select name="patient_insurance_id" class="form-control">
                                     <option value="">--- Select Insurance Company---</option>
                                         <?php
                                         if(count($patient_insurance) > 0){	
@@ -81,7 +81,7 @@
                                 <label class="col-lg-4 control-label">Insurance Number: </label>
                         
                                 <div class="col-lg-8">
-                                    <input name="insurance_id" id="insurance_id"  type="text" placeholder="Input Insurance Number">
+                                    <input name="insurance_id" id="insurance_id" class="form-control" type="text" placeholder="Input Insurance Number">
                                 </div>
                             </div>
                             <?php } ?>
@@ -95,3 +95,27 @@
         </div>
 	</div>
 </div>
+
+ <script type="text/javascript" src="<?php echo base_url("js/script.js");?>"></script>
+<script type="text/javascript" charset="utf-8">
+	var config_url = $('#config_url').val();
+	function check_date(){
+		var datess=document.getElementById("datepicker").value;
+		if(datess){
+			$('#show_doctor').fadeToggle(1000); return false;
+		}
+		else{
+	 
+			alert('Select Date First')
+		}
+	}
+	function load_schedule(){
+		var datess=document.getElementById("datepicker").value;
+		var doctor=document.getElementById("doctor").value;
+		var url=config_url+"/welcome/doc_schedule/"+doctor+"/"+datess;
+		
+		$('#doctors_schedule').load(url);
+		$('#doctors_schedule').fadeIn(1000); 
+		return false;	
+	}
+</script>
