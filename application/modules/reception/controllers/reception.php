@@ -640,7 +640,7 @@ class Reception extends auth
         	"lab_visit" => 5
     	);
 		$this->database->insert_entry('visit', $insert);
-
+	}
 	
 	public function save_initiate_pharmacy($patient_id)
 	{
