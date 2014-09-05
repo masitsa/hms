@@ -1,5 +1,113 @@
-	<?php echo validation_errors(); ?>
-        	<?php echo form_open("reception/save_visit/".$patient_id);?>
+<div class="row">
+    <div class="col-md-12">
+
+      <!-- Widget -->
+      <div class="widget boxed">
+        <!-- Widget head -->
+        <div class="widget-head">
+          <h4 class="pull-left"><i class="icon-reorder"></i>Initiate Visit for <?php echo $patient;?></h4>
+          <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+          </div>
+          <div class="clearfix"></div>
+        </div>             
+
+        <!-- Widget content -->
+        <div class="widget-content">
+          <div class="padd">
+				<?php echo validation_errors(); ?>
+				<?php echo form_open("reception/save_visit/".$patient_id);?>
+				<div class="row">
+					<div class="col-md-6">
+				        <div class="form-group">
+				            <label class="col-lg-4 control-label">Visit Date: </label>
+				            
+				            <div class="col-lg-8">
+				           		<input type="text" id="datepicker" class="form-control"  name="visit_date" size="15" autocomplete="off" placeholder="Visit Date" /> 
+				            	
+				            </div>
+				        </div>
+
+				        <div class="form-group">
+				            <label class="col-lg-4 control-label">Doctor: </label>
+				            
+				            <div class="col-lg-8">
+				            	<select name="doctor" id="doctor" onChange="load_schedule()" class="form-control">
+							    <option >----Select Doctor to View Schedule---</option>
+				                    	<?php
+											if(count($doctor) > 0){
+				                        		foreach($doctor as $row):
+													$fname = $row->personnel_fname;
+													$onames = $row->personnel_onames;
+													$personnel_id = $row->personnel_id;
+													echo "<option value=".$personnel_id.">".$onames."</option>";
+												endforeach;
+											}
+										?>
+				                </select>
+				            </div>
+				        </div>
+				        
+				        
+
+				     </div>
+				     <!--end left -->
+				     <!-- start right -->
+				     <div class="col-md-6">
+						     <div class="form-group">
+						            <label class="col-lg-4 control-label">Patient Type: </label>
+						            
+						            <div class="col-lg-8">
+						            	 <select name="patient_type" id="patient_type"  onChange='insurance_company("patient_type","insured");getCity("http://sagana/hms/data/load_charges.php?patient_type="+this.value);' class="form-control">
+						                    <option value="0">--- Select Patient Type---</option>
+						                	<?php
+												if(count($type) > 0){
+						                    		foreach($type as $row):
+														$type_name = $row->visit_type_name;
+														$type_id= $row->visit_type_id;
+															?><option value="<?php echo $type_id; ?>" ><?php echo $type_name ?></option>
+													<?php	
+													endforeach;
+												}
+											?>
+						                    </select>
+						            </div>
+						        </div>
+						        <div class="clear"></div>
+						        <div class="form-group">
+						            <label class="col-lg-4 control-label">Insurance Name: </label>
+						            
+						            <div class="col-lg-8">
+						                <select name="patient_insurance_id" class="form-control">
+						                        <option value="">--- Select Insurance Company---</option>
+						                            <?PHP
+						                            if(count($patient_insurance) > 0){	
+													foreach($patient_insurance as $row):
+															$company_name = $row->company_name;
+															$insurance_company_name = $row->insurance_company_name;
+															$patient_insurance_id = $row->patient_insurance_id;
+													echo "<option value=".$patient_insurance_id.">".$company_name." - ".$insurance_company_name."</option>";
+													endforeach;	} ?>
+						              </select>
+						            </div>
+						        </div>
+						 </div>
+				     <!-- end right -->
+				 </div>
+				 <!-- end of row -->
+				 <div class="center-align">
+				 <input type="submit" value="Initiate Visit" class="btn btn-info btn-lg"/>
+				</div>
+				<?php echo form_close();?>
+				 <!-- end of form -->
+			</div>
+		</div>
+	</div>
+    </div>
+</div>
+
+
             	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'>Initiate Visit for <?php echo $patient;?></p></div>
                 <table class="table table-stripped table-condensed table-hover">
                 	<tr>

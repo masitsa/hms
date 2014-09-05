@@ -40,6 +40,25 @@ class Reception_model extends CI_Model
 	}
 	
 	/*
+	*	Retrieve ongoing visits
+	*	@param string $table
+	* 	@param string $where
+	*	@param int $per_page
+	* 	@param int $page
+	*
+	*/
+	public function get_all_ongoing_visits($table, $where, $per_page, $page)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by('visit_date','desc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	/*
 	*	Retrieve a single dependant
 	*	@param int $strath_no
 	*
@@ -423,6 +442,6 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
-	
+
 }
 ?>
