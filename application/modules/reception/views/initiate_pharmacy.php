@@ -1,11 +1,11 @@
 <?php echo validation_errors(); ?>
-        	<?php  echo form_open("welcome/save_initiate_pharmacy/".$patient_id);?>
+<?php echo form_open("welcome/save_initiate_pharmacy/".$patient_id, array("class" => "form-horizontal"));?>
             	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'>Initiate Visit for <?php echo $patient;?></p></div>
                 <table class="table table-stripped table-condensed table-hover">
                 	<tr>
                     	<th>Patient type</th>
                            <?php
-                           
+
                         	if(count($patient_insurance) > 0){
 								
 								?>	

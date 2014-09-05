@@ -558,4 +558,10 @@ class Reception extends auth
 		
 		$this->patients();
 	}
+	
+	function doc_schedule($personnel_id,$date)
+	{
+		$data = array('personnel_id'=>$personnel_id,'date'=>$date);
+		$this->load->view('show_schedule',$data);	
+	}
 }
