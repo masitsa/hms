@@ -73,20 +73,25 @@ class Reception extends auth
 	}
 	
 
-	public function visit_list()
+	public function visit_list($visits)
 	{
-		
 		// this is it
-		$where = 'close_card = 0';
-		$table = 'visit';
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = '.$visits;
+		$visit_search = $this->session->userdata('visit_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		
+		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = base_url().'reception/visit_list';
+		$config['base_url'] = base_url().'reception/visit_list/'.$visits;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = 4;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
-		
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
 		$config['full_tag_close'] = '</ul>';
@@ -112,85 +117,36 @@ class Reception extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
 		
-		if ($query->num_rows() > 0)
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		
+		if($visits == 0)
 		{
-			$v_data['query'] = $query;
-			$v_data['page'] = $page;
-			$data['content'] = $this->load->view('ongoing_visit', $v_data, true);
+			$data['title'] = 'Ongoing Visits';
+			$v_data['title'] = 'Ongoing History';
 		}
 		
 		else
 		{
-			$data['content'] = '<a href="'.site_url().'visit_list" class="btn btn-success pull-right">Add Patient</a> There are no patients';
+			$data['title'] = 'Visit History';
+			$v_data['title'] = 'Visit History';
 		}
-		$data['title'] = 'All Patients';
+		$v_data['visit'] = $visits;
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('ongoing_visit', $v_data, true);
 		$data['sidebar'] = 'reception_sidebar';
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
 	}
-
-	public function get_found_patients($patient_id)
-	{
-		$where = 'patient_id ='.$patient_id;
-		$table = 'patients';
-		//pagination
-		$this->load->library('pagination');
-		$config['base_url'] = base_url().'reception/all-patients';
-		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 3;
-		$config['per_page'] = 20;
-		$config['num_links'] = 5;
-		
-		
-		$config['full_tag_open'] = '<ul class="pagination pull-right">';
-		$config['full_tag_close'] = '</ul>';
-		
-		$config['first_tag_open'] = '<li>';
-		$config['first_tag_close'] = '</li>';
-		
-		$config['last_tag_open'] = '<li>';
-		$config['last_tag_close'] = '</li>';
-		
-		$config['next_tag_open'] = '<li>';
-		$config['next_link'] = 'Next';
-		$config['next_tag_close'] = '</span>';
-		
-		$config['prev_tag_open'] = '<li>';
-		$config['prev_link'] = 'Prev';
-		$config['prev_tag_close'] = '</li>';
-		
-		$config['cur_tag_open'] = '<li class="active"><a href="#">';
-		$config['cur_tag_close'] = '</a></li>';
-		
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';
-		$this->pagination->initialize($config);
-		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-        $v_data["links"] = $this->pagination->create_links();
-		$query = $this->reception_model->get_all_patients($table, $where, $config["per_page"], $page);
-		
-		if ($query->num_rows() > 0)
-		{
-			$v_data['query'] = $query;
-			$v_data['page'] = $page;
-			$data['content'] = $this->load->view('all_patients', $v_data, true);
-		}
-		
-		else
-		{
-			$data['content'] = '<a href="'.site_url().'add-patient" class="btn btn-success pull-right">Add Patient</a> There are no patients';
-		}
-		$data['title'] = 'All Patients';
-		$data['sidebar'] = 'reception_sidebar';
-		
-		$this->load->view('auth/template_sidebar', $data);
-	}
+	
 	/*
 	*	Add a new patient
 	*
@@ -323,7 +279,9 @@ class Reception extends auth
 				$patient_id = $this->reception_model->insert_into_patients($this->input->post('student_number'),1);	
 			}
 			//$this->set_visit($patient_id);
-			$this->get_found_patients($patient_id);
+			$search = ' AND patient.patient_id = '.$patient_id;
+			$this->session->set_userdata('patient_search', $search);
+			$this->patients($patient_id);
 		}
 		
 		else
@@ -372,16 +330,16 @@ class Reception extends auth
 		$this->load->view('auth/template_sidebar', $data);	
 	}
 	
-		public function initiate_pharmacy($primary_key)
+	public function initiate_pharmacy($primary_key)
 	{		
 		$v_data["patient_id"] = $primary_key;
 		$v_data['patient'] = $this->reception_model->patient_names2($primary_key);
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
 
-		$data['content'] = $this->load->view('initiate_pharmacy.php',$v_data);	
+		$data['content'] = $this->load->view('initiate_pharmacy',$v_data, TRUE);	
 
-		$data['title'] = 'Add Patients';
+		$data['title'] = 'Initiate Pharmacy Visit';
 		$data['sidebar'] = 'reception_sidebar';
 		$this->load->view('auth/template_sidebar', $data);	
 	}
@@ -576,11 +534,87 @@ class Reception extends auth
 		$this->patients();
 	}
 	
+	public function search_visits($visits)
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		$strath_no = $this->input->post('strath_no');
+		$personnel_id = $this->input->post('personnel_id');
+		$visit_date = $this->input->post('visit_date');
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
+		}
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND patients.strath_no LIKE \'%'.$strath_no.'%\' ';
+		}
+		
+		if(!empty($personnel_id))
+		{
+			$personnel_id = ' AND visit.personnel_id = '.$personnel_id.' ';
+		}
+		
+		if(!empty($visit_date))
+		{
+			$visit_date = ' AND visit.visit_date = \''.$visit_date.'\' ';
+		}
+		
+		//search surname
+		$surnames = explode(" ",$_POST['surname']);
+		$total = count($surnames);
+		
+		$count = 1;
+		$surname = ' AND (';
+		for($r = 0; $r < $total; $r++)
+		{
+			if($count == $total)
+			{
+				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+			}
+			
+			else
+			{
+				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+			}
+			$count++;
+		}
+		$surname .= ') ';
+		
+		//search other_names
+		$other_names = explode(" ",$_POST['othernames']);
+		$total = count($other_names);
+		
+		$count = 1;
+		$other_name = ' AND (';
+		for($r = 0; $r < $total; $r++)
+		{
+			if($count == $total)
+			{
+				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+			}
+			
+			else
+			{
+				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+			}
+			$count++;
+		}
+		$other_name .= ') ';
+		
+		$search = $visit_type_id.$strath_no.$surname.$other_name.$visit_date.$personnel_id;
+		$this->session->set_userdata('visit_search', $search);
+		
+		$this->visit_list($visits);
+	}
+	
 	function doc_schedule($personnel_id,$date)
 	{
 		$data = array('personnel_id'=>$personnel_id,'date'=>$date);
 		$this->load->view('show_schedule',$data);	
 	}
+
 
 	function load_charges($patient_type){
 
@@ -606,6 +640,27 @@ class Reception extends auth
         	"lab_visit" => 5
     	);
 		$this->database->insert_entry('visit', $insert);
+
+	
+	public function save_initiate_pharmacy($patient_id)
+	{
+		$visit_type_id = $this->input->post("patient_type");
+		
+		$patient_insurance_number = $this->input->post("insurance_id");
+		$patient_insurance_id = $this->input->post("patient_insurance_id");
+			$insert = array(
+				"close_card" => 0,
+				"patient_id" => $patient_id,
+				"visit_type" => $visit_type_id,
+				"patient_insurance_id" => $patient_insurance_id,
+				"patient_insurance_number" => $patient_insurance_number,
+				"visit_date" => date("y-m-d"),
+				"visit_time" => date("Y-m-d H:i:s"),
+				"pharmarcy" => 5
+			);
+		$table = "visit";
+		$this->database->insert_entry($table, $insert);
+
     	$this->visit_list(0);
 	}
 }

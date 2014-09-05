@@ -51,7 +51,7 @@ class Reception_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('*');
+		$this->db->select('visit.*, patients.*');
 		$this->db->where($where);
 		$this->db->order_by('visit_date','desc');
 		$query = $this->db->get('', $per_page, $page);
@@ -82,7 +82,7 @@ class Reception_model extends CI_Model
 	{
 		$this->db->from('staff');
 		$this->db->select('*');
-		$this->db->where('Staff_Number = '.$strath_no);
+		$this->db->where('Staff_Number = \''.$strath_no.'\'');
 		$query = $this->db->get();
 		
 		return $query;
@@ -488,6 +488,7 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
+
 	public function get_service_charges_per_type($patient_type){
 		$table = "service_charge";
 		$where = "visit_type_id = $patient_type and service_id = 1";
@@ -510,6 +511,45 @@ class Reception_model extends CI_Model
 		return $result;
 	}
 
+	
+	public function get_patient_type($visit_type_id, $dependant_id = NULL)
+	{
+		if($visit_type_id == 1)
+		{
+			return 'Patient';
+		}
+		
+		else if(($visit_type_id == 2) && ($dependant_id > 0))
+		{
+			return 'Dependant';
+		}
+		
+		else if(($visit_type_id == 2) && ($dependant_id <= 0))
+		{
+			return 'Staff';
+		}
+		
+		else if(($visit_type_id == 3))
+		{
+			return 'Other';
+		}
+		
+		else if(($visit_type_id == 4))
+		{
+			return 'Insurance';
+		}
+		
+		else if(($visit_type_id == 5))
+		{
+			return 'General';
+		}
+		
+		else
+		{
+			return 'N/A';
+		}
+		
+	}
 
 }
 ?>
