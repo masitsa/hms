@@ -65,7 +65,7 @@
 						<td>'.$visit_time_out.'</td>
 						<td>'.$visit_time_out.'</td>
 						<td>'.$visit_time_out.'</td>
-						<td><a href="'.site_url().'delete-brand/1'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">End Visit</a></td>
+						<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">End Visit</a></td>
 					</tr> 
 				';
 			}

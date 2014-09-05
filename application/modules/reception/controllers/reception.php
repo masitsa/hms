@@ -14,7 +14,14 @@ class Reception extends auth
 	
 	public function patients()
 	{
+		$patient_search = $this->session->userdata('patient_search');
 		$where = 'patient_id > 0';
+		
+		if(!empty($patient_search))
+		{
+			$where .= $patient_search;
+		}
+		
 		$table = 'patients';
 		//pagination
 		$this->load->library('pagination');
@@ -53,17 +60,12 @@ class Reception extends auth
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->reception_model->get_all_patients($table, $where, $config["per_page"], $page);
 		
-		if ($query->num_rows() > 0)
-		{
-			$v_data['query'] = $query;
-			$v_data['page'] = $page;
-			$data['content'] = $this->load->view('all_patients', $v_data, true);
-		}
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['type'] = $this->reception_model->get_types();
+		$data['content'] = $this->load->view('all_patients', $v_data, true);
 		
-		else
-		{
-			$data['content'] = '<a href="'.site_url().'add-patient" class="btn btn-success pull-right">Add Patient</a> There are no patients';
-		}
+		
 		$data['title'] = 'All Patients';
 		$data['sidebar'] = 'reception_sidebar';
 		
@@ -75,7 +77,7 @@ class Reception extends auth
 	{
 		
 		// this is it
-		$where = 'close_card=0';
+		$where = 'close_card = 0';
 		$table = 'visit';
 		//pagination
 		$this->load->library('pagination');
@@ -492,5 +494,68 @@ class Reception extends auth
 		{
 			echo 'Failure';
 		}
+	}
+	
+	public function search_patients()
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		$strath_no = $this->input->post('strath_no');
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
+		}
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND patients.strath_no LIKE \'%'.$strath_no.'%\' ';
+		}
+		
+		//search surname
+		$surnames = explode(" ",$_POST['surname']);
+		$total = count($surnames);
+		
+		$count = 1;
+		$surname = ' AND (';
+		for($r = 0; $r < $total; $r++)
+		{
+			if($count == $total)
+			{
+				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+			}
+			
+			else
+			{
+				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+			}
+			$count++;
+		}
+		$surname .= ') ';
+		
+		//search other_names
+		$other_names = explode(" ",$_POST['othernames']);
+		$total = count($other_names);
+		
+		$count = 1;
+		$other_name = ' AND (';
+		for($r = 0; $r < $total; $r++)
+		{
+			if($count == $total)
+			{
+				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+			}
+			
+			else
+			{
+				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+			}
+			$count++;
+		}
+		$other_name .= ') ';
+		
+		$search = $visit_type_id.$strath_no.$surname.$other_name;
+		$this->session->set_userdata('patient_search', $search);
+		
+		$this->patients();
 	}
 }
