@@ -355,7 +355,7 @@ class Reception extends auth
 
 		$data['content'] = $this->load->view('initiate_visit', $v_data, true);
 		
-		$data['title'] = 'Add Patients';
+		$data['title'] = 'Start Visit';
 		$data['sidebar'] = 'reception_sidebar';
 		$this->load->view('auth/template_sidebar', $data);	
 	}
@@ -365,7 +365,7 @@ class Reception extends auth
 		$v_data['patient'] = $this->reception_model->patient_names2($primary_key);
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
-		$data['content'] = $this->load->view('initiate_lab',$v_data);	
+		$data['content'] = $this->load->view('initiate_lab',$v_data,true);	
 
 		$data['title'] = 'Add Patients';
 		$data['sidebar'] = 'reception_sidebar';
@@ -401,11 +401,8 @@ class Reception extends auth
 			$patient_insurance_number = $this->input->post("insurance_id");
 						$patient_type = $this->input->post("patient_type"); 
 		if($patient_type==4){
-		
 				$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
-				
-					$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
-				//$this->set_visit($patient_id);
+				$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
 			}
 		if ($this->form_validation->run() == FALSE)
 		{
@@ -417,7 +414,8 @@ class Reception extends auth
 
 			$service_charge_id = $this->input->post("service_charge_name");
 		
-			$doc_rs = $this->get_doctor2($doc_name);
+			$doc_rs = $this->reception_model->get_doctor2($doc_name);
+
 			foreach ($doc_rs as $rs1):
 				$doctor_id = $rs1->personnel_id;
 			endforeach;
@@ -436,12 +434,31 @@ class Reception extends auth
 			$close_card=2;		
 				}
 	
-			$this->save_visit_table($patient_id, $visit_date, $doc_name , $timepicker_start,$timepicker_end,$appointment_id, $patient_type, $patient_insurance_id,$patient_insurance_number,$close_card);
-			$visit_id = $this->select_max("visit", "visit_id");
-			///$service_charge_id = $this->get_service_charge_id(1, $visit_type, $service_charge_name);
-			$service_charge = $this->get_service_charge($service_charge_id);
-			$this->save_consultation_charge($visit_id, $service_charge_id, $service_charge);
-			$this->visit_list();
+			$visit_data = array(
+        		"visit_date" => $visit_date,
+        		"patient_id" => $patient_id,
+        		"personnel_id" => $doc_name,
+        		"patient_insurance_id" => $patient_insurance_id,
+				"patient_insurance_number" => $patient_insurance_number,
+        		"visit_type" => $patient_type,
+				"time_start"=>$timepicker_start,
+				"time_end"=>$timepicker_end,
+				"appointment_id"=>$appointment_id,
+				"close_card"=>$close_card,
+    		);
+	
+			$this->db->insert('visit', $visit_data);
+			$visit_id = $this->db->insert_id();
+
+			$service_charge = $this->reception_model->get_service_charge($service_charge_id);
+
+			$visit_charge_data = array(
+        	"visit_id" => $visit_id,
+        	"service_charge_id" => $service_charge_id,
+        	"visit_charge_amount" => $service_charge
+	    	);
+			$this->db->insert('visit_charge', $visit_charge_data);
+			$this->visit_list(0);
 		}
 	}
 	
@@ -563,5 +580,32 @@ class Reception extends auth
 	{
 		$data = array('personnel_id'=>$personnel_id,'date'=>$date);
 		$this->load->view('show_schedule',$data);	
+	}
+
+	function load_charges($patient_type){
+
+		
+		$v_data['service_charge'] = $this->reception_model->get_service_charges_per_type($patient_type);
+		
+		$this->load->view('service_charges_pertype',$v_data);	
+
+		
+	}
+	public function save_initiate_lab($primary_key)
+	{
+	$visit_type_id = $this->input->post("patient_type");
+	$patient_insurance_number = $this->input->post("insurance_id");
+	$patient_insurance_id = $this->input->post("patient_insurance_id");
+		$insert = array(
+        	"close_card" => 0,
+        	"patient_id" => $primary_key,
+        	"visit_type" => $visit_type_id,
+			"patient_insurance_id" => $patient_insurance_id,
+			"patient_insurance_number" => $patient_insurance_number,
+        	"visit_date" => date("y-m-d"),
+        	"lab_visit" => 5
+    	);
+		$this->database->insert_entry('visit', $insert);
+    	$this->visit_list(0);
 	}
 }

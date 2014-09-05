@@ -286,7 +286,33 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
-	
+	public function get_service_charge($id)
+	{
+		$table = "service_charge";
+		$where = "service_charge_id = $id";
+		$items = "service_charge_amount AS number";
+		$order = "service_charge_amount";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		foreach ($result as $rs1):
+			$visit_type2 = $rs1->number;
+		endforeach;
+		return $visit_type2;
+	}
+	public function save_consultation_charge($visit_id, $service_charge_id, $service_charge)
+	{
+		$insert = array(
+        	"visit_id" => $visit_id,
+        	"service_charge_id" => $service_charge_id,
+        	"visit_charge_amount" => $service_charge
+    	);
+		$table = "visit_charge";
+		$this->load->model('database', '',TRUE);
+		$this->database->insert_entry($table, $insert);
+		
+		return TRUE;
+	}
 	public function get_doctor()
 	{
 		$table = "personnel, job_title";
@@ -433,9 +459,9 @@ class Reception_model extends CI_Model
 	
 	public function get_patient_insurance($patient_id)
 	{
-		$table = "patient_insurance, company_insuarance";
-		$where = "patient_insurance.patient_id = $patient_id AND company_insuarance.company_insurance_id = patient_insurance.company_insurance_id";
-		$items = "patient_insurance_id, company_name, insurance_company_name";
+		$table = "company_insuarance";
+		$where = "company_insurance_id > 0";
+		$items = "*";
 		$order = "company_name";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -458,6 +484,27 @@ class Reception_model extends CI_Model
 		$items = "*";
 		$order = "personnel_id";
 			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_service_charges_per_type($patient_type){
+		$table = "service_charge";
+		$where = "visit_type_id = $patient_type and service_id = 1";
+		$items = "*";
+		$order = "visit_type_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_doctor2($doc_name)
+	{
+		$table = "personnel, job_title";
+		$where = "job_title.job_title_id = personnel.job_title_id AND job_title.job_title_id = 2 AND personnel.personnel_onames = '$doc_name'";
+		$items = "personnel.personnel_onames, personnel.personnel_fname, personnel.personnel_id";
+		$order = "personnel_onames";
+		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;

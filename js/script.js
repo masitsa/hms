@@ -2396,11 +2396,11 @@ function get_physiological_history(visit_id){
 
 function insurance_company(patient_type,insured){
 
-var myTarget = document.getElementById("patient_type").value;
+	var myTarget = document.getElementById("patient_type").value;
 
-var myTarget2 = document.getElementById(insured);
-if((myTarget=="Insurance")||(myTarget==4))
-{
+	var myTarget2 = document.getElementById("insured");
+	if((myTarget=="Insurance")||(myTarget==4))
+	{
 	//alert(myTarget );
 	 myTarget2.style.display = 'block';
 	 }
