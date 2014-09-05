@@ -31,8 +31,8 @@
                         <i class="icon-th"></i> Visits
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>/reception/visit_list">Ongoing Visits</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/add-patient">Visit History</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/visit_list/0">Ongoing Visits</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/visit_list/1">Visit History</a></li>
                     </ul>
                 </li>
 
