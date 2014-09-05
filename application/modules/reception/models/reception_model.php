@@ -442,6 +442,27 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
+	public function doctors_schedule($personelle_id,$date){
+		$table = "visit";
+		$where = "personnel_id = '$personelle_id' and visit_date >= '$date' and time_start <> 0 and time_end <> 0";
+		$items = "*";
+		$order = "visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function doctors_names($personelle_id){
+		$table = "personnel";
+		$where = "personnel_id = '$personelle_id'";
+		$items = "*";
+		$order = "personnel_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+
 
 }
 ?>
