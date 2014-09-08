@@ -27,7 +27,7 @@ function retrieve_data(url)
 //Get patients per day for the last 7 days
 $.ajax({
 	type:'POST',
-	url: config_url+"charts/latest_patient_totals",
+	url: config_url+"/charts/latest_patient_totals",
 	cache:false,
 	contentType: false,
 	processData: false,
@@ -53,7 +53,7 @@ $.ajax({
 //Get Revenue for the individual revenue types
 $.ajax({
 	type:'POST',
-	url: config_url+"charts/queue_total",
+	url: config_url+"/charts/queue_total",
 	cache:false,
 	contentType: false,
 	processData: false,
@@ -79,7 +79,7 @@ $.ajax({
 //Get payment methods
 $.ajax({
 	type:'POST',
-	url: config_url+"charts/payment_methods",
+	url: config_url+"/charts/payment_methods",
 	cache:false,
 	contentType: false,
 	processData: false,
@@ -114,7 +114,7 @@ var day = curr.getDate();
 var month = curr.getMonth()+1;
 var year = curr.getFullYear();
 var current_timestamp = get_date(year, month, day);
-var url = config_url+"charts/patient_type_totals/"+current_timestamp;
+var url = config_url+"/charts/patient_type_totals/"+current_timestamp;
 	
 //get data for the last 7 days
 for(r = 0; r < 8; r++)
@@ -136,7 +136,7 @@ for(r = 0; r < 8; r++)
 			other.push([current_timestamp, data.other]);
 			
 			current_timestamp = current_timestamp - 86400000;
-			url = config_url+"charts/patient_type_totals/"+current_timestamp;
+			url = config_url+"/charts/patient_type_totals/"+current_timestamp;
 		},
 		error: function(xhr, status, error) {
 			alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
@@ -252,7 +252,7 @@ $(function () {
 /* Bar Chart starts */
 $.ajax({
 	type:'POST',
-	url: config_url+"charts/service_type_totals",
+	url: config_url+"/charts/service_type_totals",
 	cache:false,
 	contentType: false,
 	processData: false,

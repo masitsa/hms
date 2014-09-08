@@ -1,7 +1,3 @@
-<!-- search -->
-<?php echo $this->load->view('patients/search_patient', '', TRUE);?>
-<!-- end search -->
-
 <div class="row">
     <div class="col-md-12">
 
@@ -9,7 +5,7 @@
       <div class="widget boxed">
         <!-- Widget head -->
         <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i>All Patients</h4>
+          <h4 class="pull-left"><i class="icon-reorder"></i>Queue Summary</h4>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
             <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -20,59 +16,88 @@
         <!-- Widget content -->
         <div class="widget-content">
           <div class="padd">
+          
 <?php
-		$search = $this->session->userdata('patient_search');
-		
-		if(!empty($search))
-		{
-			echo '<a href="'.site_url().'/reception/close_patient_search" class="btn btn-warning">Close Search</a>';
-		}
-		
-		$result = '<a href="'.site_url().'/reception/add-patient" class="btn btn-success pull-right">Add Patient</a>';
+		$result = '';
 		
 		//if users exist display them
 		if ($query->num_rows() > 0)
 		{
 			$count = $page;
 			
-			$result .= 
-			'
-				<table class="table table-hover table-bordered ">
-				  <thead>
-					<tr>
-					  <th>#</th>
-					  <th>Patient Type</th>
-					  <th>Surname</th>
-					  <th>Other Names</th>
-					  <th>Date Created</th>
-					  <th>Last Visit</th>
-					  <th colspan="5">Actions</th>
-					</tr>
-				  </thead>
-				  <tbody>
-			';
+			if($visit == 0)
+			{
+				$result .= 
+				'
+					<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Patient</th>
+						  <th>Visit Type</th>
+						  <th>Time In</th>
+						  <th>Doctor</th>
+						  <th>Actions</th>
+						</tr>
+					  </thead>
+					  <tbody>
+				';
+			}
+			
+			else
+			{
+				$result .= 
+				'
+					<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Visit Date</th>
+						  <th>Patient</th>
+						  <th>Visit Type</th>
+						  <th>Time In</th>
+						  <th>Time Out</th>
+						  <th>Doctor</th>
+						</tr>
+					  </thead>
+					  <tbody>
+				';
+			}
 			
 			$personnel_query = $this->personnel_model->get_all_personnel();
 			
 			foreach ($query->result() as $row)
 			{
+				$visit_date = date('jS M Y',strtotime($row->visit_date));
+				$visit_time = date('H:i a',strtotime($row->visit_time));
+				if($row->visit_time_out != '0000-00-00 00:00:00')
+				{
+					$visit_time_out = date('H:i a',strtotime($row->visit_time_out));
+				}
+				else
+				{
+					$visit_time_out = '-';
+				}
 				$patient_id = $row->patient_id;
+				$personnel_id = $row->personnel_id;
 				$dependant_id = $row->dependant_id;
 				$strath_no = $row->strath_no;
 				$created_by = $row->created_by;
 				$modified_by = $row->modified_by;
 				$visit_type_id = $row->visit_type_id;
+				$visit_type = $row->visit_type;
 				$created = $row->patient_date;
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
 				
 				//staff & dependant
-				if($visit_type_id == 2)
+				if($visit_type == 2)
 				{
 					//dependant
 					if($dependant_id > 0)
 					{
-						$patient_type = 'Dependant';
+						$patient_type = $this->reception_model->get_patient_type($visit_type_id, $dependant_id);
+						$visit_type = 'Dependant';
 						$dependant_query = $this->reception_model->get_dependant($strath_no);
 						
 						if($dependant_query->num_rows() > 0)
@@ -99,8 +124,9 @@
 					//staff
 					else
 					{
-						$patient_type = 'Staff';
+						$patient_type = $this->reception_model->get_patient_type($visit_type_id, $dependant_id);
 						$staff_query = $this->reception_model->get_staff($strath_no);
+						$visit_type = 'Staff';
 						
 						if($staff_query->num_rows() > 0)
 						{
@@ -126,10 +152,11 @@
 				}
 				
 				//student
-				else if($visit_type_id == 1)
+				else if($visit_type == 1)
 				{
 					$student_query = $this->reception_model->get_student($strath_no);
-					$patient_type = 'Student';
+					$patient_type = $this->reception_model->get_patient_type($visit_type_id);
+					$visit_type = 'Student';
 					
 					if($student_query->num_rows() > 0)
 					{
@@ -155,7 +182,20 @@
 				//other patient
 				else
 				{
-					$patient_type = 'Other';
+					$patient_type = $this->reception_model->get_patient_type($visit_type_id);
+					
+					if($visit_type == 3)
+					{
+						$visit_type = 'Other';
+					}
+					else if($visit_type == 4)
+					{
+						$visit_type = 'Insurance';
+					}
+					else
+					{
+						$visit_type = 'General';
+					}
 					
 					$patient_othernames = $row->patient_othernames;
 					$patient_surname = $row->patient_surname;
@@ -183,44 +223,57 @@
 					
 					foreach($personnel_result as $adm)
 					{
-						$personnel_id = $adm->personnel_id;
+						$personnel_id2 = $adm->personnel_id;
 						
-						if($personnel_id == $created_by)
+						if($personnel_id == $personnel_id2)
 						{
-							$created_by = $adm->personnel_fname;
+							$doctor = $adm->personnel_fname;
+							break;
 						}
 						
-						if($personnel_id == $modified_by)
+						else
 						{
-							$modified_by = $adm->personnel_fname;
+							$doctor = '-';
 						}
 					}
 				}
 				
 				else
 				{
-					$created_by = '-';
-					$modified_by = '-';
+					$doctor = '-';
 				}
 				
 				$count++;
-				$result .= 
-				'
-					<tr>
-						<td>'.$count.'</td>
-						<td>'.$patient_type.'</td>
-						<td>'.$patient_surname.'</td>
-						<td>'.$patient_othernames.'</td>
-						<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
-						<td>'.date('jS M Y H:i a',strtotime($last_visit)).'</td>
-						<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
-						<td><a href="'.site_url().'/reception/lab_visit/'.$patient_id.'" class="btn btn-sm btn-info">Lab</a></td>
-						<td><a href="'.site_url().'/reception/initiate_pharmacy/'.$patient_id.'" class="btn btn-sm btn-warning">Pharmacy</a></td>
-						<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
-						<!--<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>-->
-						<td><a href="'.site_url().'delete-brand/'.$patient_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>
-					</tr> 
-				';
+				
+				if($visit == 0)
+				{
+					$result .= 
+					'
+						<tr>
+							<td>'.$count.'</td>
+							<td>'.$patient_surname.' '.$patient_othernames.'</td>
+							<td>'.$visit_type.'</td>
+							<td>'.$visit_time.'</td>
+							<td>'.$doctor.'</td>
+							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">End Visit</a></td>
+						</tr> 
+					';
+				}
+				
+				else
+				{
+					$result .= 
+					'
+						<tr>
+							<td>'.$count.'</td>
+							<td>'.$patient_surname.' '.$patient_othernames.'</td>
+							<td>'.$visit_type.'</td>
+							<td>'.$visit_time.'</td>
+							<td>'.$visit_time_out.'</td>
+							<td>'.$doctor.'</td>
+						</tr> 
+					';
+				}
 			}
 			
 			$result .= 

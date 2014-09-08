@@ -126,7 +126,7 @@ class Reception_model extends CI_Model
 	{
 		$this->db->from('student');
 		$this->db->select('*');
-		$this->db->where('student_Number = '.$strath_no);
+		$this->db->where('student_Number = \''.$strath_no.'\'');
 		$query = $this->db->get();
 		
 		return $query;

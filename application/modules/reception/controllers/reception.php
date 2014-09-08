@@ -12,6 +12,28 @@ class Reception extends auth
 		$this->load->model('database');
 	}
 	
+	public function index()
+	{
+		$this->session->unset_userdata('visit_search');
+		$this->session->unset_userdata('patient_search');
+		
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0';
+		$table = 'visit, patients';
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 10, 0);
+		$v_data['query'] = $query;
+		$v_data['page'] = 0;
+		
+		$v_data['visit'] = 0;
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('reception_dashboard', $v_data, TRUE);
+		
+		$data['title'] = 'Dashboard';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	
 	public function patients()
 	{
 		$patient_search = $this->session->userdata('patient_search');
@@ -124,7 +146,6 @@ class Reception extends auth
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
 		
-		
 		if($visits == 0)
 		{
 			$data['title'] = 'Ongoing Visits';
@@ -215,86 +236,112 @@ class Reception extends auth
 		}
 	}
 	
+	public function get_found_patients($patient_id)
+	{
+		$this->session->set_userdata('patient_search', ' AND patients.patient_id = '.$patient_id);
+		
+		redirect('reception/all-patients');
+	}
+	
 	public function search_staff()
 	{
-		$query = $this->reception_model->get_staff($this->input->post('staff_number'));
-		
-		if (($query->num_rows() > 0) && (!isset($_POST['dependant'])))
+		$staff_number = $this->input->post('staff_number');
+		if(!empty($staff_number))
 		{
-			$query_staff = $this->reception_model->get_patient_staff($this->input->post('staff_number'));
+			$query = $this->reception_model->get_staff($this->input->post('staff_number'));
 			
-			if ($query_staff->num_rows() > 0)
+			//found in our database
+			if (($query->num_rows() > 0) && (!isset($_POST['dependant'])))
 			{
-				$result_patient = $query_staff->row();
-				$patient_id = $result_patient->patient_id;
-
+				$query_staff = $this->reception_model->get_patient_staff($this->input->post('staff_number'));
+				
+				//exists in patients table
+				if ($query_staff->num_rows() > 0)
+				{
+					$result_patient = $query_staff->row();
+					$patient_id = $result_patient->patient_id;
+				}
+				
+				//create patient if not found in patients' table
+				else
+				{
+					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
+					
+				}
+				$this->get_found_patients($patient_id);
 				
 			}
+			
+			else if (!isset($_POST['dependant']))
+			{
+				$patient_id = $this->strathmore_population->get_hr_staff($this->input->post('staff_number'));
+				if($patient_id != FALSE){
+					$this->get_found_patients($patient_id);
+				}else{
+					$this->session->set_userdata("error_message","Could not add patient. Please try again");
+					$this->add_patient();
+				}
+	
+			}
+			
+			//case of a dependant
 			else
 			{
-				$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
-				
+				$this->add_patient($this->input->post('staff_number'));
 			}
-			$this->set_visit($patient_id);
-			
 		}
 		
-		else if (!isset($_POST['dependant']))
-		{
-			$patient_id = $this->strathmore_population->get_hr_staff($this->input->post('staff_number'));
-			if($patient_id != FALSE){
-				$this->set_visit($patient_id);
-			}else{
-				$this->session->set_userdata("error_message","Could not add patient. Please try again");
-				$this->add_patient();
-			}
-
-		}
-		
-		//case of a dependant
 		else
 		{
-			$this->add_patient($this->input->post('staff_number'));
+			redirect('reception/all-patients');
 		}
 	}
 	
 	public function search_student()
-	{	
-		$query = $this->reception_model->get_student($this->input->post('student_number'));
-		
-		if ($query->num_rows() > 0)
+	{
+		$student_number = $this->input->post('student_number');
+		if(!empty($student_number))
 		{
+			$query = $this->reception_model->get_student($this->input->post('student_number'));
 			
-			$query_staff = $this->reception_model->get_patient_staff($this->input->post('student_number'));
-			
-			if ($query_staff->num_rows() > 0)
+			//found in our database
+			if ($query->num_rows() > 0)
 			{
-				$result_patient = $query_staff->row();
-				$patient_id = $result_patient->patient_id;
-
+				//check if they exist in patients
+				$query_staff = $this->reception_model->get_patient_staff($this->input->post('student_number'));
 				
+				if ($query_staff->num_rows() > 0)
+				{
+					$result_patient = $query_staff->row();
+					$patient_id = $result_patient->patient_id;
+				}
+				else
+				{
+					$patient_id = $this->reception_model->insert_into_patients($this->input->post('student_number'),1);	
+				}
+				//$this->set_visit($patient_id);
+				$search = ' AND patients.patient_id = '.$patient_id;
+				$this->session->set_userdata('patient_search', $search);
+				$this->get_found_patients($patient_id);
 			}
+			
 			else
 			{
-				$patient_id = $this->reception_model->insert_into_patients($this->input->post('student_number'),1);	
+				$patient_id = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
+				if($patient_id != FALSE){
+					// $this->set_visit($patient_id);
+					$this->get_found_patients($patient_id);
+				}else{
+					$this->session->set_userdata("error_message","Could not add patient. Please try again");
+					$this->add_patient();
+				}
+	
 			}
-			//$this->set_visit($patient_id);
-			$search = ' AND patient.patient_id = '.$patient_id;
-			$this->session->set_userdata('patient_search', $search);
-			$this->patients($patient_id);
 		}
 		
 		else
 		{
-			$patient_id = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
-			if($patient_id != FALSE){
-				// $this->set_visit($patient_id);
-				$this->get_found_patients($patient_id);
-			}else{
-				$this->session->set_userdata("error_message","Could not add patient. Please try again");
-				$this->add_patient();
-			}
-
+			redirect('reception/all-patients');
 		}
 	}
 	/*

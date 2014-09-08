@@ -36,7 +36,7 @@
             <li><a href="<?php echo site_url();?>/administration/personnel"><i class="icon-user"></i> Profile</a></li>
             <li><a href="<?php echo site_url();?>/welcome/control_panel/75"><i class="icon-cogs"></i> Control Panel</a></li>
             <li class="divider"></li>
-            <li><a href="<?php echo site_url();?>/welcome/logout"><i class="icon-off"></i> Logout</a></li>
+            <li><a href="<?php echo site_url();?>/auth/login/logout_user"><i class="icon-off"></i> Logout</a></li>
         </ul>
     </li>
 </ul>
