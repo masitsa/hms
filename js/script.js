@@ -3,48 +3,7 @@
 //var host = "http://sagana/hms/";
 var host = 'http://localhost/sumc/';
 
-function vitals_interface(visit_id){
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = host+"data/nurse/vitals_interface.php?visit_id="+visit_id;
-			
-	if(XMLHttpRequestObject) {
-		
-		var obj = document.getElementById("vitals");
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				obj.innerHTML = XMLHttpRequestObject.responseText;
-				
-				var count;
-				for(count = 1; count < 12; count++){
-					load_vitals(count, visit_id);
-				}
-				previous_vitals(visit_id);
-				get_family_history(visit_id);
-				display_procedure(visit_id);
-				get_medication(visit_id);
-				get_surgeries(visit_id);
-				get_vaccines(visit_id);
-				nurse_notes(visit_id);
-				patient_details(visit_id);
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
+
 function checkup_interface(visit_id){
 	
 	var XMLHttpRequestObject = false;
@@ -89,79 +48,8 @@ function checkup_interface1(visit_id){
 			plan1(visit_id);							
 
 }
-function save_vital(visit_id, vital_id){//window.alert("here");
-	
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var vital = document.getElementById("vital"+vital_id).value;
-	var url = host+"data/nurse/save_vitals.php?vital="+vital+"&vital_id="+vital_id+"&visit_id="+visit_id;//window.alert(url);
 
-	if(XMLHttpRequestObject) {
-		
-		var obj = document.getElementById("display"+vital_id);
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 
-				load_vitals(vital_id, visit_id);
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
-
-function load_vitals(vitals_id, visit_id){
-	
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var url = host+"data/nurse/load_vitals.php?vitals_id="+vitals_id+"&visit_id="+visit_id;//window.alert(url);
-
-	if(XMLHttpRequestObject) {
-		
-		var obj = document.getElementById("display"+vitals_id);
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-				obj.innerHTML = XMLHttpRequestObject.responseText;
-				
-				if((vitals_id == 8) || (vitals_id == 9)){
-					calculate_bmi(vitals_id, visit_id);
-				}
-				
-				if((vitals_id == 3) || (vitals_id == 4)){
-					calculate_hwr(vitals_id, visit_id);
-				}
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 
 function calculate_bmi(vitals_id, visit_id){
 	
