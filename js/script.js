@@ -249,39 +249,9 @@ function delete_condition(cond, family, patient_id){
 }
 
 	
-function display_procedure(visit_id){
 
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = host+"data/nurse/view_procedure.php?visit_id="+visit_id;
-	
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 
-				document.getElementById("procedures").innerHTML=XMLHttpRequestObject.responseText;
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 
-function myPopup3(visit_id) {
-	window.open( host+"data/nurse/procedures.php?visit_id="+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
-}
 
 function procedures(id, v_id, suck){
 	/*alert(id);
