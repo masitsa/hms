@@ -82,11 +82,10 @@ class Nurse extends auth
 		// end of it
 	}
 	
-	public function patient_card()
+	public function patient_card($visit_id)
 	{
-		$visit_id=1;
 		$v_data['visit_id'] = $visit_id;
-		$v_data['patient'] = $this->reception_model->patient_names2($visit_id);
+		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
