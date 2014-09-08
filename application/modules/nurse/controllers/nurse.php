@@ -10,5 +10,17 @@ class Nurse extends auth
 		$this->load->model('nurse_model');
 		$this->load->model('database');
 	}
+	
+	public function index()
+	{
+	}
+	
+	public function nurse_queue()
+	{
+	}
+	
+	public function patient_card($visit_id)
+	{
+	}
 }
 ?>
