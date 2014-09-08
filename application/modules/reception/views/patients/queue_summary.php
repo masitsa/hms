@@ -2,7 +2,7 @@
     <div class="col-md-12">
 
       <!-- Widget -->
-      <div class="widget boxed">
+      <div class="widget">
         <!-- Widget head -->
         <div class="widget-head">
           <h4 class="pull-left"><i class="icon-reorder"></i>Queue Summary</h4>

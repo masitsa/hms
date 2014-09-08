@@ -47,7 +47,7 @@ class Reception extends auth
 		$table = 'patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = base_url().'reception/all-patients';
+		$config['base_url'] = site_url().'/reception/all-patients';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 3;
 		$config['per_page'] = 20;
@@ -109,7 +109,7 @@ class Reception extends auth
 		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = base_url().'reception/visit_list/'.$visits;
+		$config['base_url'] = site_url().'/reception/visit_list/'.$visits;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 4;
 		$config['per_page'] = 20;
