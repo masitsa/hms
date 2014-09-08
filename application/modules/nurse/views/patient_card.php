@@ -50,11 +50,11 @@
                 <li><a href="#medical-checkup" data-toggle="tab">Medical Checkup</a></li>
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
-                <div class="tab-pane" id="vitals-pane">
+                <div class="tab-pane active" id="vitals-pane">
                   <?php echo $this->load->view("patients/vitals", '', TRUE);?>
                 </div>
                 
-                <div class="tab-pane active" id="dental-vitals">
+                <div class="tab-pane" id="dental-vitals">
                   <?php echo $this->load->view("patients/dental_vitals", '', TRUE);?>
                  
                 </div>

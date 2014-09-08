@@ -542,6 +542,7 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}
+	
 	public function get_doctor2($doc_name)
 	{
 		$table = "personnel, job_title";
@@ -552,6 +553,17 @@ class Reception_model extends CI_Model
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
+	}
+	
+	public function get_patient_id_from_visit($visit_id)
+	{
+		$this->db->where("visit_id = ".$visit_id);
+		$this->db->select("patient_id");
+		$query = $this->db->get('visit');
+		
+		$row = $query->row();
+		
+		return $row->patient_id;
 	}
 
 	

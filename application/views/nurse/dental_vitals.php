@@ -72,32 +72,12 @@ $save= new Database;
 }
 }
 $prior_treatment="";
-	$alcohol="";
-	$smoke="";
+$alcohol="";
+$smoke="";
 if (isset($_POST['submit'])){
 
 
-	$visit_major_reason= $_POST['reason'];
-	//$treatment= $_POST['treatment'];
-	$treatment_hospital= $_POST['hospital'];
-	$treatment_doctor=$_POST['doctor'];
-	$Food_allergies=$_POST['food_allergies'];
-	$Regular_treatment=$_POST['regular_treatment'];
-	$Recent_medication=$_POST['medication_description'];
-	$Medicine_allergies=$_POST['medicine_allergies'];
-	
-	$prior_treatment=$_POST['prior_treatment'];
-	$alcohol=$_POST['alcohol'];
-	$smoke=$_POST['smoke'];
-
-$women_pregnant=$_POST['preg'];
-$pregnancy_month=$_POST['months'];
-$serious_illness=$_POST['illness'];
-$serious_illness_xplain=$_POST['illness_exp'];
-$additional_infor=$_POST['additional'];
-
-$save= new dental_vitals;
-$save->save_dental_vital($visit_id,$visit_major_reason,$serious_illness,$serious_illness_xplain,$treatment,$treatment_hospital,$treatment_doctor,$Food_allergies,$Regular_treatment,$Recent_medication,$Medicine_allergies,$chest_trouble,$heart_problems,$diabetic,$epileptic,$rheumatic_fever,$elongated_bleeding,$jaundice,$hepatitis,$asthma,$eczema,$cancer,$women_pregnant,$pregnancy_month,$additional_infor,$smoke,$alcohol,$prior_treatment);	
+		
 	}
 	if (isset($_POST['submit1'])){
 
@@ -297,7 +277,7 @@ $("#new-nav1").load("http://sagana/hms/data/nurse/nurse_data.php?visit_id=<?php 
 	   </style>    <?php if($num_rows==0){ ?>
            <form action="<?php echo site_url('doctor/dental/'.$visit_id)?>" method="post">
            	<div class="navbar-inner"><p style="text-align:center; color:#0e0efe;">Chief Complaint</p></div> 
-           <textarea name="reason" id="reason" rows="7" placeholder="Reason for Visit" style="width: 560px; height: 170px;" required="required"  ></textarea>
+           <textarea name="reason" id="reason" rows="7" placeholder="Reason for Visit" style="width: 560px; height: 170px;" required  ></textarea>
                 	<div class="navbar-inner"><p style="text-align:center; color:#0e0efe;">Serious Illness or operation</p></div> 
           
             <textarea name="hospital" id="hospital" rows="7" placeholder="Complain" style="width: 341px; height: 129px;" align="center" ></textarea>
@@ -367,7 +347,7 @@ How far Along (Months)
 		else {?>
                <form action="<?php echo site_url('doctor/dental/'.$visit_id)?>" method="post">
                      	<div class="navbar-inner"><p style="text-align:center; color:#0e0efe;">Chief Complaint</p></div> 
-           <textarea name="reason" id="reason" rows="7" placeholder="Reason for Visit" style="width: 560px; height: 170px;" required="required"  ><?php echo $visit_major_reason;?></textarea>
+           <textarea name="reason" id="reason" rows="7" placeholder="Reason for Visit" style="width: 560px; height: 170px;" required  ><?php echo $visit_major_reason;?></textarea>
                 	<div class="navbar-inner"><p style="text-align:center; color:#0e0efe;">Serious Illness or operation</p></div> 
             
             <textarea name="hospital" id="hospital" rows="7" placeholder="Complain" style="width: 341px; height: 129px;" align="center" ><?php echo $treatment_hospital?></textarea>

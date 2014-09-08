@@ -129,7 +129,79 @@ class Nurse extends auth
 			$visit_data = array('vital_id'=>$vital_id,'visit_vitals_time'=>'$time','visit_id'=>$visit_id,'visit_vital_value'=>$vital);
 			$this->db->insert('visit_vital', $visit_data);
 		}
+	}
+	
+	public function save_dental_vitals($visit_id)
+	{
+		$save = $this->nurse_model->save_dental_vitals($visit_id);
 		
+		if($save != FALSE)
+		{
+			$this->session->set_userdata('success_message', 'Dental vitals saved successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Error saving dental vitals. Please try again');
+		}
+		
+		$this->patient_card($visit_id);
+	}
+	
+	public function end_dental_vitals($visit_id)
+	{
+		$save = $this->nurse_model->save_dental_vitals($visit_id);	
+		
+		if($save != FALSE)
+		{
+			$update = $this->nurse_model->update_dental_visit($visit_id);
+			
+			if($update)
+			{
+				$this->session->set_userdata('success_message', 'Dental vitals saved successfully');
+				
+				redirect('nurse/nurse_queue');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Error updating visit. Please try again');
+				$this->patient_card($visit_id);
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Error saving dental vitals. Please try again');
+			$this->patient_card($visit_id);
+		}
+	}
+	
+	public function update_dental_vitals($visit_id, $dental_vitals_id)
+	{	
+		$update = $this->nurse_model->update_dental_vitals($dental_vitals_id);
+		
+		if($update != FALSE)
+		{
+			$this->session->set_userdata('success_message', 'Dental vitals updated successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Error updating dental vitals. Please try again');
+		}
+		
+		$this->patient_card($visit_id);
+	}
+	
+	public function get_family_history($visit_id)
+	{
+		$v_data['patient_id'] = $this->reception_model->get_patient_id_from_visit($visit_id);
+		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
+		$v_data['family_disease_query'] = $this->nurse_model->get_family_disease();
+		$v_data['family_query'] = $this->nurse_model->get_family();
+		
+		echo $this->load->view('patients/family_history', $v_data, TRUE);
 	}
 }
 ?>
