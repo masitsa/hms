@@ -1,77 +1,66 @@
 <?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
+
 <div class="row">
 	<div class="col-md-6">
-      <p style="margin-bottom:1em;">Vitals</p>
-      <!-- vitals from java script -->
-        <div id="vitals"></div>
-        <!-- end of vitals data -->
-	</div>
-    
+        <div class="row">
+            <div class="col-md-12">
+
+              <!-- Widget -->
+              <div class="widget boxed">
+                    <!-- Widget head -->
+                    <div class="widget-head">
+                      <h4 class="pull-left"><i class="icon-reorder"></i>Vitals</h4>
+                      <div class="widget-icons pull-right">
+                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>             
+
+                <!-- Widget content -->
+                    <div class="widget-content">
+                        <div class="padd">
+                              <!-- vitals from java script -->
+                                <div id="vitals"></div>
+                                <!-- end of vitals data -->
+                        </div>
+
+                     </div>
+                
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="col-md-6">
-        <p style="margin-bottom:1em;">Procedures</p>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Post Code: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_postalcode" placeholder="Post Code">
+       <div class="row">
+        <div class="col-md-12">
+
+          <!-- Widget -->
+          <div class="widget boxed">
+                <!-- Widget head -->
+                <div class="widget-head">
+                  <h4 class="pull-left"><i class="icon-reorder"></i>Procedures</h4>
+                  <div class="widget-icons pull-right">
+                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>             
+
+            <!-- Widget content -->
+                <div class="widget-content">
+                    <div class="padd">
+                            <!-- visit Procedures from java script -->
+                                <div id="procedures"></div>
+                             <!-- end of visit procedures -->
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Town: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_town" placeholder="Town">
-            </div>
         </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Primary Phone: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_phone1" placeholder="Primary Phone">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Other Phone: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_phone2" placeholder="Other Phone">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Next of Kin Surname: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_kin_sname" placeholder="Kin Surname">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Next of Kin Other Names: </label>
-            
-            <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_kin_othernames" placeholder="Kin Other Names">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-lg-4 control-label">Relationship To Kin: </label>
-            
-            <div class="col-lg-8">
-            	
-            </div>
-        </div>
-        
     </div>
 </div>
 
-<div class="center-align">
-	<button class="btn btn-info btn-lg" type="submit">Add Patient</button>
-</div>
 <?php echo form_close();?>
 
 <script text="javascript">
@@ -81,7 +70,7 @@ $(document).ready(function(){
 });
 
  function vitals_interface(visit_id){
-    window.alert
+   
     var XMLHttpRequestObject = false;
         
     if (window.XMLHttpRequest) {
@@ -110,11 +99,11 @@ $(document).ready(function(){
                 
                 var count;
                 for(count = 1; count < 12; count++){
-                    //load_vitals(count, visit_id);
+                    load_vitals(count, visit_id);
                 }
-                // previous_vitals(visit_id);
+                 previous_vitals(visit_id);
                 // get_family_history(visit_id);
-                // display_procedure(visit_id);
+                 display_procedure(visit_id);
                 // get_medication(visit_id);
                 // get_surgeries(visit_id);
                 // get_vaccines(visit_id);
@@ -169,6 +158,38 @@ function load_vitals(vitals_id, visit_id){
     }
 }
 
+function previous_vitals(visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var config_url = $('#config_url').val();
+    var url = config_url+"/nurse/previous_vitals/"+visit_id;//window.alert(url);
+
+    if(XMLHttpRequestObject) {
+        
+        var obj = document.getElementById("previous_vitals");
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                obj.innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
 function getXMLHTTP() {
      //fuction to return the xml http object
         var xmlhttp=false;  
@@ -203,9 +224,9 @@ function getXMLHTTP() {
         else if (window.ActiveXObject) {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
-        var config_url = $('#config_url').val();
+       
         var vital = document.getElementById("vital"+vital_id).value;
-        
+        var config_url = $('#config_url').val();
         var url = config_url+"/nurse/save_vitals/"+vital+"/"+vital_id+"/"+visit_id;
     
 
@@ -226,5 +247,108 @@ function getXMLHTTP() {
             XMLHttpRequestObject.send(null);
         }
     }
+
+    function calculate_bmi(vitals_id, visit_id){
+    
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var config_url = $('#config_url').val();
+        var url = config_url+"/nurse/calculate_bmi/"+vitals_id+"/"+visit_id;//window.alert(url);
+
+        if(XMLHttpRequestObject) {
+            
+            var obj = document.getElementById("bmi_out");
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                    obj.innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+                    
+            XMLHttpRequestObject.send(null);
+        }
+    }
+
+function calculate_hwr(vitals_id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var config_url = $('#config_url').val();
+    var url = config_url+"/nurse/calculate_hwr/"+vitals_id+"/"+visit_id;//window.alert(url);
+
+    if(XMLHttpRequestObject) {
+        
+        var obj = document.getElementById("hwr_out");
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                obj.innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function display_procedure(visit_id){
+
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var config_url = $('#config_url').val();
+    var url = config_url+"/nurse/view_procedure/"+visit_id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                document.getElementById("procedures").innerHTML=XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function myPopup3(visit_id) {
+    var config_url = $('#config_url').val();
+    window.open( config_url+"/nurse/procedures/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
+}
 
 </script>

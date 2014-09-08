@@ -121,7 +121,7 @@ class Nurse extends auth
 			// do an update to the data there
 			$time = date('h:i:s');
 			$visit_data = array('vital_id'=>$vital_id,'visit_vitals_time'=>'$time','visit_id'=>$visit_id,'visit_vital_value'=>$vital);
-			$this->db->where("visit_id",$visit_id);
+			$this->db->where(array("visit_id"=>$visit_id,"vital_id"=>$vital_id));
 			$this->db->update('visit_vital', $visit_data);
 		}else{
 			// do an insert
@@ -131,5 +131,28 @@ class Nurse extends auth
 		}
 		
 	}
+	function previous_vitals($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('show_previous_vitals',$data);	
+	}
+
+	function calculate_bmi($vitals_id,$visit_id){
+		$data = array('vitals_id'=>$vitals_id,'visit_id'=>$visit_id);
+		$this->load->view('calculate_bmi',$data);
+	}
+	function calculate_hwr($vitals_id,$visit_id){
+		$data = array('vitals_id'=>$vitals_id,'visit_id'=>$visit_id);
+		$this->load->view('calculate_hwr',$data);
+	}
+	function view_procedure($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('view_procedure',$data);
+	}
+
+	function procedures($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('procedures_list',$data);	
+	}
+	
 }
 ?>
