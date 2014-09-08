@@ -82,9 +82,8 @@ class Nurse extends auth
 		// end of it
 	}
 	
-	public function patient_card()
+	public function patient_card($visit_id)
 	{
-		$visit_id=1;
 		$v_data['visit_id'] = $visit_id;
 		$v_data['patient'] = $this->reception_model->patient_names2($visit_id);
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
@@ -107,14 +106,14 @@ class Nurse extends auth
 
 	public function load_vitals($vital_id,$visit_id)
 	{
-		$data = array('vitals_id'=>$vitals_id,'visit_id'=>$visit_id);
+		$data = array('vitals_id'=>$vital_id,'visit_id'=>$visit_id);
 		$this->load->view('show_loaded_vitals',$data);	
 	}
 
 	public function save_vitals($vital,$vital_id,$visit_id)
 	{
 		//  check if the data exists in the table
-		$table = "visit_vitals";
+		$table = "visit_vital";
 		$where ="visit_id = $visit_id and vital_id = $vital_id";
 		$total_rows = $this->reception_model->count_items($table, $where);
 		

@@ -192,7 +192,6 @@ function getXMLHTTP() {
         return xmlhttp;
     }
     function save_vital(visit_id, vital_id){
-        window.alert(visit_id+"here"+vital_id);
         
         var XMLHttpRequestObject = false;
             
@@ -208,7 +207,7 @@ function getXMLHTTP() {
         var vital = document.getElementById("vital"+vital_id).value;
         
         var url = config_url+"/nurse/save_vitals/"+vital+"/"+vital_id+"/"+visit_id;
-        window.alert(url);
+    
 
         if(XMLHttpRequestObject) {
             
