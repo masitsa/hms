@@ -12,7 +12,7 @@
       <!-- Widget content -->
       <div class="padd">
           <!-- Below line produces calendar. I am using FullCalendar plugin. -->
-          <div id="appointmentss"></div>
+          <div id="appointments"></div>
       </div>
   </div>
 </div>

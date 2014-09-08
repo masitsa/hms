@@ -347,3 +347,35 @@ $.ajax({
 	}
 });
 /* Bar chart ends */
+
+$(document).ready(function() {
+  $.ajax({
+	type:'POST',
+	url: config_url+"/calender/get_appointments",
+	cache:false,
+	contentType: false,
+	processData: false,
+	dataType: "json",
+	success:function(data){
+		
+		var appointments = [];
+
+		for(var i in data)
+			appointments.push([i, data [i]]);
+		
+		$('#appointments').fullCalendar({
+			  header: {
+				left: 'prev',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay,next'
+			  },
+			  editable: true,
+			  events: appointments
+			});
+	},
+	error: function(xhr, status, error) {
+		alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+	}
+});
+
+});
