@@ -8,12 +8,13 @@ class Nurse extends auth
 	{
 		parent:: __construct();
 		$this->load->model('nurse_model');
-		$this->load->model('reception_model');
+		$this->load->model('reception/reception_model');
 		$this->load->model('database');
 	}
 	
 	public function index()
 	{
+		echo "no patient id";
 	}
 	
 	public function nurse_queue()
@@ -80,7 +81,17 @@ class Nurse extends auth
 		// end of it
 	}
 	
-	public function patient_card($visit_id)
+	public function patient_card($visit_id=1)
+	{
+		$v_data['visit_id'] = $visit_id;
+		$data['content'] = $this->load->view('patient_card', $v_data, true);
+		
+		$data['title'] = 'Patient Card';
+		$data['sidebar'] = 'nurse_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	
+	public function close_queue_search()
 	{
 	}
 }

@@ -1,14 +1,58 @@
 <?php 
-	$staff_query = $this->reception_model->get_staff($dependant_staff);
-	
-	if($staff_query->num_rows() > 0)
+	//for the add patient page
+	if(isset($dependant_staff))
 	{
-		$staff_result = $staff_query->row();
+		$staff_query = $this->reception_model->get_staff($dependant_staff);
 		
-		$patient_surname = $staff_result->Surname;
-		$patient_othernames = $staff_result->Other_names;
+		if($staff_query->num_rows() > 0)
+		{
+			$staff_result = $staff_query->row();
+			
+			$patient_surname = $staff_result->Surname;
+			$patient_othernames = $staff_result->Other_names;
+		}
+		echo form_open("reception/register-dependant-patient/".$dependant_staff, array("class" => "form-horizontal"));
 	}
-	echo form_open("reception/register-dependant-patient/".$dependant_staff, array("class" => "form-horizontal"));
+	
+	//for the add depandant page
+	else
+	{
+		//check if patient is staff
+		$patient_query = $this->reception_model->get_patient_data($patient_id);
+		$patient_row = $patient_query->row();
+		
+		$visit_type_id = $patient_row->visit_type_id;
+		
+		//if patient is not staff
+		if($visit_type_id != 2)
+		{
+			$patient_surname = $patient_row->Surname;
+			$patient_othernames = $patient_row->Other_names;
+			$staff_no = 0;
+		}
+		
+		//if patient is staff
+		else
+		{
+			$staff_no = $patient_row->visit_type_id;
+			$staff_query = $this->reception_model->get_staff($staff_no);
+			
+			if($staff_query->num_rows() > 0)
+			{
+				$staff_result = $staff_query->row();
+				
+				$patient_surname = $staff_result->Surname;
+				$patient_othernames = $staff_result->Other_names;
+			}
+			
+			else
+			{
+				$patient_surname = '<span class="label label-important">Staff not found</span>';
+				$patient_othernames = '';
+			}
+		}
+		echo form_open("reception/register_dependant/".$patient_id.'/'.$visit_type_id.'/'.$staff_no, array("class" => "form-horizontal"));
+	}
 ?>
 <div style="margin-bottom:20px;">
 	<h3 class="center-align">Add Depandant for <?php echo $patient_surname;?> <?php echo $patient_othernames;?></h3>

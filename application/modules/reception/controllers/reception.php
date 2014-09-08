@@ -225,7 +225,7 @@ class Reception extends auth
 			
 			if($patient_id != FALSE)
 			{
-				$this->set_visit($patient_id);
+				$this->get_found_patients($patient_id);
 			}
 			
 			else
@@ -394,36 +394,28 @@ class Reception extends auth
 	
 	public function save_visit($patient_id)
 	{
-		$this->load->library('form_validation');
-		
 		$this->form_validation->set_rules('visit_date', 'Visit Date', 'required');
-		
-		$this->form_validation->set_rules('doctor', 'Doctor', 'required');
-		
-		$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required');
+		$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+		$this->form_validation->set_rules('patient_type', 'Patient Type', 'required|is_natural_no_zero');
+		$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
 		
 		$patient_insurance_id = $this->input->post("patient_insurance_id");
-			$patient_insurance_number = $this->input->post("insurance_id");
-						$patient_type = $this->input->post("patient_type"); 
+		$patient_insurance_number = $this->input->post("insurance_id");
+		$patient_type = $this->input->post("patient_type"); 
 		if($patient_type==4){
-				$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
-				$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
-			}
+			$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
+			$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
+		}
+		
 		if ($this->form_validation->run() == FALSE)
 		{
 			$this->set_visit($patient_id);
 		}
 		else
 		{
-			$doc_name = $this->input->post("doctor");
-
 			$service_charge_id = $this->input->post("service_charge_name");
-		
-			$doc_rs = $this->reception_model->get_doctor2($doc_name);
 
-			foreach ($doc_rs as $rs1):
-				$doctor_id = $rs1->personnel_id;
-			endforeach;
+			$doctor_id = $this->input->post('personnel_id');
 			//$visit_type = $this->get_visit_type($type_name);
 			$visit_date = $this->input->post("visit_date");
 			$timepicker_start = $this->input->post("timepicker_start");
@@ -432,17 +424,18 @@ class Reception extends auth
 			$appointment_id;
 			$close_card;	
 			if(($timepicker_end=="")||($timepicker_start=="")){
-			$appointment_id=0;	
-			$close_card=0;
-			}else{
-			$appointment_id=1;
-			$close_card=2;		
-				}
+				$appointment_id=0;	
+				$close_card=0;
+			}
+			else{
+				$appointment_id=1;
+				$close_card=2;		
+			}
 	
 			$visit_data = array(
         		"visit_date" => $visit_date,
         		"patient_id" => $patient_id,
-        		"personnel_id" => $doc_name,
+        		"personnel_id" => $doctor_id,
         		"patient_insurance_id" => $patient_insurance_id,
 				"patient_insurance_number" => $patient_insurance_number,
         		"visit_type" => $patient_type,
@@ -458,9 +451,9 @@ class Reception extends auth
 			$service_charge = $this->reception_model->get_service_charge($service_charge_id);
 
 			$visit_charge_data = array(
-        	"visit_id" => $visit_id,
-        	"service_charge_id" => $service_charge_id,
-        	"visit_charge_amount" => $service_charge
+				"visit_id" => $visit_id,
+				"service_charge_id" => $service_charge_id,
+				"visit_charge_amount" => $service_charge
 	    	);
 			$this->db->insert('visit_charge', $visit_charge_data);
 			$this->visit_list(0);
@@ -752,5 +745,67 @@ class Reception extends auth
 		$this->session->unset_userdata('patient_search');
 		
 		$this->patients();
+	}
+	
+	public function dependants($patient_id)
+	{
+		$v_data['dependants_query'] = $this->reception_model->get_all_patient_dependant($patient_id);
+		$v_data['patient_id'] = $patient_id;
+		$v_data['relationships'] = $this->reception_model->get_relationship();
+		$v_data['religions'] = $this->reception_model->get_religion();
+		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
+		$v_data['titles'] = $this->reception_model->get_title();
+		$v_data['genders'] = $this->reception_model->get_gender();
+
+		$data['content'] = $this->load->view('dependants', $v_data, true);
+		
+		$data['title'] = 'Dependants';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	
+	public function register_dependant($patient_id, $visit_type_id, $staff_no)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
+		$this->form_validation->set_rules('patient_surname', 'Surname', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_othernames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_dob', 'Date of Birth', 'trim|xss_clean');
+		$this->form_validation->set_rules('gender_id', 'Gender', 'trim|xss_clean');
+		$this->form_validation->set_rules('religion_id', 'Religion', 'trim|xss_clean');
+		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->dependants($patient_id);
+		}
+		
+		else
+		{
+			//add staff dependant
+			if($visit_type_id == 2)
+			{
+				$patient_id = $this->reception_model->save_dependant_patient($staff_no);
+			}
+			
+			else
+			{
+				$patient_id = $this->reception_model->save_other_dependant_patient($patient_id);
+			}
+			
+			if($patient_id != FALSE)
+			{
+				//initiate visit for the patient
+				$this->session->set_userdata('success_message', 'Patient added successfully');
+				$this->get_found_patients($patient_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not create patient. Please try again');
+				$this->dependants($patient_id);
+			}
+		}
 	}
 }

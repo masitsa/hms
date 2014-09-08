@@ -21,6 +21,21 @@
         <div class="widget-content">
           <div class="padd">
 <?php
+		$error = $this->session->userdata('error_message');
+		$success = $this->session->userdata('success_message');
+		
+		if(!empty($error))
+		{
+			echo '<div class="alert alert-danger">'.$error.'</div>';
+			$this->session->unset_userdata('error_message');
+		}
+		
+		if(!empty($success))
+		{
+			echo '<div class="alert alert-success">'.$success.'</div>';
+			$this->session->unset_userdata('success_message');
+		}
+				
 		$search = $this->session->userdata('patient_search');
 		
 		if(!empty($search))
@@ -216,7 +231,7 @@
 						<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
 						<td><a href="'.site_url().'/reception/lab_visit/'.$patient_id.'" class="btn btn-sm btn-info">Lab</a></td>
 						<td><a href="'.site_url().'/reception/initiate_pharmacy/'.$patient_id.'" class="btn btn-sm btn-warning">Pharmacy</a></td>
-						<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
+						<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
 						<!--<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>-->
 						<td><a href="'.site_url().'delete-brand/'.$patient_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>
 					</tr> 

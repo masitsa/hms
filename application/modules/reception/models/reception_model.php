@@ -53,7 +53,7 @@ class Reception_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('visit.*, patients.*');
 		$this->db->where($where);
-		$this->db->order_by('visit_date','desc');
+		$this->db->order_by('visit_time','desc');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -67,7 +67,7 @@ class Reception_model extends CI_Model
 	{
 		$this->db->from('staff_dependants');
 		$this->db->select('*');
-		$this->db->where('staff_dependants_id = '.$strath_no);
+		$this->db->where('staff_dependants_id = \''.$strath_no.'\'');
 		$query = $this->db->get();
 		
 		return $query;
@@ -97,7 +97,7 @@ class Reception_model extends CI_Model
 	{
 		$this->db->from('patients');
 		$this->db->select('*');
-		$this->db->where('strath_no = '.$strath_no);
+		$this->db->where('strath_no = \''.$strath_no.'\'');
 		$query = $this->db->get();
 		
 		return $query;
@@ -249,20 +249,52 @@ class Reception_model extends CI_Model
 			'DOB'=>$this->input->post('patient_dob'),
 			'gender_id'=>$this->input->post('gender_id'),
 			'religion_id'=>$this->input->post('religion_id'),
-			'relationship_id'=>$this->input->post('relationship_id'),
 			'staff_id'=>$dependant_staff,
 			'civil_status_id'=>$this->input->post('civil_status_id')
 		);
 		$this->db->insert('staff_dependants', $data);
 		
-		$data = array(
+		$data2 = array(
 			'strath_no'=>$this->db->insert_id(),
 			'dependant_id'=>$dependant_staff,
 			'visit_type_id'=>2,
+			'relationship_id'=>$this->input->post('relationship_id'),
 			'patient_date'=>date('Y-m-d H:i:s'),
 			'patient_number'=>$this->strathmore_population->create_patient_number(),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id')
+		);
+		
+		if($this->db->insert('patients', $data2))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Save dependant patient
+	*
+	*/
+	public function save_other_dependant_patient($patient_id)
+	{
+		$data = array(
+			'visit_type_id'=>3,
+			'patient_surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
+			'patient_othernames'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+			'title_id'=>$this->input->post('title_id'),
+			'patient_date_of_birth'=>$this->input->post('patient_dob'),
+			'gender_id'=>$this->input->post('gender_id'),
+			'religion_id'=>$this->input->post('religion_id'),
+			'civil_status_id'=>$this->input->post('civil_status_id'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'patient_date'=>date('Y-m-d H:i:s'),
+			'patient_number'=>$this->strathmore_population->create_patient_number(),
+			'created_by'=>$this->session->userdata('personnel_id'),
+			'modified_by'=>$this->session->userdata('personnel_id'),
+			'dependant_id'=>$patient_id
 		);
 		
 		if($this->db->insert('patients', $data))
@@ -329,7 +361,7 @@ class Reception_model extends CI_Model
 	{
 		$table = "visit_type";
 		$where = "visit_type_id > 0";
-		$items = "visit_type_name,visit_type_id";
+		$items = "visit_type_name, visit_type_id";
 		$order = "visit_type_name";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -550,6 +582,50 @@ class Reception_model extends CI_Model
 		}
 		
 	}
-
+	
+	/*
+	*	Retrieve a single patient's details
+	*	@param int $patient_id
+	*
+	*/
+	public function get_patient_data($patient_id)
+	{
+		$this->db->from('patients');
+		$this->db->select('*');
+		$this->db->where('patient_id = '.$patient_id);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve all staff dependants
+	*	@param int $strath_no
+	*
+	*/
+	public function get_all_staff_dependant($strath_no)
+	{
+		$this->db->from('staff_dependants');
+		$this->db->select('*');
+		$this->db->where('staff_dependants_id = \''.$strath_no.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve all patient dependants
+	*	@param int $strath_no
+	*
+	*/
+	public function get_all_patient_dependant($patient_id)
+	{
+		$this->db->from('patients');
+		$this->db->select('*');
+		$this->db->where('dependant_id = \''.$patient_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
 }
 ?>

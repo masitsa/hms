@@ -16,16 +16,24 @@
         <!-- Widget content -->
         <div class="widget-content">
           <div class="padd">
-				<?php echo validation_errors(); ?>
+				<?php 
+				$validation_error = validation_errors();
+				
+				if(!empty($validation_error))
+				{
+					echo '<div class="alert alert-danger center-align">'.$validation_error.'</div>';
+				}
+				?>
 				<?php echo form_open("reception/save_visit/".$patient_id, array("class" => "form-horizontal"));?>
 				<div class="row">
 					<div class="col-md-6">
 				        
 					        <div class="form-group">
 						            <label class="col-lg-4 control-label">Doctor: </label>
-						            
+                                    
 						            <div class="col-lg-8">
-						     			 <select name="doctor" class="form-control">
+						     			 <select name="personnel_id" class="form-control">
+                                         	<option value="0">----Select a Doctor----</option>
 				                        	<?php
 									                            	
 												if(count($doctor) > 0){
@@ -33,7 +41,16 @@
 														$fname = $row->personnel_fname;
 														$onames = $row->personnel_onames;
 														$personnel_id = $row->personnel_id;
-														echo "<option value=".$personnel_id.">".$onames."</option>";
+														
+														if($personnel_id == set_value('personnel_id'))
+														{
+															echo "<option value='".$personnel_id."' selected='selected'>".$onames." ".$fname."</option>";
+														}
+														
+														else
+														{
+															echo "<option value='".$personnel_id."'>".$onames." ".$fname."</option>";
+														}
 													endforeach;
 												}
 											?>
@@ -51,8 +68,16 @@
 						                    		foreach($type as $row):
 														$type_name = $row->visit_type_name;
 														$type_id= $row->visit_type_id;
-															?><option value="<?php echo $type_id; ?>" ><?php echo $type_name ?></option>
-													<?php	
+														
+														if($type_id == set_value('patient_type'))
+														{
+															echo "<option value='".$type_id."' selected='selected'>".$type_name."</option>";
+														}
+														
+														else
+														{
+															echo "<option value='".$type_id."'>".$type_name."</option>";
+														}
 													endforeach;
 												}
 											?>
@@ -67,7 +92,7 @@
 						            <div class="col-lg-8">
 						                <select name="patient_insurance_id" class="form-control">
 						                        <option value="">--- Select Insurance Company---</option>
-						                            <?PHP
+						                            <?php
 
 						                            if(count($patient_insurance) > 0){	
 													foreach($patient_insurance as $row):
@@ -106,7 +131,7 @@
 				            
 				            <div class="col-lg-8">
 				            	<div id="datetimepicker1" class="input-append">
-				                    <input data-format="yyyy-MM-dd" class="form-control" type="text" id="datepicker" name="visit_date" placeholder="Visit Date">
+				                    <input data-format="yyyy-MM-dd" class="form-control" type="text" id="datepicker" name="visit_date" placeholder="Visit Date" value="<?php echo date('Y-m-d');?>">
 				                    <span class="add-on">
 				                        &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
 				                        </i>
@@ -257,7 +282,7 @@
 	function checks(patient_type){
 		var patient_type=document.getElementById('patient_type').value;
 		if(patient_type==0){
-		alert('Ensure you have selected The patient type');
+			alert('Ensure you have selected The patient type');
 		}
 		
 	}

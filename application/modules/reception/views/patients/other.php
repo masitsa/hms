@@ -1,4 +1,4 @@
-<?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
+<?php echo form_open("reception/register_other_patient", array("class" => "form-horizontal"));?>
 <div class="row">
 	<div class="col-md-6">
         <div class="form-group">
