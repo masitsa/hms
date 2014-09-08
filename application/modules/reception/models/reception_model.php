@@ -369,105 +369,60 @@ class Reception_model extends CI_Model
 		return $result;
 	}
 	
-	public function patient_names2($patient_id)
+	public function patient_names2($patient_id, $visit_id)
 	{
-		$table = "patients";
-		$where = "patient_id = $patient_id";
-		$items = "*";
-		$order = "patient_surname";
+		if($patient_id != NULL)
+		{
+			$table = "patients";
+			$where = "patient_id = $patient_id";
+			$items = "*";
+			$order = "patient_surname";
+		}
+		
+		else
+		{
+			$table = "patients, visit";
+			$where = "patients.patient_id = visit.patient_id AND visit.visit_id = ".$visit_id;
+			$items = "patients.*";
+			$order = "patient_surname";
+		}
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		foreach ($result as $row)
+		{
+			$patient_id = $row->patient_id;
+			$dependant_id = $row->dependant_id;
+			$strath_no = $row->strath_no;
+			$created_by = $row->created_by;
+			$modified_by = $row->modified_by;
+			$visit_type_id = $row->visit_type_id;
+			$created = $row->patient_date;
+			$last_modified = $row->last_modified;
+			$last_visit = $row->last_visit;
+			
+			//staff & dependant
+			if($visit_type_id == 2)
 			{
-				$patient_id = $row->patient_id;
-				$dependant_id = $row->dependant_id;
-				$strath_no = $row->strath_no;
-				$created_by = $row->created_by;
-				$modified_by = $row->modified_by;
-				$visit_type_id = $row->visit_type_id;
-				$created = $row->patient_date;
-				$last_modified = $row->last_modified;
-				$last_visit = $row->last_visit;
-				
-				//staff & dependant
-				if($visit_type_id == 2)
+				//dependant
+				if($dependant_id > 0)
 				{
-					//dependant
-					if($dependant_id > 0)
-					{
-						$patient_type = 'Dependant';
-						$dependant_query = $this->reception_model->get_dependant($strath_no);
-						
-						if($dependant_query->num_rows() > 0)
-						{
-							$dependants_result = $dependant_query->row();
-							
-							$patient_othernames = $dependants_result->other_names;
-							$patient_surname = $dependants_result->names;
-							$patient_date_of_birth = $dependants_result->DOB;
-							$relationship = $dependants_result->relation;
-							$gender = $dependants_result->Gender;
-						}
-						
-						else
-						{
-							$patient_othernames = '<span class="label label-important">Dependant not found</span>';
-							$patient_surname = '';
-							$patient_date_of_birth = '';
-							$relationship = '';
-							$gender = '';
-						}
-					}
+					$patient_type = 'Dependant';
+					$dependant_query = $this->reception_model->get_dependant($strath_no);
 					
-					//staff
-					else
+					if($dependant_query->num_rows() > 0)
 					{
-						$patient_type = 'Staff';
-						$staff_query = $this->reception_model->get_staff($strath_no);
+						$dependants_result = $dependant_query->row();
 						
-						if($staff_query->num_rows() > 0)
-						{
-							$staff_result = $staff_query->row();
-							
-							$patient_surname = $staff_result->Surname;
-							$patient_othernames = $staff_result->Other_names;
-							$patient_date_of_birth = $staff_result->DOB;
-							$patient_phone1 = $staff_result->contact;
-							$gender = $staff_result->gender;
-						}
-						
-						else
-						{
-							$patient_othernames = '<span class="label label-important">Staff not found</span>';
-							$patient_surname = '';
-							$patient_date_of_birth = '';
-							$relationship = '';
-							$gender = '';
-							$patient_type = '';
-						}
-					}
-				}
-				
-				//student
-				else if($visit_type_id == 1)
-				{
-					$student_query = $this->reception_model->get_student($strath_no);
-					$patient_type = 'Student';
-					
-					if($student_query->num_rows() > 0)
-					{
-						$student_result = $student_query->row();
-						
-						$patient_surname = $student_result->Surname;
-						$patient_othernames = $student_result->Other_names;
-						$patient_date_of_birth = $student_result->DOB;
-						$patient_phone1 = $student_result->contact;
-						$gender = $student_result->gender;
+						$patient_othernames = $dependants_result->other_names;
+						$patient_surname = $dependants_result->names;
+						$patient_date_of_birth = $dependants_result->DOB;
+						$relationship = $dependants_result->relation;
+						$gender = $dependants_result->Gender;
 					}
 					
 					else
 					{
-						$patient_othernames = '<span class="label label-important">Student not found</span>';
+						$patient_othernames = '<span class="label label-important">Dependant not found</span>';
 						$patient_surname = '';
 						$patient_date_of_birth = '';
 						$relationship = '';
@@ -475,15 +430,71 @@ class Reception_model extends CI_Model
 					}
 				}
 				
-				//other patient
+				//staff
 				else
 				{
-					$patient_type = 'Other';
+					$patient_type = 'Staff';
+					$staff_query = $this->reception_model->get_staff($strath_no);
 					
-					$patient_othernames = $row->patient_othernames;
-					$patient_surname = $row->patient_surname;
+					if($staff_query->num_rows() > 0)
+					{
+						$staff_result = $staff_query->row();
+						
+						$patient_surname = $staff_result->Surname;
+						$patient_othernames = $staff_result->Other_names;
+						$patient_date_of_birth = $staff_result->DOB;
+						$patient_phone1 = $staff_result->contact;
+						$gender = $staff_result->gender;
+					}
 					
+					else
+					{
+						$patient_othernames = '<span class="label label-important">Staff not found</span>';
+						$patient_surname = '';
+						$patient_date_of_birth = '';
+						$relationship = '';
+						$gender = '';
+						$patient_type = '';
+					}
 				}
+			}
+			
+			//student
+			else if($visit_type_id == 1)
+			{
+				$student_query = $this->reception_model->get_student($strath_no);
+				$patient_type = 'Student';
+				
+				if($student_query->num_rows() > 0)
+				{
+					$student_result = $student_query->row();
+					
+					$patient_surname = $student_result->Surname;
+					$patient_othernames = $student_result->Other_names;
+					$patient_date_of_birth = $student_result->DOB;
+					$patient_phone1 = $student_result->contact;
+					$gender = $student_result->gender;
+				}
+				
+				else
+				{
+					$patient_othernames = '<span class="label label-important">Student not found</span>';
+					$patient_surname = '';
+					$patient_date_of_birth = '';
+					$relationship = '';
+					$gender = '';
+				}
+			}
+			
+			//other patient
+			else
+			{
+				$patient_type = 'Other';
+				
+				$patient_othernames = $row->patient_othernames;
+				$patient_surname = $row->patient_surname;
+				
+			}
 		}
 
 		return $patient_surname." ".$patient_othernames;

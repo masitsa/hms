@@ -245,7 +245,7 @@
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'nurse/patient_card/'.$visit_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to delete ?\');">Patient Card</a></td>
+							<td><a href="'.site_url().'nurse/patient_card/'.$visit_id.'" class="btn btn-sm btn-info">Patient Card</a></td>
 							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to delete ?\');">To Doctor</a></td>
 							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-success" onclick="return confirm(\'Do you really want to delete ?\');">To Lab</a></td>
 							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-primary" onclick="return confirm(\'Do you really want to delete ?\');">To Pharmacy</a></td>
