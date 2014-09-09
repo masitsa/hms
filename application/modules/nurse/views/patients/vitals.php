@@ -351,4 +351,77 @@ function myPopup3(visit_id) {
     window.open( config_url+"/nurse/procedures/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
 }
 
+
+
+
+
+
+function calculatetotal(amount, id, procedure_id, v_id){
+        
+    var units = document.getElementById('units'+id).value;  
+
+    grand_total(id, units, amount);
+    display_procedure(v_id);
+}
+
+function grand_total(procedure_id, units, amount){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    //alert(procedure_id);
+    var url = host+"data/nurse/procedure_total.php?procedure_id="+procedure_id+"&units="+units+"&amount="+amount;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function delete_procedure(id, visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+     var config_url = $('#config_url').val();
+    var url = config_url+"/nurse/delete_procedure/"+id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                display_procedure(visit_id);
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+
 </script>

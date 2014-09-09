@@ -280,5 +280,125 @@ class Nurse_model extends CI_Model
 		
 		return $result;
 	}
+
+	function submitvisitprocedure($procedure_id,$visit_id,$suck){
+		$visit_data = array('procedure_id'=>$procedure_id,'visit_id'=>$visit_id,'units'=>$suck);
+		$this->db->insert('visit_procedure', $visit_data);
+	}
+
+	function get_visit_type($visit_id){
+		$table = "visit";
+		$where = "visit_id = '$visit_id'";
+		$items = "visit_type, visit_id";
+		$order = "visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+
+	function visit_charge_insert($v_id,$procedure_id,$suck){
+
+
+		$service_charge_rs = $this->get_service_charge($procedure_id);
+
+		foreach ($service_charge_rs as $key) :
+			# code...
+			$visit_charge_amount = $key->service_charge_amount;
+		endforeach;
+
+		$visit_data = array('service_charge_id'=>$procedure_id,'visit_id'=>$v_id,'visit_charge_amount'=>$visit_charge_amount,'visit_charge_units'=>$suck);
+		$this->db->insert('visit_charge', $visit_data);
+	}
+
+
+	function get_visit_procedure_charges($v_id){
+		$table = "visit_charge";
+		$where = "visit_id = $v_id";
+		$items = "*";
+		$order = "visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;
+	}
+	public function get_all_patient_history($table, $where, $per_page, $page)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('visit.*,patients.*');
+		$this->db->where($where);
+		$this->db->order_by('visit_time','desc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+
+	public function get_patient_lifestyle($table, $where, $per_page, $page)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by('patient_id','desc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+
+	public function get_patient_id($visit_id){
+		$table = "visit";
+		$where = "visit_id = $visit_id";
+		$items = "patient_id";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0){
+			foreach ($result as $row2):
+				 $patient_id = $row2->patient_id;
+			endforeach;
+		}
+		return $patient_id;
+	}
+
+	public function waiting_time($visit_id)
+	{
+		
+		$table = "visit";
+		$where = "visit_id = ".$visit_id;
+		$items = "visit_time, visit_time_out";
+		$order = "visit_time";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0){
+			foreach ($result as $row2):
+				$visit_time = $row2->visit_time;
+				$visit_time_out = $row2->visit_time_out;
+			endforeach;
+		}
+		
+		if($visit_time_out == "0000-00-00 00:00:00"){
+			$time1 = date('y-m-d  H:i:s');
+		}
+		else{
+			$time1 = $visit_time_out;
+		}
+		
+		$time_difference = $this->time_difference($time1, $visit_time);
+		return $time_difference;
+	}
+
+	public function time_difference($higher_time, $lower_time)
+	{
+		$seconds = strtotime($higher_time) - strtotime($lower_time);
+		$hours = $seconds/3600;
+		$hours_rounded = intval(($seconds/3600));
+		$minutes = ($hours - $hours_rounded) * 60;
+		$minutes_rounded = intval($minutes);
+		$ms = ($minutes - $minutes_rounded) * 60;
+		$ms_rounded = intval($ms);
+		return $hours_rounded.":".$minutes_rounded.":".$ms_rounded;
+	}
 }
 ?>

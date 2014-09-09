@@ -23,15 +23,15 @@ if(count($rs) >0){
 
 
 echo "
-	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'>Procedures <br/><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(".$visit_id.")'/></p></div>
+	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(".$visit_id.")'/></p></div>
 <table align='center' class='table table-striped table-hover table-condensed'>
 	<tr>
-		<th></th>
+		
 		<th>Procedure</th>
 		<th>Units</th>
 		<th>Unit Cost</th>
 		<th>Total</th>
-	
+	<th></th>
 	</tr>		
 ";                     
 		$total= 0;  
@@ -55,15 +55,14 @@ echo "
 							$total= $total +($units * $visit_charge_amount);
 							echo"
 									<tr> 
-										<td></td>
 							 			<td align='center'>".$procedure_name."</td>
-										<td align='center'><input type='text' id='units".$v_procedure_id."' value='".$units."' size='3' onkeyup='calculatetotal(".$visit_charge_amount.",".$v_procedure_id.", ".$procedure_id.",".$v_id.")'/></td>
+										<td align='center'><input type='text' id='units".$v_procedure_id."' value='".$units."' size='3' onkeyup='calculatetotal(".$visit_charge_amount.",".$v_procedure_id.", ".$procedure_id.",".$visit_id.")'/></td>
 										<td align='center'>".$visit_charge_amount."</td>
 										<td align='center'><input type='text' readonly='readonly' size='5' value='".$units * $visit_charge_amount."' id='total".$v_procedure_id."'></div></td>
 										<td>
 											<div class='btn-toolbar'>
 												<div class='btn-group'>
-													<a class='btn' href='#' onclick='delete_procedure(".$v_procedure_id.", ".$v_id.")'><i class='icon-remove'></i></a>
+													<a class='btn' href='#' onclick='delete_procedure(".$v_procedure_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
 												</div>
 											</div>
 										</td>
@@ -80,8 +79,7 @@ echo"
 <td></td>
 <td></td>
 <td></td>
-<td></td>
-<td></td>
+<td>Grand Total: </td>
 <td align='center'><div id='grand_total'>".$total."</div></td>
 </tr>
  </table>

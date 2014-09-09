@@ -59,13 +59,13 @@
                  
                 </div>
                 
-                <div class="tab-pane" id="life_style">
+                <div class="tab-pane" id="lifestyle">
                 	<?php echo $this->load->view("patients/lifestyle", '', TRUE); ?>
                 </div>
                 
                 <div class="tab-pane" id="patient-history">
                   
-                  <?php echo $this->load->view("patients/patient_history", '', TRUE);?>
+                  <?php echo $this->load->view("patient_history", '', TRUE);?>
                   
                 </div>
 

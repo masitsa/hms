@@ -1,5 +1,52 @@
 <!-- search -->
-<?php //echo $this->load->view('patients/search_visit', '', TRUE);?>
+<?php 
+
+		 $patient_id = $this->nurse_model->get_patient_id($visit_id);
+		// this is it
+
+		$where = 'visit.`close_card` = 1 AND visit.patient_id = patients.patient_id AND visit.`patient_id`='.$patient_id;
+		
+		
+		$table = 'visit,patients';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/patient_card/'.$visit_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 4;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_all_patient_history($table, $where, $config["per_page"], $page);
+		
+	
+		
+?>
 <!-- end search -->
  
 <div class="row">
@@ -9,7 +56,7 @@
       <div class="widget boxed">
         <!-- Widget head -->
         <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+          <h4 class="pull-left"><i class="icon-reorder"></i>Patient History</h4>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
             <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -29,7 +76,7 @@
 			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
-		
+	
 		//if users exist display them
 		if ($query->num_rows() > 0)
 		{
@@ -43,9 +90,8 @@
 						  <th>#</th>
 						  <th>Visit Date</th>
 						  <th>Patient</th>
-						  <th>Patient Type</th>
-						  <th>Visit Type</th>
 						  <th>Time In</th>
+						  <th>Waiting time</th>
 						  <th>Doctor</th>
 						  <th colspan="4">Actions</th>
 						</tr>
@@ -59,15 +105,12 @@
 			{
 				$visit_date = date('jS M Y',strtotime($row->visit_date));
 				$visit_time = date('H:i a',strtotime($row->visit_time));
-				if($row->visit_time_out != '0000-00-00 00:00:00')
-				{
-					$visit_time_out = date('H:i a',strtotime($row->visit_time_out));
-				}
-				else
-				{
-					$visit_time_out = '-';
-				}
-				$visit_id = $row->visit_id;
+
+
+				
+
+				$visit_id1 = $row->visit_id;
+				$waiting_time = $this->nurse_model->waiting_time($visit_id1);
 				$patient_id = $row->patient_id;
 				$personnel_id = $row->personnel_id;
 				$dependant_id = $row->dependant_id;
@@ -240,15 +283,11 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$visit_date.'</td>
-							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$patient_type.'</td>
-							<td>'.$visit_type.'</td>
+							<td>'.$patient.'</td>
 							<td>'.$visit_time.'</td>
+							<td align=center>'.$waiting_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'nurse/patient_card/'.$visit_id.'" class="btn btn-sm btn-info">Patient Card</a></td>
-							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to delete ?\');">To Doctor</a></td>
-							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-success" onclick="return confirm(\'Do you really want to delete ?\');">To Lab</a></td>
-							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-primary" onclick="return confirm(\'Do you really want to delete ?\');">To Pharmacy</a></td>
+							<td><a onclick="patient_history_popup('.$visit_id1.',0)" class="btn btn-sm btn-info">Patient Card</a></td>
 						</tr> 
 					';
 			}
@@ -282,3 +321,12 @@
       </div>
     </div>
   </div>
+
+  <script>
+	  function patient_history_popup(visit_id,mike) {
+	  	window.alert("sdads");
+	    var config_url = $('#config_url').val();
+	    window.open( config_url+"/nurse/patient_card/"+visit_id+"/"+mike, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
+		}
+
+  </script>

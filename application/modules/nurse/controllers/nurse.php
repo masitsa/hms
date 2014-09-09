@@ -82,7 +82,7 @@ class Nurse extends auth
 		// end of it
 	}
 	
-	public function patient_card($visit_id)
+	public function patient_card($visit_id,$mike=NULL)
 	{
 		$v_data['visit_id'] = $visit_id;
 		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
@@ -90,7 +90,12 @@ class Nurse extends auth
 		
 		$data['title'] = 'Patient Card';
 		$data['sidebar'] = 'nurse_sidebar';
-		$this->load->view('auth/template_sidebar', $data);	
+		if($mike !=NULL){
+			$this->load->view('auth/template_no_sidebar', $data);	
+		}else{
+			$this->load->view('auth/template_sidebar', $data);	
+		}
+		
 	}
 
 	
@@ -225,6 +230,22 @@ class Nurse extends auth
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('procedures_list',$data);	
 	}
+
+	function procedure($procedure_id,$visit_id,$suck){
+		$data = array('procedure_id'=>$procedure_id,'visit_id'=>$visit_id,'suck'=>$suck);
+		$this->load->view('procedure',$data);	
+	}
+	function delete_procedure($procedure_id)
+	{
+		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->delete('visit_charge', $visit_data);
+	}
+
+	function add_lifestyle($patient_id){
+
+	}
+
+	
 	
 }
 ?>
