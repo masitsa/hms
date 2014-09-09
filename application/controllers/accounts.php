@@ -181,7 +181,7 @@ class Accounts extends CI_Controller {
         $crud->set_table('visit');
 		//$crud->columns('visit_time', 'patient_id', 'Doctor', 'Consultation', 'Pharmacy', 'Laboratory', 'Procedures', 'Total', 'Payments', 'Balance');
 		$crud->columns('visit_time', 'patient_id', 'personnel_id', 'Invoice_Total', 'Payments', 'Balance');
-			$crud->set_relation("personnel_id", "personnel", "Dr. {personnel_fname} {personnel_onames}");
+		//$crud->set_relation("personnel_id", "personnel", "Dr. {personnel_fname} {personnel_onames}");
 		$crud->add_action('Receipt', base_url('img/new/icon-48-menu.png'), 'accounts/receipt');
 		$crud->add_action('Invoice', base_url('img/new/icon-48-stats.png'), 'accounts/invoice');
 		$crud->add_action('Payments', base_url('img/new/icon-48-content.png'), 'accounts/payments');
@@ -248,7 +248,7 @@ public function patient_names($value, $row)
 		
 		else if($visit_type == 2){
 		$name ="";		 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
@@ -265,7 +265,15 @@ public function patient_names($value, $row)
 		$rsq = $this->search_staff_dependants($row->strath_no);
 		$num_rowsq = mysql_num_rows($rsq);
 		
-		$name = mysql_result($rsq, 0, "names");
+		if($num_rowsq > 0)
+		{
+			$name = mysql_result($rsq, 0, "names").' '.mysql_result($rsq, 0, "other_names");
+		}
+		
+		else
+		{
+			$name = 'Could not find Dependant';
+		}
 		}
 		else{
 			$rs = $this->search_staff($row->strath_no);
@@ -284,11 +292,11 @@ public function patient_names($value, $row)
 	
 function search_student($strath_no){
 	 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("strathmore_population", $connect)
+        mysql_select_db("sumc", $connect)
                     or die("Could not select database".mysql_error());
 		
 		$sql = "select * from student where student_Number=$strath_no";
@@ -303,11 +311,11 @@ function search_student($strath_no){
 	function search_staff($strath_no){
 		
 		 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("strathmore_population", $connect)
+        mysql_select_db("sumc", $connect)
                     or die("Could not select database".mysql_error());
 		
 		$sql = "select * from staff where Staff_Number='$strath_no'";
@@ -319,11 +327,11 @@ function search_student($strath_no){
 		function search_staff_dependants($strath_no){
 		
 		 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("strathmore_population", $connect)
+        mysql_select_db("sumc", $connect)
                     or die("Could not select database".mysql_error());
 					
 	$sqlq = "select * from staff_dependants where staff_dependants_id='$strath_no'";
@@ -337,7 +345,7 @@ function search_student($strath_no){
 	public function total($value, $row)
 	{ $total=""; $temp="";
 		 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
@@ -414,7 +422,7 @@ $discounted_value="";
 	}return $total;}
 else{
 		 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database

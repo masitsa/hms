@@ -1363,6 +1363,7 @@ function search_student($strath_no){
 	
 	private function save_visit_table($patient_id, $visit_date, $doctor_id, $timepicker_start,$timepicker_end, $appointment_id, $patient_type, $patient_insurance_id,$patient_insurance_number,$close_card)
 	{
+		
 			$insert = array(
         		"visit_date" => $visit_date,
         		"patient_id" => $patient_id,

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="CellAbsoluteCoordinate.data" server="192.168.170.16/sumc/development/" local="130473911304938467" remote="130547115000000000" Dst="0" />
+<file name="CellAbsoluteReference.data" server="192.168.170.16/sumc/development/" local="130473911304782467" remote="130547115000000000" Dst="0" />
+<file name="CellBuildRange.data" server="192.168.170.16/sumc/development/" local="130473911304626467" remote="130547115000000000" Dst="0" />
+<file name="CellCoordinates.data" server="192.168.170.16/sumc/development/" local="130473911304314466" remote="130547115000000000" Dst="0" />
+<file name="CellExtractAllCellReferencesInRange.data" server="192.168.170.16/sumc/development/" local="130473911304002466" remote="130547115000000000" Dst="0" />
+<file name="CellGetRangeBoundaries.data" server="192.168.170.16/sumc/development/" local="130473911303846465" remote="130547115000000000" Dst="0" />
+<file name="CellRangeBoundaries.data" server="192.168.170.16/sumc/development/" local="130473911303534465" remote="130547115000000000" Dst="0" />
+<file name="CellRangeDimension.data" server="192.168.170.16/sumc/development/" local="130473911303378465" remote="130547115000000000" Dst="0" />
+<file name="CellSplitRange.data" server="192.168.170.16/sumc/development/" local="130473911303066464" remote="130547115000000000" Dst="0" />
+<file name="ColumnIndex.data" server="192.168.170.16/sumc/development/" local="130473911302598463" remote="130547115000000000" Dst="0" />
+<file name="ColumnString.data" server="192.168.170.16/sumc/development/" local="130473911302754464" remote="130547115000000000" Dst="0" />
+</dwsync>

@@ -445,14 +445,31 @@ class Nurse extends CI_Controller {
 		$rsq = $this->search_staff_dependants($row->strath_no);
 		$num_rowsq = mysql_num_rows($rsq);
 		
-			$name = mysql_result($rsq, 0, "names");
+		if($num_rowsq > 0)
+		{
+			$name = mysql_result($rsq, 0, "names").' '.mysql_result($rsq, 0, "other_names");
+		}
+		
+		else
+		{
+			$name = 'Could not find Dependant';
+		}
+			
 		}		
 		else
 		{		
 		$rs = $this->search_staff($row->strath_no);
 		$num_rows = mysql_num_rows($rs);
 
+		if($num_rows > 0)
+		{
 			$name = mysql_result($rs, 0, "Other_Names");	
+		}
+		
+		else
+		{
+			$name = 'Could not find Staff';
+		}
 		}	return $name;}
 		else if($visit_type == 3){
 			$name = $row->patient_othernames;
@@ -466,7 +483,7 @@ function search_student($strath_no){
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("strathmore_population", $connect)
+        mysql_select_db("sumc", $connect)
                     or die("Could not select database".mysql_error());
 		
 		$sql = "select * from student where student_Number=$strath_no";
@@ -485,7 +502,7 @@ function search_student($strath_no){
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("strathmore_population", $connect)
+        mysql_select_db("sumc", $connect)
                     or die("Could not select database".mysql_error());
 		
 		$sql = "select * from staff where Staff_Number='$strath_no'";
@@ -502,7 +519,7 @@ function search_student($strath_no){
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("strathmore_population", $connect)
+        mysql_select_db("sumc", $connect)
                     or die("Could not select database".mysql_error());
 					
 	$sqlq = "select * from staff_dependants where staff_dependants_id='$strath_no'";
@@ -523,7 +540,7 @@ function search_student($strath_no){
 		$crud->columns('visit_date', 'Patient', 'visit_time', 'Waiting Time', 'personnel_id', 'patient_id');
 		$crud->fields('visit_date', 'Doctor', 'patient_id');
   		$crud->callback_column('Patient',array($this,'patient_names'));
-	$crud->set_relation("personnel_id", "personnel", "Dr. {personnel_fname} {personnel_onames}");
+		//$crud->set_relation("personnel_id", "personnel", "Dr. {personnel_fname} {personnel_onames}");
 		$crud->add_action('Vitals', base_url('img/new/icon-48-stats.png'), 'nurse/vitals');
 		$crud->add_action('Dental Vitals', base_url('img/new/tooth1.jpeg'), 'doctor/dental');
 		$crud->add_action('Lifestyle', base_url('img/new/icon-48-menu.png'), 'nurse/lifestyle');
@@ -607,7 +624,7 @@ function search_student($strath_no){
 		$crud->fields('visit_date', 'Doctor', 'patient_id');
   		$crud->callback_column('Patient',array($this,'patient_names'));
 		//$crud->set_relation_n_n('Doctor', 'schedule', 'personnel', 'schedule_id', 'personnel_id', 'Dr. {personnel_fname} {personnel_surname}');
-		$crud->set_relation("personnel_id", "personnel", "Dr. {personnel_fname} {personnel_onames}");
+		//$crud->set_relation("personnel_id", "personnel", "Dr. {personnel_fname} {personnel_onames}");
 		$crud->callback_column('Waiting Time',array($this,'waiting_time'));
 		$crud->callback_column('Age',array($this,'calculate_age'));
 		$crud->callback_column('Gender',array($this,'calculate_gender'));

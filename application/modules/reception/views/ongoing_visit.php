@@ -91,6 +91,7 @@
 				{
 					$visit_time_out = '-';
 				}
+				$visit_id = $row->visit_id;
 				$patient_id = $row->patient_id;
 				$personnel_id = $row->personnel_id;
 				$dependant_id = $row->dependant_id;
@@ -270,7 +271,7 @@
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">End Visit</a></td>
+							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
 						</tr> 
 					';
 				}
