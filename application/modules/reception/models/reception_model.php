@@ -369,7 +369,7 @@ class Reception_model extends CI_Model
 		return $result;
 	}
 	
-	public function patient_names2($patient_id, $visit_id)
+	public function patient_names2($patient_id, $visit_id = NULL)
 	{
 		if($patient_id != NULL)
 		{

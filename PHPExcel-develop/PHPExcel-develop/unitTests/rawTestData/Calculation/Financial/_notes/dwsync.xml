@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="ACCRINT.data" server="192.168.170.16/sumc/development/" local="130473911336138522" remote="130547115000000000" Dst="0" />
+<file name="ACCRINTM.data" server="192.168.170.16/sumc/development/" local="130473911335514521" remote="130547115000000000" Dst="0" />
+<file name="AMORDEGRC.data" server="192.168.170.16/sumc/development/" local="130473911335514521" remote="130547115000000000" Dst="0" />
+<file name="AMORLINC.data" server="192.168.170.16/sumc/development/" local="130473911335046520" remote="130547115000000000" Dst="0" />
+<file name="COUPDAYBS.data" server="192.168.170.16/sumc/development/" local="130473911334890520" remote="130547115000000000" Dst="0" />
+<file name="COUPDAYS.data" server="192.168.170.16/sumc/development/" local="130473911334578519" remote="130547115000000000" Dst="0" />
+<file name="COUPDAYSNC.data" server="192.168.170.16/sumc/development/" local="130473911334422519" remote="130547115000000000" Dst="0" />
+<file name="COUPNCD.data" server="192.168.170.16/sumc/development/" local="130473911333798518" remote="130547115000000000" Dst="0" />
+<file name="COUPNUM.data" server="192.168.170.16/sumc/development/" local="130473911333486517" remote="130547115000000000" Dst="0" />
+<file name="COUPPCD.data" server="192.168.170.16/sumc/development/" local="130473911333174517" remote="130547115000000000" Dst="0" />
+<file name="CUMIPMT.data" server="192.168.170.16/sumc/development/" local="130473911332862516" remote="130547115000000000" Dst="0" />
+<file name="CUMPRINC.data" server="192.168.170.16/sumc/development/" local="130473911332238515" remote="130547115000000000" Dst="0" />
+<file name="DB.data" server="192.168.170.16/sumc/development/" local="130473911331926514" remote="130547115000000000" Dst="0" />
+<file name="DDB.data" server="192.168.170.16/sumc/development/" local="130473911331614514" remote="130547115000000000" Dst="0" />
+<file name="DISC.data" server="192.168.170.16/sumc/development/" local="130473911328650509" remote="130547115000000000" Dst="0" />
+<file name="DOLLARDE.data" server="192.168.170.16/sumc/development/" local="130473911328494508" remote="130547115000000000" Dst="0" />
+<file name="DOLLARFR.data" server="192.168.170.16/sumc/development/" local="130473911328026508" remote="130547115000000000" Dst="0" />
+<file name="EFFECT.data" server="192.168.170.16/sumc/development/" local="130473911327870507" remote="130547115000000000" Dst="0" />
+<file name="FV.data" server="192.168.170.16/sumc/development/" local="130473911327714507" remote="130547115000000000" Dst="0" />
+<file name="FVSCHEDULE.data" server="192.168.170.16/sumc/development/" local="130473911327558507" remote="130547115000000000" Dst="0" />
+<file name="INTRATE.data" server="192.168.170.16/sumc/development/" local="130473911327402506" remote="130547115000000000" Dst="0" />
+<file name="IPMT.data" server="192.168.170.16/sumc/development/" local="130473911326934506" remote="130547115000000000" Dst="0" />
+<file name="IRR.data" server="192.168.170.16/sumc/development/" local="130473911326778505" remote="130547115000000000" Dst="0" />
+<file name="ISPMT.data" server="192.168.170.16/sumc/development/" local="130473911326466505" remote="130547115000000000" Dst="0" />
+<file name="MIRR.data" server="192.168.170.16/sumc/development/" local="130473911326466505" remote="130547115000000000" Dst="0" />
+<file name="NOMINAL.data" server="192.168.170.16/sumc/development/" local="130473911326154504" remote="130547115000000000" Dst="0" />
+<file name="NPER.data" server="192.168.170.16/sumc/development/" local="130473911325842504" remote="130547115000000000" Dst="0" />
+<file name="NPV.data" server="192.168.170.16/sumc/development/" local="130473911325686503" remote="130547115000000000" Dst="0" />
+<file name="PRICE.data" server="192.168.170.16/sumc/development/" local="130473911325530503" remote="130547115000000000" Dst="0" />
+<file name="RATE.data" server="192.168.170.16/sumc/development/" local="130473911325062502" remote="130547115000000000" Dst="0" />
+<file name="XIRR.data" server="192.168.170.16/sumc/development/" local="130473911324906502" remote="130547115000000000" Dst="0" />
+</dwsync>

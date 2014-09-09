@@ -136,6 +136,46 @@ class Nurse extends auth
 		}
 	}
 	
+	public function dental_vitals($visit_id)
+	{
+		//saving vitals
+		if (isset($_POST['submit']))
+		{
+			$this->save_dental_vitals($visit_id);
+			$this->patient_card($visit_id);
+		}
+		
+		//saving & going to dentist
+		else if (isset($_POST['submit']))
+		{
+			$this->save_dental_vitals($visit_id);
+			$this->end_dental_vitals($visit_id);
+		}
+		
+		//updating & going to dentist
+		else if (isset($_POST['update']))
+		{
+			$dental_vitals_id = $this->input->post('dental_vitals_id');
+			
+			$this->update_dental_vitals($visit_id, $dental_vitals_id);
+			$this->patient_card($visit_id);
+		}
+		
+		//updating & going to dentist
+		else if (isset($_POST['update1']))
+		{
+			$dental_vitals_id = $this->input->post('dental_vitals_id');
+			
+			$this->update_dental_vitals($visit_id, $dental_vitals_id);
+			$this->end_dental_vitals($visit_id);
+		}
+		
+		else
+		{
+			$this->patient_card($visit_id);
+		}
+	}
+	
 	public function save_dental_vitals($visit_id)
 	{
 		$save = $this->nurse_model->save_dental_vitals($visit_id);
@@ -150,7 +190,7 @@ class Nurse extends auth
 			$this->session->set_userdata('error_message', 'Error saving dental vitals. Please try again');
 		}
 		
-		$this->patient_card($visit_id);
+		return TRUE;
 	}
 	
 	public function end_dental_vitals($visit_id)
@@ -196,7 +236,7 @@ class Nurse extends auth
 			$this->session->set_userdata('error_message', 'Error updating dental vitals. Please try again');
 		}
 		
-		$this->patient_card($visit_id);
+		return TRUE;
 	}
 	
 	public function get_family_history($visit_id)
@@ -247,5 +287,9 @@ class Nurse extends auth
 
 	
 	
+	public function save_family_disease($disease_id, $family_id, $patient_id)
+	{
+		$this->nurse_model->save_family_disease($family_id, $patient_id, $disease_id);
+	}
 }
 ?>

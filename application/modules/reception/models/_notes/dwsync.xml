@@ -3,4 +3,7 @@
 <file name="reception_model.php" server="192.168.170.16/sumc/" local="130546506181776974" remote="130546395600000000" Dst="0" />
 <file name="strathmore_population.php" server="192.168.170.16/sumc/" local="130543182817265178" remote="130543937400000000" Dst="0" />
 <file name="stf.php" server="192.168.170.16/sumc/" local="130543206105507189" remote="130543937400000000" Dst="0" />
+<file name="reception_model.php" server="192.168.170.16/sumc/development/" local="130547228142027562" remote="130547118000000000" Dst="0" />
+<file name="stf.php" server="192.168.170.16/sumc/development/" local="130543206105507189" remote="130547113800000000" Dst="0" />
+<file name="strathmore_population.php" server="192.168.170.16/sumc/development/" local="130543182817265178" remote="130547113800000000" Dst="0" />
 </dwsync>

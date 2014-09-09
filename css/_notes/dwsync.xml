@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="bootstrap.css" server="C:/xampplite/htdocs/hms" local="130328805951755583" remote="130328805950000000" />
-<file name="jquery-ui-1.8.18.custom.css" server="C:/xampplite/htdocs/hms" local="129936129020000000" remote="129936129020000000" />
-<file name="jquery.ui.timepicker.css" server="C:/xampplite/htdocs/hms" local="130035279720000000" remote="130035279720000000" />
-<file name="head.css" server="C:/xampplite/htdocs/hms" local="130328751511683789" remote="130328751510000000" />
-<file name="bootstrap.min.css" server="C:/xampplite/htdocs/hms" local="130293064212134903" remote="130293064210000000" />
+<file name="bootstrap.css" server="C:/xampplite/htdocs/hms" local="130328805951755583" remote="130328805950000000" Dst="-1" />
+<file name="jquery-ui-1.8.18.custom.css" server="C:/xampplite/htdocs/hms" local="129936129020000000" remote="129936129020000000" Dst="-1" />
+<file name="jquery.ui.timepicker.css" server="C:/xampplite/htdocs/hms" local="130035279720000000" remote="130035279720000000" Dst="-1" />
+<file name="head.css" server="C:/xampplite/htdocs/hms" local="130328751511683789" remote="130328751510000000" Dst="-1" />
+<file name="bootstrap.min.css" server="C:/xampplite/htdocs/hms" local="130293064212134903" remote="130293064210000000" Dst="-1" />
+<file name="bootstrap-responsive.css" server="192.168.170.16/sumc/development/" local="130473911923323546" remote="130547114400000000" Dst="0" />
+<file name="bootstrap-responsive.min.css" server="192.168.170.16/sumc/development/" local="130473911923011545" remote="130547114400000000" Dst="0" />
+<file name="bootstrap.css" server="192.168.170.16/sumc/development/" local="130473911922855545" remote="130547114400000000" Dst="0" />
+<file name="bootstrap.min.css" server="192.168.170.16/sumc/development/" local="130473911922387544" remote="130547114400000000" Dst="0" />
+<file name="head.css" server="192.168.170.16/sumc/development/" local="130473911922075543" remote="130547114400000000" Dst="0" />
+<file name="interface.css" server="192.168.170.16/sumc/development/" local="130473911921763543" remote="130547114400000000" Dst="0" />
+<file name="jquery-ui-1.8.18.custom.css" server="192.168.170.16/sumc/development/" local="130473911921763543" remote="130547114400000000" Dst="0" />
+<file name="jquery.ui.timepicker.css" server="192.168.170.16/sumc/development/" local="130473911921451542" remote="130547114400000000" Dst="0" />
+<file name="reports.css" server="192.168.170.16/sumc/development/" local="130473911921295542" remote="130547114400000000" Dst="0" />
+<file name="style.css" server="192.168.170.16/sumc/development/" local="130473911921139542" remote="130547114400000000" Dst="0" />
+<file name="twoColLiqLtHdr.css" server="192.168.170.16/sumc/development/" local="130473911920827541" remote="130547114400000000" Dst="0" />
 </dwsync>

@@ -3,4 +3,7 @@
 <file name="data.js" server="70.32.66.141/cart/" local="130468698886471925" remote="130468563000000000" Dst="0" />
 <file name="datasourceTree.js" server="70.32.66.141/cart/" local="130452189880000000" remote="130468563600000000" Dst="0" />
 <file name="datasource.js" server="70.32.66.141/cart/" local="130452189880000000" remote="130468563600000000" Dst="0" />
+<file name="data.js" server="192.168.170.16/sumc/development/" local="130468818571037491" remote="130547114400000000" Dst="0" />
+<file name="datasource.js" server="192.168.170.16/sumc/development/" local="130452189880000000" remote="130547114400000000" Dst="0" />
+<file name="datasourceTree.js" server="192.168.170.16/sumc/development/" local="130452189880000000" remote="130547114400000000" Dst="0" />
 </dwsync>

@@ -3,4 +3,24 @@
 <file name="connection.php" server="C:/xampplite/htdocs/hms" local="130244358373870894" remote="130244358370000000" Dst="-1" />
 <file name="Reports.php" server="C:/xampplite/htdocs/hms" local="130337270678226594" remote="130337270670000000" Dst="-1" />
 <file name="class_doctor.php" server="C:/xampplite/htdocs/hms" local="130372137838290780" remote="130372137830000000" Dst="-1" />
+<file name="acconts.php" server="192.168.170.16/sumc/development/" local="130473911920203540" remote="130547114400000000" Dst="0" />
+<file name="connection.php" server="192.168.170.16/sumc/development/" local="130473983819036483" remote="130547114400000000" Dst="0" />
+<file name="class_doctor.php" server="192.168.170.16/sumc/development/" local="130473911920047540" remote="130547114400000000" Dst="0" />
+<file name="class_insurance.php" server="192.168.170.16/sumc/development/" local="130473911919891540" remote="130547114400000000" Dst="0" />
+<file name="class_invoice.php" server="192.168.170.16/sumc/development/" local="130473911919735539" remote="130547114400000000" Dst="0" />
+<file name="class_lab.php" server="192.168.170.16/sumc/development/" local="130473911919579539" remote="130547114400000000" Dst="0" />
+<file name="class_nurse.php" server="192.168.170.16/sumc/development/" local="130473911919423539" remote="130547114400000000" Dst="0" />
+<file name="class_personnel.php" server="192.168.170.16/sumc/development/" local="130473911919267538" remote="130547114400000000" Dst="0" />
+<file name="class_prescription.php" server="192.168.170.16/sumc/development/" local="130473911919111538" remote="130547114400000000" Dst="0" />
+<file name="class_sendpharmacy.php" server="192.168.170.16/sumc/development/" local="130473911918955538" remote="130547114400000000" Dst="0" />
+<file name="connection2.php" server="192.168.170.16/sumc/development/" local="130476489666453790" remote="130547114400000000" Dst="0" />
+<file name="dates.php" server="192.168.170.16/sumc/development/" local="130473911918799538" remote="130547114400000000" Dst="0" />
+<file name="expenses.php" server="192.168.170.16/sumc/development/" local="130473911918487537" remote="130547114400000000" Dst="0" />
+<file name="export.php" server="192.168.170.16/sumc/development/" local="130473911917863536" remote="130547114400000000" Dst="0" />
+<file name="invoice.php" server="192.168.170.16/sumc/development/" local="130473911916771534" remote="130547114400000000" Dst="0" />
+<file name="logo.php" server="192.168.170.16/sumc/development/" local="130473911914743531" remote="130547114400000000" Dst="0" />
+<file name="medicaladmin.php" server="192.168.170.16/sumc/development/" local="130473911913651529" remote="130547114400000000" Dst="0" />
+<file name="Reports.php" server="192.168.170.16/sumc/development/" local="130476491594644076" remote="130547114400000000" Dst="0" />
+<file name="strathmore_population.php" server="192.168.170.16/sumc/development/" local="130476489797751300" remote="130547114400000000" Dst="0" />
+<file name="test.php" server="192.168.170.16/sumc/development/" local="130473911912559527" remote="130547114400000000" Dst="0" />
 </dwsync>

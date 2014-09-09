@@ -38,9 +38,38 @@ if($dental_vitals->num_rows() > 0){
 
 else
 {
+	$dental_vitals_id = "";
+	$visit_major_reason = "";
+	$serious_illness = "";
+	$serious_illness_xplain = "";
+	$treatment = "";
+	$treatment_hospital = "";
+	$treatment_doctor = "";
+	$Food_allergies = "";
+	$Regular_treatment = "";
+	$Recent_medication = "";
+	$Medicine_allergies = "";
+	$chest_trouble = "";
+	$heart_problems = "";
+	$diabetic = "";
+	$epileptic = "";
+	$rheumatic_fever = "";
+	$elongated_bleeding = "";
+	$explain_bleeding = "";
+	$jaundice = "";
+	$hepatitis = "";
+	$asthma = "";
+	$eczema = "";
+	$cancer = "";
+	$women_pregnant = "";
+	$pregnancy_month = "";
+	$additional_infor = "";
+	$prior_treatment = "";
+	$alcohol = "";
+	$smoke = "";
 }
 
-	echo form_open("reception/register_other_patient", array("class" => "form-horizontal"));
+	echo form_open("nurse/dental_vitals/".$visit_id, array("class" => "form-horizontal"));
 	?>
     <div class="row">
         <div class="col-md-6">
@@ -64,7 +93,7 @@ else
                             <label class="col-lg-4 control-label">Chief Complaint: </label>
                             
                             <div class="col-lg-8">
-                                <textarea name="reason" id="reason" placeholder="Reason for Visit" required class="form-control"></textarea>
+                                <textarea name="reason" id="reason" placeholder="Reason for Visit" required class="form-control"><?php echo $visit_major_reason;?></textarea>
                             </div>
                         </div>
                         
@@ -72,7 +101,7 @@ else
                             <label class="col-lg-4 control-label">Serious Illness or operation: </label>
                             
                             <div class="col-lg-8">
-            					<textarea name="doctor" id="doctor" placeholder="Hospital" class="form-control"></textarea>
+                            	<textarea name="doctor" id="doctor" placeholder="Doctor" class="form-control"><?php echo $treatment_doctor;?></textarea>
                             </div>
                         </div>
                         
@@ -80,7 +109,7 @@ else
                             <label class="col-lg-4 control-label"> </label>
                             
                             <div class="col-lg-8">
-                                <textarea name="hospital" id="hospital" placeholder="Complain" class="form-control"></textarea>
+                                <textarea name="hospital" id="hospital" placeholder="Hospital" class="form-control"><?php echo $treatment_hospital;?></textarea>
                             </div>
                         </div>
                         
@@ -110,7 +139,7 @@ else
                             <label class="col-lg-4 control-label">Food Allergies: </label>
                             
                             <div class="col-lg-8">
-                                <textarea id='food_allergies' name='food_allergies' class="form-control"> </textarea>
+                                <textarea id='food_allergies' name='food_allergies' class="form-control"><?php echo $Food_allergies;?></textarea>
                             </div>
                         </div>
                         
@@ -118,7 +147,7 @@ else
                             <label class="col-lg-4 control-label">Medicine Allergies: </label>
                             
                             <div class="col-lg-8">
-            					<textarea id='medicine_allergies' name='medicine_allergies' class="form-control"></textarea>
+            					<textarea id='medicine_allergies' name='medicine_allergies' class="form-control"><?php echo $Medicine_allergies;?></textarea>
                             </div>
                         </div>
                         
@@ -126,7 +155,7 @@ else
                             <label class="col-lg-4 control-label">Regular Treatment: </label>
                             
                             <div class="col-lg-8">
-            					<textarea id='regular_treatment' name='regular_treatment' class="form-control"></textarea>
+            					<textarea id='regular_treatment' name='regular_treatment' class="form-control"><?php echo $Regular_treatment;?></textarea>
                             </div>
                         </div>
                         
@@ -134,7 +163,7 @@ else
                             <label class="col-lg-4 control-label">Recent Medication: </label>
                             
                             <div class="col-lg-8">
-            					<textarea id='medication_description' name='medication_description' class="form-control"></textarea>
+            					<textarea id='medication_description' name='medication_description' class="form-control"><?php echo $Recent_medication;?></textarea>
                             </div>
                         </div>
                         
@@ -193,18 +222,32 @@ else
                             <label class="col-lg-4 control-label">Any Serious Illness? </label>
                             
                             <div class="col-lg-8">
-            					<select name="illness" id="illness" onChange="toggleFieldh('myTFh','illness')"  class="form-control"> 
-                                    <option value="NO">NO </option>
-                                    <option value="YES">YES </option>
+            					<select name="illness" id="illness" onChange="toggleFieldh('myTFh','illness')"  class="form-control">
+                                	<?php
+                                    if($serious_illness == 'YES')
+									{
+										$se = 'selected';
+										$se2 = '';
+										$display = 'style="display:block;"';
+									}
+									else
+									{
+										$se2 = 'selected';
+										$se = '';
+										$display = 'style="display:none;"';
+									}
+									?>
+                                    <option value="NO" <?php echo $se2;?>>NO </option>
+                                    <option value="YES" <?php echo $se;?>>YES </option>
                                 </select>
                             </div>
                         </div>
                         
-                    	<div class="form-group" id="myTFh" name="myTFh" style='display:none;'>
+                    	<div class="form-group" id="myTFh" name="myTFh" <?php echo $display;?>>
                             <label class="col-lg-4 control-label">Explain Illness: </label>
                             
                             <div class="col-lg-8">
-            					<textarea id="illness_exp" name="illness_exp" placeholder="Illness Name" class="form-control"> </textarea>
+            					<textarea id="illness_exp" name="illness_exp" placeholder="Illness Name" class="form-control"><?php echo $serious_illness_xplain;?></textarea>
                             </div>
                         </div>
                         
@@ -212,19 +255,42 @@ else
                             <label class="col-lg-4 control-label">Is patient pregnant? </label>
                             
                             <div class="col-lg-8">
-            					<select name="preg" id="preg" onChange="toggleFieldX('myTFx','preg')" class="form-control"> 
-                                    <option value="NA">NOT APPLICABLE </option>
-                                    <option value="YES">YES </option>
-                                    <option value="NO">NO </option>
+            					<select name="preg" id="preg" onChange="toggleFieldX('myTFx','preg')" class="form-control">
+                                	<?php
+                                    if($women_pregnant == 'NA')
+									{
+										$se = 'selected';
+										$se2 = '';
+										$se3 = '';
+										$display = 'style="display:none;"';
+									}
+									else if($women_pregnant == 'YES')
+									{
+										$se = '';
+										$se2 = 'selected';
+										$se3 = '';
+										$display = 'style="display:block;"';
+									}
+									else
+									{
+										$se = '';
+										$se2 = '';
+										$se3 = 'selected';
+										$display = 'style="display:none;"';
+									}
+									?>
+                                    <option value="NA" <?php echo $se;?>>NOT APPLICABLE </option>
+                                    <option value="YES" <?php echo $se2;?>>YES </option>
+                                    <option value="NO" <?php echo $se3;?>>NO </option>
                                 </select>
                             </div>
                         </div>
                         
-                    	<div class="form-group" id="myTFx" name="myTFx" style='display:none;'>
+                    	<div class="form-group" id="myTFx" name="myTFx" <?php echo $display;?>>
                             <label class="col-lg-4 control-label">How far Along (Months)? </label>
                             
                             <div class="col-lg-8">
-            					<textarea id="months" name="months" placeholder="How far Along Months" class="form-control"> </textarea>
+            					<textarea id="months" name="months" placeholder="How far Along Months" class="form-control"><?php echo $pregnancy_month;?></textarea>
                             </div>
                         </div>
                         
@@ -232,34 +298,78 @@ else
                             <label class="col-lg-4 control-label">Additional Information: </label>
                             
                             <div class="col-lg-8">
-            					<textarea name="additional" class="form-control" placeholder="Additional Information"></textarea>
+            					<textarea name="additional" class="form-control" placeholder="Additional Information"><?php echo $additional_infor;?></textarea>
                             </div>
                         </div>
                         
                     	<div class="form-group">
                             <label class="col-lg-4 control-label">Have You been Dissatisfied With Previous Treatment? </label>
                             
-                            <div class="col-lg-8">
-            					<input name="prior_treatment" type="radio" value="YES" class="form-control"> <strong> Yes</strong>
-                                <input name="prior_treatment" type="radio" value="NO" class="form-control"> <strong>No </strong>
+							<?php
+                            if($prior_treatment == 'YES')
+                            {
+                                $se = ' checked="checked"';
+                                $se2 = '';
+                            }
+                            else
+                            {
+                                $se2 = ' checked="checked"';
+                                $se = '';
+                            }
+                            ?>
+                            <div class="col-lg-4">
+            					<input name="prior_treatment" type="radio" value="YES" <?php echo $se;?>> <strong> Yes</strong>
+                            </div>
+                            <div class="col-lg-4">
+                                <input name="prior_treatment" type="radio" value="NO" <?php echo $se2;?>> <strong>No </strong>
                             </div>
                         </div>
                         
                     	<div class="form-group">
                             <label class="col-lg-4 control-label">Alcohol Consupmtion? </label>
                             
-                            <div class="col-lg-8">
-            					<input name="alcohol" type="radio" value="YES" class="form-control"> <strong> Yes</strong>
-                                <input name="alcohol" type="radio" value="NO" class="form-control"> <strong>No </strong>
+							<?php
+                            if($alcohol == 'YES')
+                            {
+                                $se = ' checked="checked"';
+                                $se2 = '';
+                            }
+                            else
+                            {
+                                $se2 = ' checked="checked"';
+                                $se = '';
+                            }
+                            ?>
+                            
+                            <div class="col-lg-4">
+            					<input name="alcohol" type="radio" value="YES" <?php echo $se;?>> <strong> Yes</strong>
+                            </div>
+                            <div class="col-lg-4">
+                                <input name="alcohol" type="radio" value="NO" <?php echo $se2;?>> <strong>No </strong>
                             </div>
                         </div>
                         
                     	<div class="form-group">
                             <label class="col-lg-4 control-label">Smoke? </label>
                             
-                            <div class="col-lg-8">
-            					<input name="smoke" type="radio" value="YES" class="form-control"> <strong> Yes</strong>
-                                <input name="smoke" type="radio" value="NO" class="form-control"> <strong>No </strong>
+							<?php
+                            if($smoke == 'YES')
+                            {
+                                $se = ' checked="checked"';
+                                $se2 = '';
+                            }
+                            else
+                            {
+                                $se2 = ' checked="checked"';
+                                $se = '';
+                            }
+                            ?>
+                            
+                            <div class="col-lg-4">
+            					<input name="smoke" type="radio" value="YES" <?php echo $se;?>> <strong> Yes</strong>
+                            </div>
+                            <div class="col-lg-4">
+                                <input name="smoke" type="radio" value="NO" <?php echo $se2;?>> <strong>No </strong>
                             </div>
                         </div>
                         
@@ -271,18 +381,90 @@ else
         </div>
     </div>
     
+    <?php if($dental_vitals->num_rows() > 0){ ?>
     <div class="center-align">
-    	<input type="submit" name="submit" id="submit" class="btn btn-large btn-info" align="center" value="Save"/> 
-           <input type="submit" name="submit1" id="submit1" align="center" class="btn btn-large btn-success"value="Save & Send To Dentist"/>
+    	<input type="hidden" name="dental_vitals_id" value="<?php echo $dental_vitals_id;?>"/>
+    	<input type="submit" name="update" class="btn btn-large btn-info" align="center" value="Update"/>
+        <input type="submit" name="update1" align="center" class="btn btn-large btn-success"value="Update & Send To Dentist"/>
     </div>
+    <?php } 
+	
+	else{ ?>
+    <div class="center-align">
+    	<input type="submit" name="submit" id="submit" class="btn btn-large btn-info" align="center" value="Save"/>
+        <input type="submit" name="submit1" id="submit1" align="center" class="btn btn-large btn-success"value="Save & Send To Dentist"/>
+    </div>
+    <?php } ?>
 <script>
-	$(document).ready(function(){
 		
-		var config_url = $("#config_url").val();
+	var config_url = $("#config_url").val();
+		
+	$(document).ready(function(){
 		
 	  	$.get( config_url+"/nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
 			$("#new-nav").html(data);
 		});
 	});
+	
+	function save_condition1(cond, family, patient_id){
+		
+		var XMLHttpRequestObject = false;
+			
+		if (window.XMLHttpRequest) {
+		
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} 
+			
+		else if (window.ActiveXObject) {
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		//var condition = document.getElementById("checkbox"+cond+family);
+			
+		url = config_url+"/nurse/save_family_disease/"+cond+"/"+family+"/"+patient_id;
+	
+		if(XMLHttpRequestObject) {
+					
+			XMLHttpRequestObject.open("GET", url);
+					
+			XMLHttpRequestObject.onreadystatechange = function(){
+				
+				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+					
+					$.get( config_url+"/nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
+						$("#new-nav").html(data);
+					});
+				}
+			}
+			
+			XMLHttpRequestObject.send(null);
+		}
+	}
+	
+	function toggleFieldh(myTFh,illness) 
+	{
+		var myTarget = document.getElementById(myTFh);
+		var illness = document.getElementById(illness).value;
+		
+		if((myTarget.style.display == 'none')&&(illness=='YES')){
+		  myTarget.style.display = 'block';
+		} 
+		else {
+		  myTarget.style.display = 'none';
+		  myTarget.value = '';
+		}
+	}
+	
+	function toggleFieldX(myTFx,preg) {
+		var myTarget = document.getElementById(myTFx);
+		var pregnant = document.getElementById(preg).value;
+		//alert(pregnant);
+		if((myTarget.style.display == 'none')&&(pregnant=='YES')){
+		  myTarget.style.display = 'block';
+		} 
+		else {
+		  myTarget.style.display = 'none';
+		  myTarget.value = '';
+		}
+	}
 	
 </script>

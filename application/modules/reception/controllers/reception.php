@@ -808,4 +808,17 @@ class Reception extends auth
 			}
 		}
 	}
+	
+	
+	public function end_visit($visit_id)
+	{
+		$data = array(
+        	"close_card" => 1
+    	);
+		$table = "visit";
+		$key = $visit_id;
+		$this->database->update_entry($table, $data, $key);
+		
+		redirect('reception/visit_list/0');
+	}
 }

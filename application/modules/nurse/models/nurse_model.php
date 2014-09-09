@@ -28,14 +28,14 @@ class Nurse_model extends CI_Model
 			'visit_major_reason'=>$visit_major_reason,
 			'serious_illness'=>$serious_illness,
 			'serious_illness_xplain'=>$serious_illness_xplain,
-			'treatment'=>$treatment,
+			//'treatment'=>$treatment,
 			'treatment_hospital'=>$treatment_hospital,
 			'treatment_doctor'=>$treatment_doctor,
 			'Food_allergies'=>$Food_allergies,
 			'Regular_treatment'=>$Regular_treatment,
 			'Recent_medication'=>$Recent_medication,
 			'Medicine_allergies'=>$Medicine_allergies,
-			'chest_trouble'=>$chest_trouble,
+			/*'chest_trouble'=>$chest_trouble,
 			'heart_problems'=>$heart_problems,
 			'diabetic'=>$diabetic,
 			'epileptic'=>$epileptic,
@@ -45,7 +45,7 @@ class Nurse_model extends CI_Model
 			'hepatitis'=>$hepatitis,
 			'asthma'=>$asthma,
 			'eczema'=>$eczema,
-			'cancer'=>$cancer,
+			'cancer'=>$cancer,*/
 			'women_pregnant'=>$women_pregnant,
 			'pregnancy_month'=>$pregnancy_month,
 			'additional_infor'=>$additional_infor,
@@ -94,14 +94,14 @@ class Nurse_model extends CI_Model
 			'visit_major_reason'=>$visit_major_reason,
 			'serious_illness'=>$serious_illness,
 			'serious_illness_xplain'=>$serious_illness_xplain,
-			'treatment'=>$treatment,
+			//'treatment'=>$treatment,
 			'treatment_hospital'=>$treatment_hospital,
 			'treatment_doctor'=>$treatment_doctor,
 			'Food_allergies'=>$Food_allergies,
 			'Regular_treatment'=>$Regular_treatment,
 			'Recent_medication'=>$Recent_medication,
 			'Medicine_allergies'=>$Medicine_allergies,
-			'chest_trouble'=>$chest_trouble,
+			/*'chest_trouble'=>$chest_trouble,
 			'heart_problems'=>$heart_problems,
 			'diabetic'=>$diabetic,
 			'epileptic'=>$epileptic,
@@ -111,7 +111,7 @@ class Nurse_model extends CI_Model
 			'hepatitis'=>$hepatitis,
 			'asthma'=>$asthma,
 			'eczema'=>$eczema,
-			'cancer'=>$cancer,
+			'cancer'=>$cancer,*/
 			'women_pregnant'=>$women_pregnant,
 			'pregnancy_month'=>$pregnancy_month,
 			'additional_infor'=>$additional_infor,
@@ -281,6 +281,7 @@ class Nurse_model extends CI_Model
 		return $result;
 	}
 
+
 	function submitvisitprocedure($procedure_id,$visit_id,$suck){
 		$visit_data = array('procedure_id'=>$procedure_id,'visit_id'=>$visit_id,'units'=>$suck);
 		$this->db->insert('visit_procedure', $visit_data);
@@ -399,6 +400,22 @@ class Nurse_model extends CI_Model
 		$ms = ($minutes - $minutes_rounded) * 60;
 		$ms_rounded = intval($ms);
 		return $hours_rounded.":".$minutes_rounded.":".$ms_rounded;
+	}
+	public function save_family_disease($family_id, $patient_id, $disease_id)
+	{
+		$data = array(
+			'family_id'=>$family_id,
+			'patient_id'=>$patient_id,
+			'disease_id'=>$disease_id
+		);
+		
+		if($this->db->insert('family_history_disease', $data))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
 	}
 }
 ?>
