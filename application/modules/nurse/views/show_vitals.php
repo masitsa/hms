@@ -48,7 +48,7 @@
 
 <!-- hip/ Weist -->
 
-<p>Hip / Weist :</p>
+<p>Hip / Waist :</p>
 <div class="form-group">
     <label class="col-lg-4 control-label">Hip : </label>
     
@@ -60,7 +60,7 @@
 
 </div>
 <div class="form-group">
-    <label class="col-lg-4 control-label">Weist : </label>
+    <label class="col-lg-4 control-label">Waist : </label>
     
     <div class="col-lg-8">
     	<input type="text" id="vital3" onfocusout = "save_vital(<?php echo $visit_id;?>, 3)" class="form-control"/>

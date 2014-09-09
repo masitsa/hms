@@ -241,7 +241,7 @@ else{
 
    
 
-    var url = "http://localhost/sumc/index.php/nurse/procedure/"+id+"/"+v_id+"/"+suck;
+    var url = "<?php echo site_url();?>/nurse/procedure/"+id+"/"+v_id+"/"+suck;
    
     if(XMLHttpRequestObject) {
                 

@@ -16,6 +16,16 @@ if(count($rs) > 0){
 		}
 	endforeach;
 	
+	if(empty($weight))
+	{
+		$weight = 0;
+	}
+	
+	if(empty($height))
+	{
+		$height = 0;
+	}
+	
 	if(($weight != NULL) && ($height != NULL))
 	{
 		$bmi = $weight / ($height * $height);

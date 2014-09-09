@@ -17,6 +17,16 @@ if(count($rs) > 0){
 		}
 	endforeach;
 	
+	if(empty($waist))
+	{
+		$waist = 0;
+	}
+	
+	if(empty($hip))
+	{
+		$hip = 0;
+	}
+	
 	if(($waist != NULL) && ($hip != NULL))
 	{
 		$hwr = $hip / $waist;
