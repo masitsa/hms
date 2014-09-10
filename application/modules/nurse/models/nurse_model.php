@@ -418,5 +418,172 @@ class Nurse_model extends CI_Model
 			return FALSE;
 		}
 	}
+	public function get_exercices_values(){
+		$table = "excersise";
+		$where = "excersise_id > 0 ";
+		$items = "*";
+		$order = "excersise_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+	}
+
+	public function get_exercices_duration_values(){
+		$table = "excersise_duration";
+		$where = "excersise_duration_id > 0 ";
+		$items = "*";
+		$order = "excersise_duration_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+	}
+
+	public function get_sleep_values(){
+		$table = "sleep";
+		$where = "sleep_id > 0 ";
+		$items = "*";
+		$order = "sleep_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+	}
+
+	public function get_values($table_name,$primary_key){
+		$table = "$table_name";
+		$where = "$primary_key > 0 ";
+		$items = "*";
+		$order = "$primary_key";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+	}
+
+	public function submit_lifestyle_values($patient_id){
+		$excercise= $this->input->post('excercise');
+		$excercise_duration= $this->input->post('excercise_duration');
+		$sleep=$this->input->post('sleep');
+		$meals=$this->input->post('meals');
+		$coffee=$this->input->post('coffee');
+		$housing=$this->input->post('housing');
+		$education=$this->input->post('education');
+		$drugs=$this->input->post('drugs');
+		$diet=$this->input->post('diet');
+		$alcohol_qty=$this->input->post('alcohol_qty');
+		$alcohol_percentage=$this->input->post('alcohol_percentage');
+		
+		$data = array(
+			'excersise_id'=>$excercise,
+			'excersise_duration_id'=>$excercise_duration,
+			'sleep_id'=>$sleep,
+			'meals_id'=>$meals,
+			'coffee_id'=>$coffee,
+			'housing_id'=>$housing,
+			'education_id'=>$education_id,
+			'lifestyle_diet'=>$diet,
+			'lifestyle_drugs'=>$drugs,
+			'lifestyle_alcohol_percentage'=>$alcohol_percentage,
+			'lifestyle_alcohol_quantity'=>$alcohol_qty,
+			'patient_id'=>$patient_id
+		);
+		
+		if($this->db->insert('dental_vitals', $data))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	public function get_symptoms($visit_id){
+		$table = "visit";
+		$where = "visit_id = ".$visit_id;
+		$items = "*";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+	}
+
+	function get_visit_symptoms($visit_id){
+		$table = "status, visit_symptoms, symptoms";
+		$where = "visit_symptoms.visit_id = $visit_id AND visit_symptoms.symptoms_id = symptoms.symptoms_id AND visit_symptoms.status_id = status.status_id";
+		$items = "visit_symptoms.description, symptoms.symptoms_name, status.status_name, visit_symptoms.visit_symptoms_id";
+		$order = "symptoms.symptoms_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+	}
+
+	public function get_objective_findings($visit_id){
+		$table = "visit";
+		$where = "visit_id = ".$visit_id;
+		$items = "visit_objective_findings";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+		
+		
+	}
+
+	function get_visit_objective_findings($visit_id){
+
+		$table = "objective_findings, objective_findings_class, visit_objective_findings";
+		$where = "objective_findings_class.objective_findings_class_id = objective_findings.objective_findings_class_id 
+		AND visit_objective_findings.`objective_findings_id` = objective_findings.objective_findings_id
+		AND visit_objective_findings.visit_id = ".$visit_id;
+		$items = "objective_findings.objective_findings_name, objective_findings_class.objective_findings_class_name, objective_findings.objective_findings_id, visit_objective_findings.visit_objective_findings_id,visit_objective_findings.description";
+		$order = "objective_findings.objective_findings_name";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+		
+	
+	}
+
+	function get_assessment($visit_id){
+		$table = "visit";
+		$where = "visit_id = ".$visit_id;
+		$items = "visit_assessment";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+	}
+
+	function get_plan($visit_id){
+		$table = "visit";
+		$where = "visit_id = ".$visit_id;
+		$items = "visit_plan";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	
+	function get_diagnosis($visit_id){
+
+		$table = "diagnosis, diseases";
+		$where = "diagnosis.visit_id = ".$visit_id;
+		$items = "diagnosis.diagnosis_id, diseases.diseases_name, diseases.diseases_code";
+		$order = "diagnosis.disease_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+		
+		
+	}
+	
 }
 ?>

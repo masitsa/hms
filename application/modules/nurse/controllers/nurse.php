@@ -97,6 +97,8 @@ class Nurse extends auth
 		}
 	}
 
+
+
 	
 	public function close_queue_search()
 	{
@@ -373,6 +375,62 @@ class Nurse extends auth
 	public function save_family_disease($disease_id, $family_id, $patient_id)
 	{
 		$this->nurse_model->save_family_disease($family_id, $patient_id, $disease_id);
+	}
+
+
+	public function save_lifestyle($visit_id){
+		$this->form_validation->set_rules('diet', 'Diet', 'trim|xss_clean');
+		$this->form_validation->set_rules('drugs', 'Drugs', 'trim|xss_clean');
+		$this->form_validation->set_rules('alcohol_percentage', 'Alcohol %', 'trim|xss_clean');
+		$this->form_validation->set_rules('alcohol_qty', 'Alcohol Qty', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->session->set_userdata("error_message","Fill in the fields");
+			$this->patient_card($visit_id);
+		}
+		
+		else
+		{
+			$patient_id = $this->nurse_model->get_patient_id($patient_id);
+			
+			if($patient_id != FALSE)
+			{
+				$this->nurse_model->submit_lifestyle_values($patient_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not find patient. Please try again");
+				$this->patient_card($visit_id);	
+			}
+		}
+		
+	}
+	public function procedure_total($procedure_id,$units,$amount){
+		
+
+		$visit_data = array('visit_charge_units'=>$units);
+		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->update('visit_charge', $visit_data);
+	}
+
+	public function view_symptoms($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/view_symptoms',$data);	
+	}
+	public function view_objective_findings($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/view_objective_findings',$data);
+	}
+	public function view_assessment($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/view_assessment',$data);
+	}
+	public function view_plan($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/view_plan',$data);
 	}
 }
 ?>
