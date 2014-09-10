@@ -270,15 +270,16 @@ class Nurse_model extends CI_Model
 		return $result;
 	}
 	
-	function get_procedures($order,$visit_t){
-		$table = "service_charge";
-		$where = "service_id = '3' AND visit_type_id = $visit_t";
-		$items = "*";
-		$order = "service_charge_id";
-
-		$result = $this->database->select_entries_where($table, $where, $items, $order);
+	public function get_procedures($table, $where, $per_page, $page, $order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('', $per_page, $page);
 		
-		return $result;
+		return $query;
 	}
 
 

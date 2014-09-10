@@ -750,6 +750,7 @@ class Reception extends auth
 	public function dependants($patient_id)
 	{
 		$v_data['dependants_query'] = $this->reception_model->get_all_patient_dependant($patient_id);
+		$v_data['patient_query'] = $this->reception_model->get_patient_data($patient_id);
 		$v_data['patient_id'] = $patient_id;
 		$v_data['relationships'] = $this->reception_model->get_relationship();
 		$v_data['religions'] = $this->reception_model->get_religion();

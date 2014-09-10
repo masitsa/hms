@@ -95,7 +95,6 @@ class Nurse extends auth
 		}else{
 			$this->load->view('auth/template_sidebar', $data);	
 		}
-		
 	}
 
 	
@@ -265,10 +264,96 @@ class Nurse extends auth
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('view_procedure',$data);
 	}
+	
+	public function search_procedures($visit_id)
+	{
+		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			$search = ' AND service_charge_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$this->session->set_userdata('procedure_search', $search);
+		}
+		
+		$this->procedures($visit_id);
+	}
+	
+	public function close_procedure_search($visit_id)
+	{
+		$this->session->unset_userdata('procedure_search');
+		$this->procedures($visit_id);
+	}
 
-	function procedures($visit_id){
-		$data = array('visit_id'=>$visit_id);
-		$this->load->view('procedures_list',$data);	
+	function procedures($visit_id)
+	{
+		//check patient visit type
+		$rs = $this->nurse_model->check_visit_type($visit_id);
+		if(count($rs)>0){
+		  foreach ($rs as $rs1) {
+			# code...
+			  $visit_t = $rs1->visit_type;
+		  }
+		}
+		
+		$order = 'service_charge_name';
+		
+		$where = 'service_id = 3 AND visit_type_id = '.$visit_t;
+		$procedure_search = $this->session->userdata('procedure_search');
+		
+		if(!empty($procedure_search))
+		{
+			$where .= $procedure_search;
+		}
+		
+		$table = 'service_charge';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/procedures/'.$visit_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 4;
+		$config['per_page'] = 15;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_procedures($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Procedure List';
+		$v_data['title'] = 'Procedure List';
+		
+		$v_data['visit_id'] = $visit_id;
+		$data['content'] = $this->load->view('procedures_list', $v_data, true);
+		
+		$data['title'] = 'Procedure List';
+		$this->load->view('auth/template_no_sidebar', $data);	
 	}
 
 	function procedure($procedure_id,$visit_id,$suck){
@@ -284,8 +369,6 @@ class Nurse extends auth
 	function add_lifestyle($patient_id){
 
 	}
-
-	
 	
 	public function save_family_disease($disease_id, $family_id, $patient_id)
 	{

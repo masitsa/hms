@@ -242,34 +242,48 @@ class Reception_model extends CI_Model
 	*/
 	public function save_dependant_patient($dependant_staff)
 	{
-		$data = array(
-			'other_names'=>ucwords(strtolower($this->input->post('patient_surname'))),
-			'names'=>ucwords(strtolower($this->input->post('patient_othernames'))),
-			'title_id'=>$this->input->post('title_id'),
-			'DOB'=>$this->input->post('patient_dob'),
-			'gender_id'=>$this->input->post('gender_id'),
-			'religion_id'=>$this->input->post('religion_id'),
-			'staff_id'=>$dependant_staff,
-			'civil_status_id'=>$this->input->post('civil_status_id')
-		);
-		$this->db->insert('staff_dependants', $data);
+		$this->db->select('staff_system_id');
+		$this->db->where('Staff_Number', $dependant_staff);
+		$query = $this->db->get('staff');
 		
-		$data2 = array(
-			'strath_no'=>$this->db->insert_id(),
-			'dependant_id'=>$dependant_staff,
-			'visit_type_id'=>2,
-			'relationship_id'=>$this->input->post('relationship_id'),
-			'patient_date'=>date('Y-m-d H:i:s'),
-			'patient_number'=>$this->strathmore_population->create_patient_number(),
-			'created_by'=>$this->session->userdata('personnel_id'),
-			'modified_by'=>$this->session->userdata('personnel_id')
-		);
-		
-		if($this->db->insert('patients', $data2))
+		if($query->num_rows() > 0)
 		{
-			return $this->db->insert_id();
+			$res = $query->row();
+			$staff_system_id = $res->staff_system_id;
+			$data = array(
+				'other_names'=>ucwords(strtolower($this->input->post('patient_surname'))),
+				'names'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+				'title_id'=>$this->input->post('title_id'),
+				'DOB'=>$this->input->post('patient_dob'),
+				'gender_id'=>$this->input->post('gender_id'),
+				'religion_id'=>$this->input->post('religion_id'),
+				'staff_id'=>$staff_system_id,
+				'civil_status_id'=>$this->input->post('civil_status_id')
+			);
+			$this->db->insert('staff_dependants', $data);
+			
+			$data2 = array(
+				'strath_no'=>$this->db->insert_id(),
+				'dependant_id'=>$dependant_staff,
+				'visit_type_id'=>2,
+				'relationship_id'=>$this->input->post('relationship_id'),
+				'patient_date'=>date('Y-m-d H:i:s'),
+				'patient_number'=>$this->strathmore_population->create_patient_number(),
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+			);
+			
+			if($this->db->insert('patients', $data2))
+			{
+				return $this->db->insert_id();
+			}
+			else{
+				return FALSE;
+			}
 		}
-		else{
+		
+		else
+		{
 			return FALSE;
 		}
 	}
@@ -646,6 +660,31 @@ class Reception_model extends CI_Model
 		$this->db->from('patients');
 		$this->db->select('*');
 		$this->db->where('dependant_id = \''.$patient_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve all patient dependants
+	*	@param int $strath_no
+	*
+	*/
+	public function get_all_staff_dependants($patient_id)
+	{
+		$this->db->from('patients, staff_dependants, staff');
+		$this->db->select('staff_dependants.*, staff.Staff_Number');
+		$this->db->where('patients.strath_no = staff.Staff_Number AND staff.staff_system_id = staff_dependants.staff_id AND patients.patient_id = \''.$patient_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	public function get_staff_dependant_patient($staff_dependant_id, $staff_no)
+	{
+		$this->db->from('patients');
+		$this->db->select('patients.*');
+		$this->db->where('patients.strath_no = \''.$staff_dependant_id.'\' AND patients.dependant_id = \''.$staff_no.'\'');
 		$query = $this->db->get();
 		
 		return $query;
