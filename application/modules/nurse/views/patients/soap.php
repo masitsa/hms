@@ -119,7 +119,7 @@
                 <div class="widget-content">
                     <div class="padd">
                             <!-- visit Procedures from java script -->
-                                <div id="procedures"></div>
+                                <div id="plan"></div>
                              <!-- end of visit procedures -->
                     </div>
                 </div>
@@ -496,5 +496,10 @@ function display_prescription(visit_id, page){
     
     XMLHttpRequestObject.send(null);
   }
+}
+
+function open_window_lab(test, visit_id){
+  var config_url = $('#config_url').val();
+  window.open(config_url+"/lab/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
 }
 </script>

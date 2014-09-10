@@ -672,7 +672,7 @@ a:hover {
         
         <?php } 
           echo"
-                        </table>
+            </table>
 						<div class='pagination' style='margin-left:25%;'>
     						<ul>";
 							if($current_page <= 1){
