@@ -18,7 +18,6 @@
 	else
 	{
 		//check if patient is staff
-		$patient_query = $this->reception_model->get_patient_data($patient_id);
 		$patient_row = $patient_query->row();
 		
 		$visit_type_id = $patient_row->visit_type_id;
@@ -34,7 +33,7 @@
 		//if patient is staff
 		else
 		{
-			$staff_no = $patient_row->visit_type_id;
+			$staff_no = $patient_row->strath_no;
 			$staff_query = $this->reception_model->get_staff($staff_no);
 			
 			if($staff_query->num_rows() > 0)

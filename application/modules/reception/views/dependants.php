@@ -17,37 +17,87 @@
         <div class="widget-content">
           <div class="padd">
 				<?php
+				
+		
+				$patient_row = $patient_query->row();
+				$visit_type_id = $patient_row->visit_type_id;
+				
+				//if patient is staff
+				if($visit_type_id == 2)
+				{
+					$dependants_query = $this->reception_model->get_all_staff_dependants($patient_id);
+				}
+				
                 if($dependants_query->num_rows() > 0)
 				{
+					$count = 0;
 					echo '
           		<table class="table table-hover table-bordered ">
 				  <thead>
 					<tr>
 					  <th>#</th>
-					  <th>Patient Type</th>
 					  <th>Surname</th>
 					  <th>Other Names</th>
-					  <th>Date Created</th>
-					  <th>Last Visit</th>
-					  <th colspan="5">Actions</th>
+					  <th colspan="4">Actions</th>
 					</tr>
 				  </thead>
 				  <tbody>';
 				  
 					$dependants = $dependants_query->result();
 					
-					foreach($dependants as $dep)
+					//if patient is staff
+					if($visit_type_id == 2)
 					{
-						$patient_surname = $dep->Surname;
-						$patient_othernames = $dep->Other_names;
-						
-						echo 
-						'
-						<tr>
-							<td>'.$patient_surname.'</td>
-							<td>'.$patient_othernames.'</td>
-						</tr>
-						';
+						foreach($dependants as $dep)
+						{
+							$count++;
+							$patient_surname = $dep->names;
+							$patient_othernames = $dep->other_names;
+							$staff_patient_query = $this->reception_model->get_staff_dependant_patient($dep->staff_dependants_id, $dep->Staff_Number);
+							if($staff_patient_query->num_rows() > 0)
+							{
+								$staff_patient_row = $staff_patient_query->row();
+								
+								$patient_id = $staff_patient_row->patient_id;
+								
+								echo 
+								'
+								<tr>
+									<td>'.$count.'</td>
+									<td>'.$patient_surname.'</td>
+									<td>'.$patient_othernames.'</td>
+									<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
+									<td><a href="'.site_url().'/reception/lab_visit/'.$patient_id.'" class="btn btn-sm btn-info">Lab</a></td>
+									<td><a href="'.site_url().'/reception/initiate_pharmacy/'.$patient_id.'" class="btn btn-sm btn-warning">Pharmacy</a></td>
+									<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
+								</tr>
+								';
+							}
+						}
+					}
+					
+					else
+					{
+						foreach($dependants as $dep)
+						{
+							$count++;
+							$patient_surname = $dep->patient_surname;
+							$patient_othernames = $dep->patient_othernames;
+							$patient_id = $dep->patient_id;
+							
+							echo 
+							'
+							<tr>
+								<td>'.$count.'</td>
+								<td>'.$patient_surname.'</td>
+								<td>'.$patient_othernames.'</td>
+								<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
+								<td><a href="'.site_url().'/reception/lab_visit/'.$patient_id.'" class="btn btn-sm btn-info">Lab</a></td>
+								<td><a href="'.site_url().'/reception/initiate_pharmacy/'.$patient_id.'" class="btn btn-sm btn-warning">Pharmacy</a></td>
+								<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
+							</tr>
+							';
+						}
 					}
 					
 					echo '
