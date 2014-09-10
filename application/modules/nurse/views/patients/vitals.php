@@ -357,7 +357,7 @@ function myPopup3(visit_id) {
 
 
 function calculatetotal(amount, id, procedure_id, v_id){
-        
+       
     var units = document.getElementById('units'+id).value;  
 
     grand_total(id, units, amount);
@@ -375,8 +375,8 @@ function grand_total(procedure_id, units, amount){
     else if (window.ActiveXObject) {
         XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    //alert(procedure_id);
-    var url = host+"data/nurse/procedure_total.php?procedure_id="+procedure_id+"&units="+units+"&amount="+amount;
+    
+    var url = config_url+"/nurse/procedure_total/"+procedure_id+"/"+units+"/"+amount;
     
     if(XMLHttpRequestObject) {
                 
