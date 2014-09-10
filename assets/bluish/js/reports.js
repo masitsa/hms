@@ -349,9 +349,13 @@ $.ajax({
 /* Bar chart ends */
 
 $(document).ready(function() {
+	var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
   $.ajax({
 	type:'POST',
-	url: config_url+"/calender/get_appointments",
+	url: config_url+"/reception/get_appointments",
 	cache:false,
 	contentType: false,
 	processData: false,
@@ -359,9 +363,35 @@ $(document).ready(function() {
 	success:function(data){
 		
 		var appointments = [];
+		var total_events = parseInt(data.total_events, 10);
 
-		for(var i in data)
-			appointments.push([i, data [i]]);
+		for(i = 0; i < total_events; i++)
+		{
+			var data_array = [];
+			
+			data_title = data.title[i];
+			data_start = data.start[i];
+			data_end = data.end[i];
+			data_backgroundColor = data.backgroundColor[i];
+			data_borderColor = data.borderColor[i];
+			data_allDay = data.allDay[i];
+			data_url = data.url[i];
+			
+			//add the items to an array
+			data_array.title = data_title;
+			data_array.start = data_start;
+			data_array.end = data_end;
+			data_array.backgroundColor = data_backgroundColor;
+			data_array.borderColor = data_borderColor;
+			data_array.allDay = data_allDay;
+			data_array.url = data_url;
+			//console.log(data_array);
+			appointments.push(data_array);
+		}
+		console.log(appointments);
+		/*for(var i in data){
+			appointments.push([i, data [i]]);alert(data[i]);
+		}*/
 		
 		$('#appointments').fullCalendar({
 			  header: {

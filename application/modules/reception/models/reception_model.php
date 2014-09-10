@@ -689,5 +689,123 @@ class Reception_model extends CI_Model
 		
 		return $query;
 	}
+	
+	/*
+	*	Retrieve all appointments
+	*	@param string $table
+	* 	@param string $where
+	*	@param int $per_page
+	* 	@param int $page
+	*
+	*/
+	public function get_all_appointments($table, $where, $per_page, $page)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('visit.*, patients.*');
+		$this->db->where($where);
+		$this->db->order_by('visit_time','desc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	public function get_patient_details($appointments_result, $visit_type_id, $dependant_id, $strath_no)
+	{
+		//staff & dependant
+		if($visit_type_id == 2)
+		{
+			//dependant
+			if($dependant_id > 0)
+			{
+				$patient_type = $this->reception_model->get_patient_type($visit_type_id, $dependant_id);
+				$visit_type = 'Dependant';
+				$dependant_query = $this->reception_model->get_dependant($strath_no);
+				
+				if($dependant_query->num_rows() > 0)
+				{
+					$dependants_result = $dependant_query->row();
+					$patient_othernames = $dependants_result->other_names;
+					$patient_surname = $dependants_result->names;
+				}
+				
+				else
+				{
+					$patient_othernames = '<span class="label label-important">Dependant not found</span>';
+					$patient_surname = '';
+				}
+			}
+			
+			//staff
+			else
+			{
+				$patient_type = $this->reception_model->get_patient_type($visit_type_id, $dependant_id);
+				$staff_query = $this->reception_model->get_staff($strath_no);
+				$visit_type = 'Staff';
+				
+				if($staff_query->num_rows() > 0)
+				{
+					$staff_result = $staff_query->row();
+					
+					$patient_surname = $staff_result->Surname;
+					$patient_othernames = $staff_result->Other_names;
+				}
+				
+				else
+				{
+					$patient_othernames = '<span class="label label-important">Staff not found</span>';
+					$patient_surname = '';
+				}
+			}
+		}
+		
+		//student
+		else if($visit_type_id == 1)
+		{
+			$student_query = $this->reception_model->get_student($strath_no);
+			$patient_type = $this->reception_model->get_patient_type($visit_type_id);
+			$visit_type = 'Student';
+			
+			if($student_query->num_rows() > 0)
+			{
+				$student_result = $student_query->row();
+				
+				$patient_surname = $student_result->Surname;
+				$patient_othernames = $student_result->Other_names;
+			}
+			
+			else
+			{
+				$patient_othernames = '<span class="label label-important">Student not found</span>';
+				$patient_surname = '';
+			}
+		}
+		
+		//other patient
+		else
+		{
+			$patient_type = $this->reception_model->get_patient_type($visit_type_id);
+			
+			if($visit_type == 3)
+			{
+				$visit_type = 'Other';
+			}
+			else if($visit_type == 4)
+			{
+				$visit_type = 'Insurance';
+			}
+			else
+			{
+				$visit_type = 'General';
+			}
+			
+			$patient_othernames = $row->patient_othernames;
+			$patient_surname = $row->patient_surname;
+		}
+		
+		$patient = $visit_type.': '.$patient_surname.' '.$patient_othernames;
+		
+		return $patient;
+	}
 }
 ?>

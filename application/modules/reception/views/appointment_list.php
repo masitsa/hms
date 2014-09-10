@@ -20,28 +20,7 @@
         <!-- Widget content -->
         <div class="widget-content">
           <div class="padd">
-          <?php
-            	$error = $this->session->userdata('error_message');
-            	$validation_error = validation_errors();
-				$success = $this->session->userdata('success_message');
-				
-				if(!empty($error))
-				{
-					echo '<div class="alert alert-danger">'.$error.'</div>';
-					$this->session->unset_userdata('error_message');
-				}
-				
-				if(!empty($validation_error))
-				{
-					echo '<div class="alert alert-danger">'.$validation_error.'</div>';
-				}
-				
-				if(!empty($success))
-				{
-					echo '<div class="alert alert-success">'.$success.'</div>';
-					$this->session->unset_userdata('success_message');
-				}
-			?>
+          
 <?php
 		$search = $this->session->userdata('visit_search');
 		
@@ -56,9 +35,7 @@
 		{
 			$count = $page;
 			
-			if($visit == 0)
-			{
-				$result .= 
+			$result .= 
 				'
 					<table class="table table-hover table-bordered ">
 					  <thead>
@@ -68,35 +45,14 @@
 						  <th>Patient</th>
 						  <th>Patient Type</th>
 						  <th>Visit Type</th>
-						  <th>Time In</th>
+						  <th>Time Start</th>
+						  <th>Time End</th>
 						  <th>Doctor</th>
 						  <th>Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
 				';
-			}
-			
-			else
-			{
-				$result .= 
-				'
-					<table class="table table-hover table-bordered ">
-					  <thead>
-						<tr>
-						  <th>#</th>
-						  <th>Visit Date</th>
-						  <th>Patient</th>
-						  <th>Patient Type</th>
-						  <th>Visit Type</th>
-						  <th>Time In</th>
-						  <th>Time Out</th>
-						  <th>Doctor</th>
-						</tr>
-					  </thead>
-					  <tbody>
-				';
-			}
 			
 			$personnel_query = $this->personnel_model->get_all_personnel();
 			
@@ -124,6 +80,8 @@
 				$created = $row->patient_date;
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
+				$time_start = $row->time_start;
+				$time_end = $row->time_end;
 				
 				//staff & dependant
 				if($visit_type == 2)
@@ -280,41 +238,23 @@
 				
 				$count++;
 				
-				if($visit == 0)
-				{
-					$result .= 
-					'
-						<tr>
-							<td>'.$count.'</td>
-							<td>'.$visit_date.'</td>
-							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$patient_type.'</td>
-							<td>'.$visit_type.'</td>
-							<td>'.$visit_time.'</td>
-							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
-						</tr> 
-					';
-				}
-				
-				else
-				{
-					$result .= 
-					'
-						<tr>
-							<td>'.$count.'</td>
-							<td>'.$visit_date.'</td>
-							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$patient_type.'</td>
-							<td>'.$visit_type.'</td>
-							<td>'.$visit_time.'</td>
-							<td>'.$visit_time_out.'</td>
-							<td>'.$doctor.'</td>
-						</tr> 
-					';
-				}
+				$result .= 
+				'
+					<tr>
+						<td>'.$count.'</td>
+						<td>'.$visit_date.'</td>
+						<td>'.$patient_surname.' '.$patient_othernames.'</td>
+						<td>'.$patient_type.'</td>
+						<td>'.$visit_type.'</td>
+						<td>'.$time_start.'</td>
+						<td>'.$time_end.'</td>
+						<td>'.$doctor.'</td>
+						<td><a href="'.site_url().'/reception/initiate_visit_appointment/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Do you really want to start this visit ?\');">Start Visit</a></td>
+					</tr> 
+				';
 			}
 			
+
 			$result .= 
 			'
 						  </tbody>
@@ -324,7 +264,7 @@
 		
 		else
 		{
-			$result .= "There are no patients";
+			$result .= "There are no appointment patients";
 		}
 		
 		echo $result;

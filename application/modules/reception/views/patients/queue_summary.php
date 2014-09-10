@@ -85,6 +85,7 @@
 				$created_by = $row->created_by;
 				$modified_by = $row->modified_by;
 				$visit_type_id = $row->visit_type_id;
+				$visit_id = $row->visit_id;
 				$visit_type = $row->visit_type;
 				$created = $row->patient_date;
 				$last_modified = $row->last_modified;
@@ -255,7 +256,7 @@
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'delete-brand/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">End Visit</a></td>
+							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/0" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to end this visit?\');">End Visit</a></td>
 						</tr> 
 					';
 				}
