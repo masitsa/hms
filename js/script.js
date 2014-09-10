@@ -1,7 +1,9 @@
 // JavaScript Document
 //var host = "http://192.168.178.118/hms/";
 //var host = "http://sagana/hms/";
-var host = 'http://localhost/sumc/';
+//var host = $('#config_url').val();//
+var host = 'http://localhost/hms/';
+//alert(host);
 
 
 function checkup_interface(visit_id){
@@ -623,7 +625,7 @@ function patient_details(visit_id){
 		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	
-	var url = host+"data/nurse/nurse_data.php?visit_id="+visit_id;alert(url);
+	var url = host+"data/nurse/nurse_data.php?visit_id="+visit_id;
 	
 	if(XMLHttpRequestObject) {
 		

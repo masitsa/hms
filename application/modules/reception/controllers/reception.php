@@ -93,7 +93,6 @@ class Reception extends auth
 		
 		$this->load->view('auth/template_sidebar', $data);
 	}
-	
 
 	public function visit_list($visits)
 	{
@@ -646,7 +645,15 @@ class Reception extends auth
 		$search = $visit_type_id.$strath_no.$surname.$other_name.$visit_date.$personnel_id;
 		$this->session->set_userdata('visit_search', $search);
 		
-		$this->visit_list($visits);
+		if($visits == 3)
+		{
+			$this->appointment_list();
+		}
+		
+		else
+		{
+			$this->visit_list($visits);
+		}
 	}
 	
 	function doc_schedule($personnel_id,$date)
@@ -737,7 +744,15 @@ class Reception extends auth
 	{
 		$this->session->unset_userdata('visit_search');
 		
-		$this->visit_list($visit);
+		if($visit == 3)
+		{
+			$this->appointment_list();
+		}
+		
+		else
+		{
+			$this->visit_list($visit);
+		}
 	}
 	
 	public function close_patient_search()
@@ -810,8 +825,7 @@ class Reception extends auth
 		}
 	}
 	
-	
-	public function end_visit($visit_id)
+	public function end_visit($visit_id, $page = NULL)
 	{
 		$data = array(
         	"close_card" => 1
@@ -820,6 +834,157 @@ class Reception extends auth
 		$key = $visit_id;
 		$this->database->update_entry($table, $data, $key);
 		
-		redirect('reception/visit_list/0');
+		if($page == 0)
+		{
+			redirect('reception');
+		}
+		
+		else
+		{
+			redirect('reception/visit_list/0');
+		}
+	}
+
+	public function appointment_list()
+	{
+		// this is it
+		$where = 'visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2';
+		$appointment_search = $this->session->userdata('visit_search');
+		
+		if(!empty($appointment_search))
+		{
+			$where .= $appointment_search;
+		}
+		
+		$table = 'visit, patients';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/reception/appointment_list';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 3;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Appointment List';
+		$v_data['title'] = 'Appointment List';
+		$v_data['visit'] = 3;
+		
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('appointment_list', $v_data, true);
+		$data['sidebar'] = 'reception_sidebar';
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+	}
+	
+	public function initiate_visit_appointment($visit_id)
+	{
+		$data = array(
+        	"close_card" => 0
+    	);
+		$table = "visit";
+		$key = $visit_id;
+		
+		$this->database->update_entry($table, $data, $key);
+		
+		$this->session->set_userdata('success_message', 'The patient has been added to the queue');
+		$this->visit_list(0);
+	}
+	
+	function get_appointments()
+	{	
+		$this->load->model('reports_model');
+		//get all appointments
+		$appointments_result = $this->reports_model->get_all_appointments();
+		
+		//initialize required variables
+		$totals = '';
+		$highest_bar = 0;
+		$r = 0;
+		$data = array();
+		
+		if($appointments_result->num_rows() > 0)
+		{
+			$result = $appointments_result->result();
+			
+			foreach($result as $res)
+			{
+				$visit_date = date('D M d Y',strtotime($res->visit_date)); 
+				$time_start = $visit_date.' '.$res->time_start.':00 GMT+0300'; 
+				$time_end = $visit_date.' '.$res->time_end.':00 GMT+0300';
+				$visit_type_name = $res->visit_type_name.' Appointment';
+				$patient_id = $res->patient_id;
+				$dependant_id = $res->dependant_id;
+				$visit_type = $res->visit_type;
+				$visit_id = $res->visit_id;
+				$strath_no = $res->strath_no;
+				$patient_data = $this->reception_model->get_patient_details($appointments_result, $visit_type, $dependant_id, $strath_no);
+				$color = $this->random_color();
+				
+				$data['title'][$r] = $patient_data;
+				$data['start'][$r] = $time_start;
+				$data['end'][$r] = $time_start;
+				$data['backgroundColor'][$r] = $color;
+				$data['borderColor'][$r] = $color;
+				$data['allDay'][$r] = FALSE;
+				$data['url'][$r] = site_url().'/reception/search_appointment/'.$visit_id;
+				$r++;
+			}
+		}
+		
+		$data['total_events'] = $r;
+		echo json_encode($data);
+	}
+	
+	function random_color()
+	{
+		$rand = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+    	$color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
+		
+		return $color;
+	}
+	
+	function search_appointment($visit_id)
+	{
+		if($visit_id > 0)
+		{
+			$search = ' AND visit.visit_id = '.$visit_id;
+			$this->session->set_userdata('visit_search', $search);
+		}
+		
+		redirect('reception/appointment_list');
 	}
 }
