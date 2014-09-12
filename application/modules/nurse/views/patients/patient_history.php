@@ -262,7 +262,7 @@
 		
 		else
 		{
-			$result .= "There are no patients";
+			$result .= "This patient has no previous visits";
 		}
 		
 		echo $result;

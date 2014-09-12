@@ -15,7 +15,6 @@ class Nurse_model extends CI_Model
 		$prior_treatment=$this->input->post('prior_treatment');
 		$alcohol=$this->input->post('alcohol');
 		$smoke=$this->input->post('smoke');
-	
 		
 		$women_pregnant=$this->input->post('preg');
 		$pregnancy_month=$this->input->post('months');
@@ -24,7 +23,7 @@ class Nurse_model extends CI_Model
 		$additional_infor=$this->input->post('additional');
 		
 		$data = array(
-			'visit_id'=>$visit_id,
+			'visit_id' => $visit_id,
 			'visit_major_reason'=>$visit_major_reason,
 			'serious_illness'=>$serious_illness,
 			'serious_illness_xplain'=>$serious_illness_xplain,
@@ -637,6 +636,116 @@ class Nurse_model extends CI_Model
 		return $query;
 	}
 
+	public function medical_exam_categories()
+	{
+		$query = $this->db->get('medical_exam_categories');
+		
+		return $query;
+	}
+
+	public function get_illness($visit_id, $mec_id)
+	{
+		$this->db->where('med_id = '.$mec_id.' AND visit_id = '.$visit_id);
+		$query = $this->db->get('med_check_text_save');
+		
+		return $query;
+	}
 	
+	function get_visit_charge($visit_id)
+	{
+		$this->db->select('visit_charge_amount, visit_charge_timestamp');
+		$this->db->where('visit_id = '.$visit_id);
+		$query = $this->db->get('visit_charge');
+		
+		return $query;
+	}
+	
+	function get_credit_amount($visit_type_id)
+	{
+		$this->db->select('account_credit, Amount, efect_date');
+		$this->db->where('visit_type_id = '.$visit_type_id);
+		$query = $this->db->get('account_credit');
+		
+		return $query;
+	}
+	
+	function get_visit_type_name($visit_type_id)
+	{
+		$this->db->select('visit_type_id,visit_type_name');
+		$this->db->where('visit_type_id = '.$visit_type_id);
+		$query = $this->db->get('visit_type');
+		
+		return $query;
+	}
+	
+	function get_visit_payment($visit_id)
+	{
+		$this->db->select('amount_paid');
+		$this->db->where('visit_id = '.$visit_id);
+		$query = $this->db->get('payments');
+		
+		return $query;
+	}
+	
+	function max_visit($p_id)
+	{
+		$this->db->select('MAX(visit_id)');
+		$this->db->where('patient_id = '.$p_id);
+		$query = $this->db->get('visit');
+		
+		return $query;
+	}
+	
+	function min_visit($visit_id,$payment_method_id,$amount_paid)
+	{
+		$this->db->select('MIN(time), payment_id');
+		$this->db->where('payment_method_id = '.$payment_method_id.' AND visit_id = '.$visit_id.' AND amount_paid = '.$amount_paid);
+		$query = $this->db->get('payments');
+		
+		return $query;
+	}
+		
+	function mec_med($mec_id)
+	{
+		$this->db->select('DISTINCT(item_format_id)');
+		$this->db->where('mec_id = '.$mec_id);
+		$query = $this->db->get('cat_items');
+		
+		return $query;
+	}
+		
+	function format_id($item_format_id)
+	{
+		$this->db->where('item_format_id = '.$item_format_id);
+		$query = $this->db->get('format');
+		
+		return $query;
+	}
+		
+	function get_cat_items($item_format_id, $mec_id)
+	{
+		$this->db->select('cat_items.cat_item_name, cat_items.cat_items_id, cat_items.item_format_id, format.format_name, format.format_id');
+		$this->db->where('cat_items.item_format_id = format.item_format_id AND cat_items.item_format_id = '.$item_format_id.' AND mec_id = '.$mec_id);
+		$query = $this->db->get('cat_items, format');
+		
+		return $query;
+	}
+	
+	function cat_items($item_format_id, $mec_id)
+	{
+		$this->db->select('cat_items.cat_item_name, cat_items.cat_items_id');
+		$this->db->where('cat_items.item_format_id = '.$item_format_id.' AND mec_id = '.$mec_id);
+		$query = $this->db->get('cat_items');
+		
+		return $query;
+	}
+	
+	function cat_items2($cat_items_id,$format_id,$visit_id)
+	{
+		$this->db->where('cat_id = '.$cat_items_id.' AND format_id = '.$format_id.' AND visit_id = '.$visit_id);
+		$query = $this->db->get('medical_checkup_results');
+		
+		return $query;
+	}
 }
 ?>
