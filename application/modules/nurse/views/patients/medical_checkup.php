@@ -239,3 +239,113 @@ if($exam_categories->num_rows() > 0)
     </div>
    
 </div>
+
+<script type="text/javascript">
+var host = $('#config_url').val();
+
+function save_illness(mec_id, visit_id){
+	
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var str1 = "gg";
+	var mec_id;
+	var n = str1.concat(mec_id); 
+	
+	var illness = document.getElementById(n).value;
+	//alert(illness);
+	var url = host+"/nurse/save_illness/"+mec_id+"/"+illness+"/"+visit_id;
+	
+	if(XMLHttpRequestObject) {
+		
+		//var obj = document.getElementById("insurance_company");
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
+
+function medical_exam(cat_items_id,format_id,visit_id){
+	
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	var url = host+"/nurse/save_medical_exam/"+cat_items_id+"/"+format_id+"/"+visit_id;
+		//alert(url);
+	
+	if(XMLHttpRequestObject) {
+		
+		//var obj = document.getElementById("insurance_company");
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
+
+function del_medical_exam(cat_items_id,format_id,visit_id){
+	
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	var url = host+"/nurse/delete_medical_exam/"+cat_items_id+"/"+format_id+"/"+visit_id;
+		//alert(url);
+	
+	if(XMLHttpRequestObject) {
+		
+		//var obj = document.getElementById("insurance_company");
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
+</script>

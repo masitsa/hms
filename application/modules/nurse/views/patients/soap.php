@@ -394,6 +394,7 @@ function get_test_results(page, visit_id){
   else if ((page == 75) || (page == 100)){
     url = config_url+"/lab/test1/"+visit_id;
   }
+  //alert(url);
   if(XMLHttpRequestObject) {
     if((page == 75) || (page == 85)){
       var obj = window.opener.document.getElementById("test_results");

@@ -747,5 +747,84 @@ class Nurse_model extends CI_Model
 		
 		return $query;
 	}
+	
+	function check_text_save($mec_id, $visit_id)
+	{			
+		$this->db->where('med_id = '.$mec_id.' AND visit_id = '.$visit_id);
+		$query = $this->db->get('med_check_text_save');
+		
+		return $query;
+		
+	}
+	
+	function save_illness($illness, $mec_id, $visit_id)
+	{	
+		$data['med_id'] = $mec_id;
+		$data['infor'] = $illness;
+		$data['visit_id'] = $visit_id;
+		
+		if($this->db->insert('med_check_text_save', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	function update_illness($illness, $result)
+	{
+		$mcts_id= $result->mcts_id;
+		
+		$data['infor'] = $illness;
+		
+		$this->db->where('mcts_id', $mcts_id);
+		if($this->db->update('med_check_text_save', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	function save_medical_exam($cat_items_id, $format_id, $visit_id)
+	{
+		$data['cat_id'] = $cat_items_id;
+		$data['format_id'] = $format_id;
+		$data['visit_id'] = $visit_id;
+		
+		if($this->db->insert('medical_checkup_results', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	function delete_medical_exam($cat_items_id,$format_id,$visit_id)
+	{
+		$data['cat_id'] = $cat_items_id;
+		$data['format_id'] = $format_id;
+		$data['visit_id'] = $visit_id;
+		$this->db->where($data);
+		
+		if($this->db->delete('medical_checkup_results'))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
 }
 ?>

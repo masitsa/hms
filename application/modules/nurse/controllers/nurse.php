@@ -98,9 +98,6 @@ class Nurse extends auth
 			$this->load->view('auth/template_sidebar', $data);	
 		}
 	}
-
-
-
 	
 	public function close_queue_search()
 	{
@@ -617,8 +614,63 @@ class Nurse extends auth
 		$visit_data = array('visit_id'=>$visit_id);
 		$this->load->view('soap/diagnose',$visit_data);
 	}
-
-
-
+	
+	public function save_illness($mec_id, $illness, $visit_id)
+	{
+		$illness = str_replace('%20', ' ', $illness);
+		
+		//check if illness has been saved
+		$query = $this->nurse_model->check_text_save($mec_id,$visit_id);
+		
+		//update if it exists
+		if($query->num_rows() > 0)
+		{
+			if($this->nurse_model->update_illness($illness, $query->row()))
+			{
+				echo 'true';
+			}
+			else
+			{
+				echo 'false';
+			}
+		}
+		
+		//otherwise insert new row
+		else
+		{
+			if($this->nurse_model->save_illness($illness, $mec_id, $visit_id))
+			{
+				echo 'true';
+			}
+			else
+			{
+				echo 'false';
+			}
+		}
+	}
+	
+	public function save_medical_exam($cat_items_id, $format_id, $visit_id)
+	{
+		if($this->nurse_model->save_medical_exam($cat_items_id, $format_id, $visit_id))
+		{
+			echo 'true';
+		}
+		else
+		{
+			echo 'false';
+		}
+	}
+	
+	public function delete_medical_exam($cat_items_id, $format_id, $visit_id)
+	{
+		if($this->nurse_model->delete_medical_exam($cat_items_id, $format_id, $visit_id))
+		{
+			echo 'true';
+		}
+		else
+		{
+			echo 'false';
+		}
+	}
 }
 ?>
