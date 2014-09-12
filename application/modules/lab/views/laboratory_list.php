@@ -107,7 +107,7 @@
               </div>
               <div class="clearfix"></div>
             </div>             
-
+			<hr />
         <!-- Widget content -->
             <div class="widget-content">
                 <div class="padd">
@@ -137,7 +137,7 @@
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
         var url = "<?php echo site_url();?>/lab/test_lab/"+visit_id;
-             window.alert(url)   ;
+        //window.alert(url)   ;
         if(XMLHttpRequestObject) {
                     
             XMLHttpRequestObject.open("GET", url);
@@ -153,7 +153,7 @@
             XMLHttpRequestObject.send(null);
         }
     }
-    function lab(id, visit_id){
+   function lab(id, visit_id){
     
     var XMLHttpRequestObject = false;
         

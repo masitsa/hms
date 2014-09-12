@@ -141,3 +141,16 @@
       </div>
     </div>
   </div>
+  
+  <script type="text/javascript">
+  	
+	var config_url = $("#config_url").val();
+		
+	$(document).ready(function(){
+		
+	  	$.get( config_url+"/nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
+			$("#new-nav").html(data);
+			$("#checkup_history").html(data);
+		});
+	});
+  </script>

@@ -22,7 +22,8 @@ class Lab extends auth
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('tests/test',$data);
 	}
-	public function test1($visit_id){
+	public function test1($visit_id)
+	{
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('tests/test1',$data);
 	}
