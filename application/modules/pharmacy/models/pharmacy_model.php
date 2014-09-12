@@ -80,7 +80,7 @@ class Pharmacy_model extends CI_Model
 						AND pres.drug_consumption_id = drug_consumption.drug_consumption_id
 						AND pres.visit_charge_id = visit_charge.visit_charge_id
 						 AND visit_charge.visit_id = ". $visit_id;
-		$items = "service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name";
+		$items = "visit_charge.visit_charge_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name";
 		$order = "`drugs`.drugs_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -245,6 +245,48 @@ class Pharmacy_model extends CI_Model
 		if($this->db->insert('pres', $data))
 		{
 			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	public function update_prescription($visit_id, $visit_charge_id, $prescription_id)
+	{
+		//$varpassed_value = $_POST['passed_value'];
+		$varsubstitution = $_POST['substitution'.$prescription_id];
+		
+		if(empty($varsubstitution)){
+			$varsubstitution = "No";
+		}
+		$date = date("Y-m-d"); 
+		$time = date("H:i:s");
+		
+		$visit_charge_qty = $this->input->post('quantity'.$prescription_id);
+
+		$array = array('visit_charge_qty'=>$visit_charge_qty);
+		$this->db->where('visit_charge_id', $visit_charge_id);
+		if($this->db->update('visit_charge', $array))
+		{
+			//$visit_charge_id = $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+
+		$data2 = array(
+			'prescription_substitution'=>$varsubstitution,
+			'prescription_finishdate'=>$this->input->post('finishdate'.$prescription_id),
+			'drug_times_id'=>$this->input->post('x'.$prescription_id),
+			'drug_duration_id'=>$this->input->post('duration'.$prescription_id),
+			'drug_consumption_id'=>$this->input->post('consumption'.$prescription_id),
+			'prescription_quantity'=>$this->input->post('quantity'.$prescription_id)
+		);
+		
+		$this->db->where('prescription_id', $prescription_id);
+		if($this->db->update('pres', $data2))
+		{
+			return TRUE;
 		}
 		else{
 			return FALSE;

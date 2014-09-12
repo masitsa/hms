@@ -678,36 +678,7 @@ function save_nurse_notes(visit_id){
 	}
 }
 
-function nurse_notes(visit_id){
-		var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var url = host+"data/nurse/nurse_notes.php?visit_id="+visit_id;
-	
-	if(XMLHttpRequestObject) {
-		
-		var obj = document.getElementById("nurse_notes");
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				obj.innerHTML = XMLHttpRequestObject.responseText;
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
+
 
 function patient_details(visit_id){
 		var XMLHttpRequestObject = false;
@@ -1504,11 +1475,7 @@ function search_drugs(visit_id){
 	window.location.href =url;
 }
 
-function send_to_pharmacy2(visit_id){
- 
-	window.close(this);
-	//display_prescription(visit_id, 2);
-}
+
 function send_to_pharmacy21(visit_id){
  
 	window.location.href="http://sagana/hms/index.php/pharmacy/send_to_accounts/"+visit_id;
@@ -1817,37 +1784,6 @@ function do_a_search_diseases(visit_id){
 	window.location.href = url;
 }
 
-function save_doctor_notes(visit_id){
-	
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var notes = document.getElementById("doctor_notes_item").value;
-//	window.alert('dfghj');
-	var url = host+"data/doctor/save_doctor_notes.php?notes="+notes+"&visit_id="+visit_id;
-			
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				//window.alert(XMLHttpRequestObject.responseText);
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 
 
 

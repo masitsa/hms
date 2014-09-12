@@ -1,4 +1,28 @@
 <div class="row">
+                <div class="col-md-4">
+                  <div class="center-align">
+                    <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
+                      <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor"/>
+                    <?php echo form_close();?>
+                  </div>
+                  
+                </div>
+                <div class="col-md-4">
+                  <div class="center-align">
+                    <?php echo form_open("nurse/send_to_pharmacy/".$visit_id, array("class" => "form-horizontal"));?>
+                      <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy"/>
+                    <?php echo form_close();?>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="center-align">
+                    <?php echo form_open("nurse/send_to_labs/".$visit_id, array("class" => "form-horizontal"));?>
+                      <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory"/>
+                    <?php echo form_close();?>
+                  </div>
+                </div>
+              </div>
+<div class="row">
     <div class="col-md-12">
 
       <!-- Widget -->
@@ -40,6 +64,7 @@
 				}
 			?>
           </div>
+
 			<div class="tabbable" style="margin-bottom: 18px;">
               <ul class="nav nav-tabs">
                 <li class="active"><a href="#vitals-pane" data-toggle="tab">Vitals</a></li>
@@ -83,6 +108,32 @@
                 
               </div>
             </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="center-align">
+                    <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
+                      <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor"/>
+                    <?php echo form_close();?>
+                  </div>
+                  
+                </div>
+                <div class="col-md-4">
+                  <div class="center-align">
+                    <?php echo form_open("nurse/send_to_pharmacy/".$visit_id, array("class" => "form-horizontal"));?>
+                      <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy"/>
+                    <?php echo form_close();?>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="center-align">
+                    <?php echo form_open("nurse/send_to_labs/".$visit_id, array("class" => "form-horizontal"));?>
+                      <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory"/>
+                    <?php echo form_close();?>
+                  </div>
+                </div>
+              </div>
+
           </div>
         </div>
         <!-- Widget ends -->

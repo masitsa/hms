@@ -183,7 +183,7 @@
                     <div class="widget-content">
                         <div class="padd">
                               <!-- vitals from java script -->
-                                <div id="vitals"></div>
+                                <div id="doctor_notes"></div>
                                 <!-- end of vitals data -->
                         </div>
 
@@ -213,7 +213,7 @@
                 <div class="widget-content">
                     <div class="padd">
                             <!-- visit Procedures from java script -->
-                                <div id="procedures"></div>
+                                <div id="nurse_notes"></div>
                              <!-- end of visit procedures -->
                     </div>
                 </div>
@@ -222,8 +222,10 @@
         </div>
     </div>
 </div>
-
 <?php echo form_close();?>
+
+
+
 
 <script type="text/javascript">
 
@@ -232,6 +234,8 @@
       objective_findings(<?php echo $visit_id;?>);
       assessment(<?php echo $visit_id;?>);
       plan(<?php echo $visit_id;?>);
+      doctor_notes(<?php echo $visit_id;?>);
+      nurse_notes(<?php echo $visit_id?>);
       
   });
   
@@ -568,5 +572,64 @@ function doctor_notes(visit_id){
   }
 }
 
-
+function save_doctor_notes(visit_id){
+  
+    var XMLHttpRequestObject = false;
+      
+    if (window.XMLHttpRequest) {
+    
+      XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+      
+    else if (window.ActiveXObject) {
+      XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var notes = document.getElementById("doctor_notes_item").value;
+    var config_url = $('#config_url').val();
+    var url = config_url+"/nurse/save_doctor_notes/"+notes+"/"+visit_id;
+       
+    if(XMLHttpRequestObject) {
+          
+      XMLHttpRequestObject.open("GET", url);
+          
+      XMLHttpRequestObject.onreadystatechange = function(){
+        
+        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+          //window.alert(XMLHttpRequestObject.responseText);
+        }
+      }
+          
+      XMLHttpRequestObject.send(null);
+    }
+  }
+function nurse_notes(visit_id){
+    var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  var config_url = $('#config_url').val();
+  var url = config_url+"/nurse/nurse_notes/"+visit_id;
+  
+  if(XMLHttpRequestObject) {
+    
+    var obj = document.getElementById("nurse_notes");
+        
+    XMLHttpRequestObject.open("GET", url);
+        
+    XMLHttpRequestObject.onreadystatechange = function(){
+      
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+        obj.innerHTML = XMLHttpRequestObject.responseText;
+      }
+    }
+        
+    XMLHttpRequestObject.send(null);
+  }
+}
 </script>

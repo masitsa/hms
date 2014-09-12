@@ -78,44 +78,7 @@ if(!empty($delete)){
     <?php
 }
 //if the update button is clicked
-if(isset($_REQUEST['update'])){
-	
-		$id = $_POST['hidden_id'];//echo $id."<br/>";
-		$start_date= addslashes($_POST['date3'.$id]);
-		$finish_date = addslashes($_POST['date4'.$id]);
-		$frequncy = addslashes($_POST['frequency'.$id]);
-		$sub = addslashes($_POST['substitution'.$id]);
-		$duration = addslashes($_POST['duration'.$id]);
-		$consumption = addslashes($_POST['consumption'.$id]);
-		$quantity = addslashes($_POST['quantity'.$id]);
-		
-		
-		$times = new prescription;
-$times_rs11 = $times->get_drug_time($time);
-$num_times11 = mysql_num_rows($times_rs11);
-$numerical_value11 = mysql_result($rs3, 0, "numerical_value");
 
-     $your_date = strtotime($varfinishdate);
-	 $your_date1 = strtotime($vardate);
-     $datediff = $your_date - $your_date1;
-    $qtty= floor($datediff/(60*60*24));
-	
-	$quantity_fin=$qtty*$numerical_value11*$quantity;
-		$update = new prescription;
-		$update->update_drug_list($start_date, $finish_date, $frequncy, $id, $sub, $duration, $consumption, $quantity_fin);	
-		$v_id = $_POST['v_id'];
-		
-		$get = new prescription;
-		$visit_charge_id = $get->get_visit_charge_id1($id);
-		$prescription = new prescription;
-		$prescription->update_visit_charge($visit_charge_id,$quantity_fin);
-		?>
-        <script type="text/javascript">
-			window.alert("Update Successfull");
-			window.location.href = "prescription.php?visit_id="+<?php echo $v_id;?>;
-		</script>
-		<?php
-	}
 
 
 
@@ -458,6 +421,9 @@ $p = 0;
 			<input name="submit" type="submit" class="btn btn-large" value="Prescribe" />
 		</div>
 	</div>
+
+                         
+<?php echo form_close();?>
 <div class="row col-md-12">
 	<div class="col-md-12">
 		<!-- Widget -->
@@ -486,8 +452,9 @@ $p = 0;
     											<th>Times</th>
     											<th>Duration</th>
    											 	<th>Number of Days</th>
-    											<th> </th>
-                                                <th>Allow Substitution</th>
+   											 	 <th>Allow Substitution</th>
+    											<th>Delete </th>
+                                               
                                                 <th></th>
   											</tr>
                                            <?php 
@@ -509,8 +476,9 @@ $p = 0;
 												$consumption = $key_rs->drug_consumption_name;
 												$quantity = $key_rs->prescription_quantity;
 												$medicine = $key_rs->drugs_name;
+												$visit_charge_id = $key_rs->visit_charge_id;
 												
-												$substitution = "<select name='substitution".$id."'>";
+												$substitution = "<select name='substitution".$id."' class='form-control'>";
 												if($sub == "No"){
 													$substitution = $substitution."<option selected>No</option><option>Yes</option>";
 												}
@@ -564,7 +532,7 @@ $p = 0;
 													}
 												}
 												
-												$time_list2 = "<select name = 'x".$id."'>";
+												$time_list2 = "<select name = 'x".$id."' class='form-control'>";
 												
 													foreach ($times_rs as $key_items):
 
@@ -574,7 +542,7 @@ $p = 0;
 													endforeach;
 												$time_list2 = $time_list2."</select>";
 												
-												$duration_list2 = "<select name = 'duration".$id."'>";
+												$duration_list2 = "<select name = 'duration".$id."' class='form-control'>";
 												
 												foreach ($duration_rs as $key_duration):
 													$durations = $key_duration->drug_duration_name;
@@ -583,7 +551,7 @@ $p = 0;
 												endforeach;
 												$duration_list2 = $duration_list2."</select>";
 												
-												$cons_list2 = "<select name = 'consumption".$id."'>";
+												$cons_list2 = "<select name = 'consumption".$id."' class='form-control'>";
 												
 												foreach ($rs_cons as $key_cons):
 													$con = $key_cons->drug_consumption_name;
@@ -593,17 +561,17 @@ $p = 0;
 												$cons_list2 = $cons_list2."</select>";
 												$s++;
 											?>
-                                           	<?php echo form_open($this->uri->uri_string, array("class" => "form-horizontal"));?>
+                                           	<?php echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id, array("class" => "form-horizontal"));?>
 									  		<tr>
     											<td><?php echo $s; ?></td>
     											<td width="200px"><?php echo $medicine;?></td>
     											<td><?php echo $dose;?></td>
                                                 <td><?php echo $doseunit?></td>
     											<td><?php echo $cons_list2; ?></td>
-                                                <td><input type="text" name="quantity<?php echo $id?>"  autocomplete="off" value="<?php echo $quantity?>"/></td>
+                                                <td><input type="text" name="quantity<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo $quantity?>"/></td>
     											<td><?php echo $time_list2; ?></td>
     											<td><?php echo $duration_list2; ?></td>
-                                        		<td><input type="text" id="datepicker3" name="days"  autocomplete="off" value="<?php echo  $date1?>"/></td>
+                                        		<td><input type="text" id="datepicker3" name="days<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo  $date1?>"/></td>
                        
                                                 <td><?php echo $substitution?></td>
                                                 <td>
@@ -631,175 +599,19 @@ $p = 0;
            </div>
 	</div>
 </div>
+
 <div class="row col-md-12">
  	<div class="center-align">
  	 <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
             <input name="pharmacy_doctor"   onClick="send_to_pharmacy2(<?php echo $visit_id;?>);unload()" type="button" class="btn btn-large" value="Done" />
     </div>
  </div>  
-                         
-<?php echo form_close();?>
-
                                         
   
 
 </div>
 
-   <script type="text/javascript" charset="utf-8">
-
-			$(function(){
-
-				// Accordion
-				$("#accordion").accordion({ header: "h3" });
-
-				//Autocomplete
-				$("#autocomplete").autocomplete({
-					source: [<?php echo $xray?>]
-				});
-				//Autocomplete
-				$("#autocomplete2").autocomplete({
-					source: [<?php echo $xray2?>]
-				});
-				//Autocomplete
-				$("#autocomplete3").autocomplete({
-					source: [<?php echo $xray3?>]
-				});
-				//Autocomplete
-				$("#autocomplete6").autocomplete({
-					source: [<?php echo $inst?>]
-				});
-				//Autocomplete
-				$("#autocomplete7").autocomplete({
-					source: [<?php echo $warning?>]
-				});
-				//Autocomplete
-				$("#autocomplete8").autocomplete({
-					source: [<?php echo $xray3?>]
-				});
-
-				// Button
-				$("#button").button();
-				$("#radioset").buttonset();
-
-				// Tabs
-				$('#tabs').tabs();
-	
-
-				// Dialog			
-				$('#dialog').dialog({
-					autoOpen: false,
-					width: 600,
-					buttons: {
-						"Ok": function() { 
-							$(this).dialog("close"); 
-						}, 
-						"Cancel": function() { 
-							$(this).dialog("close"); 
-						} 
-					}
-				});
-				
-				// Dialog Link
-				$('#dialog_link').click(function(){
-					$('#dialog').dialog('open');
-					return false;
-				});
-
-				// Datepicker
-				$('#datepicker').datepicker({
-					inline: true
-				});
-				$('#datepicker2').datepicker({
-					inline: true
-				});
-
-				// Datepicker
-				$('#datepicker3').datepicker({
-					inline: true
-				});
-				$('#datepicker4').datepicker({
-					inline: true
-				});
-				
-				// Slider
-				$('#slider').slider({
-					range: true,
-					values: [17, 67]
-				});
-				
-				// Progressbar
-				$("#progressbar").progressbar({
-					value: 20 
-				});
-				
-				//hover states on the static widgets
-				$('#dialog_link, ul#icons li').hover(
-					function() { $(this).addClass('ui-state-hover'); }, 
-					function() { $(this).removeClass('ui-state-hover'); }
-				);
-				
-			});
-		
-		function drug_dose(id){
-			$(function(){
-				//Autocomplete
-				$("#drug_dose"+id).autocomplete({
-					source: [<?php echo $xray3?>]
-				});
-				
-			});
-		}
-		
-		function consumption_instructions(id){
-			$(function(){
-				//Autocomplete
-				$("#instructions"+id).autocomplete({
-					source: [<?php echo $inst?>]
-				});
-				
-			});
-		}
-		
-		function consumption_warnings(id){
-			$(function(){
-				//Autocomplete
-				$("#warnings"+id).autocomplete({
-					source: [<?php echo $warning?>]
-				});
-				
-			});
-		}
-	</script>
-<script type="text/javascript" charset="utf-8">
-
-			$(function(){
-				
-				//date picker
-				$( "#datepicker" ).datepicker();
-				$( "#format" ).change(function() {
-					$( "#datepicker" ).datepicker( "option", "dateFormat", $( this ).val() );
-		});});
-	
-    function setImage(file) {
-        if(document.all){
-            document.getElementById('prevImage').src = file.value;
-		}
-        else{
-            document.getElementById('prevImage').src = file.files.item(0).getAsDataURL();
-		}
-        if(document.getElementById('prevImage').src.length > 0) {
-            document.getElementById('prevImage').style.display = 'block';
-		}
-    }
-	function unload(){
-		window.opener.location.reload(true);
-		}
-
-
-
-
-
-	</script>
+  
 	<script type="text/javascript">
 
 function myPopup2(visit_id) {
@@ -809,6 +621,11 @@ function myPopup2(visit_id) {
                          "resizable=no status=no,history=no top = 50 left = 100"); 
 }
 
+function send_to_pharmacy2(visit_id){
+ 
+	window.close(this);
+	//display_prescription(visit_id, 2);
+}
 
 	</script>
 

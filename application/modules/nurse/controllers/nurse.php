@@ -617,6 +617,71 @@ class Nurse extends auth
 		$visit_data = array('visit_id'=>$visit_id);
 		$this->load->view('soap/diagnose',$visit_data);
 	}
+	public function doctor_notes($visit_id)
+	{
+		$visit_data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/doctor_notes',$visit_data);
+	}
+	public function save_doctor_notes($notes,$visit_id){
+		$notes = str_replace('%20', ' ',$notes);
+		$patient_id = $this->nurse_model->get_patient_id($visit_id);
+		
+		$this->nurse_model->save_doctor_notes($notes,$patient_id);
+
+	}
+	public function nurse_notes($visit_id){
+		$visit_data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/nurse_notes',$visit_data);
+	}
+	public function save_nurse_notes($notes,$visit_id){
+		$notes = str_replace('%20', ' ',$notes);
+		$patient_id = $this->nurse_model->get_patient_id($visit_id);
+		
+		$this->nurse_model->save_nurse_notes($notes,$patient_id);
+
+	}
+
+	public function send_to_doctor($visit_id)
+	{
+		$visit_data = array('nurse_visit'=>1);
+		$this->db->where('visit_id',$visit_id);
+		if($this->db->update('visit', $visit_data))
+		{
+			redirect('nurse/nurse_queue');
+		}
+		else
+		{
+			FALSE;
+		}
+	}
+	public function send_to_labs($visit_id)
+	{
+		$visit_data = array('nurse_visit'=>1,'lab_visit'=>12,'doc_visit'=>1);
+		$this->db->where('visit_id',$visit_id);
+		if($this->db->update('visit', $visit_data))
+		{
+			redirect('nurse/nurse_queue');
+		}
+		else
+		{
+			FALSE;
+		}
+	}
+	public function send_to_pharmacy($visit_id)
+	{
+		$visit_data = array('nurse_visit'=>1,'lab_visit'=>6,'doc_visit'=>1);
+		$this->db->where('visit_id',$visit_id);
+		if($this->db->update('visit', $visit_data))
+		{
+			redirect('nurse/nurse_queue');
+		}
+		else
+		{
+			FALSE;
+		}
+		
+	}
+
 
 
 

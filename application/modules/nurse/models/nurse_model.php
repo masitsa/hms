@@ -349,7 +349,7 @@ class Nurse_model extends CI_Model
 
 	public function get_patient_id($visit_id){
 		$table = "visit";
-		$where = "visit_id = $visit_id";
+		$where = "visit_id = ". $visit_id;
 		$items = "patient_id";
 		$order = "visit_id";
 		
@@ -636,6 +636,62 @@ class Nurse_model extends CI_Model
 		
 		return $query;
 	}
+	function get_doctor_notes($patient_id){
+		$table = "doctor_notes";
+		$where = "patient_id = ".$patient_id;
+		$items = "*";
+		$order = "doctor_note_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+		
+	}
+
+	function save_doctor_notes($doctor_notes, $patient_id){	
+		$rs = $this->get_doctor_notes($patient_id);
+		$num_doc_notes = count($rs);
+		
+		if($num_doc_notes == 0){	
+			$visit_data = array('patient_id'=>$patient_id,'doctor_notes'=>$doctor_notes);
+			$this->db->insert('doctor_notes', $visit_data);
+
+		}
+		else {
+			$visit_data = array('patient_id'=>$patient_id,'doctor_notes'=>$doctor_notes);
+			$this->db->where('patient_id',$patient_id);
+			$this->db->update('doctor_notes', $visit_data);
+		}
+	}
+
+	function get_nurse_notes($patient_id){
+		$table = "nurse_notes";
+		$where = "patient_id = ".$patient_id;
+		$items = "*";
+		$order = "note_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+		
+	}
+	function save_nurse_notes($nurse_notes, $patient_id){	
+		$rs = $this->get_doctor_notes($patient_id);
+		$num_doc_notes = count($rs);
+		
+		if($num_doc_notes == 0){	
+			$visit_data = array('patient_id'=>$patient_id,'nurse_notes'=>$doctor_notes);
+			$this->db->insert('nurse_notes', $visit_data);
+
+		}
+		else {
+			$visit_data = array('patient_id'=>$patient_id,'nurse_notes'=>$doctor_notes);
+			$this->db->where('patient_id',$patient_id);
+			$this->db->update('nurse_notes', $visit_data);
+		}
+	}
+
+
 
 	
 }
