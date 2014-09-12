@@ -23,7 +23,7 @@ class Nurse extends auth
 	public function nurse_queue()
 	{
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0';
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
