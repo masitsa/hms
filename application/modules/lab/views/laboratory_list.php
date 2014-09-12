@@ -78,7 +78,7 @@
                                         <?php endforeach;?>
                                     </table>
 
-                                        <div id="lab_table"></div>
+                                        
                                 </div>
                             </div>
                         
@@ -90,9 +90,37 @@
                     if(isset($links)){echo $links;}
                     ?>
                     </div>
+
                  </div>
             </div>
         </div>
+<div class="row">
+<div class="col-md-12">
+      <!-- Widget -->
+      <div class="widget boxed">
+            <!-- Widget head -->
+            <div class="widget-head">
+              <h4 class="pull-left"><i class="icon-reorder"></i>Lab Test List</h4>
+              <div class="widget-icons pull-right">
+                <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                <a href="#" class="wclose"><i class="icon-remove"></i></a>
+              </div>
+              <div class="clearfix"></div>
+            </div>             
+
+        <!-- Widget content -->
+            <div class="widget-content">
+                <div class="padd">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="lab_table"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+</div>
 <script type="text/javascript">
     $(document).ready(function(){
       get_lab_table(<?php echo $visit_id;?>);
@@ -108,8 +136,8 @@
         else if (window.ActiveXObject) {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
-        var url = "<?php echo site_url();?>/lab/test_table/"+visit_id;
-                
+        var url = "<?php echo site_url();?>/lab/test_lab/"+visit_id;
+             window.alert(url)   ;
         if(XMLHttpRequestObject) {
                     
             XMLHttpRequestObject.open("GET", url);
@@ -125,6 +153,86 @@
             XMLHttpRequestObject.send(null);
         }
     }
-
+    function lab(id, visit_id){
+    
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = "<?php echo site_url();?>/lab/test_lab/"+visit_id+"/"+id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+               // document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
+               get_lab_table(visit_id);
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
+}
   
+function send_to_lab3(visit_id){
+    get_test_results(85, visit_id);
+}
+
+function send_to_lab2(visit_id){
+    get_test_results(75, visit_id);
+}
+function get_test_results(page, visit_id){
+
+  var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  var config_url = $('#config_url').val();
+  if((page == 1) || (page == 65) || (page == 85)){
+    
+    url = config_url+"/lab/test/"+visit_id;
+  }
+  
+  else if ((page == 75) || (page == 100)){
+    url = config_url+"/lab/test1/"+visit_id;
+  }
+  if(XMLHttpRequestObject) {
+    if((page == 75) || (page == 85)){
+      var obj = window.opener.document.getElementById("test_results");
+    }
+    else{
+      var obj = document.getElementById("test_results");
+    }
+    XMLHttpRequestObject.open("GET", url);
+    
+    XMLHttpRequestObject.onreadystatechange = function(){
+    
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+  //window.alert(XMLHttpRequestObject.responseText);
+        obj.innerHTML = XMLHttpRequestObject.responseText;
+        if((page == 75) || (page == 85)){
+          window.close(this);
+        }
+        
+      }
+    }
+    XMLHttpRequestObject.send(null);
+  }
+}
 </script>

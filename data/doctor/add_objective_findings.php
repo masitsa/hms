@@ -118,3 +118,42 @@ else{
 	";
 }
 ?>
+
+<script type="text/javascript">
+	
+	function save_symptoms(visit_id){
+	//alert('jhjh');
+		var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	var objective_findings = document.getElementById("objective_findings").value;
+	window.alert("what the hell");
+	
+	var url = host+"data/nurse/save_objective_finding/symptoms="+symptoms+"&item=sypmtoms&visit_id="+visit_id;
+	
+	if(XMLHttpRequestObject) {
+		
+		//var obj = window.opener.document.getElementById("symptoms_");
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+				//obj.innerHTML = XMLHttpRequestObject.responseText;
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
+</script>

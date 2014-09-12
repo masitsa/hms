@@ -107,9 +107,11 @@ class Lab extends auth
 
 	}
 
-	public function test_table($visit_id){
-		$data = array('visit_id'=>$visit_id);
-		$this->load->view('visit_test_table',$data);
+	
+
+	public function test_lab($visit_id,$service_charge_id=NULL){
+		$data = array('service_charge_id'=>$service_charge_id,'visit_id'=>$visit_id);
+		$this->load->view('test_lab',$data);
 	}
 }
 ?>

@@ -1,9 +1,7 @@
 // JavaScript Document
 //var host = "http://192.168.178.118/hms/";
 //var host = "http://sagana/hms/";
-//var host = $('#config_url').val();//
-var host = 'http://localhost/hms/';
-//alert(host);
+var host = 'http://localhost/sumc/';
 
 
 function checkup_interface(visit_id){
@@ -625,7 +623,7 @@ function patient_details(visit_id){
 		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	
-	var url = host+"data/nurse/nurse_data.php?visit_id="+visit_id;
+	var url = host+"data/nurse/nurse_data.php?visit_id="+visit_id;alert(url);
 	
 	if(XMLHttpRequestObject) {
 		
@@ -837,31 +835,9 @@ function symptoms4(visit_id){
 	}
 }
 
-function open_symptoms(visit_id){
-	window.open(host+"data/doctor/symptoms_list.php?visit_id="+visit_id,"Popup","height=1000,width=600,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100");
-		
-	
-}
 
 
  
-function open_window(plan, visit_id){
-	
-	if(plan == 6){
-		
-		window.open(host+"data/doctor/disease.php?visit_id="+visit_id,"Popup","height=1000,width=600,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100");
-	}
-	else if (plan == 1){
-		
-		window.open(host+"data/doctor/prescription.php?visit_id="+visit_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=yes status=yes,history=yes top = 50 left = 100");
-	}
-}
 
 function close_search(visit_id){
 	window.location.href="laboratory.php?visit_id="+visit_id;
@@ -871,87 +847,11 @@ function close_symptoms(visit_id){
 	window.close(this);
 }
 
-function add_symptoms(symptoms_id, status, visit_id){
-	
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = host+"data/doctor/symptoms.php?symptoms_id="+symptoms_id+"&status="+status+"&visit_id="+visit_id;
-	
-	if(XMLHttpRequestObject) {
-		var obj3 = window.opener.document.getElementById("symptoms");
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				
-				obj3.innerHTML = XMLHttpRequestObject.responseText;
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
-function toggleField(field1) {
-var myTarget = document.getElementById(field1);
-
-if(myTarget.style.display == 'none'){
-  myTarget.style.display = 'block';
-    } else {
-  myTarget.style.display = 'none';
-  myTarget.value = '';
-}}
-function update_visit_symptoms(symptoms_id,status,visit_id){
-	//window.alert('dfghj');
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var id= "myTF".concat(symptoms_id);
-	var description = document.getElementById(id).value;
-	
-	var url = host+"data/doctor/symptoms.php?id="+description+"&symptoms_id="+symptoms_id+"&visit_id="+visit_id+"&status="+status;
-	
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				symptoms2(visit_id);
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 
 
-function toggleField(objective_findings) {
-var myTarget = document.getElementById(objective_findings);
 
-if(myTarget.style.display == 'none'){
-  myTarget.style.display = 'block';
-    } else {
-  myTarget.style.display = 'none';
-  myTarget.value = '';
-}}
+
+
 
 function toggleFieldX(myTFx,preg) {
 var myTarget = document.getElementById(myTFx);
@@ -1105,48 +1005,10 @@ function save_symptoms(visit_id){
 
 
 
-function open_objective_findings(visit_id){
-	
-	window.open(host+"data/doctor/objective_finding.php?visit_id="+visit_id,"Popup","height=600,width=1000,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100");
-		
-	
-}
 
-function close_objective_findings(visit_id){
-	window.close(this);
-}
 
-function add_objective_findings(objective_findings_id, visit_id){
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = host+"data/doctor/add_objective_findings.php?objective_findings_id="+objective_findings_id+"&visit_id="+visit_id;
-			
-	if(XMLHttpRequestObject) {
-		var obj3 = window.opener.document.getElementById("objective_findings");
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				
-				obj3.innerHTML = XMLHttpRequestObject.responseText;
-				
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
+
+
 
 function delete_objective_findings(visit_objective_findings_id, visit_id){
 	
@@ -1214,34 +1076,6 @@ function save_objective_findings(visit_id){
 
 
 
-function save_assessment(visit_id){
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var assessment = document.getElementById("visit_assessment").value;
-	var url = host+"data/doctor/save.php?assessment="+assessment+"&item=assessment&visit_id="+visit_id;
-	
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 
 
 function plan1(visit_id){
@@ -1319,13 +1153,7 @@ function send_to_lab(visit_id){
 	get_test_results(65, visit_id);
 }
 
-function send_to_lab2(visit_id){
-	get_test_results(75, visit_id);
-}
 
-function send_to_lab3(visit_id){
-	get_test_results(85, visit_id);
-}
 
 
 function delete_cost(id, visit_id){
@@ -1358,36 +1186,7 @@ function delete_cost(id, visit_id){
 		XMLHttpRequestObject.send(null);
 	}
 }
-function lab(id, visit_id){
-    
-//  alert(visit_id);alert(id);
-    var XMLHttpRequestObject = false;
-        
-    if (window.XMLHttpRequest) {
-    
-        XMLHttpRequestObject = new XMLHttpRequest();
-    } 
-        
-    else if (window.ActiveXObject) {
-        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    var url = host+"data/doctor/lab.php?service_charge_id="+id+"&visit_id="+visit_id;
-        /// window.alert(url);
-    if(XMLHttpRequestObject) {
-                
-        XMLHttpRequestObject.open("GET", url);
-                
-        XMLHttpRequestObject.onreadystatechange = function(){
-            
-            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-                
-                document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
-            }
-        }
-        
-        XMLHttpRequestObject.send(null);
-    }
-}
+
 function print_previous_test2(visit_id, patient_id){
 	
 	var url = host+"data/lab/print_test.php?visit_id="+visit_id+"&patient_id="+patient_id;
@@ -1395,65 +1194,9 @@ function print_previous_test2(visit_id, patient_id){
     window.open(url, "Popup", "height=1200, width=600, ,scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
 }
 
-function save_disease(val, visit_id){
-	
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = host+"data/doctor/save_diagnosis.php?disease_id="+val+"&visit_id="+visit_id;
-			
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				get_disease(visit_id);
-			}
-		}
-		
-		XMLHttpRequestObject.send(null);
-	}
-}
 
-function get_disease(visit_id){
-	
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = host+"data/doctor/get_diagnosis.php?visit_id="+visit_id;
-	
-	var obj = document.getElementById("disease_list");
-			
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				obj.innerHTML = XMLHttpRequestObject.responseText;
-			}
-		}
-		
-		XMLHttpRequestObject.send(null);
-	}
-}
+
+
 
 
 function delete_diagnosis(id, visit_id){
@@ -1485,28 +1228,14 @@ function delete_diagnosis(id, visit_id){
 	}
 }
 
-function popup2(visit_id){
-	window.open( host+"data/doctor/drugs.php?visit_id="+visit_id,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100");
-}
 			
-function myPopup2(visit_id) {
-	window.open(host+"data/doctor/drugs.php?visit_id="+visit_id,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100"); 
-}
+
 
 function search_drugs(visit_id){
 	var variable = document.getElementById("item_name").value;
 	var url =  host+"data/doctor/drugs.php?search="+variable+"&visit_id="+visit_id;
 	
 	window.location.href =url;
-}
-function close_drug(val, visit_id, service_charge_id){
-	window.open(host+"data/doctor/prescription.php?visit_id="+visit_id+"&passed_value="+val+"&service_charge_id="+service_charge_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100"); 
 }
 
 function send_to_pharmacy2(visit_id){

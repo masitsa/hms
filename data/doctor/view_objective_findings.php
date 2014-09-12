@@ -15,42 +15,7 @@ $num_rows2 = mysql_num_rows($rs2);
 echo "
 	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'>Objective Findings <br/><input type='button' class='btn btn-primary' value='Add Objective Findings' onclick='open_objective_findings(".$visit_id.")'/></p></div>";
 
-if($num_rows2 > 0){
-	echo"
-		<table align='center' class='table table-striped table-hover table-condensed'>
-		<tr>
-			<th></th>
-			<th>Class</th>
-			<th>Objective Findings</th>
-			<th></th>
-		</tr>
-	";	
-	
-	for($z = 0; $z < $num_rows2; $z++){
-		
-		$count=$z+1;
-		$objective_findings_name = mysql_result($rs2, $z, "objective_findings_name");
-		$visit_objective_findings_id = mysql_result($rs2, $z, "visit_objective_findings_id");
-		$objective_findings_class_name = mysql_result($rs2, $z, "objective_findings_class_name");
-		echo"
-		<tr> 
-			<td>".$count."</td>
-			<td>".$objective_findings_class_name."</td>
- 			<td align='center'>".$objective_findings_name."</td>
-			<td>
-				<div class='btn-toolbar'>
-					<div class='btn-group'>
-						<a class='btn' href='#' onclick='delete_objective_findings(".$visit_objective_findings_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
-					</div>
-				</div>
-			</td>
-		</tr>	
-		";
-	}
-echo"
- </table>
-";
-}
+
 	
 if($num_rows > 0){
 	$visit_objective_findings = mysql_result($rs, 0, "visit_objective_findings");
@@ -60,7 +25,6 @@ if($num_rows > 0){
 				<td>
 					<textarea rows='5' cols='100' id='visit_symptoms1' disabled='disabled'>"; for($z = 0; $z < $num_rows2; $z++){
 		
-		$count=$z+1;
 		$objective_findings_name = mysql_result($rs2, $z, "objective_findings_name");
 		$visit_objective_findings_id = mysql_result($rs2, $z, "visit_objective_findings_id");
 		$objective_findings_class_name = mysql_result($rs2, $z, "objective_findings_class_name");
@@ -90,7 +54,6 @@ else{
 				<td>
 					<textarea rows='5' cols='100' id='visit_symptoms' disabled='disabled'>"; for($z = 0; $z < $num_rows2; $z++){
 		
-		$count=$z+1;
 		$objective_findings_name = mysql_result($rs2, $z, "objective_findings_name");
 		$visit_objective_findings_id = mysql_result($rs2, $z, "visit_objective_findings_id");
 		$objective_findings_class_name = mysql_result($rs2, $z, "objective_findings_class_name");

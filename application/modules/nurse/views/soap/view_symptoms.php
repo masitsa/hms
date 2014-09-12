@@ -10,44 +10,7 @@ $num_rows2 = count($rs2);
 echo "
 	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Symptoms' onclick='open_symptoms(".$visit_id.")'/></p></div>";
 
-if($num_rows2 > 0){
-	echo"
-		<table align='center' class='table table-striped table-hover table-condensed'>
-		<tr>
-			<th></th>
-			<th>Symptom</th>
-			<th>Description</th>
-			<th></th>
-		</tr>
-	";	
-	
-	foreach ($rs2 as $key): 
-			
-		$count=$z+1;
-		$symptoms_name = $key->symptoms_name;
-		$status_name = $key->status_name;
-		$visit_symptoms_id = $key->visit_symptoms_id;
-		$description= $key->description; 
-		
-		echo"
-		<tr> 
-			<td>".$count."</td>
- 			<td align='center'>".$symptoms_name."</td>
- 			<td align='center'>".$status_name."</td>
-			<td>
-				<div class='btn-toolbar'>
-					<div class='btn-group'>
-						<a class='btn' href='#' onclick='delete_symptom(".$visit_symptoms_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
-					</div>
-				</div>
-			</td>
-		</tr>	
-		";
-	endforeach;
-echo"
- </table>
-";
-}
+
 	
 if($num_rows > 0){
 	foreach ($rs as $key1):
@@ -59,6 +22,7 @@ if($num_rows > 0){
 			<tr>
 				<td>
 					<textarea rows='10' cols='80' class='form-control col-md-6' class='form-control' id='visit_symptoms1' disabled='disabled'>"; 
+					$z=0;
 					foreach ($rs2 as $key):	
 						$count=$z+1;
 						$symptoms_name = $key->symptoms_name;
@@ -89,6 +53,7 @@ else{
 			<tr>
 				<td>
 					<textarea rows='10' cols='80' class='form-control col-md-6' id='visit_symptoms1' disabled='disabled'>"; 
+					$z=0;
 					foreach ($rs2 as $key):	
 						$count=$z+1;
 						$symptoms_name = $key->symptoms_name;

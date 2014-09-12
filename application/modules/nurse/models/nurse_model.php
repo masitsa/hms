@@ -557,7 +557,7 @@ class Nurse_model extends CI_Model
 		$order = "visit_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
-
+		return $result;
 	}
 
 	function get_plan($visit_id){
@@ -574,7 +574,7 @@ class Nurse_model extends CI_Model
 	function get_diagnosis($visit_id){
 
 		$table = "diagnosis, diseases";
-		$where = "diagnosis.visit_id = ".$visit_id;
+		$where = "diagnosis.disease_id = diseases.diseases_id AND diagnosis.visit_id = ".$visit_id;
 		$items = "diagnosis.diagnosis_id, diseases.diseases_name, diseases.diseases_code";
 		$order = "diagnosis.disease_id";
 		
@@ -582,8 +582,61 @@ class Nurse_model extends CI_Model
 		
 		return $result;
 		
+
+
+	}
+
+	function get_symptom_list($table, $where, $per_page, $page, $order){
+
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+
+	function update_visit_sypmtom($symptoms_id,$visit_id,$description){
+		$description = str_replace('%20', ' ',$description);
+		$visit_data = array('description'=>$description);
+
+		$this->db->where(array("symptoms_id"=>$symptoms_id,"visit_id"=>$visit_id));
+		$this->db->update('visit_symptoms', $visit_data);
 		
 	}
+	function save_visit_sypmtom($symptoms_id,$visit_id,$status){
+		$visit_data = array('visit_id'=>$visit_id,'symptoms_id'=>$symptoms_id,'status_id'=>$status);
+		$this->db->insert('visit_symptoms', $visit_data);
+	}
+
+	function update_objective_finding($objective_finding_id, $visit_id, $description){
+		
+		$description = str_replace('%20', ' ',$description);
+		$visit_data = array('description'=>$description);
+
+		$this->db->where(array("objective_findings_id"=>$objective_finding_id,"visit_id"=>$visit_id));
+		$this->db->update('visit_objective_findings', $visit_data);
+		
+	}
+	function save_objective_finding($objective_finding_id, $visit_id){
+		$visit_data = array('visit_id'=>$visit_id,'objective_findings_id'=>$objective_finding_id);
+		$this->db->insert('visit_objective_findings', $visit_data);
+	}
+
+	public function get_diseases($table, $where, $per_page, $page, $order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+
 	
 }
 ?>

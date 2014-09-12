@@ -232,6 +232,7 @@
       objective_findings(<?php echo $visit_id;?>);
       assessment(<?php echo $visit_id;?>);
       plan(<?php echo $visit_id;?>);
+      
   });
   
   function symptoms(visit_id){
@@ -393,7 +394,6 @@ function get_test_results(page, visit_id){
   else if ((page == 75) || (page == 100)){
     url = config_url+"/lab/test1/"+visit_id;
   }
-  
   if(XMLHttpRequestObject) {
     if((page == 75) || (page == 85)){
       var obj = window.opener.document.getElementById("test_results");
@@ -418,43 +418,7 @@ function get_test_results(page, visit_id){
   }
 }
 
-function closeit(page, visit_id){
-  
-  var XMLHttpRequestObject = false;
-    
-  if (window.XMLHttpRequest) {
-  
-    XMLHttpRequestObject = new XMLHttpRequest();
-  } 
-    
-  else if (window.ActiveXObject) {
-    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-   var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/diagnose/"+visit_id;
-      
-  if(XMLHttpRequestObject) {
-        
-    XMLHttpRequestObject.open("GET", url);
-        
-    XMLHttpRequestObject.onreadystatechange = function(){
-      
-      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-        
-        if(page == 1){
-          window.opener.document.getElementById("diagnosis").innerHTML = XMLHttpRequestObject.responseText;
-          window.close(this);
-        }
-        
-        else{
-          document.getElementById("diagnosis").innerHTML = XMLHttpRequestObject.responseText;
-        }
-      }
-    }
-    
-    XMLHttpRequestObject.send(null);
-  }
-}
+
 
 function display_prescription(visit_id, page){
   
@@ -502,4 +466,75 @@ function open_window_lab(test, visit_id){
   var config_url = $('#config_url').val();
   window.open(config_url+"/lab/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
 }
+
+function open_symptoms(visit_id){
+  var config_url = $('#config_url').val();
+  window.open(config_url+"/nurse/symptoms_list/"+visit_id,"Popup","height=1000,width=600,,scrollbars=yes,"+ 
+                        "directories=yes,location=yes,menubar=yes," + 
+                         "resizable=no status=no,history=no top = 50 left = 100");
+    
+  
+}
+
+function open_objective_findings(visit_id){
+  var config_url = $('#config_url').val();
+  window.open(config_url+"/nurse/objective_finding/"+visit_id,"Popup","height=600,width=1000,,scrollbars=yes,"+ 
+                        "directories=yes,location=yes,menubar=yes," + 
+                         "resizable=no status=no,history=no top = 50 left = 100");
+    
+  
+}
+
+
+function save_assessment(visit_id){
+  var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  
+  var assessment = document.getElementById("visit_assessment").value;
+  var config_url = $('#config_url').val();
+  var url = config_url+"/nurse/save_assessment/"+assessment+"/"+visit_id;
+
+  if(XMLHttpRequestObject) {
+        
+    XMLHttpRequestObject.open("GET", url);
+        
+    XMLHttpRequestObject.onreadystatechange = function(){
+      
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+      }
+    }
+        
+    XMLHttpRequestObject.send(null);
+  }
+}
+
+function open_window(plan, visit_id){
+    var config_url = $('#config_url').val();
+  if(plan == 6){
+  
+    window.open(config_url+"/nurse/disease/"+visit_id,"Popup","height=1000,width=600,,scrollbars=yes,"+ 
+                        "directories=yes,location=yes,menubar=yes," + 
+                         "resizable=no status=no,history=no top = 50 left = 100");
+  }
+  else if (plan == 1){
+    
+    window.open(config_url+"/pharmacy/prescription/"+visit_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
+                        "directories=yes,location=yes,menubar=yes," + 
+                         "resizable=yes status=yes,history=yes top = 50 left = 100");
+  }
+}
+
+
+
+
+
+
 </script>

@@ -11,6 +11,8 @@ class Nurse extends auth
 		$this->load->model('reception/reception_model');
 		$this->load->model('database');
 		$this->load->model('reception/reception_model');
+		$this->load->model('medical_admin/medical_admin_model');
+		$this->load->model('pharmacy/pharmacy_model');
 	}
 	
 	public function index()
@@ -432,5 +434,191 @@ class Nurse extends auth
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('soap/view_plan',$data);
 	}
+	public function symptoms_list($visit_id){
+
+		//check patient visit type
+		$rs = $this->nurse_model->check_visit_type($visit_id);
+		if(count($rs)>0){
+		  foreach ($rs as $rs1) {
+			# code...
+			  $visit_t = $rs1->visit_type;
+		  }
+		}
+		
+		$order = 'symptoms_id';
+		
+		$where = 'symptoms_id > 0 ';
+		$symptoms_search = $this->session->userdata('symptoms_search');
+		
+		if(!empty($symptoms_search))
+		{
+			$where .= $symptoms_search;
+		}
+		
+		$table = 'symptoms';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/symptoms_list/'.$visit_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 4;
+		$config['per_page'] = 15;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_symptom_list($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Symptoms List';
+		$v_data['title'] = 'Symptoms List';
+		
+		$v_data['visit_id'] = $visit_id;
+		$data['content'] = $this->load->view('symptoms_list', $v_data, true);
+		
+		$data['title'] = 'Symptoms List';
+		$this->load->view('auth/template_no_sidebar', $data);
+
+	}
+	function symptoms($symptoms_id,$status,$visit_id,$description=NULL){
+		$data = array('symptoms_id'=>$symptoms_id,'status'=>$status,'visit_id'=>$visit_id,'description'=>$description);
+		$this->load->view('soap/symptoms',$data);
+	}
+	function objective_finding($visit_id){
+		$v_data['visit_id'] = $visit_id;
+		$data['content'] = $this->load->view('soap/objective_finding', $v_data, true);
+		
+		$data['title'] = 'Symptoms List';
+		$this->load->view('auth/template_no_sidebar', $data);
+	}
+	function add_objective_findings($objective_finding_id,$visit_id,$status,$description=NULL){
+		$data = array('objective_finding_id'=>$objective_finding_id,'visit_id'=>$visit_id,'update_id'=>$status,'description'=>$description);
+		$this->load->view('soap/add_objective_findings',$data);
+	}
+
+	function save_assessment($assessment,$visit_id){
+		$assessment = str_replace('%20', ' ',$assessment);
+		$visit_data = array('visit_assessment'=>$assessment);
+
+		$this->db->where(array("visit_id"=>$visit_id));
+		$this->db->update('visit', $visit_data);
+	}
+
+	public function disease($visit_id){
+
+
+
+
+		//check patient visit type
+		$rs = $this->nurse_model->check_visit_type($visit_id);
+		if(count($rs)>0){
+		  foreach ($rs as $rs1) {
+			# code...
+			  $visit_t = $rs1->visit_type;
+		  }
+		}
+		
+		$order = 'diseases_id';
+		
+		$where = 'diseases_id > 0 ';
+		$desease_search = $this->session->userdata('desease_search');
+		
+		if(!empty($desease_search))
+		{
+			$where .= $desease_search;
+		}
+		
+		$table = 'diseases';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/disease/'.$visit_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 4;
+		$config['per_page'] = 15;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_diseases($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Disease List';
+		$v_data['title'] = 'Disease List';
+		
+		$v_data['visit_id'] = $visit_id;
+		$data['content'] = $this->load->view('soap/disease', $v_data, true);
+		
+		$data['title'] = 'Disease List';
+		$this->load->view('auth/template_no_sidebar', $data);	
+
+	}
+
+	function get_diagnosis($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/get_diagnosis',$data);
+	}
+	function save_diagnosis($disease_id,$visit_id){
+
+		$visit_data = array('visit_id'=>$visit_id,'disease_id'=>$disease_id);
+		$this->db->insert('diagnosis', $visit_data);
+	}
+	function diagnose($visit_id){
+		$visit_data = array('visit_id'=>$visit_id);
+		$this->load->view('soap/diagnose',$visit_data);
+	}
+
+
+
 }
 ?>

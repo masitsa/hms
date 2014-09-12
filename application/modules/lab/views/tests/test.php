@@ -1,11 +1,9 @@
 <?php
 
-
 $patient_id = $this->nurse_model->get_patient_id($visit_id);
 
 $rs2 = $this->lab_model->get_lab_visit2($visit_id);
 $num_rows2 = count($rs2);
-
 if($num_rows2 > 0){
 	foreach ($rs2 as $key): 
 		$lab_visit = $key->lab_visit;
@@ -30,8 +28,6 @@ if ($num_rows >0 ){
 	foreach ($get_test_rs as $key_rs):
 		$lab_test = $key_rs->lab_visit;
 	endforeach;
-	//echo $lab_test;
-	
 	if ($lab_test == 2){
 		echo "
 		<table align='center'>
@@ -48,7 +44,8 @@ if ($num_rows >0 ){
 	}else {}
 	
 }
-$lab_rs = $this->lab_model->get_lab_visit($visit_id);
+$get = new Lab;
+$lab_rs = $this->lab_model->get_lab_visit_item($visit_id);
 $num_lab_visit = count($lab_rs);
 
 if($num_lab_visit > 0){
@@ -82,11 +79,11 @@ if($num_lab_visit > 0){
 			$num_lab = count($rs);
 		}
 		else{
-			$rs = $get->this->lab_model->get_m_test($visit_charge_id);
+			$rs = $this->lab_model->get_m_test($visit_charge_id);
 			$num_lab = count($rs);
 		}
 		//echo "num lab = ".$num_lab;
-		foreach ($rs as $key2):
+	foreach ($rs as $key2):
 		
 		$lab_test_name =$key2->lab_test_name;
 		$lab_test_class_name =$key2->lab_test_class_name;
@@ -99,6 +96,7 @@ if($num_lab_visit > 0){
         $visit_charge_id =$key2->lab_visit_id;
 		
 		//echo $_SESSION['test'];
+		echo "hlkjasda".$this->session->userdata('test');
 		if($this->session->userdata('test') ==0){
 			$test_format =$key2->lab_test_formatname;
 			$lab_test_format_id =$key2->lab_test_format_id;
@@ -119,6 +117,7 @@ if($num_lab_visit > 0){
 		else{
 			$class = "class=''";
 		}
+
 
 		if((($num_format > 0) && ($r == 0)) || ($num_format <= 0)){
 			echo "
@@ -167,20 +166,20 @@ if($num_lab_visit > 0){
 			echo "</tr>";
 		endforeach;
 		
-			if((($num_format > 0) && ($r == 0)) || ($num_format <= 0)){
+				if((($num_format > 0) && ($r == 0)) || ($num_format <= 0)){
 
 			}
 			
 			else{
-					$rsy2 = $this->lab_model->get_test_comment($visit_charge_id);
-					$num_rowsy2 = count($rsy2);
+				$rsy2 = $this->lab_model->get_test_comment($visit_charge_id);
+				$num_rowsy2 = count($rsy2);
 
-					if($num_rowsy2 > 0){
+				if($num_rowsy2 > 0){
 
-						foreach ($rsy2 as $keyy):
-							$comment4= $keyy->lab_visit_format_comments;
-						endforeach;
-					}
+					foreach ($rsy2 as $keyy):
+						$comment4= $keyy->lab_visit_format_comments;
+					endforeach;
+				}
 				echo "<tr>
 				<td> </td>
 				
@@ -261,6 +260,5 @@ if($num_lab_visit > 0){
 		</table>
 	";
 	}
-	
 }
 ?>

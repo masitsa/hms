@@ -1,9 +1,6 @@
 <?php
-if(isset($_GET['service_charge_id'])){
-	$service_charge_id = $_GET['service_charge_id'];
-}else{
-	$service_charge_id = 0;
-}
+
+
 
 
 if ($this->session->userdata('nurse_lab') <> NULL){
@@ -11,15 +8,21 @@ if ($this->session->userdata('nurse_lab') <> NULL){
 }
 
 $rs2 = $this->lab_model->get_lab_visit2($visit_id);
-$num_rows2 = count($rs2);
+ $num_rows2 = count($rs2);
 if($num_rows2 > 0){
 	foreach ($rs2 as $key):
-		$lab_visit = $key->lab_visit;
+		 $lab_visit = $key->lab_visit;
 	endforeach;
 }
 if(!empty($service_charge_id)){
 	
-	$lab_test_id = $this->lab_model->get_lab_test_id($service_charge_id);
+	 $lab_test_id_array = $this->lab_model->get_lab_test_id($service_charge_id);
+
+	foreach ($lab_test_id_array as $key_array):
+		# code...
+		$lab_test_id = $key_array->lab_test_id;
+	endforeach;
+
 }
 
 if(!empty($service_charge_id)){
@@ -68,6 +71,7 @@ $rs = $this->lab_model->get_lab_test($visit_id);
 $num_rows = count($rs);
 
 echo "
+
 <table class='table table-striped table-hover table-condensed'>
 	<thead>
 		<th>No.</th>
@@ -87,10 +91,10 @@ foreach ($rs as $key6):
 	$price = $key6->lab_test_price;
 	$class = $key6->class_name;
 	$total = $total + $price;
-	
+	$s++;
 	echo "
 		<tr>
-        	<td>".($s+1)."</td>
+        	<td>".($s)."</td>
 			<td>".$test."</td>
 			<td>".$class."</td>
 			<td>".$price."</td>
@@ -103,6 +107,7 @@ foreach ($rs as $key6):
 			</td>
 		</tr>
 	";
+
 endforeach;
 
 echo "
@@ -129,6 +134,8 @@ else{
 
 echo "
 </tbody>
-</table>";
+</table>
+
+";
 
 ?>

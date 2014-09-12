@@ -17,15 +17,19 @@ if($num_rows > 0){
 					<th>Code</th>
 					<th>Disease</th>
 				</tr>";
-	
+	$t=0;
 	foreach ($rs as $key):
 		$diagnosis_id =$key->diagnosis_id;
 		$name =$key->diseases_name;
 		$code =$key->diseases_code;
-		
+		$t++;
 		echo "<tr>
-				<td>".($t+1)."</td>
+				<td>".($t)."</td>
 				<td>".$code."</td>
-				<td>".$name."</td></tr>";
+				<td>".$name."</td>
+				</tr>";
 	endforeach;
 }
+	echo "
+	<table>
+	";

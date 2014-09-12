@@ -10,43 +10,6 @@ $num_rows2 = count($rs2);
 echo "
 	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Objective Findings' onclick='open_objective_findings(".$visit_id.")'/></p></div>";
 
-if($num_rows2 > 0){
-	echo"
-		<table align='center'  class='table table-striped table-hover table-condensed'>
-		<tr>
-			<th></th>
-			<th>Class</th>
-			<th>Objective Findings</th>
-			<th></th>
-		</tr>
-	";	
-	
-	foreach ($rs2 as $key):
-		
-		$count=$z+1;
-		$objective_findings_name = $key->objective_findings_name;
-		$visit_objective_findings_id = $key->visit_objective_findings_id;
-		$objective_findings_class_name = $key->objective_findings_class_name;
-		echo"
-		<tr> 
-			<td>".$count."</td>
-			<td>".$objective_findings_class_name."</td>
- 			<td align='center'>".$objective_findings_name."</td>
-			<td>
-				<div class='btn-toolbar'>
-					<div class='btn-group'>
-						<a class='btn' href='#' onclick='delete_objective_findings(".$visit_objective_findings_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
-					</div>
-				</div>
-			</td>
-		</tr>	
-		";
-	endforeach;
-echo"
- </table>
-";
-}
-	
 if($num_rows > 0){
 	foreach ($rs as $key1):
 		$visit_objective_findings = $key1->visit_objective_findings;
