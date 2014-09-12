@@ -10,7 +10,6 @@ class Nurse extends auth
 		$this->load->model('nurse_model');
 		$this->load->model('reception/reception_model');
 		$this->load->model('database');
-		$this->load->model('reception/reception_model');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
 	}
@@ -34,7 +33,7 @@ class Nurse extends auth
 		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/visit_list/';
+		$config['base_url'] = site_url().'/nurse/nurse_queue/';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 3;
 		$config['per_page'] = 20;
@@ -73,6 +72,7 @@ class Nurse extends auth
 		
 		$data['title'] = 'Nurse Queue';
 		$v_data['title'] = 'Nurse Queue';
+		$v_data['module'] = 0;
 		
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
@@ -84,15 +84,25 @@ class Nurse extends auth
 		// end of it
 	}
 	
-	public function patient_card($visit_id, $mike = NULL)
+	public function patient_card($visit_id, $mike = NULL, $module = NULL)
 	{
+		$v_data['module'] = $module;
 		$v_data['visit_id'] = $visit_id;
 		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
-		$data['sidebar'] = 'nurse_sidebar';
-		if($mike !=NULL){
+		
+		if($module == 0)
+		{
+			$data['sidebar'] = 'nurse_sidebar';
+		}
+		
+		else
+		{
+			$data['sidebar'] = 'doctor_sidebar';
+		}
+		if(($mike != NULL) && ($mike != 'a')){
 			$this->load->view('auth/template_no_sidebar', $data);	
 		}else{
 			$this->load->view('auth/template_sidebar', $data);	
