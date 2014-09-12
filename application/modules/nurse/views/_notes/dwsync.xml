@@ -24,4 +24,5 @@
 <file name="show_previous_vitals.php" server="192.168.170.16/sumc/" local="130546628463000130" remote="130547969400000000" Dst="0" />
 <file name="show_vitals.php" server="192.168.170.16/sumc/" local="130547393106352982" remote="130547969400000000" Dst="0" />
 <file name="view_procedure.php" server="192.168.170.16/sumc/" local="130547386868136176" remote="130547969400000000" Dst="0" />
+<file name="symptoms_list.php" server="192.168.170.16/sumc/development/" local="130549831349432632" remote="130549720800000000" Dst="0" />
 </dwsync>
