@@ -1849,38 +1849,7 @@ function save_doctor_notes(visit_id){
 	}
 }
 
-function doctor_notes(visit_id){
-		var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var url = host+"data/doctor/doctor_notes.php?visit_id="+visit_id;
-	
-	if(XMLHttpRequestObject) {
-		
-		var obj = document.getElementById("doctor_notes");
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				obj.innerHTML = XMLHttpRequestObject.responseText;
-				symptoms3(visit_id);
-				
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
+
 
 function set_service_charge_id(id){
 	document.getElementById("service_charge_id").value = id;
