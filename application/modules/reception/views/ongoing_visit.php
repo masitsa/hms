@@ -56,7 +56,8 @@
 		{
 			$count = $page;
 			
-			if($visit == 0)
+			//deleted patients
+			if($delete == 1)
 			{
 				$result .= 
 				'
@@ -70,7 +71,8 @@
 						  <th>Visit Type</th>
 						  <th>Time In</th>
 						  <th>Doctor</th>
-						  <th>Actions</th>
+						  <th>Date Deleted</th>
+						  <th>Deleted By</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -79,23 +81,48 @@
 			
 			else
 			{
-				$result .= 
-				'
-					<table class="table table-hover table-bordered ">
-					  <thead>
-						<tr>
-						  <th>#</th>
-						  <th>Visit Date</th>
-						  <th>Patient</th>
-						  <th>Patient Type</th>
-						  <th>Visit Type</th>
-						  <th>Time In</th>
-						  <th>Time Out</th>
-						  <th>Doctor</th>
-						</tr>
-					  </thead>
-					  <tbody>
-				';
+				if(($visit == 0) || ($visit == 3))
+				{
+					$result .= 
+					'
+						<table class="table table-hover table-bordered ">
+						  <thead>
+							<tr>
+							  <th>#</th>
+							  <th>Visit Date</th>
+							  <th>Patient</th>
+							  <th>Patient Type</th>
+							  <th>Visit Type</th>
+							  <th>Time In</th>
+							  <th>Doctor</th>
+							  <th colspan="3">Actions</th>
+							</tr>
+						  </thead>
+						  <tbody>
+					';
+				}
+				
+				else
+				{
+					$result .= 
+					'
+						<table class="table table-hover table-bordered ">
+						  <thead>
+							<tr>
+							  <th>#</th>
+							  <th>Visit Date</th>
+							  <th>Patient</th>
+							  <th>Patient Type</th>
+							  <th>Visit Type</th>
+							  <th>Time In</th>
+							  <th>Time Out</th>
+							  <th>Doctor</th>
+							  <th>Actions</th>
+							</tr>
+						  </thead>
+						  <tbody>
+					';
+				}
 			}
 			
 			$personnel_query = $this->personnel_model->get_all_personnel();
@@ -117,13 +144,10 @@
 				$personnel_id = $row->personnel_id;
 				$dependant_id = $row->dependant_id;
 				$strath_no = $row->strath_no;
-				$created_by = $row->created_by;
-				$modified_by = $row->modified_by;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
-				$created = $row->patient_date;
-				$last_modified = $row->last_modified;
-				$last_visit = $row->last_visit;
+				$visit_table_visit_type = $visit_type;
+				$patient_table_visit_type = $visit_type_id;
 				
 				//staff & dependant
 				if($visit_type == 2)
@@ -234,21 +258,6 @@
 					
 					$patient_othernames = $row->patient_othernames;
 					$patient_surname = $row->patient_surname;
-					$title_id = $row->title_id;
-					$patient_date_of_birth = $row->patient_date_of_birth;
-					$civil_status_id = $row->civil_status_id;
-					$patient_address = $row->patient_address;
-					$patient_post_code = $row->patient_postalcode;
-					$patient_town = $row->patient_town;
-					$patient_phone1 = $row->patient_phone1;
-					$patient_phone2 = $row->patient_phone2;
-					$patient_email = $row->patient_email;
-					$patient_national_id = $row->patient_national_id;
-					$religion_id = $row->religion_id;
-					$gender_id = $row->gender_id;
-					$patient_kin_othernames = $row->patient_kin_othernames;
-					$patient_kin_sname = $row->patient_kin_sname;
-					$relationship_id = $row->relationship_id;
 				}
 				
 				//creators and editors
@@ -280,25 +289,84 @@
 				
 				$count++;
 				
-				if($visit == 0)
+				if($delete == 0)
 				{
-					$result .= 
-					'
-						<tr>
-							<td>'.$count.'</td>
-							<td>'.$visit_date.'</td>
-							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$patient_type.'</td>
-							<td>'.$visit_type.'</td>
-							<td>'.$visit_time.'</td>
-							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
-						</tr> 
-					';
+					if(($visit == 0) || ($visit == 3))
+					{
+						//if staff was registered as other
+						if(($visit_table_visit_type == 2) && ($patient_table_visit_type != $visit_table_visit_type))
+						{
+							$button = '<a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to change this patient type?\');">Change Patient Type</a>';
+						}
+						//if student was registered as other
+						else if(($visit_table_visit_type == 1) && ($patient_table_visit_type != $visit_table_visit_type))
+						{
+							$button = '<a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to change this patient type?\');">Change Patient Type</a>';
+						}
+						
+						else
+						{
+							$button = '';
+						}
+						
+						$result .= 
+						'
+							<tr>
+								<td>'.$count.'</td>
+								<td>'.$visit_date.'</td>
+								<td>'.$patient_surname.' '.$patient_othernames.'</td>
+								<td>'.$patient_type.'</td>
+								<td>'.$visit_type.'</td>
+								<td>'.$visit_time.'</td>
+								<td>'.$doctor.'</td>
+								<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
+								<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>
+								<td>'.$button.'</td>
+							</tr> 
+						';
+					}
+					
+					else
+					{
+						$result .= 
+						'
+							<tr>
+								<td>'.$count.'</td>
+								<td>'.$visit_date.'</td>
+								<td>'.$patient_surname.' '.$patient_othernames.'</td>
+								<td>'.$patient_type.'</td>
+								<td>'.$visit_type.'</td>
+								<td>'.$visit_time.'</td>
+								<td>'.$visit_time_out.'</td>
+								<td>'.$doctor.'</td>
+								<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>
+							</tr> 
+						';
+					}
 				}
 				
 				else
 				{
+					//deleted by
+					$deleted_by = $row->deleted_by;
+					
+					if($personnel_query->num_rows() > 0)
+					{
+						$personnel_result = $personnel_query->result();
+						
+						foreach($personnel_result as $adm)
+						{	
+							$personnel_id2 = $adm->personnel_id;
+							if($deleted_by == $personnel_id2)
+							{
+								$deleted_by = $adm->personnel_fname;
+								break;
+							}
+						}
+					}
+					
+					$deleted = $row->date_deleted;
+					
 					$result .= 
 					'
 						<tr>
@@ -308,8 +376,9 @@
 							<td>'.$patient_type.'</td>
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
-							<td>'.$visit_time_out.'</td>
 							<td>'.$doctor.'</td>
+							<td>'.date('jS M Y H:i a',strtotime($deleted)).'</td>
+							<td>'.$deleted_by.'</td>
 						</tr> 
 					';
 				}

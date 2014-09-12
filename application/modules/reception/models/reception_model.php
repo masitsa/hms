@@ -51,7 +51,7 @@ class Reception_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, patients.*');
+		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no');
 		$this->db->where($where);
 		$this->db->order_by('visit_time','desc');
 		$query = $this->db->get('', $per_page, $page);
@@ -97,7 +97,7 @@ class Reception_model extends CI_Model
 	{
 		$this->db->from('patients');
 		$this->db->select('*');
-		$this->db->where('strath_no = \''.$strath_no.'\'');
+		$this->db->where('patients.patient_delete = 0 AND strath_no = \''.$strath_no.'\'');
 		$query = $this->db->get();
 		
 		return $query;
@@ -111,10 +111,9 @@ class Reception_model extends CI_Model
 	{
 		//  instert data into the patients table
 		$date = date("Y-m-d H:i:s");
-		$patient_data = array('patient_number'=>$this->strathmore_population->create_patient_number(),'patient_date'=>'$date','visit_type_id'=>$visit_type,'strath_no'=>$strath_no,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
+		$patient_data = array('patient_number'=>$this->strathmore_population->create_patient_number(),'patient_date'=>$date,'visit_type_id'=>$visit_type,'strath_no'=>$strath_no,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
 		$this->db->insert('patients', $patient_data);
 		return $this->db->insert_id();
-		
 	}
 
 	/*
@@ -806,6 +805,144 @@ class Reception_model extends CI_Model
 		$patient = $visit_type.': '.$patient_surname.' '.$patient_othernames;
 		
 		return $patient;
+	}
+	
+	public function delete_patient($patient_id)
+	{
+		$data = array
+		(
+			"patient_delete" => 1,
+			"deleted_by" => $this->session->userdata('personnel_id'),
+			"date_deleted" => date('Y-m-d H:i:s')
+		);
+		
+		$this->db->where('patient_id', $patient_id);
+		if($this->db->update('patients', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function delete_visit($visit_id)
+	{
+		$data = array
+		(
+			"visit_delete" => 1,
+			"deleted_by" => $this->session->userdata('personnel_id'),
+			"date_deleted" => date('Y-m-d H:i:s')
+		);
+		
+		$this->db->where('visit_id', $visit_id);
+		if($this->db->update('visit', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function change_patient_type($patient_id)
+	{
+		$data = array
+		(
+			"visit_type_id" => $this->input->post('visit_type_id'),
+			"strath_no" => $this->input->post('strath_no')
+		);
+		
+		$this->db->where('patient_id', $patient_id);
+		if($this->db->update('patients', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function add_sbs_patient()
+	{
+		$data = array(
+			'Other_names'=>ucwords(strtolower($this->input->post('surname'))),
+			'Surname'=>ucwords(strtolower($this->input->post('other_names'))),
+			'DOB'=>$this->input->post('date_of_birth'),
+			'gender'=>$this->input->post('gender'),
+			'Staff_Number'=>$this->input->post('strath_no'),
+			'contact'=>$this->input->post('contact'),
+			'sbs'=>'1'
+		);
+		if($this->db->insert('staff', $data))
+		{
+			$data2 = array(
+				'strath_no'=>$this->input->post('strath_no'),
+				'visit_type_id'=>2,
+				'patient_date'=>date('Y-m-d H:i:s'),
+				'patient_number'=>$this->strathmore_population->create_patient_number(),
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+			);
+			
+			if($this->db->insert('patients', $data2))
+			{
+				return $this->db->insert_id();
+			}
+			else{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function bulk_add_sbs_staff()
+	{
+		$query = $this->db->get('staff2');
+		
+		if($query->num_rows() > 0)
+		{
+			$result = $query->result();
+			
+			foreach($result as $res)
+			{
+				$exists = $this->strathmore_population->staff_exists($res->Staff_Number);
+				
+				if(!$exists)
+				{
+					echo 'doesn\'t exist '.$res->Staff_Number.'<br/>';
+					$data = array(
+						'Other_names'=>ucwords(strtolower($res->Other_names)),
+						'Surname'=>ucwords(strtolower($res->Surname)),
+						'Staff_Number'=>$res->Staff_Number,
+						'title'=>$res->title,
+						'sbs'=>'1'
+					);
+					if(!$this->db->insert('staff', $data))
+					{
+						break;
+						return FALSE;
+					}
+				}
+				
+				else
+				{
+					echo 'Exists '.$res->Staff_Number.'<br/>';
+				}
+			}
+		}
+		
+		return TRUE;
 	}
 }
 ?>

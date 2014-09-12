@@ -253,6 +253,104 @@ function delete_condition(cond, family, patient_id){
 
 
 
+function procedures(id, v_id, suck){
+	/*alert(id);
+	alert(v_id);
+	alert(suck);*/
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	var url = host+"data/nurse/procedure.php?procedure_id="+id+"&visit_id="+v_id+"&suck="+suck;
+	
+	if(XMLHttpRequestObject) {
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+				window.close(this);
+				window.opener.document.getElementById("procedures").innerHTML=XMLHttpRequestObject.responseText;
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
+
+function calculatetotal(amount, id, procedure_id, v_id){
+		
+	var units = document.getElementById('units'+id).value;	
+
+	grand_total(id, units, amount);
+	display_procedure(v_id);
+}
+
+function grand_total(procedure_id, units, amount){
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	//alert(procedure_id);
+	var url = host+"data/nurse/procedure_total.php?procedure_id="+procedure_id+"&units="+units+"&amount="+amount;
+	
+	if(XMLHttpRequestObject) {
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+				
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
+
+function delete_procedure(id, visit_id){
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var url = host+"data/nurse/delete_procedure.php?procedure_id="+id;
+	
+	if(XMLHttpRequestObject) {
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+				display_procedure(visit_id);
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
 
 function do_a_search(){
 		var XMLHttpRequestObject = false;
@@ -1003,7 +1101,36 @@ function save_symptoms(visit_id){
 	}
 }
 
-
+function objective_findings(visit_id){
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	var url = host+"data/doctor/view_objective_findings.php?visit_id="+visit_id;
+	
+	if(XMLHttpRequestObject) {
+		
+		var obj = document.getElementById("objective_findings");
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
 
 
 
@@ -1074,10 +1201,71 @@ function save_objective_findings(visit_id){
 	}
 }
 
+function assessment(visit_id){
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	var url = host+"data/doctor/view_assessment.php?visit_id="+visit_id;
+	
+	if(XMLHttpRequestObject) {
+		
+		var obj = document.getElementById("assessment");
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
 
 
-
-
+function plan(visit_id){
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	var url = host+"data/doctor/view_plan.php?visit_id="+visit_id;
+	
+	if(XMLHttpRequestObject) {
+		
+		var obj = document.getElementById("plan");
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+				get_test_results(100, visit_id);
+				closeit(79, visit_id);
+				display_prescription(visit_id, 2);
+			}
+		}
+				
+		XMLHttpRequestObject.send(null);
+	}
+}
 function plan1(visit_id){
 	var XMLHttpRequestObject = false;
 		
@@ -1155,6 +1343,49 @@ function send_to_lab(visit_id){
 
 
 
+function get_test_results(page, visit_id){
+
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	if((page == 1) || (page == 65) || (page == 85)){
+		url = host+"data/lab/test.php?visit_id="+visit_id;
+	}
+	
+	else if ((page == 75) || (page == 100)){
+		url = host+"data/lab/test1.php?visit_id="+visit_id;
+	}
+	
+	if(XMLHttpRequestObject) {
+		if((page == 75) || (page == 85)){
+			var obj = window.opener.document.getElementById("test_results");
+		}
+		else{
+			var obj = document.getElementById("test_results");
+		}
+		XMLHttpRequestObject.open("GET", url);
+		
+		XMLHttpRequestObject.onreadystatechange = function(){
+		
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+	//window.alert(XMLHttpRequestObject.responseText);
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+				if((page == 75) || (page == 85)){
+					window.close(this);
+				}
+				
+			}
+		}
+		XMLHttpRequestObject.send(null);
+	}
+}
 
 function delete_cost(id, visit_id){
 	
@@ -1198,7 +1429,42 @@ function print_previous_test2(visit_id, patient_id){
 
 
 
-
+function closeit(page, visit_id){
+	
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var url = host+"data/doctor/diagnose.php?visit_id="+visit_id;
+			
+	if(XMLHttpRequestObject) {
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+				
+				if(page == 1){
+					window.opener.document.getElementById("diagnosis").innerHTML = XMLHttpRequestObject.responseText;
+					window.close(this);
+				}
+				
+				else{
+					document.getElementById("diagnosis").innerHTML = XMLHttpRequestObject.responseText;
+				}
+			}
+		}
+		
+		XMLHttpRequestObject.send(null);
+	}
+}
 function delete_diagnosis(id, visit_id){
 	
 	var XMLHttpRequestObject = false;
@@ -1277,7 +1543,46 @@ function send_to_pharmacy(visit_id, page){
 	}
 }
 
-
+function display_prescription(visit_id, page){
+	
+	var XMLHttpRequestObject = false;
+		
+	if (window.XMLHttpRequest) {
+	
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+		
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var url = host+"data/pharmacy/display_prescription.php?v_id="+visit_id;
+	
+	if(page == 1){
+		var obj = window.opener.document.getElementById("prescription");
+	}
+	
+	else{
+		var obj = document.getElementById("prescription");
+	}
+			
+	if(XMLHttpRequestObject) {
+				
+		XMLHttpRequestObject.open("GET", url);
+				
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+				
+				if(page == 1){
+					window.close(this);
+				}
+			}
+		}
+		
+		XMLHttpRequestObject.send(null);
+	}
+}
 
 function test(page, visit_id){
 	

@@ -17,7 +17,7 @@ class Reception extends auth
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0';
+		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 10, 0);
 		$v_data['query'] = $query;
@@ -34,10 +34,21 @@ class Reception extends auth
 		$this->load->view('auth/template_sidebar', $data);	
 	}
 	
-	public function patients()
+	public function patients($delete = 0)
 	{
+		if($delete == 1)
+		{
+			$segment = 4;
+		}
+		
+		else
+		{
+			$segment = 3;
+			$delete = 0;
+		}
+		
 		$patient_search = $this->session->userdata('patient_search');
-		$where = 'patient_id > 0';
+		$where = 'patient_delete = '.$delete;
 		
 		if(!empty($patient_search))
 		{
@@ -49,7 +60,7 @@ class Reception extends auth
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/reception/all-patients';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		
@@ -78,26 +89,87 @@ class Reception extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->reception_model->get_all_patients($table, $where, $config["per_page"], $page);
 		
+		if($delete == 1)
+		{
+			$data['title'] = 'Deleted Patients';
+			$v_data['title'] = 'Deleted Patients';
+		}
+		
+		else
+		{
+			$data['title'] = 'All Patients';
+			$v_data['title'] = 'All Patients';
+		}
+		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
+		$v_data['delete'] = $delete;
 		$v_data['type'] = $this->reception_model->get_types();
 		$data['content'] = $this->load->view('all_patients', $v_data, true);
 		
-		
-		$data['title'] = 'All Patients';
 		$data['sidebar'] = 'reception_sidebar';
 		
 		$this->load->view('auth/template_sidebar', $data);
 	}
-
+	
+	/*
+	*
+	*	$visits = 0 :ongoing visits of the current day
+	*	$visits = 1 :terminated visits
+	*	$visits = 2 :deleted visits
+	*	$visits = 3 :all other ongoing visits
+	*
+	*/
 	public function visit_list($visits)
 	{
+		//Deleted visits
+		if($visits == 2)
+		{
+			$delete = 1;
+		}
+		//undeleted visits
+		else
+		{
+			$delete = 0;
+		}
+		$segment = 4;
+		
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = '.$visits;
+		if($visits != 2)
+		{
+			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id';
+			//terminated visits
+			if($visits == 1)
+			{
+				$where .= ' AND visit.close_card = '.$visits;
+			}
+			
+			//ongoing visits
+			else
+			{
+				$where .= ' AND visit.close_card = 0';
+				
+				//visits of the current day
+				if($visits == 0)
+				{
+					$where .= ' AND visit.visit_date = \''.date('Y-m-d').'\'';
+				}
+				
+				else
+				{
+					$where .= ' AND visit.visit_date < \''.date('Y-m-d').'\'';
+				}
+			}
+		}
+		
+		else
+		{
+			$where = 'visit.visit_delete = '.$delete.' AND visit.patient_id = patients.patient_id';
+		}
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -110,7 +182,7 @@ class Reception extends auth
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/reception/visit_list/'.$visits;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 4;
+		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		
@@ -138,7 +210,7 @@ class Reception extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
 		
@@ -148,7 +220,19 @@ class Reception extends auth
 		if($visits == 0)
 		{
 			$data['title'] = 'Ongoing Visits';
-			$v_data['title'] = 'Ongoing History';
+			$v_data['title'] = 'Ongoing Visits';
+		}
+		
+		elseif($visits == 2)
+		{
+			$data['title'] = 'Deleted Visits';
+			$v_data['title'] = 'Deleted Visits';
+		}
+		
+		elseif($visits == 3)
+		{
+			$data['title'] = 'Unclosed Visits';
+			$v_data['title'] = 'Unclosed Visits';
 		}
 		
 		else
@@ -157,6 +241,7 @@ class Reception extends auth
 			$v_data['title'] = 'Visit History';
 		}
 		$v_data['visit'] = $visits;
+		$v_data['delete'] = $delete;
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
@@ -273,11 +358,18 @@ class Reception extends auth
 			
 			else if (!isset($_POST['dependant']))
 			{
-				$patient_id = $this->strathmore_population->get_hr_staff($this->input->post('staff_number'));
-				if($patient_id != FALSE){
-					$this->get_found_patients($patient_id);
-				}else{
-					$this->session->set_userdata("error_message","Could not add patient. Please try again");
+				if($this->strathmore_population->get_hr_staff($this->input->post('staff_number')))
+				{
+					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
+					if($patient_id != FALSE){
+						$this->get_found_patients($patient_id);
+					}else{
+						$this->add_patient();
+					}
+				}
+				
+				else
+				{
 					$this->add_patient();
 				}
 	
@@ -455,6 +547,13 @@ class Reception extends auth
 				"visit_charge_amount" => $service_charge
 	    	);
 			$this->db->insert('visit_charge', $visit_charge_data);
+
+			$patient_date = array(
+				"last_visit" => $visit_date
+	    	);
+			$this->db->where('patient_id', $patient_id);
+			$this->db->update('patients', $patient_date);
+			
 			$this->visit_list(0);
 		}
 	}
@@ -526,46 +625,62 @@ class Reception extends auth
 		}
 		
 		//search surname
-		$surnames = explode(" ",$_POST['surname']);
-		$total = count($surnames);
-		
-		$count = 1;
-		$surname = ' AND (';
-		for($r = 0; $r < $total; $r++)
+		if(!empty($_POST['surname']))
 		{
-			if($count == $total)
-			{
-				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
-			}
+			$surnames = explode(" ",$_POST['surname']);
+			$total = count($surnames);
 			
-			else
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
 			{
-				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				if($count == $total)
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
 			}
-			$count++;
+			$surname .= ') ';
 		}
-		$surname .= ') ';
+		
+		else
+		{
+			$surname = '';
+		}
 		
 		//search other_names
-		$other_names = explode(" ",$_POST['othernames']);
-		$total = count($other_names);
-		
-		$count = 1;
-		$other_name = ' AND (';
-		for($r = 0; $r < $total; $r++)
+		if(!empty($_POST['othernames']))
 		{
-			if($count == $total)
-			{
-				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
-			}
+			$other_names = explode(" ",$_POST['othernames']);
+			$total = count($other_names);
 			
-			else
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
 			{
-				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				if($count == $total)
+				{
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
 			}
-			$count++;
+			$other_name .= ') ';
 		}
-		$other_name .= ') ';
+		
+		else
+		{
+			$other_name = '';
+		}
 		
 		$search = $visit_type_id.$strath_no.$surname.$other_name;
 		$this->session->set_userdata('patient_search', $search);
@@ -841,14 +956,14 @@ class Reception extends auth
 		
 		else
 		{
-			redirect('reception/visit_list/0');
+			redirect('reception/visit_list/'.$page);
 		}
 	}
 
 	public function appointment_list()
 	{
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2';
+		$where = 'visit.visit_delete = 0 AND patients.patient_delete = 0 AND visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2';
 		$appointment_search = $this->session->userdata('visit_search');
 		
 		if(!empty($appointment_search))
@@ -986,5 +1101,126 @@ class Reception extends auth
 		}
 		
 		redirect('reception/appointment_list');
+	}
+	
+	public function delete_patient($patient_id)
+	{
+		if($this->reception_model->delete_patient($patient_id))
+		{
+			$this->session->set_userdata('success_message', 'The patient has been deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Could not delete patient. Please <a href="'.site_url().'/reception/delete_patient/'.$patient_id.'">try again</a>');
+		}
+		
+		redirect('reception/patients');
+	}
+	
+	public function delete_visit($visit_id, $visit)
+	{
+		if($this->reception_model->delete_visit($visit_id))
+		{
+			$this->session->set_userdata('success_message', 'The visit has been deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Could not delete visit. Please <a href="'.site_url().'/reception/delete_patient/'.$patient_id.'">try again</a>');
+		}
+		
+		redirect('reception/visit_list/'.$visit);
+	}
+	
+	public function change_patient_type($patient_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('visit_type_id', 'Visit Type', 'required|is_numeric|xss_clean');
+		$this->form_validation->set_rules('strath_no', 'Staff/Student ID No.', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->reception_model->change_patient_type($patient_id))
+			{
+				$this->session->set_userdata('success_message', 'Patient type updated successfully');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Unable to update patient type. Please try again');
+			}
+			
+			redirect('reception/visit_list/0');
+		}
+		
+		$v_data['patient'] = $this->reception_model->patient_names2($patient_id);
+		$data['content'] = $this->load->view('change_patient_type', $v_data, true);
+		$data['sidebar'] = 'reception_sidebar';
+		$data['title'] = 'Change Patient Type';
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function staff_sbs()
+	{
+		//form validation rules
+		$this->form_validation->set_rules('strath_no', 'Staff Number', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('surname', 'Surname', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('other_names', 'Other Names', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('phone', 'Phone', 'trim|xss_clean');
+		$this->form_validation->set_rules('email', 'Email', 'trim|valid_email|xss_clean');
+		$this->form_validation->set_rules('date_of_birth', 'Date of Birth', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('gender', 'Gender', 'trime|required|xss_clean');
+		$this->form_validation->set_rules('staff_type', 'Staff Type', 'required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->add_patient();
+		}
+		
+		else
+		{
+			$patient_id = $this->reception_model->add_sbs_patient();
+			if($patient_id != FALSE)
+			{
+				$this->session->set_userdata('success_message', 'Patient added successfully');
+				$this->get_found_patients($patient_id);
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Unable to update patient type. Please try again');
+				$this->add_patient();
+			}
+		}
+	}
+	
+	public function bulk_add_sbs_staff()
+	{
+		if($this->reception_model->bulk_add_sbs_staff())
+		{
+			echo 'SUCCESS';
+		}
+		
+		else
+		{
+			echo 'FAILURE';
+		}
+	}
+	
+	public function bulk_add_all_staff()
+	{
+		if($this->strathmore_population->get_hr_staff())
+		{
+			echo 'SUCCESS';
+		}
+		
+		else
+		{
+			echo 'FAILURE';
+		}
 	}
 }

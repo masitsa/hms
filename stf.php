@@ -9,8 +9,8 @@
                     or die("Could not select database".mysql_error());
 		
 			
-			$sql1 = "select `employee`.`Employee_ID` AS `E_ID`, `employee`.`Employee_Code` AS `Employee_Code`,`employee`.`ID_No` AS `ID_No`,`employee`.`Title` AS `Title`,`employee`.`Surname` AS `Surname`,`employee`.`Other_Name` AS `Other_Name`,`employee`.`Gender` AS `Gender`,`employee`.`DOB` AS `DOB`,`employee`.`Nationality` AS `Nationality`,`employee`.`Marital_Status` AS `Marital_Status`,`dept`.`Dept` AS `Dept`,`emp_post`.`Post` AS `Post`,`contact`.`Tel_1` AS `Tel_1`,`contact`.`Address_2` AS `Address_2`,`contact`.`Postal_Code` AS `Postal_Code`,`contact`.`Email` AS `Email`,`contact`.`City` AS `City` from (((`employee` join `emp_post` on((`employee`.`Employee_ID` = `emp_post`.`Employee_ID`))) join `contact` on((`employee`.`Contact_ID` = `contact`.`Contact_ID`))) join `dept` on((`employee`.`Dept_ID` = `dept`.`Dept_ID`)))";
-				echo $sql1.'<br />';
+			$sql1 = "select `employee`.`Employee_ID` AS `E_ID`, `employee`.`Employee_Code` AS `Employee_Code`,`employee`.`ID_No` AS `ID_No`,`employee`.`Title` AS `Title`,`employee`.`Surname` AS `Surname`,`employee`.`Other_Name` AS `Other_Name`,`employee`.`Gender` AS `Gender`,`employee`.`DOB` AS `DOB`,`employee`.`Nationality` AS `Nationality`,`employee`.`Marital_Status` AS `Marital_Status`,`dept`.`Dept` AS `Dept`,`emp_post`.`Post` AS `Post`,`contact`.`Tel_1` AS `Tel_1`,`contact`.`Address_2` AS `Address_2`,`contact`.`Postal_Code` AS `Postal_Code`,`contact`.`Email` AS `Email`,`contact`.`City` AS `City` from (((`employee` join `emp_post` on((`employee`.`Employee_ID` = `emp_post`.`Employee_ID`))) join `contact` on((`employee`.`Contact_ID` = `contact`.`Contact_ID`))) join `dept` on((`employee`.`Dept_ID` = `dept`.`Dept_ID`))) ORDER BY Dept";
+				//echo $sql1.'<br />';
         $rs1 = mysql_query($sql1)
 		
         or die ("unable to Select ".mysql_error());
@@ -25,10 +25,13 @@
 			$Nationality=mysql_result($rs1, $a,'Nationality');
 			$Marital_Status=mysql_result($rs1, $a,'Marital_Status');
 			$Email=mysql_result($rs1, $a,'Email');
-			$Gender=mysql_result($rs1, $a,'Gender');	$Title=mysql_result($rs1, $a,'Title');	$Tel_1=mysql_result($rs1, $a,'Tel_1');
+			$Gender=mysql_result($rs1, $a,'Gender');
+			$Title=mysql_result($rs1, $a,'Title');
+			$Tel_1=mysql_result($rs1, $a,'Tel_1');
+			$Dept=mysql_result($rs1, $a,'Dept');
 			
 			
-		echo	$E_ID.'-->'.$Surname.'-->'.$Other_Name.'-->'.$E_ID.'-->'.$Employee_Code.'-->'.$DOB.'-->'.$Tel_1.'<br />';
+		echo	$Dept.'-->'.$Employee_Code.'-->'.$E_ID.'-->'.$Surname.'-->'.$Other_Name.'-->'.$E_ID.'-->'.$DOB.'-->'.$Tel_1.'<br />';
 		
 		
 		 //connect to database
@@ -41,8 +44,8 @@
 		
 			$Surname=str_replace("'", "", "$Surname1");
 			$Other_Name=str_replace("'", "", "$Other_Name1");
-			$sql2 = "insert into staff (title,Surname,Other_names,DOB,contact,gender,Staff_Number,staff_system_id) values('$Title','$Surname','$Other_Name','$DOB','$Tel_1','$Gender','$Employee_Code','$E_ID')";
-				echo $sql2.'<br />';
+			$sql2 = "insert into all_staff (surname, othernames, department, employee_number) values('$Surname', '$Other_Name', '$Dept', '$Employee_Code')";
+				//echo $sql2.'<br />';
 		     $rs2 = mysql_query($sql2)  or  die ("unable to Select ".mysql_error());
       
 		

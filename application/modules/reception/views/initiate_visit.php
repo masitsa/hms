@@ -132,7 +132,7 @@
 				            <div class="col-lg-8">
 				            	<div id="datetimepicker1" class="input-append">
 				                    <input data-format="yyyy-MM-dd" class="form-control" type="text" id="datepicker" name="visit_date" placeholder="Visit Date" value="<?php echo date('Y-m-d');?>">
-				                    <span class="add-on">
+				                    <span class="add-on" style="cursor:pointer;">
 				                        &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
 				                        </i>
 				                    </span>
@@ -146,7 +146,7 @@
 				            <label class="col-lg-4 control-label">Schedule: </label>
 				            
 				            <div class="col-lg-8">
-				            	<a onclick="check_date()">[Show Doctor's Schedule]</a><br>
+				            	<a onclick="check_date()" style="cursor:pointer;">[Show Doctor's Schedule]</a><br>
 				            	<!-- show the doctors -->
 				            	<div id="show_doctor" style="display:none;"> 
 				            		<select name="doctor" id="doctor" onChange="load_schedule()" class="form-control">
@@ -173,7 +173,7 @@
 					            <div class="col-lg-8">
 								    <div id="datetimepicker2" class="input-append">
 				                       <input data-format="hh:mm" class="picker" id="timepicker_start" name="timepicker_start"  type="text" class="form-control">
-				                       <span class="add-on">
+				                       <span class="add-on" style="cursor:pointer;">
 				                         &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
 				                         </i>
 				                       </span>
@@ -186,7 +186,7 @@
 					            <div class="col-lg-8">				            
 									<div id="datetimepicker3" class="input-append">
 				                       <input data-format="hh:mm" class="picker" id="timepicker_end" name="timepicker_end"  type="text" class="form-control">
-				                       <span class="add-on">
+				                       <span class="add-on" style="cursor:pointer;">
 				                         &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
 				                         </i>
 				                       </span>
