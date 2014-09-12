@@ -61,10 +61,10 @@
                     </div>
                                         
                     <div class="form-group">
-                        <label class="col-lg-4 control-label">Strath No.: </label>
+                        <label class="col-lg-4 control-label">Staff/ Student ID: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="strath_no" placeholder="Strath No.">
+                            <input type="text" class="form-control" name="strath_no" placeholder="Staff/ Student ID">
                         </div>
                     </div>
                 </div>

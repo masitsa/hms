@@ -144,7 +144,7 @@ class Reports_model extends CI_Model
 		{
 			$date = date('Y-m-d');
 		}
-		$where = 'visit.visit_type = visit_type.visit_type_id AND visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2 AND visit.visit_date >= \''.$date.'\'';
+		$where = 'visit.visit_delete = 0 AND patients.patient_delete = 0 AND visit.visit_type = visit_type.visit_type_id AND visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2 AND visit.visit_date >= \''.$date.'\'';
 		
 		$this->db->select('visit.*, visit_type.visit_type_name, patients.*');
 		$this->db->where($where);

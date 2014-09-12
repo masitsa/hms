@@ -23,4 +23,6 @@
 <file name="Reports.php" server="192.168.170.16/sumc/development/" local="130476491594644076" remote="130547114400000000" Dst="0" />
 <file name="strathmore_population.php" server="192.168.170.16/sumc/development/" local="130476489797751300" remote="130547114400000000" Dst="0" />
 <file name="test.php" server="192.168.170.16/sumc/development/" local="130473911912559527" remote="130547114400000000" Dst="0" />
+<file name="connection.php" server="192.168.170.16/hms_old/" local="130548318812368566" remote="130548208200000000" Dst="0" />
+<file name="connection2.php" server="192.168.170.16/hms_old/" local="130476489666453790" remote="130548208200000000" Dst="0" />
 </dwsync>

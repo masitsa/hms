@@ -7,8 +7,8 @@ $conn = oci_connect('AMS_QUERIES',' MuYaibu1','192.168.170.228:1521/STRATHMO');
 		}
 		else{
 		
-		$sql = "SELECT * FROM   GAOWNER.VIEW_STUDENT_DETAILS WHERE STUDENT_NO='083041'  ";
-		
+		$sql = "SELECT * FROM   GAOWNER.VIEW_STUDENT_DETAILS WHERE SURNAME='Kipkurui'  ";
+		//$sql = "SELECT * FROM   GAOWNER.VIEW_STUDENT_DETAILS";
 	
 		$rs4 = OCIParse($conn, $sql);
    		OCIExecute($rs4, OCI_DEFAULT);

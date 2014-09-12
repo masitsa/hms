@@ -73,13 +73,8 @@
 				$personnel_id = $row->personnel_id;
 				$dependant_id = $row->dependant_id;
 				$strath_no = $row->strath_no;
-				$created_by = $row->created_by;
-				$modified_by = $row->modified_by;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
-				$created = $row->patient_date;
-				$last_modified = $row->last_modified;
-				$last_visit = $row->last_visit;
 				$time_start = $row->time_start;
 				$time_end = $row->time_end;
 				
@@ -192,21 +187,6 @@
 					
 					$patient_othernames = $row->patient_othernames;
 					$patient_surname = $row->patient_surname;
-					$title_id = $row->title_id;
-					$patient_date_of_birth = $row->patient_date_of_birth;
-					$civil_status_id = $row->civil_status_id;
-					$patient_address = $row->patient_address;
-					$patient_post_code = $row->patient_postalcode;
-					$patient_town = $row->patient_town;
-					$patient_phone1 = $row->patient_phone1;
-					$patient_phone2 = $row->patient_phone2;
-					$patient_email = $row->patient_email;
-					$patient_national_id = $row->patient_national_id;
-					$religion_id = $row->religion_id;
-					$gender_id = $row->gender_id;
-					$patient_kin_othernames = $row->patient_kin_othernames;
-					$patient_kin_sname = $row->patient_kin_sname;
-					$relationship_id = $row->relationship_id;
 				}
 				
 				//creators and editors

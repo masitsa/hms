@@ -19,6 +19,7 @@
 <file name="pharmacy_charge.php" server="192.168.170.16/sumc/development/" local="130473911143156185" remote="130547115000000000" Dst="0" />
 <file name="procedures.php" server="192.168.170.16/sumc/development/" local="130473911142064183" remote="130547115000000000" Dst="0" />
 <file name="std.php" server="192.168.170.16/sumc/development/" local="130473911141284181" remote="130547115000000000" Dst="0" />
-<file name="stf.php" server="192.168.170.16/sumc/development/" local="130473911140348180" remote="130547115000000000" Dst="0" />
+<file name="stf.php" server="192.168.170.16/sumc/development/" local="130549245667690345" remote="130549135200000000" Dst="0" />
 <file name="ttt.php" server="192.168.170.16/sumc/development/" local="130473911137540175" remote="130547115000000000" Dst="0" />
+<file name="std.php" server="192.168.170.16/hms_old/" local="130548956984738625" remote="130548846600000000" Dst="0" />
 </dwsync>
