@@ -19,13 +19,59 @@ class Pharmacy extends auth
 		echo "no patient id";
 	}
 
-	public function prescription($visit_id,$service_charge_id=NULL,$prescription_id=NULL){
+	public function prescription($visit_id,$service_charge_id=NULL,$prescription_id=NULL)
+	{
+		$this->form_validation->set_rules('substitution', 'Substitution', 'trim|required|xss_clean');
+		// $this->form_validation->set_rules('prescription_finishdate', 'Finish Date', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('x', 'Times Per Day', 'trim|required|xss_clean');
+		//$this->form_validation->set_rules('visit_charge_id', 'Cost', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('duration', 'Duration', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('consumption', 'Consumption', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Quantity', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('service_charge_id', 'Drug', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+
+			$this->pharmacy_model->save_prescription($visit_id);
+
+			redirect('pharmacy/prescription/'.$visit_id);
+		}
+
 		$v_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'prescription_id'=>$prescription_id);
 		$data['content'] = $this->load->view('prescription', $v_data, true);
 		
 		$data['title'] = 'Pharmacy medicine ';
 		$this->load->view('auth/template_no_sidebar', $data);	
 	}
+
+	public function update_prescription($visit_id){
+		$this->form_validation->set_rules('substitution', 'Substitution', 'trim|required|xss_clean');
+		// $this->form_validation->set_rules('prescription_finishdate', 'Finish Date', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('x', 'Times Per Day', 'trim|required|xss_clean');
+		//$this->form_validation->set_rules('visit_charge_id', 'Cost', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('duration', 'Duration', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('consumption', 'Consumption', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Quantity', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('service_charge_id', 'Drug', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+
+			$this->pharmacy_model->update_prescription($visit_id);
+
+			redirect('pharmacy/prescription/'.$visit_id);
+		}
+
+		$v_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'prescription_id'=>$prescription_id);
+		$data['content'] = $this->load->view('prescription', $v_data, true);
+		
+		$data['title'] = 'Pharmacy medicine ';
+		$this->load->view('auth/template_no_sidebar', $data);	
+	}
+
 	public function drugs($visit_id){
 		//check patient visit type
 		$rs = $this->nurse_model->check_visit_type($visit_id);
