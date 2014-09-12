@@ -941,10 +941,7 @@ function open_symptoms(visit_id){
 	
 }
 
-function open_window_lab(test, visit_id){
-	
-	window.open(host+"data/doctor/laboratory.php?lab="+test+"&visit_id="+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
-}
+
  
 function open_window(plan, visit_id){
 	
@@ -1502,36 +1499,7 @@ function search_lab_test(visit_id){
 	window.location.href = url;
 }
 
-function lab(id, visit_id){
-	
-//	alert(visit_id);alert(id);
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = host+"data/doctor/lab.php?service_charge_id="+id+"&visit_id="+visit_id;
-		///	window.alert(url);
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				
-    			document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
-			}
-		}
-		
-		XMLHttpRequestObject.send(null);
-	}
-}
+
 
 function send_to_lab(visit_id){
 	get_test_results(65, visit_id);
@@ -1619,34 +1587,35 @@ function delete_cost(id, visit_id){
 		XMLHttpRequestObject.send(null);
 	}
 }
-
-function get_lab_table(visit_id){
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var url = host+"data/doctor/lab.php?visit_id="+visit_id;
-			
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				
-    			document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
-			}
-		}
-		
-		XMLHttpRequestObject.send(null);
-	}
+function lab(id, visit_id){
+    
+//  alert(visit_id);alert(id);
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    var url = host+"data/doctor/lab.php?service_charge_id="+id+"&visit_id="+visit_id;
+        /// window.alert(url);
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+                document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
+            }
+        }
+        
+        XMLHttpRequestObject.send(null);
+    }
 }
 function print_previous_test2(visit_id, patient_id){
 	

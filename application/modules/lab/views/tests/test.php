@@ -1,40 +1,42 @@
 <?php
 
-$visit = $_GET['visit_id'];
 
-$get3 = new Lab;
-$patient_id = mysql_result($get3->get_patient_id($visit), 0, "patient_id");
+$patient_id = $this->nurse_model->get_patient_id($visit_id);
 
-$get2 = new Lab;
-$rs2 = $get2->get_lab_visit2($visit);
-$num_rows2 = mysql_num_rows($rs2);
+$rs2 = $this->lab_model->get_lab_visit2($visit_id);
+$num_rows2 = count($rs2);
+
 if($num_rows2 > 0){
-	$lab_visit = mysql_result($rs2, 0, "lab_visit");
+	foreach ($rs2 as $key): 
+		$lab_visit = $key->lab_visit;
+	endforeach;
 }
 
-$get_test = new Lab();
-$get_test_rs = $get_test->get_lab_visit_test($visit);
-$num_rows = mysql_num_rows($get_test_rs);
+$get_test_rs = $this->lab_model->get_lab_visit_test($visit_id);
+$num_rows = count($get_test_rs);
 
-$get2 = new Lab;
-$rs2 = $get2->get_comment($visit);
-$num_rows2 = mysql_num_rows($rs2);
+$rs3 = $this->lab_model->get_comment($visit_id);
+$num_rows3 = count($rs2);
 
-if($num_rows2 > 0){
-	$comment = mysql_result($rs2, 0, "lab_visit_comment");
+if($num_rows3 > 0){
+	foreach ($rs3 as $key3):
+		$comment = $key3->lab_visit_comment;
+	endforeach;
 }
 
 
 
 if ($num_rows >0 ){
-	$lab_test = mysql_result($get_test_rs, 0, "lab_visit");
+	foreach ($get_test_rs as $key_rs):
+		$lab_test = $key_rs->lab_visit;
+	endforeach;
 	//echo $lab_test;
 	
 	if ($lab_test == 2){
 		echo "
 		<table align='center'>
 		<tr><td>
-		<input name='test' type='button' value='check test' onclick='open_window_laboratory(".$visit.",552)' />
+		<input name='test' type='button' value='check test' onclick='open_window_laboratory(".$visit_id.",552)' />
 		
 		</td></tr>
 		
@@ -46,9 +48,8 @@ if ($num_rows >0 ){
 	}else {}
 	
 }
-$get = new Lab;
-$lab_rs = $get->get_lab_visit($visit);
-$num_lab_visit = mysql_num_rows($lab_rs);
+$lab_rs = $this->lab_model->get_lab_visit($visit_id);
+$num_lab_visit = count($lab_rs);
 
 if($num_lab_visit > 0){
 	
@@ -69,47 +70,44 @@ if($num_lab_visit > 0){
 				<th></th>
 			<tr>
 	";
-	for($g = 0; $g < $num_lab_visit; $g++){
+	foreach ($lab_rs as $key):
 		
-		$visit_charge_id = mysql_result($lab_rs, $g, "visit_charge_id");
+		$visit_charge_id = $key->visit_charge_id;
 	
-		$format = new Lab;
-		$format_rs = $format->get_lab_visit_result($visit_charge_id);
-		$num_format = mysql_num_rows($format_rs);
+		$format_rs = $this->lab_model->get_lab_visit_result($visit_charge_id);
+		$num_format = count($format_rs);
 		
 		if($num_format > 0){
-			$get = new Lab();
-			$rs = $get->get_test($visit_charge_id);
-			$num_lab = mysql_num_rows($rs);
+			$rs = $this->lab_model->get_test($visit_charge_id);
+			$num_lab = count($rs);
 		}
 		else{
-			$get = new Lab();
-			$rs = $get->get_m_test($visit_charge_id);
-			$num_lab = mysql_num_rows($rs);
+			$rs = $get->this->lab_model->get_m_test($visit_charge_id);
+			$num_lab = count($rs);
 		}
 		//echo "num lab = ".$num_lab;
-	for($r = 0; $r < $num_lab; $r++){
+		foreach ($rs as $key2):
 		
-		$lab_test_name = mysql_result($rs, $r, "lab_test_name");
-		$lab_test_class_name = mysql_result($rs, $r, "lab_test_class_name");
-		$lab_test_units = mysql_result($rs, $r, "lab_test_units");
-		$lab_test_upper_limit = mysql_result($rs, $r, "lab_test_malelowerlimit");
-		$lab_test_lower_limit = mysql_result($rs, $r, "lab_test_malelupperlimit");
-		$lab_test_upper_limit1 = mysql_result($rs, $r, "lab_test_femalelowerlimit");
-		$lab_test_lower_limit1 = mysql_result($rs, $r, "lab_test_femaleupperlimit");
-		$lab_visit_result = mysql_result($rs, $r, "lab_visit_result");
-        $visit_charge_id = mysql_result($rs, $r, "lab_visit_id");
+		$lab_test_name =$key2->lab_test_name;
+		$lab_test_class_name =$key2->lab_test_class_name;
+		$lab_test_units =$key2->lab_test_units;
+		$lab_test_upper_limit =$key2->lab_test_malelowerlimit;
+		$lab_test_lower_limit =$key2->lab_test_malelupperlimit;
+		$lab_test_upper_limit1 =$key2->lab_test_femalelowerlimit;
+		$lab_test_lower_limit1 =$key2->lab_test_femaleupperlimit;
+		$lab_visit_result =$key2->lab_visit_result;
+        $visit_charge_id =$key2->lab_visit_id;
 		
 		//echo $_SESSION['test'];
-		if($_SESSION['test'] ==0){
-			$test_format = mysql_result($rs, $r, "lab_test_formatname");
-			$lab_test_format_id = mysql_result($rs, $r, "lab_test_format_id");
-			$lab_test_format_units = mysql_result($rs, $r, "lab_test_format_units");
-			$lab_test_format_malelowerlimit = mysql_result($rs, $r, "lab_test_format_malelowerlimit");
-			$lab_test_format_maleupperlimit = mysql_result($rs, $r, "lab_test_format_maleupperlimit");
-			$lab_test_format_femalelowerlimit = mysql_result($rs, $r, "lab_test_format_femalelowerlimit");
-			$lab_test_format_femaleupperlimit = mysql_result($rs, $r, "lab_test_format_femaleupperlimit");
-			$lab_visit_result = mysql_result($rs, $r, "lab_visit_results_result");
+		if($this->session->userdata('test') ==0){
+			$test_format =$key2->lab_test_formatname;
+			$lab_test_format_id =$key2->lab_test_format_id;
+			$lab_test_format_units =$key2->lab_test_format_units;
+			$lab_test_format_malelowerlimit =$key2->lab_test_format_malelowerlimit;
+			$lab_test_format_maleupperlimit =$key2->lab_test_format_maleupperlimit;
+			$lab_test_format_femalelowerlimit =$key2->lab_test_format_femalelowerlimit;
+			$lab_test_format_femaleupperlimit =$key2->lab_test_format_femaleupperlimit;
+			$lab_visit_result =$key2->lab_visit_results_result;
 		}
 		else{
 			$test_format ="-";
@@ -138,8 +136,8 @@ if($num_lab_visit > 0){
 		echo"
 			<td>".$test_format."</td>";
 				
-			if($_SESSION['test'] ==0){
-				echo"<td><input type='text' id='laboratory_result2".$lab_test_format_id."' size='10' onkeyup='save_result_format(".$visit_charge_id.",".$lab_test_format_id.", ".$visit.")' value='".$lab_visit_result."'/></td>";
+			if($this->session->userdata('test') ==0){
+				echo"<td><input type='text' id='laboratory_result2".$lab_test_format_id."' size='10' onkeyup='save_result_format(".$visit_charge_id.",".$lab_test_format_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
 				
 				echo"
 					<td>".$lab_test_format_units."</td>
@@ -149,7 +147,7 @@ if($num_lab_visit > 0){
 					<td id='result_space".$lab_test_format_id."'></td>";
 			}
 			else {
-				echo"<td><input type='text' id='laboratory_result".$visit_charge_id."' size='10' onkeyup='save_result(".$visit_charge_id.", ".$visit.")' value='".$lab_visit_result."'/></td>";
+				echo"<td><input type='text' id='laboratory_result".$visit_charge_id."' size='10' onkeyup='save_result(".$visit_charge_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
 								
 				echo "
 					<td>".$lab_test_units."</td>
@@ -159,7 +157,7 @@ if($num_lab_visit > 0){
 					<td id='result_space".$visit_charge_id."'></td>";
 			}
 			
-			if($_SESSION['test'] ==0){
+			if($this->session->userdata('test') ==0){
 				echo"<td><div class='ui-widget' id='value2".$lab_test_format_id."'></div></td>";
 			}
 			else {
@@ -167,30 +165,32 @@ if($num_lab_visit > 0){
 			} 
 				
 			echo "</tr>";
-		}
+		endforeach;
 		
-				if((($num_format > 0) && ($r == 0)) || ($num_format <= 0)){
+			if((($num_format > 0) && ($r == 0)) || ($num_format <= 0)){
 
 			}
 			
 			else{
-				$gety2 = new Lab;
-$rsy2 = $gety2->get_test_comment($visit_charge_id);
-$num_rowsy2 = mysql_num_rows($rsy2);
+					$rsy2 = $this->lab_model->get_test_comment($visit_charge_id);
+					$num_rowsy2 = count($rsy2);
 
-if($num_rowsy2 > 0){
-	$comment4= mysql_result($rsy2, 0, "lab_visit_format_comments");
-}
+					if($num_rowsy2 > 0){
+
+						foreach ($rsy2 as $keyy):
+							$comment4= $keyy->lab_visit_format_comments;
+						endforeach;
+					}
 				echo "<tr>
 				<td> </td>
 				
 					<td></td>
-					<td><textarea rows='5' cols='10' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit.")'>".$comment4."</textarea> </td>
+					<td><textarea rows='5' cols='10' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit_id.")'>".$comment4."</textarea> </td>
 					<td> </td>
 					<td ></td>			<td> </td>
 			</tr>";
 				}
-	}
+	endforeach;
 	
 	echo //MM.$lab_test.
 	"
@@ -207,9 +207,9 @@ if($num_rowsy2 > 0){
 		echo"
 		<table align='center'>
 			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit.",".$patient_id.")'/></td>
-				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit.")'/></td>
-				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit.")'/></td>
+				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
+				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit_id.")'/></td>
+				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit_id.")'/></td>
 			</tr>
 		</table>
 	";
@@ -219,9 +219,9 @@ if($num_rowsy2 > 0){
 		echo"
 		<table align='center'>
 			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit.",".$patient_id.")'/></td>
-				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit.")'/></td>
-				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit.")'/></td>
+				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
+				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit_id.")'/></td>
+				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit_id.")'/></td>
 			</tr>
 		</table>
 	";
@@ -231,9 +231,9 @@ if($num_rowsy2 > 0){
 	echo"
 		<table align='center'>
 			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit.",".$patient_id.")'/></td>
-				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit.")'/></td>
-				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit.")'/></td>
+				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
+				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit_id.")'/></td>
+				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit_id.")'/></td>
 			</tr>
 		</table>
 	";
@@ -243,7 +243,7 @@ if($num_rowsy2 > 0){
 	echo"
 		<table align='center'>
 			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit.",".$patient_id.")'/></td>
+				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
 			</tr>
 		</table>
 	";
@@ -253,13 +253,14 @@ if($num_rowsy2 > 0){
 		echo"
 		<table align='center'>
 			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit.",".$patient_id.")'/></td>
-				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit.")'/></td>
-				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit.")'/></td>
+				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
+				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit_id.")'/></td>
+				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit_id.")'/></td>
 				 
 			</tr>
 		</table>
 	";
 	}
+	
 }
 ?>
