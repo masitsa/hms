@@ -131,10 +131,7 @@ class Reception_model extends CI_Model
 		return $query;
 	}
 	
-	public function calculate_age($dob)
-	{
-		
-	}
+	
 	
 	/*
 	*	Retrieve gender
@@ -962,5 +959,49 @@ class Reception_model extends CI_Model
 		
 		return $row;
 	}
+
+	public function calculate_age($patient_date_of_birth)
+	{
+		$value = $this->dateDiff(date('y-m-d  h:i'), $patient_date_of_birth." 00:00", 'year');
+		
+		return $value;
+	}
+
+	public function dateDiff($time1, $time2, $interval) {
+	    // If not numeric then convert texts to unix timestamps
+	    if (!is_int($time1)) {
+	      $time1 = strtotime($time1);
+	    }
+	    if (!is_int($time2)) {
+	      $time2 = strtotime($time2);
+	    }
+	 
+	    // If time1 is bigger than time2
+	    // Then swap time1 and time2
+	    if ($time1 > $time2) {
+	      $ttime = $time1;
+	      $time1 = $time2;
+	      $time2 = $ttime;
+	    }
+	 
+	    // Set up intervals and diffs arrays
+	    $intervals = array('year','month','day','hour','minute','second');
+	    if (!in_array($interval, $intervals)) {
+	      return false;
+	    }
+	 
+	    $diff = 0;
+	    // Create temp time from time1 and interval
+	    $ttime = strtotime("+1 " . $interval, $time1);
+	    // Loop until temp time is smaller than time2
+	    while ($time2 >= $ttime) {
+	      $time1 = $ttime;
+	      $diff++;
+	      // Create new temp time from time1 and interval
+	      $ttime = strtotime("+1 " . $interval, $time1);
+	    }
+	 
+	    return $diff;
+  	}
 }
 ?>
