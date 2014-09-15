@@ -16,7 +16,7 @@
 <file name="initiate_lab.php" server="192.168.170.16/sumc/development/" local="130544046889055497" remote="130552329000000000" Dst="0" />
 <file name="initiate_pharmacy.php" server="192.168.170.16/sumc/development/" local="130544045313575384" remote="130552329000000000" Dst="0" />
 <file name="initiate_visit.php" server="192.168.170.16/sumc/development/" local="130549228642026533" remote="130552329000000000" Dst="0" />
-<file name="ongoing_visit.php" server="192.168.170.16/sumc/development/" local="130552445381185396" remote="130552337400000000" Dst="0" />
+<file name="ongoing_visit.php" server="192.168.170.16/sumc/development/" local="130552485638527984" remote="130552525200000000" Dst="0" />
 <file name="reception_dashboard.php" server="192.168.170.16/sumc/development/" local="130546369196581869" remote="130552329000000000" Dst="0" />
 <file name="service_charges_pertype.php" server="192.168.170.16/sumc/development/" local="130544026994407588" remote="130552329000000000" Dst="0" />
 <file name="show_schedule.php" server="192.168.170.16/sumc/development/" local="130543938529217668" remote="130552329000000000" Dst="0" />
