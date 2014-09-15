@@ -978,6 +978,11 @@ class Reception extends auth
 			redirect('reception');
 		}
 		
+		if($page == 1)
+		{
+			redirect('accounts/accounts_queue');
+		}
+		
 		else
 		{
 			redirect('reception/visit_list/'.$page);

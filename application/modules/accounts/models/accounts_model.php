@@ -216,8 +216,18 @@ class Accounts_model extends CI_Model
 
 	}
 	
-	public function receipt($visit_id)
+	public function receipt($visit_id, $invoice = NULL)
 	{
+		if($invoice != NULL)
+		{
+			$title = 'INVOICE';
+			$number = 'INV/00'.$visit_id;
+		}
+		else
+		{
+			$title = 'RECEIPT';
+			$number = 'REC/00'.$visit_id;
+		}
 		$personnel_id = $this->session->userdata('personnel_id');
 		/*
 			-----------------------------------------------------------------------------------------
@@ -338,10 +348,11 @@ class Accounts_model extends CI_Model
 				$visit_type = 'General';
 			}
 			
-			$patient_othernames = $row->patient_othernames;
-			$patient_surname = $row->patient_surname;
-			$patient_date_of_birth = $row->patient_date_of_birth;
-			$gender_id = $row->gender_id;
+			$patient_othernames = $patient->patient_othernames;
+			$patient_surname = $patient->patient_surname;
+			$patient_date_of_birth = $patient->patient_date_of_birth;
+			$gender_id = $patient->gender_id;
+			
 			if($gender_id == 1)
 			{
 				$gender = 'Male';
@@ -404,9 +415,9 @@ class Accounts_model extends CI_Model
 		*/
 		$lineBreak = 20;
 		//Colors of frames, background and Text
-		$this->SetDrawColor(092, 123, 29);
-		$this->SetFillColor(0, 232, 12);
-		$this->SetTextColor(092, 123, 29);
+		$this->fpdf->SetDrawColor(092, 123, 29);
+		$this->fpdf->SetFillColor(0, 232, 12);
+		$this->fpdf->SetTextColor(092, 123, 29);
 		
 		//thickness of frame (mm)
 		//$this->SetLineWidth(1);
@@ -421,180 +432,125 @@ class Accounts_model extends CI_Model
 		$this->fpdf->Cell(0, 5, 'Madaraka Estate', 'B', 1, 'C');
 		$this->fpdf->SetFont('Arial', 'B', 10);
 		
-		$this->Cell(0, 5, 'RECEIPT', 'B', 1, 'C');
+		$this->fpdf->Cell(0, 5, $title, 'B', 1, 'C');
 		
-		$this->Ln(3);
-		$this->Cell(100,5,'Patient Name:	'.$patient_surname.' '.$patient_othernames, 0, 0, 'L');
-		$this->Cell(0,5,'Invoice Number:	REC/00'.$visit_id, 0, 1, 'L');
-		$this->Cell(100,5,'Patient Number:	'.$patient_number, 0, 0, 'L');
-		$this->Cell(0,5,'Att. Doctor:	'.$doctor, 0, 1, 'L');
-		$this->Cell(0,5,'Receipt Date:	'.$visit_date, 'B', 1, 'L');
-		$this->Ln(3);
+		$this->fpdf->Ln(3);
+		$this->fpdf->Cell(100,5,'Patient Name:	'.$patient_surname.' '.$patient_othernames, 0, 0, 'L');
+		$this->fpdf->Cell(0,5,'Invoice Number:	'.$number, 0, 1, 'L');
+		$this->fpdf->Cell(100,5,'Patient Number:	'.$patient_number, 0, 0, 'L');
+		$this->fpdf->Cell(0,5,'Att. Doctor:	'.$doctor, 0, 1, 'L');
+		$this->fpdf->Cell(0,5,'Receipt Date:	'.$visit_date, 'B', 1, 'L');
+		$this->fpdf->Ln(3);
 		
-		$visit_t = $visit_type;
-		$get_charge = new accounts();
-		$rs = $get_charge->get_invoice($vid,$visit_t);
-		$num_rows = mysql_num_rows($rs);
+		$this->fpdf->SetTextColor(0, 0, 0); //226, 225, 225
+		$this->fpdf->SetDrawColor(0, 0, 0); //226, 225, 225
+		$item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
+		$total = 0;
+		$pageH = 6;
+		$width = 60;
 		
-		$sqlf= "SELECT * FROM visit_type WHERE  visit_type_id= $visit_t"; //echo $sqlf;
-			$rs21f = mysql_query($sqlf)
-				or die ("unable to Select ".mysql_error());
-		$num_type0= mysql_num_rows($rs21f);
-		$visit_type_name = mysql_result($rs21f, 0 ,"visit_type_name");
-		////echo VT.$visit_type_name;
-		
-		
-		$sqlfa= "SELECT * FROM visit WHERE  visit_id= $vid"; //echo $sqlf;
-			$rs21fa = mysql_query($sqlfa)
-				or die ("unable to Select ".mysql_error());
-		$num_type0a= mysql_num_rows($rs21fa);
-		$patient_ida= mysql_result($rs21fa, 0 ,"patient_id");
-		
-		if($num_rows > 0){
-			
-			for($r = 0; $r < $num_rows; $r++){
+		$this->fpdf->Cell(0, 5, 'INVOICE ITEMS', 'B', 1, 'C');
 				
-				$width = 25;
-				$units23 = 15;
-				$service = mysql_result($rs, $r, "service_name");
-				$service_id1 = mysql_result($rs, $r, "service_id");
-				$service_charge_name = mysql_result($rs, $r, "service_charge_name");
-				$visit_charge_amount = mysql_result($rs, $r, "visit_charge_amount");
-				$visit_charge_units = mysql_result($rs, $r, "visit_charge_units");
-			//	$total = $total + ($visit_charge_amount * $visit_charge_units);
-				
-				//$pdf->Cell(50,$pageH,$service,'B');
-				//$pdf->Cell(45,$pageH,$service_charge_name,'B');
-				//$pdf->Cell($units23,$pageH,$visit_charge_units,'B');
-		if ($patient_insurance_id!=0)
+		$this->fpdf->SetFont('Times','B',11);
+		$this->fpdf->Cell(10,$pageH,'#','B');
+		$this->fpdf->Cell($width,$pageH,'Service','B',0,'C');
+		$this->fpdf->Cell($width,$pageH,'Item Name','B',0);
+		$this->fpdf->Cell($width,$pageH,'Charge (KSH)','B',1);
+		$this->fpdf->SetFont('Times','',10);
+		$this->fpdf->Ln(2);
+		
+		if(count($item_invoiced_rs) > 0)
 		{
+			$s=0;
+			
+			foreach ($item_invoiced_rs as $key_items):
+				$s++;
+				$service_charge_name = $key_items->service_charge_name;
+				$visit_charge_amount = $key_items->visit_charge_amount;
+				$service_name = $key_items->service_name;
+				
+				$this->fpdf->Cell(10,$pageH,$s,0);
+				$this->fpdf->Cell($width,$pageH,$service_name,0,0,'C');
+				$this->fpdf->Cell($width,$pageH,$service_charge_name,0,0);
+				$this->fpdf->Cell($width,$pageH,number_format($visit_charge_amount, 2),0,1);
+				
+				$total = $total + $visit_charge_amount;
+			endforeach;
+				
+			$this->fpdf->SetFont('Times','B',10);
+			$this->fpdf->Cell(10,$pageH,'','B');
+			$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+			$this->fpdf->Cell($width,$pageH,'','B',0);
+			$this->fpdf->Cell($width,$pageH,number_format($total, 2),'B',1);
+		}
+		else
+		{
+			$this->fpdf->SetFont('Times','B',10);
+			$this->fpdf->Cell(10,$pageH,'','B');
+			$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+			$this->fpdf->Cell($width,$pageH,'No Charges','B',0);
+			$this->fpdf->Cell($width,$pageH,number_format($total, 2),'B',1);
+		}
 		
-		$discounted_value="";
+		if($invoice == NULL)
+		{
+			//payments
+			$this->fpdf->ln(20);
+			$this->fpdf->Cell(0, 5, 'PAYMENTS', 'B', 1, 'C');
 					
-		$sql1= "SELECT * FROM insurance_discounts WHERE insurance_id = (SELECT company_insurance_id FROM `patient_insurance` where patient_insurance_id  =$patient_insurance_id ) and service_id=$service_id1";
-		 //echo $sql1;
-			$rs1 = mysql_query($sql1)
-				or die ("unable to Select ".mysql_error());
-		$num_type1= mysql_num_rows($rs1);
-		
-		$percentage = mysql_result($rs1,0, "percentage");
-		$amounts = mysql_result($rs1, 0, "amount");
-		$discounted_value="";	
-				if($percentage==0){
-					$discounted_value=$amounts;	
-				$amount = $visit_charge_amount -$discounted_value;
-		$amoun_money=($amount * $visit_charge_units);
-		$total = $total + $amoun_money;
-			$width = 15;
-				//$pdf->Cell($width,$pageH,'','B',1);
-		//$totalxx = $totalxx + $amoun_money;
-				}
-				elseif($amounts==0){
-					$discounted_value=$percentage;
-					$amount = $visit_charge_amount *((100-$discounted_value)/100);
-					$amoun_money=($amount * $visit_charge_units);
-		$total = $total + $amoun_money;
-				$width = 15;
-				//$pdf->Cell($width,$pageH,'','B',1);	
+			$this->fpdf->SetFont('Times','B',11);
+			$this->fpdf->Cell(10,$pageH,'#','B');
+			$this->fpdf->Cell($width,$pageH,'Time','B',0,'C');
+			$this->fpdf->Cell($width,$pageH,'Payment Method','B',0);
+			$this->fpdf->Cell($width,$pageH,'Amount (KSH)','B',1);
+			$this->fpdf->SetFont('Times','',10);
+			$this->fpdf->Ln(2);
 			
+			$payments_rs = $this->accounts_model->payments($visit_id);
+			$total_payments = 0;
+			
+			if(count($payments_rs) > 0)
+			{
+				$x=0;
 				
+				foreach ($payments_rs as $key_items):
+					$x++;
+					$payment_method = $key_items->payment_method;
+					$amount_paid = $key_items->amount_paid;
+					$time = $key_items->time;
+					$time = date('jS M Y H:i a',strtotime($time));
+					
+					$this->fpdf->Cell(10,$pageH,$x,'B');
+					$this->fpdf->Cell($width,$pageH,$time,'B',0,'C');
+					$this->fpdf->Cell($width,$pageH,$payment_method,'B',0);
+					$this->fpdf->Cell($width,$pageH,number_format($amount_paid, 2),'B',1);
+					
+					$total_payments = $total_payments + $amount_paid;
+				endforeach;
+					
+				$this->fpdf->SetFont('Times','B',10);
+				$this->fpdf->Cell(10,$pageH,'','B');
+				$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+				$this->fpdf->Cell($width,$pageH,'','B',0);
+				$this->fpdf->Cell($width,$pageH,number_format($total_payments, 2),'B',1);
+			}
+			
+			else
+			{
+				$this->fpdf->SetFont('Times','B',10);
+				$this->fpdf->Cell(10,$pageH,'','B');
+				$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+				$this->fpdf->Cell($width,$pageH,'No Payments Made','B',0);
+				$this->fpdf->Cell($width,$pageH,$total_payments,'B',1);
+			}
 		}
 		
-		}
+		/*$this->fpdf->SetFont('Times','B',10);
+		$this->fpdf->Cell(10,$pageH,'','B');
+		$this->fpdf->Cell($width,$pageH,'BALANCE','B',0,'C');
+		$this->fpdf->Cell($width,$pageH,'No Payments Made','B',0);
+		$this->fpdf->Cell($width,$pageH,$total_payments - $total,'B',1);*/
 		
-		else{
-			
-				$amount=($visit_charge_amount * $visit_charge_units);
-				//$amoun_money=($amount * $visit_charge_units);
-				//$pdf->Cell($width,$pageH,$visit_charge_amount,'B',0,'C');
-				//$pdf->Cell($width,$pageH,$amoun_money,'B');
-				$width = 15;
-			$total = $total + $amount;
-				
-		} } }
-		
-		//payments
-		$get = new accounts;
-		$amount_rs= $get->get_amount_paid($vid);
-		$num_amount = mysql_num_rows($amount_rs);
-		
-		$get_methods = new accounts;
-		$method_rs = $get_methods->get_payment_method($id);
-		$num_method = mysql_num_rows($method_rs);
-		
-		$pdf = new PDF('P','mm','A4');
-		$pdf->AliasNbPages();
-		$pdf->AddPage();
-		$pdf->setFont('Times', '', 12);
-		$pdf->SetFillColor(174, 255, 187); //226, 225, 225
-		
-		//HEADER
-		$billTotal = 0;
-		$linespacing = 2;
-		$majorSpacing = 7;
-		$pageH = 4;
-		$width = 30;
-		$pdf->SetFont('Times','B',11);
-		$pdf->Cell(40,$pageH,'Date','B');
-		$pdf->Cell($width,$pageH,'Payment Method','B');
-		$pdf->Cell($width,$pageH,'Amount Paid','B',0,'C');
-		$pdf->Cell($width,$pageH,'Total Paid','B',0);
-		$pdf->Cell($width,$pageH,'Invoice Total','B',0);
-		$pdf->Cell($width,$pageH,'Balance','B',1);
-		$pdf->SetFont('Times','',10);
-		$pdf->Ln(2);
-		$pageH = 5;
-		$pdf->SetFillColor(174, 255, 187); //226, 225, 225
-		$receipt_total = $total;
-		$total_paid = 0;
-		$counter = 0;
-		
-		
-		for($r = 0; $r < $num_amount; $r++){
-			
-			$date = mysql_result($amount_rs, $r, "time");
-			$visit_id = mysql_result($amount_rs, $r, "visit_id");
-			$amount_paid = mysql_result($amount_rs, $r, "amount_paid");
-			$id = mysql_result($amount_rs, $r, "payment_id");
-			$payment_method = mysql_result($amount_rs, $r, "payment_method");
-			
-			/*if($r < $num_amount -1){
-				$next_date = mysql_result($amount_rs, $r+1, "time");
-			}
-			
-			if(($date != $next_date) || ($r == 0)){
-				$pdf->Cell(40,$pageH,$date,'B',0,'C',$fill);
-			}
-			else{
-				$pdf->Cell(40,$pageH,"",'B',0,'C',$fill);
-			}*/
-			$pdf->Cell(40,$pageH,$date,'B',0,'C',$fill);
-			$pdf->Cell($width,$pageH,$payment_method,'B',0,"L",$fill);
-			$pdf->Cell($width,$pageH,$amount_paid,'B',0,"L",$fill);
-			$pdf->Cell($width,$pageH,"",'B',0,"L",$fill);
-			$pdf->Cell($width,$pageH,"",'B',0,"L",$fill);
-			$pdf->Cell($width,$pageH,"",'B',1,"L",$fill);
-			$total_paid = $total_paid + $amount_paid;
-			
-			if(($counter % 2) == 0){
-		
-				$fill = TRUE;
-			}
-		
-			else{
-		
-				$fill = FALSE;
-			}
-			$counter++;
-		}
-		$balance = $total_paid - $total;
-		
-		$pdf->Cell(40,$pageH,"",'B',0,'C',$fill);
-		$pdf->Cell($width,$pageH,"",'B',0,"L",$fill);
-		$pdf->Cell($width,$pageH,"",'B',0,"L",$fill);
-		$pdf->Cell($width,$pageH,$total_paid,'B',0,"L",$fill);
-		$pdf->Cell($width,$pageH,$total,'B',0,"L",$fill);
-		$pdf->Cell($width,$pageH,$balance,'B',0,"L",$fill);
 
 		$this->fpdf->Output();
 	}

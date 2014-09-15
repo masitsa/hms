@@ -97,8 +97,7 @@ class Accounts extends auth
 		
 		$this->accounts_queue();
 	}
-
-
+	
 	public function payments($visit_id){
 		$v_data = array('visit_id'=>$visit_id);
 		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
@@ -109,6 +108,7 @@ class Accounts extends auth
 
 		$this->load->view('auth/template_sidebar', $data);
 	}
+	
 	public function make_payments($visit_id){
 		$this->form_validation->set_rules('payment_method', 'Payment Method', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('amount_paid', 'Amount', 'trim|required|xss_clean');
@@ -126,4 +126,13 @@ class Accounts extends auth
 		}
 	}
 	
+	public function print_receipt($visit_id)
+	{
+		$this->accounts_model->receipt($visit_id);
+	}
+	
+	public function print_invoice($visit_id)
+	{
+		$this->accounts_model->receipt($visit_id, TRUE);
+	}
 }
