@@ -293,20 +293,45 @@
 				{
 					if(($visit == 0) || ($visit == 3))
 					{
-						//if staff was registered as other
-						if(($visit_table_visit_type == 2) && ($patient_table_visit_type != $visit_table_visit_type))
+						if($page_name == 'doctor')
 						{
-							$button = '<a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to change this patient type?\');">Change Patient Type</a>';
+							$button = '
+							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-info">Patient Card</a></td>
+							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
+							<td><a href="'.site_url().'/nurse/send_to_pharmacy/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
+							';
 						}
-						//if student was registered as other
-						else if(($visit_table_visit_type == 1) && ($patient_table_visit_type != $visit_table_visit_type))
+						
+						else if($page_name == 'nurse')
 						{
-							$button = '<a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to change this patient type?\');">Change Patient Type</a>';
+							$button = '
+							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/0" class="btn btn-sm btn-info">Patient Card</a></td>
+							<td><a href="'.site_url().'/nurse/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>
+							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
+							<td><a href="'.site_url().'/nurse/send_to_pharmacy/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
+							';
 						}
 						
 						else
 						{
-							$button = '';
+							$button = '<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
+								<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>';
+								
+							//if staff was registered as other
+							if(($visit_table_visit_type == 2) && ($patient_table_visit_type != $visit_table_visit_type))
+							{
+								$button .= '<td><a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to change this patient type?\');">Change Patient Type</a></td>';
+							}
+							//if student was registered as other
+							else if(($visit_table_visit_type == 1) && ($patient_table_visit_type != $visit_table_visit_type))
+							{
+								$button .= '<td><a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to change this patient type?\');">Change Patient Type</a></td>';
+							}
+							
+							else
+							{
+								$button .= '<td></td>';
+							}
 						}
 						
 						$result .= 
@@ -319,9 +344,7 @@
 								<td>'.$visit_type.'</td>
 								<td>'.$visit_time.'</td>
 								<td>'.$doctor.'</td>
-								<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
-								<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>
-								<td>'.$button.'</td>
+								'.$button.'
 							</tr> 
 						';
 					}
