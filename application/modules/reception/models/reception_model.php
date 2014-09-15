@@ -582,7 +582,7 @@ class Reception_model extends CI_Model
 	{
 		if($visit_type_id == 1)
 		{
-			return 'Patient';
+			return 'Student';
 		}
 		
 		else if(($visit_type_id == 2) && ($dependant_id > 0))
@@ -961,6 +961,17 @@ class Reception_model extends CI_Model
 		
 		return $color;
 	}
+	
+	public function get_patient_data_from_visit($visit_id)
+	{
+		$this->db->select('visit.*, patients.*');
+		$this->db->where("visit.patient_id = patients.patient_id AND visit.visit_id = ".$visit_id);
+		$query = $this->db->get('visit, patients');
+		
+		$row = $query->row();
+		
+		return $row;
+	}
 
 	public function calculate_age($patient_date_of_birth)
 	{
@@ -969,7 +980,8 @@ class Reception_model extends CI_Model
 		return $value;
 	}
 
-	public function dateDiff($time1, $time2, $interval) {
+	public function dateDiff($time1, $time2, $interval) 
+	{
 	    // If not numeric then convert texts to unix timestamps
 	    if (!is_int($time1)) {
 	      $time1 = strtotime($time1);

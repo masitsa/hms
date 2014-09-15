@@ -17,6 +17,7 @@ class Personnel_model extends CI_Model
 		
 		return $query;
 	}
+	
 	/*
 	*	Select all personnel
 	*
@@ -27,6 +28,19 @@ class Personnel_model extends CI_Model
 		$query = $this->db->get('personnel');
 		
 		return $query;
+	}
+	
+	/*
+	*	Select single personnel data
+	*
+	*/
+	public function get_single_personnel($personnel_id)
+	{
+		$this->db->select('*');
+		$this->db->where('personnel_id', $personnel_id);
+		$query = $this->db->get('personnel');
+		
+		return $query->row();
 	}
 }
 ?>

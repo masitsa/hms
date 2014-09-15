@@ -241,10 +241,10 @@
 							<td>'.$invoice_total.'</td>
 							<td>'.$payments_value.'</td>
 							<td>'.$balance.'</td>
-							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/'.$module.'" class="btn btn-sm btn-info">Receipt</a></td>
-							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">Invoice</a></td>
+							<td><a href="'.site_url().'/accounts/print_receipt/'.$visit_id.'/a/'.$module.'" target="_blank" class="btn btn-sm btn-info">Receipt</a></td>
+							<td><a href="'.site_url().'/accounts/print_invoice/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice</a></td>
 							<td><a href="'.site_url().'/accounts/payments/'.$visit_id.'" class="btn btn-sm btn-primary" >Payments</a></td>
-							<td><a href="'.site_url().'/nurse/send_to_pharmacy/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Send to pharmacy?\');">End Visit</a></td>
+							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'End this visit?\');">End Visit</a></td>
 						</tr> 
 					';
 			}

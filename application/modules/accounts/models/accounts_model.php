@@ -215,4 +215,349 @@ class Accounts_model extends CI_Model
 		}
 
 	}
+	
+	public function receipt($visit_id, $invoice = NULL)
+	{
+		if($invoice != NULL)
+		{
+			$title = 'INVOICE';
+			$number = 'INV/00'.$visit_id;
+		}
+		else
+		{
+			$title = 'RECEIPT';
+			$number = 'REC/00'.$visit_id;
+		}
+		$personnel_id = $this->session->userdata('personnel_id');
+		/*
+			-----------------------------------------------------------------------------------------
+			Retrieve the details of the patient
+			-----------------------------------------------------------------------------------------
+		*/
+		$patient = $this->reception_model->get_patient_data_from_visit($visit_id);
+		$strath_no = $patient->strath_no;
+		$visit_type = $patient->visit_type;
+		$doctor_id = $patient->personnel_id;
+		$patient_number = $patient->patient_number;
+		$patient_insurance_id = $patient->patient_insurance_id;
+		$visit_date = date('jS M Y H:i a',strtotime($patient->visit_time));
+		$dependant_id = $patient->dependant_id;
+		
+		//patient names
+		if($visit_type == 2)
+		{
+			//dependant
+			if($dependant_id > 0)
+			{
+				$patient_type = $this->reception_model->get_patient_type($visit_type, $dependant_id);
+				
+				$dependant_query = $this->reception_model->get_dependant($strath_no);
+				
+				if($dependant_query->num_rows() > 0)
+				{
+					$dependants_result = $dependant_query->row();
+					
+					$patient_othernames = $dependants_result->other_names;
+					$patient_surname = $dependants_result->names;
+					$patient_date_of_birth = $dependants_result->DOB;
+					$relationship = $dependants_result->relation;
+					$gender = $dependants_result->Gender;
+				}
+				
+				else
+				{
+					$patient_othernames = '<span class="label label-important">Dependant not found</span>';
+					$patient_surname = '';
+					$patient_date_of_birth = '';
+					$relationship = '';
+					$gender = '';
+				}
+			}
+			
+			//staff
+			else
+			{
+				$patient_type = $this->reception_model->get_patient_type($visit_type, $dependant_id);
+				$staff_query = $this->reception_model->get_staff($strath_no);
+				
+				if($staff_query->num_rows() > 0)
+				{
+					$staff_result = $staff_query->row();
+					
+					$patient_surname = $staff_result->Surname;
+					$patient_othernames = $staff_result->Other_names;
+					$patient_date_of_birth = $staff_result->DOB;
+					$patient_phone1 = $staff_result->contact;
+					$gender = $staff_result->gender;
+				}
+				
+				else
+				{
+					$patient_othernames = '<span class="label label-important">Staff not found</span>';
+					$patient_surname = '';
+					$patient_date_of_birth = '';
+					$relationship = '';
+					$gender = '';
+					$patient_type = '';
+				}
+			}
+		}
+		
+		//student
+		else if($visit_type == 1)
+		{
+			$student_query = $this->reception_model->get_student($strath_no);
+			$patient_type = $this->reception_model->get_patient_type($visit_type);
+			
+			if($student_query->num_rows() > 0)
+			{
+				$student_result = $student_query->row();
+				
+				$patient_surname = $student_result->Surname;
+				$patient_othernames = $student_result->Other_names;
+				$patient_date_of_birth = $student_result->DOB;
+				$patient_phone1 = $student_result->contact;
+				$gender = $student_result->gender;
+			}
+			
+			else
+			{
+				$patient_othernames = '<span class="label label-important">Student not found</span>';
+				$patient_surname = '';
+				$patient_date_of_birth = '';
+				$relationship = '';
+				$gender = '';
+			}
+		}
+		
+		//other patient
+		else
+		{
+			$patient_type = $this->reception_model->get_patient_type($visit_type);
+			
+			if($visit_type == 3)
+			{
+				$visit_type = 'Other';
+			}
+			else if($visit_type == 4)
+			{
+				$visit_type = 'Insurance';
+			}
+			else
+			{
+				$visit_type = 'General';
+			}
+			
+			$patient_othernames = $patient->patient_othernames;
+			$patient_surname = $patient->patient_surname;
+			$patient_date_of_birth = $patient->patient_date_of_birth;
+			$gender_id = $patient->gender_id;
+			
+			if($gender_id == 1)
+			{
+				$gender = 'Male';
+			}
+			else
+			{
+				$gender = 'Female';
+			}
+		}
+		
+		/*
+			-----------------------------------------------------------------------------------------
+			Get personnel data of the person who is printing the receipt
+			-----------------------------------------------------------------------------------------
+		*/
+		$personnel = $this->personnel_model->get_single_personnel($personnel_id);
+		$personnel_surname = $personnel->personnel_onames;
+		$personnel_fname = $personnel->personnel_fname;
+		
+		//doctor
+		$doctor_data = $this->personnel_model->get_single_personnel($doctor_id);
+		$doctor_surname = $doctor_data->personnel_onames;
+		$doctor_fname = $doctor_data->personnel_fname;
+		$doctor = $doctor_surname." ".$doctor_fname;
+		
+		$totalxx = 0;
+			
+		/*
+			-----------------------------------------------------------------------------------------
+			Measurements of the page cells
+			-----------------------------------------------------------------------------------------
+		*/
+		$pageH = 5;//height of an output cell
+		$pageW = 0;//width of the output cell. Takes the entire width of the page
+		$lineBreak = 20;//height between cells
+		
+		/*
+			-----------------------------------------------------------------------------------------
+			Begin creating the PDF in A4
+			-----------------------------------------------------------------------------------------
+		*/
+		$this->load->library('fpdf');
+		$this->fpdf->AliasNbPages();
+		$this->fpdf->AddPage();
+		
+		/*
+			-----------------------------------------------------------------------------------------
+			Colors of frames, background and Text
+			-----------------------------------------------------------------------------------------
+		*/
+		$this->fpdf->SetDrawColor(092, 123, 29);//color of borders
+		$this->fpdf->SetFillColor(0, 232, 12);//color of shading
+		//$this->fpdf->SetTextColor(092, 123, 29);//color of text
+		$this->fpdf->SetFont('Times', 'B', 12);
+		
+		/*
+			-----------------------------------------------------------------------------------------
+			Title of the document.
+			-----------------------------------------------------------------------------------------
+		*/
+		$lineBreak = 20;
+		//Colors of frames, background and Text
+		$this->fpdf->SetDrawColor(092, 123, 29);
+		$this->fpdf->SetFillColor(0, 232, 12);
+		$this->fpdf->SetTextColor(092, 123, 29);
+		
+		//thickness of frame (mm)
+		//$this->SetLineWidth(1);
+		//Logo
+		$this->fpdf->Image(base_url().'images/strathmore.gif',10,8,45,15);
+		//font
+		$this->fpdf->SetFont('Arial', 'B', 12);
+		//title
+		$this->fpdf->Cell(0, 5, 'Strathmore University Medical Center', 0, 1, 'C');
+		$this->fpdf->Cell(0, 5, 'P.O. Box 59857 00200, Nairobi, Kenya', 0, 1, 'C');
+		$this->fpdf->Cell(0, 5, 'info@strathmore.edu', 0, 1, 'C');
+		$this->fpdf->Cell(0, 5, 'Madaraka Estate', 'B', 1, 'C');
+		$this->fpdf->SetFont('Arial', 'B', 10);
+		
+		$this->fpdf->Cell(0, 5, $title, 'B', 1, 'C');
+		
+		$this->fpdf->Ln(3);
+		$this->fpdf->Cell(100,5,'Patient Name:	'.$patient_surname.' '.$patient_othernames, 0, 0, 'L');
+		$this->fpdf->Cell(0,5,'Invoice Number:	'.$number, 0, 1, 'L');
+		$this->fpdf->Cell(100,5,'Patient Number:	'.$patient_number, 0, 0, 'L');
+		$this->fpdf->Cell(0,5,'Att. Doctor:	'.$doctor, 0, 1, 'L');
+		$this->fpdf->Cell(0,5,'Receipt Date:	'.$visit_date, 'B', 1, 'L');
+		$this->fpdf->Ln(3);
+		
+		$this->fpdf->SetTextColor(0, 0, 0); //226, 225, 225
+		$this->fpdf->SetDrawColor(0, 0, 0); //226, 225, 225
+		$item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
+		$total = 0;
+		$pageH = 6;
+		$width = 60;
+		
+		$this->fpdf->Cell(0, 5, 'INVOICE ITEMS', 'B', 1, 'C');
+				
+		$this->fpdf->SetFont('Times','B',11);
+		$this->fpdf->Cell(10,$pageH,'#','B');
+		$this->fpdf->Cell($width,$pageH,'Service','B',0,'C');
+		$this->fpdf->Cell($width,$pageH,'Item Name','B',0);
+		$this->fpdf->Cell($width,$pageH,'Units','B',0);
+		$this->fpdf->Cell($width,$pageH,'Charge (KSH)','B',1);
+		$this->fpdf->Cell($width,$pageH,'Total (KSH)','B',1);
+		$this->fpdf->SetFont('Times','',10);
+		$this->fpdf->Ln(2);
+		
+		if(count($item_invoiced_rs) > 0)
+		{
+			$s=0;
+			
+			foreach ($item_invoiced_rs as $key_items):
+				$s++;
+				$service_charge_name = $key_items->service_charge_name;
+				$visit_charge_amount = $key_items->visit_charge_amount;
+				$units = $key_items->visit_charge_units;
+				$service_name = $key_items->service_name;
+				$total_item = $visit_charge_amount * $units;
+				
+				$this->fpdf->Cell(10,$pageH,$s,0);
+				$this->fpdf->Cell($width,$pageH,$service_name,0,0,'C');
+				$this->fpdf->Cell($width,$pageH,$service_charge_name,0,0);
+				$this->fpdf->Cell($width,$pageH,$units,0,0);
+				$this->fpdf->Cell($width,$pageH,number_format($visit_charge_amount, 2),0,0);
+				$this->fpdf->Cell($width,$pageH,number_format($total_item, 2),0,1);
+				
+				$total = $total + $total_item;
+			endforeach;
+				
+			$this->fpdf->SetFont('Times','B',10);
+			$this->fpdf->Cell(10,$pageH,'','B');
+			$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+			$this->fpdf->Cell($width,$pageH,'','B',0);
+			$this->fpdf->Cell($width,$pageH,number_format($total, 2),'B',1);
+		}
+		else
+		{
+			$this->fpdf->SetFont('Times','B',10);
+			$this->fpdf->Cell(10,$pageH,'','B');
+			$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+			$this->fpdf->Cell($width,$pageH,'No Charges','B',0);
+			$this->fpdf->Cell($width,$pageH,number_format($total, 2),'B',1);
+		}
+		
+		if($invoice == NULL)
+		{
+			//payments
+			$this->fpdf->ln(20);
+			$this->fpdf->Cell(0, 5, 'PAYMENTS', 'B', 1, 'C');
+					
+			$this->fpdf->SetFont('Times','B',11);
+			$this->fpdf->Cell(10,$pageH,'#','B');
+			$this->fpdf->Cell($width,$pageH,'Time','B',0,'C');
+			$this->fpdf->Cell($width,$pageH,'Payment Method','B',0);
+			$this->fpdf->Cell($width,$pageH,'Amount (KSH)','B',1);
+			$this->fpdf->SetFont('Times','',10);
+			$this->fpdf->Ln(2);
+			
+			$payments_rs = $this->accounts_model->payments($visit_id);
+			$total_payments = 0;
+			
+			if(count($payments_rs) > 0)
+			{
+				$x=0;
+				
+				foreach ($payments_rs as $key_items):
+					$x++;
+					$payment_method = $key_items->payment_method;
+					$amount_paid = $key_items->amount_paid;
+					$time = $key_items->time;
+					$time = date('jS M Y H:i a',strtotime($time));
+					
+					$this->fpdf->Cell(10,$pageH,$x,'B');
+					$this->fpdf->Cell($width,$pageH,$time,'B',0,'C');
+					$this->fpdf->Cell($width,$pageH,$payment_method,'B',0);
+					$this->fpdf->Cell($width,$pageH,number_format($amount_paid, 2),'B',1);
+					
+					$total_payments = $total_payments + $amount_paid;
+				endforeach;
+					
+				$this->fpdf->SetFont('Times','B',10);
+				$this->fpdf->Cell(10,$pageH,'','B');
+				$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+				$this->fpdf->Cell($width,$pageH,'','B',0);
+				$this->fpdf->Cell($width,$pageH,number_format($total_payments, 2),'B',1);
+			}
+			
+			else
+			{
+				$this->fpdf->SetFont('Times','B',10);
+				$this->fpdf->Cell(10,$pageH,'','B');
+				$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+				$this->fpdf->Cell($width,$pageH,'No Payments Made','B',0);
+				$this->fpdf->Cell($width,$pageH,$total_payments,'B',1);
+			}
+		}
+		
+		/*$this->fpdf->SetFont('Times','B',10);
+		$this->fpdf->Cell(10,$pageH,'','B');
+		$this->fpdf->Cell($width,$pageH,'BALANCE','B',0,'C');
+		$this->fpdf->Cell($width,$pageH,'No Payments Made','B',0);
+		$this->fpdf->Cell($width,$pageH,$total_payments - $total,'B',1);*/
+		
+
+		$this->fpdf->Output();
+	}
 }

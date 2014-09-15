@@ -23,7 +23,7 @@
                               <div class="row">
                                <div class="col-md-12">
                                <h4 class="pull-left">Invoices Charges</h4>
-                               <a href="<?php echo site_url();?>/accounts/print_invoice/<?php echo $visit_id;?>" class="btn btn-sm btn-success pull-right" >Print Invoice</a>
+                               <a href="<?php echo site_url();?>/accounts/print_invoice/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-success pull-right" >Print Invoice</a>
                                 <table class="table table-hover table-bordered ">
                                   <thead>
                                   <tr>
@@ -85,7 +85,7 @@
                                <div class="row">
                                 <div class="col-md-12">
                                   <h4 class="pull-left">Receipts</h4>
-                                    <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" class="btn btn-sm btn-primary pull-right" >Print Receipt</a>
+                                    <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt</a>
                                 <table class="table table-hover table-bordered ">
                                   <thead>
                                   <tr>
@@ -231,7 +231,7 @@
 </div>
 <div class="row">
   <div class="center-align">
-    <a href= "<?php echo site_url();?>/accounts/end_visit/<?php echo $visit_id?>" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+    <a href= "<?php echo site_url();?>/reception/end_visit/<?php echo $visit_id?>/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
   </div>
 </div>
 

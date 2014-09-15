@@ -159,6 +159,13 @@ class Strathmore_population extends CI_Model
 			if($number == 1){
 				$number = "SUMC/000001";
 			}
+
+			
+			if($number == 1)
+			{
+				$number = "SUMC/000001";
+			}
+			
 		}
 		else{//start generating receipt numbers
 			$number = "SUMC/000001";
