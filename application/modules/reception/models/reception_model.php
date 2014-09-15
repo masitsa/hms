@@ -584,7 +584,7 @@ class Reception_model extends CI_Model
 	{
 		if($visit_type_id == 1)
 		{
-			return 'Patient';
+			return 'Student';
 		}
 		
 		else if(($visit_type_id == 2) && ($dependant_id > 0))
@@ -951,6 +951,16 @@ class Reception_model extends CI_Model
     	$color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
 		
 		return $color;
+	}
+	
+	public function get_patient_data_from_visit($visit_id)
+	{
+		$this->db->where("visit.patient_id = patient.patient_id AND visit.visit_id = ".$visit_id);
+		$query = $this->db->get('visit.*, patient.*');
+		
+		$row = $query->row();
+		
+		return $row;
 	}
 }
 ?>

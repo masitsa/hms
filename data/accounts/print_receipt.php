@@ -10,7 +10,7 @@ $personnel_id=$_SESSION['personel_id'];
 	$rs = $get->get_patient2($_SESSION['vid']);
 	$strath_no = mysql_result($rs, 0, "strath_no");
 	$strath_type = mysql_result($rs, 0, "visit_type_id");
-		$personnel_idx = mysql_result($rs, 0,  	"personnel_id");
+	$personnel_idx = mysql_result($rs, 0,  	"personnel_id");
 	$patient_number = mysql_result($rs, 0, "patient_number");
 	$patient_insurance_id = mysql_result($rs, 0, "patient_insurance_id");
 $get = new accounts();
@@ -154,7 +154,6 @@ if($num_rowsx > 0){
 		$this->Cell(0,5,'Att. Doctor:	'.$_SESSION['personnel_namex'], 0, 1, 'L');
 		$this->Cell(0,5,'Invoice Date:	'.date("20y-m-d"), 'B', 1, 'L');
 		$this->Ln(3);
-	
 	}
 	
 	//page footer
