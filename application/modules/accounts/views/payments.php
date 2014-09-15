@@ -19,9 +19,15 @@
                         <div class="padd">
                               <div class="row">
                                <div class="col-md-12">
-                               <h4 class="pull-left">Invoices Charges</h4>
-                               <a href="<?php echo site_url();?>/accounts/print_invoice/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-success pull-right" >Print Invoice</a>
-                                <table class="table table-hover table-bordered ">
+							   <div class="widget-head">
+								  <h4 class="pull-left"><i class="icon-reorder"></i>Invoices Charges</h4>
+								  <div class=" pull-right">
+									 <a href="<?php echo site_url();?>/accounts/print_invoice/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-success pull-right" >Print Invoice</a>
+
+								  </div>
+								  <div class="clearfix"></div>
+								</div> 
+                                <table class="table table-hover table-bordered col-md-12">
                                   <thead>
                                   <tr>
                                     <th>#</th>
@@ -78,12 +84,16 @@
                                 </table>
                                 </div>
                               </div>
-                              <br>
-                               <div class="row">
+                               <div class="row" style= "margin-top:2em">
                                 <div class="col-md-12">
-                                  <h4 class="pull-left">Receipts</h4>
-                                    <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt</a>
-                                <table class="table table-hover table-bordered ">
+								<div class="widget-head">
+								  <h4 class="pull-left"><i class="icon-reorder"></i>Receipts</h4>
+								  <div class=" pull-right">
+									<a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt</a>
+								  </div>
+								  <div class="clearfix"></div>
+								</div> 
+                                <table class="table table-hover table-bordered col-md-12">
                                   <thead>
                                   <tr>
                                     <th>#</th>
@@ -137,8 +147,7 @@
                                 </div>
 
                               </div>
-                              <br>
-                              <div class="row">
+                              <div class="row" style= "margin-top:2em">
                                <div class="col-md-12">
                                  <table class="table table-hover table-bordered">
                                   <tbody>

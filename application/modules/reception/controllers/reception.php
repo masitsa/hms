@@ -549,7 +549,7 @@ class Reception extends auth
 			}
 			//  check if the student exisit for that day and the close card 0;
 
-			$check_visits = $this->$reception_model->check_patient_exist($patient_id,$visit_date);
+			$check_visits = $this->reception_model->check_patient_exist($patient_id,$visit_date);
 			$check_count = count($check_visits);
 
 			if($check_count > 0)
