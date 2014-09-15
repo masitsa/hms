@@ -882,5 +882,20 @@ class Nurse_model extends CI_Model
 			return FALSE;
 		}
 	}
+	
+	public function get_queue_total($table, $where)
+	{
+		$total = $this->reception_model->count_items($table, $where);
+		
+		if($total > 0)
+		{
+			return $total;
+		}
+		
+		else
+		{
+			return 0;
+		}
+	}
 }
 ?>

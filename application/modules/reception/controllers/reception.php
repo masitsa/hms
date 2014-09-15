@@ -1067,7 +1067,7 @@ class Reception extends auth
 				$visit_id = $res->visit_id;
 				$strath_no = $res->strath_no;
 				$patient_data = $this->reception_model->get_patient_details($appointments_result, $visit_type, $dependant_id, $strath_no);
-				$color = $this->random_color();
+				$color = $this->reception_model->random_color();
 				
 				$data['title'][$r] = $patient_data;
 				$data['start'][$r] = $time_start;
@@ -1082,14 +1082,6 @@ class Reception extends auth
 		
 		$data['total_events'] = $r;
 		echo json_encode($data);
-	}
-	
-	function random_color()
-	{
-		$rand = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-    	$color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
-		
-		return $color;
 	}
 	
 	function search_appointment($visit_id)

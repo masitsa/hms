@@ -16,7 +16,24 @@ class Nurse extends auth
 	
 	public function index()
 	{
-		echo "no patient id";
+		$this->session->unset_userdata('visit_search');
+		$this->session->unset_userdata('patient_search');
+		
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit, patients';
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
+		$v_data['query'] = $query;
+		$v_data['page'] = 0;
+		
+		$v_data['visit'] = 0;
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('nurse_dashboard', $v_data, TRUE);
+		
+		$data['title'] = 'Dashboard';
+		$data['sidebar'] = 'nurse_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
 	}
 	
 	public function nurse_queue()
@@ -775,5 +792,57 @@ class Nurse extends auth
 	}
 
 	
+	function queue_totals()
+	{
+		//initialize required variables
+		$totals = '';
+		$names = '';
+		$highest_bar = 0;
+		$r = 1;
+		$date = date('Y-m-d');
+		
+		//get nurse total
+		$table = 'patients, visit';
+		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.$date.'\'';
+		$nurse_total = $this->nurse_model->get_queue_total($table, $where);
+		
+		if($nurse_total > $highest_bar)
+		{
+			$highest_bar = $nurse_total;
+		}
+		
+		//get doctor total
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND visit.visit_date = \''.$date.'\'';
+		$doctor_total = $this->nurse_model->get_queue_total($table, $where);
+		
+		if($doctor_total > $highest_bar)
+		{
+			$highest_bar = $doctor_total;
+		}
+		
+		//get lab total
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.lab_visit = 12 AND visit.visit_date = \''.$date.'\'';
+		$lab_total = $this->nurse_model->get_queue_total($table, $where);
+		
+		if($lab_total > $highest_bar)
+		{
+			$highest_bar = $lab_total;
+		}
+		
+		//get pharnacy total
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.pharmarcy = 6 AND visit.visit_date = \''.$date.'\'';
+		$pharmacy_total = $this->nurse_model->get_queue_total($table, $where);
+		
+		if($pharmacy_total > $highest_bar)
+		{
+			$highest_bar = $pharmacy_total;
+		}
+		
+		$result['total_services'] = 4;
+		$result['names'] = 'nurse, doctor, laboratory, pharmacy';
+		$result['bars'] = $nurse_total.', '.$doctor_total.', '.$lab_total.', '.$pharmacy_total;
+		$result['highest_bar'] = $highest_bar;
+		echo json_encode($result);
+	}
 }
 ?>

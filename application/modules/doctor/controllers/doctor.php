@@ -16,7 +16,25 @@ class Doctor extends auth
 	
 	public function index()
 	{
-		echo "no patient id";
+		$this->session->unset_userdata('visit_search');
+		$this->session->unset_userdata('patient_search');
+		
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit, patients';
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
+		$v_data['query'] = $query;
+		$v_data['page'] = 0;
+		
+		$v_data['visit'] = 0;
+		$v_data['doctor_appointments'] = 1;
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('nurse/nurse_dashboard', $v_data, TRUE);
+		
+		$data['title'] = 'Dashboard';
+		$data['sidebar'] = 'doctor_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
 	}
 	
 	public function doctor_queue()
@@ -82,6 +100,51 @@ class Doctor extends auth
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
+	}
+	
+	public function get_doctor_appointments()
+	{
+		$this->load->model('reports_model');
+		//get all appointments
+		$appointments_result = $this->reports_model->get_doctor_appointments($this->session->userdata('personnel_id'));
+		
+		//initialize required variables
+		$totals = '';
+		$highest_bar = 0;
+		$r = 0;
+		$data = array();
+		
+		if($appointments_result->num_rows() > 0)
+		{
+			$result = $appointments_result->result();
+			
+			foreach($result as $res)
+			{
+				$visit_date = date('D M d Y',strtotime($res->visit_date)); 
+				$time_start = $visit_date.' '.$res->time_start.':00 GMT+0300'; 
+				$time_end = $visit_date.' '.$res->time_end.':00 GMT+0300';
+				$visit_type_name = $res->visit_type_name.' Appointment';
+				$patient_id = $res->patient_id;
+				$dependant_id = $res->dependant_id;
+				$visit_type = $res->visit_type;
+				$visit_id = $res->visit_id;
+				$strath_no = $res->strath_no;
+				$patient_data = $this->reception_model->get_patient_details($appointments_result, $visit_type, $dependant_id, $strath_no);
+				$color = $this->reception_model->random_color();
+				
+				$data['title'][$r] = $patient_data;
+				$data['start'][$r] = $time_start;
+				$data['end'][$r] = $time_start;
+				$data['backgroundColor'][$r] = $color;
+				$data['borderColor'][$r] = $color;
+				$data['allDay'][$r] = FALSE;
+				$data['url'][$r] = site_url().'/reception/search_appointment/'.$visit_id;
+				$r++;
+			}
+		}
+		
+		$data['total_events'] = $r;
+		echo json_encode($data);
 	}
 }
 ?>

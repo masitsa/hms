@@ -26,7 +26,7 @@ $(document).ready(function() {
     var y = date.getFullYear();
   $.ajax({
 	type:'POST',
-	url: config_url+"/reception/get_appointments",
+	url: config_url+"/doctor/get_doctor_appointments",
 	cache:false,
 	contentType: false,
 	processData: false,
