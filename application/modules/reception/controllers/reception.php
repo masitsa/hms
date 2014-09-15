@@ -228,8 +228,8 @@ class Reception extends auth
 		
 		if($visits == 0)
 		{
-			$data['title'] = 'Ongoing Visits';
-			$v_data['title'] = 'Ongoing Visits';
+			$data['title'] = 'General Queue';
+			$v_data['title'] = 'General Queue';
 		}
 		
 		elseif($visits == 2)
