@@ -9,7 +9,7 @@
               <div class="widget boxed">
                     <!-- Widget head -->
                     <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Payment Details</h4>
+                      <h4 class="pull-left"><i class="icon-reorder"></i>Payment details for <?php echo $patient;?></h4>
                       <div class="widget-icons pull-right">
                         <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                         <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -22,11 +22,13 @@
                         <div class="padd">
                               <div class="row">
                                <div class="col-md-12">
-                               <p>Invoices Charges</p>
+                               <h4 class="pull-left">Invoices Charges</h4>
+                               <a href="<?php echo site_url();?>/accounts/print_invoice/<?php echo $visit_id;?>" class="btn btn-sm btn-success pull-right" >Print Invoice</a>
                                 <table class="table table-hover table-bordered ">
                                   <thead>
                                   <tr>
                                     <th>#</th>
+                                    <th>Service</th>
                                     <th>Item Name</th>
                                     <th>Charge</th>
                                   </tr>
@@ -34,16 +36,19 @@
                                   <tbody>
                                     <?php
                                     $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
+                                    $total = 0;
                                     if(count($item_invoiced_rs) > 0){
                                       $s=0;
-                                      $total = 0;
+                                      
                                       foreach ($item_invoiced_rs as $key_items):
                                         $s++;
                                         $service_charge_name = $key_items->service_charge_name;
                                         $visit_charge_amount = $key_items->visit_charge_amount;
+                                        $service_name = $key_items->service_name;
                                         ?>
                                           <tr>
                                             <td><?php echo $s;?></td>
+                                            <td><?php echo $service_name;?></td>
                                             <td><?php echo $service_charge_name;?></td>
                                             <td><?php echo $visit_charge_amount;?></td>
                                           </tr>
@@ -53,6 +58,7 @@
                                         ?>
                                         <tr>
                                           <td></td>
+                                          <td></td>
                                           <td>Total :</td>
                                           <td> <?php echo $total;?></td>
                                         </tr>
@@ -60,7 +66,7 @@
                                     }else{
                                        ?>
                                         <tr>
-                                          <td colspan="3"> No Charges</td>
+                                          <td colspan="4"> No Charges</td>
                                         </tr>
                                         <?php
                                     }
@@ -74,7 +80,8 @@
                               <br>
                                <div class="row">
                                 <div class="col-md-12">
-                                <p>Payments</p>
+                                  <h4 class="pull-left">Receipts</h4>
+                                    <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" class="btn btn-sm btn-primary pull-right" >Print Receipt</a>
                                 <table class="table table-hover table-bordered ">
                                   <thead>
                                   <tr>
@@ -87,9 +94,10 @@
                                   <tbody>
                                    <?php
                                     $payments_rs = $this->accounts_model->payments($visit_id);
+                                    $total_payments = 0;
                                     if(count($payments_rs) > 0){
                                       $x=0;
-                                      $total_payments = 0;
+                                      
                                       foreach ($payments_rs as $key_items):
                                         $x++;
                                         $payment_method = $key_items->payment_method;
@@ -123,7 +131,23 @@
                                       ?>
                                   </tbody>
                                 </table>
+                               
                                 </div>
+
+                              </div>
+                              <br>
+                              <div class="row">
+                               <div class="col-md-12">
+                                 <table class="table table-hover table-bordered">
+                                  <tbody>
+                                      <tr>
+                                        <td colspan="3">Balance :</td>
+                                        <td> <?php echo ($total - $total_payments);?></td>
+
+                                      </tr>
+                                  </tbody>
+                                </table>
+                                  </div>
                               </div>
 
 
@@ -199,6 +223,11 @@
 
     </div>
    
+</div>
+<div class="row">
+  <div class="center-align">
+    <a href= "<?php echo site_url();?>/accounts/end_visit/<?php echo $visit_id?>" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+  </div>
 </div>
 
 <?php echo form_close();?>
