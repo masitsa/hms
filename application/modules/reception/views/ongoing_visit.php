@@ -47,7 +47,7 @@
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/reception/close_visit_search/'.$visit.'" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/reception/close_visit_search/'.$visit.'/'.$page_name.'" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		

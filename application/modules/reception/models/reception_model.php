@@ -47,13 +47,13 @@ class Reception_model extends CI_Model
 	* 	@param int $page
 	*
 	*/
-	public function get_all_ongoing_visits($table, $where, $per_page, $page)
+	public function get_all_ongoing_visits($table, $where, $per_page, $page, $order = NULL)
 	{
 		//retrieve all users
 		$this->db->from($table);
 		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no');
 		$this->db->where($where);
-		$this->db->order_by('visit_time','desc');
+		$this->db->order_by('visit_time','ASC');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -785,11 +785,11 @@ class Reception_model extends CI_Model
 		{
 			$patient_type = $this->reception_model->get_patient_type($visit_type_id);
 			
-			if($visit_type == 3)
+			if($visit_type_id == 3)
 			{
 				$visit_type = 'Other';
 			}
-			else if($visit_type == 4)
+			else if($visit_type_id == 4)
 			{
 				$visit_type = 'Insurance';
 			}
@@ -797,7 +797,7 @@ class Reception_model extends CI_Model
 			{
 				$visit_type = 'General';
 			}
-			
+			$row = $appointments_result->row();
 			$patient_othernames = $row->patient_othernames;
 			$patient_surname = $row->patient_surname;
 		}

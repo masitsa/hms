@@ -11,7 +11,11 @@
 <file name="footer.php" server="192.168.170.16/sumc/development/" local="130542264062776173" remote="130547113800000000" Dst="0" />
 <file name="header.php" server="192.168.170.16/sumc/development/" local="130542264105498617" remote="130547113800000000" Dst="0" />
 <file name="navigation.php" server="192.168.170.16/sumc/development/" local="130546352626554118" remote="130547113800000000" Dst="0" />
-<file name="nurse_sidebar.php" server="192.168.170.16/sumc/development/" local="130549838317581188" remote="130549728600000000" Dst="0" />
+<file name="nurse_sidebar.php" server="192.168.170.16/sumc/development/" local="130552454410000000" remote="130552345800000000" Dst="0" />
 <file name="reception_sidebar.php" server="192.168.170.16/sumc/development/" local="130549309948883843" remote="130549713600000000" Dst="0" />
 <file name="sidebar.php" server="192.168.170.16/sumc/development/" local="130542243556963308" remote="130547113800000000" Dst="0" />
+<file name="accounts_sidebar.php" server="192.168.170.16/sumc/development/" local="130552434384066396" remote="130552333800000000" Dst="0" />
+<file name="doctor_sidebar.php" server="192.168.170.16/sumc/development/" local="130552467576104872" remote="130552359000000000" Dst="0" />
+<file name="doctor_sidebar.php" server="192.168.170.16/sumc/" local="130552467576104872" remote="130552365000000000" Dst="0" />
+<file name="nurse_sidebar.php" server="192.168.170.16/sumc/" local="130552454410000000" remote="130552365000000000" Dst="0" />
 </dwsync>

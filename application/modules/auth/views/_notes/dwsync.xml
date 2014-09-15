@@ -5,8 +5,8 @@
 <file name="admin_login.php" server="192.168.170.16/sumc/" local="130542109184187624" remote="130542981000000000" Dst="0" />
 <file name="template_no_sidebar.php" server="192.168.170.16/sumc/" local="130542153623409402" remote="130542981000000000" Dst="0" />
 <file name="template_sidebar.php" server="192.168.170.16/sumc/" local="130542268537302101" remote="130542981000000000" Dst="0" />
-<file name="admin_login.php" server="192.168.170.16/sumc/development/" local="130542109184187624" remote="130547113800000000" Dst="0" />
-<file name="control_panel.php" server="192.168.170.16/sumc/development/" local="130543068808844269" remote="130547113800000000" Dst="0" />
-<file name="template_no_sidebar.php" server="192.168.170.16/sumc/development/" local="130542153623409402" remote="130547113800000000" Dst="0" />
-<file name="template_sidebar.php" server="192.168.170.16/sumc/development/" local="130542268537302101" remote="130547113800000000" Dst="0" />
+<file name="admin_login.php" server="192.168.170.16/sumc/development/" local="130542109184187624" remote="130552337400000000" Dst="0" />
+<file name="control_panel.php" server="192.168.170.16/sumc/development/" local="130543068808844269" remote="130552329000000000" Dst="0" />
+<file name="template_no_sidebar.php" server="192.168.170.16/sumc/development/" local="130542153623409402" remote="130552329000000000" Dst="0" />
+<file name="template_sidebar.php" server="192.168.170.16/sumc/development/" local="130542268537302101" remote="130552329000000000" Dst="0" />
 </dwsync>

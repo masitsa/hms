@@ -238,7 +238,7 @@
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/0" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to end this visit?\');">End Visit</a></td>
+							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-primary">Card</a></td>
 						</tr> 
 					';
 				}

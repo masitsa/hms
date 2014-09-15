@@ -19,11 +19,11 @@
                         <i class="icon-th"></i> Queues
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>/doctor/doctor_queue">Doctor Queue</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/visit_list/0">General Queue</a></li>
-                        <li><a href="<?php echo site_url();?>/laboratory/lab_queue">Laboratory Queue</a></li>
-                        <li><a href="<?php echo site_url();?>/pharmacy/pharmacy_queue">Pharmacy Queue</a></li
-                    ></ul>
+                        <li><a href="<?php echo site_url();?>/doctor/doctor_queue/nurse">Doctor Queue</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/visit_list/0/nurse">General Queue</a></li>
+                        <!--<li><a href="#">Laboratory Queue</a></li>
+                        <li><a href="#">Pharmacy Queue</a></li>-->
+                    </ul>
                 </li>
 
             </ul>

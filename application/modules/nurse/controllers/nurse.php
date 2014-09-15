@@ -36,7 +36,7 @@ class Nurse extends auth
 		$this->load->view('auth/template_sidebar', $data);	
 	}
 	
-	public function nurse_queue()
+	public function nurse_queue($page_name = NULL)
 	{
 		// this is it
 		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
@@ -47,12 +47,21 @@ class Nurse extends auth
 			$where .= $visit_search;
 		}
 		
+		if($page_name == NULL)
+		{
+			$segment = 3;
+		}
+		
+		else
+		{
+			$segment = 4;
+		}
 		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/nurse/nurse_queue/';
+		$config['base_url'] = site_url().'/nurse/nurse_queue/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		
@@ -80,9 +89,9 @@ class Nurse extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
-		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page, 'ASC');
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -95,7 +104,16 @@ class Nurse extends auth
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
 		$data['content'] = $this->load->view('nurse_queue', $v_data, true);
-		$data['sidebar'] = 'nurse_sidebar';
+		
+		if($page_name == 'doctor')
+		{
+			$data['sidebar'] = 'doctor_sidebar';
+		}
+		
+		else
+		{
+			$data['sidebar'] = 'nurse_sidebar';
+		}
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
@@ -803,7 +821,7 @@ class Nurse extends auth
 		
 		//get nurse total
 		$table = 'patients, visit';
-		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.$date.'\'';
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND visit.visit_date = \''.$date.'\'';
 		$nurse_total = $this->nurse_model->get_queue_total($table, $where);
 		
 		if($nurse_total > $highest_bar)

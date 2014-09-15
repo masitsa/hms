@@ -23,7 +23,7 @@ $(document).ready(function() {
 	var date = new Date();
     var d = date.getDate();
     var m = date.getMonth();
-    var y = date.getFullYear();
+    var y = date.getFullYear();//alert(config_url+"/doctor/get_doctor_appointments");
   $.ajax({
 	type:'POST',
 	url: config_url+"/doctor/get_doctor_appointments",

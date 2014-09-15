@@ -16,7 +16,7 @@
     <div class="widget-content">
     	<div class="padd">
 			<?php
-            echo form_open("reception/search_visits/".$visit, array("class" => "form-horizontal"));
+            echo form_open("reception/search_visits/".$visit.'/'.$page_name, array("class" => "form-horizontal"));
             ?>
             <div class="row">
                 <div class="col-md-6">

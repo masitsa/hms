@@ -8,7 +8,7 @@
             <ul class="navi">
 
                 <!-- Use the class nred, ngreen, nblue, nlightblue, nviolet or norange to add background color. You need to use this in <li> tag. -->
-                <li><a href="<?php echo site_url();?>/nurse"><i class="icon-list"></i> Dashboard</a></li>
+                <li><a href="<?php echo site_url();?>/doctor"><i class="icon-list"></i> Dashboard</a></li>
                 <li><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-home"></i> Control Panel</a></li>
                 <li><a href="<?php echo site_url();?>/doctor/doctor_queue"><i class="icon-sitemap"></i> Doctor Queue</a></li>
 
@@ -19,11 +19,9 @@
                         <i class="icon-th"></i> Queues
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>/nurse/nurse_queue">Nurse Queue</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/visit_list/0">General Queue</a></li>
-                        <li><a href="<?php echo site_url();?>/laboratory/lab_queue">Laboratory Queue</a></li>
-                        <li><a href="<?php echo site_url();?>/pharmacy/pharmacy_queue">Pharmacy Queue</a></li
-                    ></ul>
+                        <li><a href="<?php echo site_url();?>/nurse/nurse_queue/doctor">Nurse Queue</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/visit_list/0/doctor">General Queue</a></li>
+                    </ul>
                 </li>
 
             </ul>

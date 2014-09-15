@@ -124,7 +124,7 @@ class Reception extends auth
 	*	$visits = 3 :all other ongoing visits
 	*
 	*/
-	public function visit_list($visits)
+	public function visit_list($visits, $page_name = NULL)
 	{
 		//Deleted visits
 		if($visits == 2)
@@ -136,7 +136,16 @@ class Reception extends auth
 		{
 			$delete = 0;
 		}
-		$segment = 4;
+		
+		if($page_name == NULL)
+		{
+			$segment = 4;
+		}
+		
+		else
+		{
+			$segment = 5;
+		}
 		
 		// this is it
 		if($visits != 2)
@@ -180,7 +189,7 @@ class Reception extends auth
 		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/reception/visit_list/'.$visits;
+		$config['base_url'] = site_url().'/reception/visit_list/'.$visits.'/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -241,12 +250,27 @@ class Reception extends auth
 			$v_data['title'] = 'Visit History';
 		}
 		$v_data['visit'] = $visits;
+		$v_data['page_name'] = $page_name;
 		$v_data['delete'] = $delete;
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
 		$data['content'] = $this->load->view('ongoing_visit', $v_data, true);
-		$data['sidebar'] = 'reception_sidebar';
+		
+		if($page_name == 'nurse')
+		{
+			$data['sidebar'] = 'nurse_sidebar';
+		}
+		
+		else if($page_name == 'doctor')
+		{
+			$data['sidebar'] = 'doctor_sidebar';
+		}
+		
+		else
+		{
+			$data['sidebar'] = 'reception_sidebar';
+		}
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
@@ -688,7 +712,7 @@ class Reception extends auth
 		$this->patients();
 	}
 	
-	public function search_visits($visits)
+	public function search_visits($visits, $page_name = NULL)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
 		$strath_no = $this->input->post('strath_no');
@@ -767,7 +791,7 @@ class Reception extends auth
 		
 		else
 		{
-			$this->visit_list($visits);
+			$this->visit_list($visits, $page_name);
 		}
 	}
 	
@@ -855,7 +879,7 @@ class Reception extends auth
 		}
 	}
 	
-	public function close_visit_search($visit)
+	public function close_visit_search($visit, $page_name = NULL)
 	{
 		$this->session->unset_userdata('visit_search');
 		
@@ -866,7 +890,7 @@ class Reception extends auth
 		
 		else
 		{
-			$this->visit_list($visit);
+			$this->visit_list($visit, $page_name);
 		}
 	}
 	

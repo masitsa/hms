@@ -19,7 +19,7 @@ class Doctor extends auth
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
 		$table = 'visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
 		$v_data['query'] = $query;
@@ -37,10 +37,10 @@ class Doctor extends auth
 		$this->load->view('auth/template_sidebar', $data);	
 	}
 	
-	public function doctor_queue()
+	public function doctor_queue($page_name = NULL)
 	{
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -49,11 +49,21 @@ class Doctor extends auth
 		}
 		
 		$table = 'visit, patients';
+		
+		if($page_name != NULL)
+		{
+			$segment = 4;
+		}
+		
+		else
+		{
+			$segment = 3;
+		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/doctor/doctor_queue/';
+		$config['base_url'] = site_url().'/doctor/doctor_queue/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		
@@ -81,9 +91,9 @@ class Doctor extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
-		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page, 'ASC');
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -96,7 +106,16 @@ class Doctor extends auth
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
 		$data['content'] = $this->load->view('nurse/nurse_queue', $v_data, true);
-		$data['sidebar'] = 'doctor_sidebar';
+		
+		if($page_name == NULL)
+		{
+			$data['sidebar'] = 'doctor_sidebar';
+		}
+		
+		else
+		{
+			$data['sidebar'] = 'nurse_sidebar';
+		}
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
