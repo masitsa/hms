@@ -455,7 +455,9 @@ class Accounts_model extends CI_Model
 		$this->fpdf->Cell(10,$pageH,'#','B');
 		$this->fpdf->Cell($width,$pageH,'Service','B',0,'C');
 		$this->fpdf->Cell($width,$pageH,'Item Name','B',0);
+		$this->fpdf->Cell($width,$pageH,'Units','B',0);
 		$this->fpdf->Cell($width,$pageH,'Charge (KSH)','B',1);
+		$this->fpdf->Cell($width,$pageH,'Total (KSH)','B',1);
 		$this->fpdf->SetFont('Times','',10);
 		$this->fpdf->Ln(2);
 		
@@ -467,14 +469,18 @@ class Accounts_model extends CI_Model
 				$s++;
 				$service_charge_name = $key_items->service_charge_name;
 				$visit_charge_amount = $key_items->visit_charge_amount;
+				$units = $key_items->visit_charge_units;
 				$service_name = $key_items->service_name;
+				$total_item = $visit_charge_amount * $units;
 				
 				$this->fpdf->Cell(10,$pageH,$s,0);
 				$this->fpdf->Cell($width,$pageH,$service_name,0,0,'C');
 				$this->fpdf->Cell($width,$pageH,$service_charge_name,0,0);
-				$this->fpdf->Cell($width,$pageH,number_format($visit_charge_amount, 2),0,1);
+				$this->fpdf->Cell($width,$pageH,$units,0,0);
+				$this->fpdf->Cell($width,$pageH,number_format($visit_charge_amount, 2),0,0);
+				$this->fpdf->Cell($width,$pageH,number_format($total_item, 2),0,1);
 				
-				$total = $total + $visit_charge_amount;
+				$total = $total + $total_item;
 			endforeach;
 				
 			$this->fpdf->SetFont('Times','B',10);
