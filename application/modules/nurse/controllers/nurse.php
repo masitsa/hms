@@ -844,5 +844,7 @@ class Nurse extends auth
 		$result['highest_bar'] = $highest_bar;
 		echo json_encode($result);
 	}
+
+	
 }
 ?>

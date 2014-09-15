@@ -85,7 +85,7 @@ class Accounts extends auth
 		// end of it
 	}
 
-	public function invoice($primary_key)
+	public function invoice($visit_id)
 	{
 		?>
         	<script type="text/javascript">
@@ -96,6 +96,34 @@ class Accounts extends auth
         <?php
 		
 		$this->accounts_queue();
+	}
+
+
+	public function payments($visit_id){
+		$v_data = array('visit_id'=>$visit_id);
+		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['content'] = $this->load->view('payments', $v_data, true);
+		
+		$data['title'] = 'Patient Card';
+		$data['sidebar'] = 'accounts_sidebar';
+
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	public function make_payments($visit_id){
+		$this->form_validation->set_rules('payment_method', 'Payment Method', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('amount_paid', 'Amount', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			$this->accounts_model->receipt_payment($visit_id);
+			redirect('accounts/payments/'.$visit_id);
+		}
+		else
+		{
+			$this->session->set_userdata("error_message","Fill in the fields");
+			redirect('accounts/payments/'.$visit_id);
+		}
 	}
 	
 }

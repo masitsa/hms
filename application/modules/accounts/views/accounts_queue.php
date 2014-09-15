@@ -243,7 +243,7 @@
 							<td>'.$balance.'</td>
 							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/'.$module.'" class="btn btn-sm btn-info">Receipt</a></td>
 							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">Invoice</a></td>
-							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to lab?\');">Payments</a></td>
+							<td><a href="'.site_url().'/accounts/payments/'.$visit_id.'" class="btn btn-sm btn-primary" >Payments</a></td>
 							<td><a href="'.site_url().'/nurse/send_to_pharmacy/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Send to pharmacy?\');">End Visit</a></td>
 						</tr> 
 					';

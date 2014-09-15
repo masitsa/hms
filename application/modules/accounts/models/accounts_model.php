@@ -152,6 +152,19 @@ class Accounts_model extends CI_Model
 
 	}
 
+	function get_payment_methods()
+	{
+		$table = "payment_method";
+		$where = "payment_method_id > 0";
+		$items = "*";
+		$order = "payment_method_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+
+	}
+
 	public function balance($payments, $invoice_total)
 	{
 		
@@ -164,5 +177,42 @@ class Accounts_model extends CI_Model
 		}
 	
 		return $value;
+	}
+
+	public function get_patient_visit_charge_items($visit_id)
+	{
+		$table = "visit_charge, service_charge";
+		$where = "visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
+		$items = "service_charge.service_charge_name,visit_charge.service_charge_id, visit_charge.visit_charge_amount";
+		$order = "visit_charge.service_charge_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+
+	}
+
+	public function payments($visit_id){
+		$table = "payments,payment_method";
+		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.visit_id =". $visit_id;
+		$items = "*";
+		$order = "payments.payment_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function receipt_payment($visit_id){
+		$amount = $this->input->post('amount_paid');
+		$payment_method=$this->input->post('payment_method');
+		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"));
+		if($this->db->insert('payments', $data))
+		{
+			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+
 	}
 }
