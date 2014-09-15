@@ -220,7 +220,8 @@ class Reception_model extends CI_Model
 			'patient_date'=>date('Y-m-d H:i:s'),
 			'patient_number'=>$this->strathmore_population->create_patient_number(),
 			'created_by'=>$this->session->userdata('personnel_id'),
-			'modified_by'=>$this->session->userdata('personnel_id')
+			'modified_by'=>$this->session->userdata('personnel_id'),
+			'patient_kin_phonenumber1'=>$this->session->userdata('next_of_kin_contact')
 		);
 		
 		if($this->db->insert('patients', $data))
@@ -674,6 +675,17 @@ class Reception_model extends CI_Model
 		$query = $this->db->get();
 		
 		return $query;
+	}
+	public function check_student_exist($patient_id,$visit_date)
+	{
+		$table = "visit";
+		$where = "patient_id = ". $patient_id ." AND visit_date = ".$visit_date;
+		$items = "*";
+		$order = "visit_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
 	}
 	
 	public function get_staff_dependant_patient($staff_dependant_id, $staff_no)

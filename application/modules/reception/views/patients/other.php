@@ -230,6 +230,13 @@
             	<input type="text" class="form-control" name="patient_kin_othernames" placeholder="Kin Other Names">
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label">Next of Kin Contact: </label>
+            
+            <div class="col-lg-8">
+                <input type="text" class="form-control" name="next_of_kin_contact" placeholder="">
+            </div>
+        </div>
         
         <div class="form-group">
             <label class="col-lg-4 control-label">Relationship To Kin: </label>

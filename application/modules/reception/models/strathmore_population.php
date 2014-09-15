@@ -154,17 +154,14 @@ class Strathmore_population extends CI_Model
 		{
 			$result = $query->result();
 			$number =  $result[0]->number;
-			$number_current = explode('/', $number);
-			var_dump($number_current);
-			$number = $number_current[1];
-			
-			$number++;//go to the next numbe
+			$number++;//go to the next number
 
-			$number = "SUMC/$number";
-			
+			if($number == 1){
+				$number = "SUMC/000001";
+			}
 		}
 		else{//start generating receipt numbers
-			$number = "SUMC/001";
+			$number = "SUMC/000001";
 		}
 
 		return $number;

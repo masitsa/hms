@@ -83,6 +83,8 @@ class Accounts extends auth
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
+		
+
 	}
 
 	public function invoice($visit_id)

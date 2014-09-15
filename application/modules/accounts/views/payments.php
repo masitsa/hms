@@ -45,22 +45,26 @@
                                         $service_charge_name = $key_items->service_charge_name;
                                         $visit_charge_amount = $key_items->visit_charge_amount;
                                         $service_name = $key_items->service_name;
+                                         $units = $key_items->visit_charge_units;
+
+                                         $visit_total = $visit_charge_amount * $units;
+
                                         ?>
                                           <tr>
                                             <td><?php echo $s;?></td>
                                             <td><?php echo $service_name;?></td>
                                             <td><?php echo $service_charge_name;?></td>
-                                            <td><?php echo $visit_charge_amount;?></td>
+                                            <td><?php echo number_format($visit_total,2);?></td>
                                           </tr>
                                         <?php
-                                          $total = $total + $visit_charge_amount;
+                                          $total = $total + $visit_total;
                                       endforeach;
                                         ?>
                                         <tr>
                                           <td></td>
                                           <td></td>
                                           <td>Total :</td>
-                                          <td> <?php echo $total;?></td>
+                                          <td> <?php echo number_format($total,2);?></td>
                                         </tr>
                                         <?php
                                     }else{
@@ -108,17 +112,18 @@
                                           <td><?php echo $x;?></td>
                                           <td><?php echo $time;?></td>
                                           <td><?php echo $payment_method;?></td>
-                                          <td><?php echo $amount_paid;?></td>
+                                          <td><?php echo number_format($amount_paid,2);?></td>
                                         </tr>
                                         <?php
                                         $total_payments = $total_payments + $amount_paid;
+
                                       endforeach;
                                          ?>
                                         <tr>
                                           <td></td>
                                           <td></td>
                                           <td>Total :</td>
-                                          <td> <?php echo $total_payments;?></td>
+                                          <td> <?php echo number_format($total_payments,2);?></td>
                                         </tr>
                                         <?php
                                       }else{
@@ -142,7 +147,7 @@
                                   <tbody>
                                       <tr>
                                         <td colspan="3">Balance :</td>
-                                        <td> <?php echo ($total - $total_payments);?></td>
+                                        <td> <?php echo number_format(($total - $total_payments),2) ;?></td>
 
                                       </tr>
                                   </tbody>

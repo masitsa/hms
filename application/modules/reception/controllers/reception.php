@@ -319,6 +319,7 @@ class Reception extends auth
 		$this->form_validation->set_rules('patient_kin_othernames', 'Next of Kin Other Names', 'trim|xss_clean');
 		$this->form_validation->set_rules('relationship_id', 'Relationship With Kin', 'trim|xss_clean');
 		$this->form_validation->set_rules('patient_national_id', 'National ID', 'trim|xss_clean');
+		$this->form_validation->set_rules('next_of_kin_contact', 'Next of Kin Contact', 'trim|xss_clean');
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run() == FALSE)
@@ -546,8 +547,19 @@ class Reception extends auth
 				$appointment_id=1;
 				$close_card=2;		
 			}
-	
-			$visit_data = array(
+			//  check if the student exisit for that day and the close card 0;
+
+			$check_visits = $this->$reception_model->check_patient_exist($patient_id,$visit_date);
+			$check_count = count($check_visits);
+
+			if($check_count > 0)
+			{
+				$this->session->set_userdata('error_message', 'Seems like there is another visit initiated');
+				$this->visit_list(0);
+			}
+			else
+			{
+				$visit_data = array(
         		"visit_date" => $visit_date,
         		"patient_id" => $patient_id,
         		"personnel_id" => $doctor_id,
@@ -558,27 +570,30 @@ class Reception extends auth
 				"time_end"=>$timepicker_end,
 				"appointment_id"=>$appointment_id,
 				"close_card"=>$close_card,
-    		);
-	
-			$this->db->insert('visit', $visit_data);
-			$visit_id = $this->db->insert_id();
+	    		);
+		
+				$this->db->insert('visit', $visit_data);
+				$visit_id = $this->db->insert_id();
 
-			$service_charge = $this->reception_model->get_service_charge($service_charge_id);
+				$service_charge = $this->reception_model->get_service_charge($service_charge_id);
 
-			$visit_charge_data = array(
-				"visit_id" => $visit_id,
-				"service_charge_id" => $service_charge_id,
-				"visit_charge_amount" => $service_charge
-	    	);
-			$this->db->insert('visit_charge', $visit_charge_data);
+				$visit_charge_data = array(
+					"visit_id" => $visit_id,
+					"service_charge_id" => $service_charge_id,
+					"visit_charge_amount" => $service_charge
+		    	);
+				$this->db->insert('visit_charge', $visit_charge_data);
 
-			$patient_date = array(
-				"last_visit" => $visit_date
-	    	);
-			$this->db->where('patient_id', $patient_id);
-			$this->db->update('patients', $patient_date);
+				$patient_date = array(
+					"last_visit" => $visit_date
+		    	);
+				$this->db->where('patient_id', $patient_id);
+				$this->db->update('patients', $patient_date);
+				
+				$this->visit_list(0);
+
+			}
 			
-			$this->visit_list(0);
 		}
 	}
 	
