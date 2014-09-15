@@ -153,6 +153,21 @@ class Reports_model extends CI_Model
 		return $query;
 	}
 	
+	public function get_doctor_appointments($personnel_id, $date = NULL)
+	{
+		if($date == NULL)
+		{
+			$date = date('Y-m-d');
+		}
+		$where = 'visit.visit_delete = 0 AND patients.patient_delete = 0 AND visit.visit_type = visit_type.visit_type_id AND visit.patient_id = patients.patient_id AND visit.appointment_id = 1 AND visit.close_card = 2 AND visit.visit_date >= \''.$date.'\' AND visit.personnel_id = '.$personnel_id;
+		
+		$this->db->select('visit.*, visit_type.visit_type_name, patients.*');
+		$this->db->where($where);
+		$query = $this->db->get('visit, visit_type, patients');
+		
+		return $query;
+	}
+	
 	public function get_all_sessions($date = NULL)
 	{
 		if($date == NULL)
