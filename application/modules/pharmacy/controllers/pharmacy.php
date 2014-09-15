@@ -153,5 +153,9 @@ class Pharmacy extends auth
 		$data['title'] = 'Drugs List';
 		$this->load->view('auth/template_no_sidebar', $data);
 	}
+	public function display_prescription($visit_id){
+		$visit_data = array('visit_id'=>$visit_id);
+		$this->load->view('display_prescription',$visit_data);
+	}
 }
 ?>

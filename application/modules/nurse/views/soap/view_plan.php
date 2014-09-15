@@ -44,7 +44,7 @@ else{
 
 echo "
 <div id='test_results'></div>
-<div id='diagnosis'></div>
+<div id='disease_list'></div>
 <div id='prescription'></div>";
 
 

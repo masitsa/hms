@@ -1036,41 +1036,7 @@ function delete_symptom(visit_symptom_id, visit_id){
 	}
 }
 
-function save_symptoms(visit_id){
-	//alert('jhjh');
-		var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var symptoms = document.getElementById("visit_symptoms").value;
 
-	
-	var url = host+"data/doctor/save.php?symptoms="+symptoms+"&item=sypmtoms&visit_id="+visit_id;
-	
-	if(XMLHttpRequestObject) {
-		
-		//var obj = window.opener.document.getElementById("symptoms_");
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-				//obj.innerHTML = XMLHttpRequestObject.responseText;
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 
 function objective_findings(visit_id){
 	var XMLHttpRequestObject = false;
@@ -1136,41 +1102,7 @@ function delete_objective_findings(visit_objective_findings_id, visit_id){
 	}
 }
 
-function save_objective_findings(visit_id){
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var objective_findings = document.getElementById("visit_objective_findings").value;
-	
-	var url = host+"data/doctor/save.php?objective_findings="+objective_findings+"&item=objective_findings&visit_id="+visit_id;
-	//alert(url);
-	
-	if(XMLHttpRequestObject) {
-		
-		//var obj = window.opener.document.getElementById("symptoms_");
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
 
-				//obj.innerHTML = XMLHttpRequestObject.responseText;
-				
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 
 function assessment(visit_id){
 	var XMLHttpRequestObject = false;
@@ -1268,34 +1200,7 @@ function plan1(visit_id){
 		XMLHttpRequestObject.send(null);
 	}
 }
-function save_plan(visit_id){
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var plan = document.getElementById("visit_plan").value;
-	var url = host+"data/doctor/save.php?plan="+plan+"&item=plan&visit_id="+visit_id;
-	
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
+
 
 function search_lab_test(visit_id){
 

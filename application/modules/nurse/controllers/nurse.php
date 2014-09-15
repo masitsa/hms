@@ -535,6 +535,30 @@ class Nurse extends auth
 		$this->db->where(array("visit_id"=>$visit_id));
 		$this->db->update('visit', $visit_data);
 	}
+	function save_plan($plan,$visit_id){
+		$plan = str_replace('%20', ' ',$plan);
+		$visit_data = array('visit_plan'=>$plan);
+
+		$this->db->where(array("visit_id"=>$visit_id));
+		$this->db->update('visit', $visit_data);
+	}
+	
+
+	function save_objective_findings($objective_finding,$visit_id){
+		$objective_finding = str_replace('%20', ' ',$objective_finding);
+		$visit_data = array('visit_objective_findings'=>$objective_finding);
+
+		$this->db->where(array("visit_id"=>$visit_id));
+		$this->db->update('visit', $visit_data);
+	}
+	function save_symptoms($symptoms,$visit_id){
+		$symptoms = str_replace('%20', ' ',$symptoms);
+		$visit_data = array('visit_symptoms'=>$symptoms);
+
+		$this->db->where(array("visit_id"=>$visit_id));
+		$this->db->update('visit', $visit_data);
+	}
+
 
 	public function disease($visit_id){
 
@@ -749,5 +773,7 @@ class Nurse extends auth
 			echo 'false';
 		}
 	}
+
+	
 }
 ?>

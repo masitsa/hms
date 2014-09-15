@@ -149,7 +149,7 @@
                     <div class="widget-content">
                         <div class="padd">
                               <!-- vitals from java script -->
-                                <div id="vitals"></div>
+                                <div id="prescription"></div>
                                 <!-- end of vitals data -->
                         </div>
 
@@ -236,7 +236,8 @@
       plan(<?php echo $visit_id;?>);
       doctor_notes(<?php echo $visit_id;?>);
       nurse_notes(<?php echo $visit_id?>);
-      
+      display_prescription(<?php echo $visit_id?>,2);
+      get_disease(<?php echo $visit_id?>);
   });
   
   function symptoms(visit_id){
@@ -369,7 +370,7 @@ function plan(visit_id){
         obj.innerHTML = XMLHttpRequestObject.responseText;
          get_test_results(100, visit_id);
          closeit(79, visit_id);
-        // display_prescription(visit_id, 2);
+         display_prescription(visit_id, 2);
       }
     }
         
@@ -447,7 +448,6 @@ function display_prescription(visit_id, page){
   else{
     var obj = document.getElementById("prescription");
   }
-      
   if(XMLHttpRequestObject) {
         
     XMLHttpRequestObject.open("GET", url);
@@ -633,4 +633,138 @@ function nurse_notes(visit_id){
     XMLHttpRequestObject.send(null);
   }
 }
+
+function save_symptoms(visit_id){
+  //alert('jhjh');
+    var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  
+  var symptoms = document.getElementById("visit_symptoms").value;
+
+  var config_url = $('#config_url').val();
+  var url = config_url+"/nurse/save_symptoms/"+symptoms+"/"+visit_id;
+  
+  if(XMLHttpRequestObject) {
+    
+    //var obj = window.opener.document.getElementById("symptoms_");
+        
+    XMLHttpRequestObject.open("GET", url);
+        
+    XMLHttpRequestObject.onreadystatechange = function(){
+      
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+        //obj.innerHTML = XMLHttpRequestObject.responseText;
+      }
+    }
+        
+    XMLHttpRequestObject.send(null);
+  }
+}
+
+function save_objective_findings(visit_id){
+  var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  
+  var objective_findings = document.getElementById("visit_objective_findings").value;
+  var config_url = $('#config_url').val();
+  var url = config_url+"/nurse/save_objective_findings/"+objective_findings+"/"+visit_id;
+  //alert(url);
+  
+  if(XMLHttpRequestObject) {
+    
+    //var obj = window.opener.document.getElementById("symptoms_");
+        
+    XMLHttpRequestObject.open("GET", url);
+        
+    XMLHttpRequestObject.onreadystatechange = function(){
+      
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+        //obj.innerHTML = XMLHttpRequestObject.responseText;
+        
+      }
+    }
+        
+    XMLHttpRequestObject.send(null);
+  }
+}
+function save_plan(visit_id){
+  var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  
+  var plan = document.getElementById("visit_plan").value;
+   var config_url = $('#config_url').val();
+  var url = config_url+"/nurse/save_plan/"+plan+"/"+visit_id;
+  
+  if(XMLHttpRequestObject) {
+        
+    XMLHttpRequestObject.open("GET", url);
+        
+    XMLHttpRequestObject.onreadystatechange = function(){
+      
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+      }
+    }
+        
+    XMLHttpRequestObject.send(null);
+  }
+}
+
+function get_disease(visit_id){
+  
+  var XMLHttpRequestObject = false;
+    
+  if (window.XMLHttpRequest) {
+  
+    XMLHttpRequestObject = new XMLHttpRequest();
+  } 
+    
+  else if (window.ActiveXObject) {
+    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  var config_url = $('#config_url').val();
+  var url = config_url+"/nurse/get_diagnosis/"+visit_id;
+ 
+  var obj = document.getElementById("disease_list");
+      
+  if(XMLHttpRequestObject) {
+        
+    XMLHttpRequestObject.open("GET", url);
+        
+    XMLHttpRequestObject.onreadystatechange = function(){
+      
+      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+        obj.innerHTML = XMLHttpRequestObject.responseText;
+      }
+    }
+    
+    XMLHttpRequestObject.send(null);
+  }
+}
+
 </script>
