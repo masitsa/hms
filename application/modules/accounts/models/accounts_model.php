@@ -447,16 +447,16 @@ class Accounts_model extends CI_Model
 		$item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
 		$total = 0;
 		$pageH = 6;
-		$width = 60;
+		$width = 22.5;
 		
 		$this->fpdf->Cell(0, 5, 'INVOICE ITEMS', 'B', 1, 'C');
 				
 		$this->fpdf->SetFont('Times','B',11);
 		$this->fpdf->Cell(10,$pageH,'#','B');
 		$this->fpdf->Cell($width,$pageH,'Service','B',0,'C');
-		$this->fpdf->Cell($width,$pageH,'Item Name','B',0);
+		$this->fpdf->Cell($width*3,$pageH,'Item Name','B',0);
 		$this->fpdf->Cell($width,$pageH,'Units','B',0);
-		$this->fpdf->Cell($width,$pageH,'Charge (KSH)','B',1);
+		$this->fpdf->Cell($width*2,$pageH,'Charge (KSH)','B',0);
 		$this->fpdf->Cell($width,$pageH,'Total (KSH)','B',1);
 		$this->fpdf->SetFont('Times','',10);
 		$this->fpdf->Ln(2);
@@ -475,9 +475,9 @@ class Accounts_model extends CI_Model
 				
 				$this->fpdf->Cell(10,$pageH,$s,0);
 				$this->fpdf->Cell($width,$pageH,$service_name,0,0,'C');
-				$this->fpdf->Cell($width,$pageH,$service_charge_name,0,0);
+				$this->fpdf->Cell($width*3,$pageH,$service_charge_name,0,0);
 				$this->fpdf->Cell($width,$pageH,$units,0,0);
-				$this->fpdf->Cell($width,$pageH,number_format($visit_charge_amount, 2),0,0);
+				$this->fpdf->Cell($width*2,$pageH,number_format($visit_charge_amount, 2),0,0);
 				$this->fpdf->Cell($width,$pageH,number_format($total_item, 2),0,1);
 				
 				$total = $total + $total_item;
@@ -486,7 +486,9 @@ class Accounts_model extends CI_Model
 			$this->fpdf->SetFont('Times','B',10);
 			$this->fpdf->Cell(10,$pageH,'','B');
 			$this->fpdf->Cell($width,$pageH,'','B',0,'C');
+			$this->fpdf->Cell($width*3,$pageH,'','B',0);
 			$this->fpdf->Cell($width,$pageH,'','B',0);
+			$this->fpdf->Cell($width*2,$pageH,'','B',0);
 			$this->fpdf->Cell($width,$pageH,number_format($total, 2),'B',1);
 		}
 		else
@@ -500,6 +502,7 @@ class Accounts_model extends CI_Model
 		
 		if($invoice == NULL)
 		{
+			$width = 60;
 			//payments
 			$this->fpdf->ln(20);
 			$this->fpdf->Cell(0, 5, 'PAYMENTS', 'B', 1, 'C');
