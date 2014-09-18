@@ -2,9 +2,6 @@
 
 <div class="row">
 	<div class="col-md-7">
-        <div class="row">
-            <div class="col-md-12">
-
               <!-- Widget -->
               <div class="widget boxed">
                     <!-- Widget head -->
@@ -170,12 +167,9 @@
                      </div>
                 
                 </div>
-            </div>
-        </div>
+                
     </div>
     <div class="col-md-5">
-        <div class="row">
-            <div class="col-md-12">
 
               <!-- Widget -->
               <div class="widget boxed">
@@ -231,8 +225,6 @@
                      </div>
                 
                 </div>
-            </div>
-        </div>
 
 
     </div>
