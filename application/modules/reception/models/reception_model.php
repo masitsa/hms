@@ -51,7 +51,7 @@ class Reception_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no');
+		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
 		$this->db->where($where);
 		$this->db->order_by('visit_time','ASC');
 		$query = $this->db->get('', $per_page, $page);
@@ -860,53 +860,191 @@ class Reception_model extends CI_Model
 	
 	public function change_patient_type($patient_id)
 	{
-		$data = array
-		(
-			"visit_type_id" => $this->input->post('visit_type_id'),
-			"strath_no" => $this->input->post('strath_no')
-		);
-		
-		$this->db->where('patient_id', $patient_id);
-		if($this->db->update('patients', $data))
-		{
-			return TRUE;
+	
+		// check if the staff of student exist 
+		$visit_type_id = $this->input->post('visit_type_id');
+		$strath_no = $this->input->post('strath_no');
+		if($visit_type_id == 1){
+			// check in the staff table
+			$student_rs = $this->get_student_number_from_student($strath_no);
+			$num_rows = count($student_rs);
+			
+			if($num_rows > 0){
+				foreach($student_rs as $key):
+					$student_number = $key->student_Number;
+				endforeach;
+				
+				$data = array
+				(
+					"visit_type_id" => $visit_type_id,
+					"strath_no" => $student_number
+				);
+				
+				$this->db->where('patient_id', $patient_id);
+				if($this->db->update('patients', $data))
+				{
+					return TRUE;
+				}
+				
+				else
+				{
+					return FALSE;
+				}
+			}else{
+			
+			}
+			
+		}else{
+			// check in the staff table
+			$staff_rs = $this->get_staff_number_from_staff($strath_no);
+			$num_rows = count($staff_rs);
+			
+			if($num_rows > 0){
+				foreach($staff_rs as $key):
+					$staff_number = $key->Staff_Number;
+				endforeach;
+				
+				$data = array
+				(
+					"visit_type_id" => $visit_type_id,
+					"strath_no" => $staff_number
+				);
+				
+				$this->db->where('patient_id', $patient_id);
+				if($this->db->update('patients', $data))
+				{
+					return TRUE;
+				}
+				
+				else
+				{
+					return FALSE;
+				}
+			}else{
+			// check if the patient is a staff and appears as a 
+				$staff_rs = $this->get_staff_number_from_patients($strath_no);
+				$num_rows = count($staff_rs);
+				
+				if($num_rows > 0){
+					foreach($staff_rs as $key):
+						$national_id = $key->patient_national_id;
+					endforeach;
+					
+					$data = array
+					(
+						"visit_type_id" => $visit_type_id,
+						"patient_national_id" => $national_id
+					);
+					
+					$this->db->where('patient_id', $patient_id);
+					if($this->db->update('patients', $data))
+					{
+						return TRUE;
+					}
+					
+					else
+					{
+						return FALSE;
+					}
+				}else{
+				}
+				
+			
+				
+			
+			}
 		}
+	
 		
-		else
-		{
-			return FALSE;
-		}
 	}
 	
+	public function get_staff_number_from_staff($strath_no){
+		$table = "staff";
+		$where = "Staff_Number = ".$strath_no;
+		$items = "*";
+		$order = "staff.staff_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	
+	public function get_staff_number_from_patients($national_id){
+		$table = "patients";
+		$where = "patient_national_id = ".$national_id;
+		$items = "*";
+		$order = "patients.patient_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_student_number_from_student($strath_no)
+	{
+		$table = "student";
+		$where = "student_Number = ".$strath_no;
+		$items = "*";
+		$order = "student.student_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	
+	}
 	public function add_sbs_patient()
 	{
-		$data = array(
+		$staff_type = $this->input->post('staff_type');
+		$strath_no = $this->input->post('strath_no');
+		
+		if($staff_type == "housekeeping"){
+			$data = array(
 			'Other_names'=>ucwords(strtolower($this->input->post('surname'))),
 			'Surname'=>ucwords(strtolower($this->input->post('other_names'))),
 			'DOB'=>$this->input->post('date_of_birth'),
 			'gender'=>$this->input->post('gender'),
 			'Staff_Number'=>$this->input->post('strath_no'),
 			'contact'=>$this->input->post('contact'),
-			'sbs'=>'1'
-		);
+			'house_keeping'=>'1'
+			);
+		}else{
+			$data = array(
+				'Other_names'=>ucwords(strtolower($this->input->post('surname'))),
+				'Surname'=>ucwords(strtolower($this->input->post('other_names'))),
+				'DOB'=>$this->input->post('date_of_birth'),
+				'gender'=>$this->input->post('gender'),
+				'Staff_Number'=>$this->input->post('strath_no'),
+				'contact'=>$this->input->post('contact'),
+				'sbs'=>'1'
+			);
+		}
+		
 		if($this->db->insert('staff', $data))
 		{
-			$data2 = array(
-				'strath_no'=>$this->input->post('strath_no'),
-				'visit_type_id'=>2,
-				'patient_date'=>date('Y-m-d H:i:s'),
-				'patient_number'=>$this->strathmore_population->create_patient_number(),
-				'created_by'=>$this->session->userdata('personnel_id'),
-				'modified_by'=>$this->session->userdata('personnel_id')
-			);
+			// check if exist in the patients table
 			
-			if($this->db->insert('patients', $data2))
-			{
-				return $this->db->insert_id();
+			$check_patient = $this->check_patient_if_exist($staff_type,$strath_no);
+			
+			if(count($check_patient > 0)){
+					return TRUE;
+			}else{
+				$data2 = array(
+					'strath_no'=>$this->input->post('strath_no'),
+					'visit_type_id'=>2,
+					'patient_date'=>date('Y-m-d H:i:s'),
+					'patient_number'=>$this->strathmore_population->create_patient_number(),
+					'created_by'=>$this->session->userdata('personnel_id'),
+					'modified_by'=>$this->session->userdata('personnel_id')
+				);
+				
+				if($this->db->insert('patients', $data2))
+				{
+					return $this->db->insert_id();
+				}
+				else{
+					return FALSE;
+				}
 			}
-			else{
-				return FALSE;
-			}
+				
 		}
 		
 		else
@@ -914,7 +1052,22 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
+	public function check_patient_if_exist($staff_type,$strath_no){
+		
+		$table = "patients";
+		if($staff_type == "housekeeping"){
+		$where = "patient_national_id = ".$strath_no;
+		}else{
+		$where = "strath_no = ".$strath_no;
+		}
+		$items = "*";
+		$order = "patients.patient_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
 	
+	}
 	public function bulk_add_sbs_staff()
 	{
 		$query = $this->db->get('staff2');
@@ -1024,6 +1177,8 @@ class Reception_model extends CI_Model
 		$order = "visit.visit_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
   	}
 }
 ?>

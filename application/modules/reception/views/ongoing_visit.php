@@ -148,9 +148,10 @@
 				$visit_type = $row->visit_type;
 				$visit_table_visit_type = $visit_type;
 				$patient_table_visit_type = $visit_type_id;
+				$patient_national_id = $row->patient_national_id;
 				
 				//staff & dependant
-				if($visit_type == 2)
+				if($visit_type == 2 && empty($patient_national_id))
 				{
 					//dependant
 					if($dependant_id > 0)
@@ -208,6 +209,12 @@
 							$patient_type = '';
 						}
 					}
+				}else if($visit_type == 2 && !empty($patient_national_id))
+				{
+					$patient_othernames = $row->patient_othernames;
+					$patient_surname = $row->patient_surname;
+					$visit_type = 'staff';
+					
 				}
 				
 				//student

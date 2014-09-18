@@ -221,11 +221,13 @@ class Accounts_model extends CI_Model
 		if($invoice != NULL)
 		{
 			$title = 'INVOICE';
+			$heading = 'Invoice';
 			$number = 'INV/00'.$visit_id;
 		}
 		else
 		{
 			$title = 'RECEIPT';
+			$heading = 'Receipt';
 			$number = 'REC/00'.$visit_id;
 		}
 		$personnel_id = $this->session->userdata('personnel_id');
@@ -436,10 +438,10 @@ class Accounts_model extends CI_Model
 		
 		$this->fpdf->Ln(3);
 		$this->fpdf->Cell(100,5,'Patient Name:	'.$patient_surname.' '.$patient_othernames, 0, 0, 'L');
-		$this->fpdf->Cell(0,5,'Invoice Number:	'.$number, 0, 1, 'L');
+		$this->fpdf->Cell(0,5,$heading.' Number:	'.$number, 0, 1, 'L');
 		$this->fpdf->Cell(100,5,'Patient Number:	'.$patient_number, 0, 0, 'L');
 		$this->fpdf->Cell(0,5,'Att. Doctor:	'.$doctor, 0, 1, 'L');
-		$this->fpdf->Cell(0,5,'Receipt Date:	'.$visit_date, 'B', 1, 'L');
+		$this->fpdf->Cell(0,5,$heading.' Date:	'.$visit_date, 'B', 1, 'L');
 		$this->fpdf->Ln(3);
 		
 		$this->fpdf->SetTextColor(0, 0, 0); //226, 225, 225
@@ -449,7 +451,7 @@ class Accounts_model extends CI_Model
 		$pageH = 6;
 		$width = 22.5;
 		
-		$this->fpdf->Cell(0, 5, 'INVOICE ITEMS', 'B', 1, 'C');
+		$this->fpdf->Cell(0, 5, 'BILLED ITEMS', 'B', 1, 'C');
 				
 		$this->fpdf->SetFont('Times','B',11);
 		$this->fpdf->Cell(10,$pageH,'#','B');
@@ -474,11 +476,11 @@ class Accounts_model extends CI_Model
 				$total_item = $visit_charge_amount * $units;
 				
 				$this->fpdf->Cell(10,$pageH,$s,0);
-				$this->fpdf->Cell($width,$pageH,$service_name,0,0,'C');
-				$this->fpdf->Cell($width*3,$pageH,$service_charge_name,0,0);
-				$this->fpdf->Cell($width,$pageH,$units,0,0);
-				$this->fpdf->Cell($width*2,$pageH,number_format($visit_charge_amount, 2),0,0);
-				$this->fpdf->Cell($width,$pageH,number_format($total_item, 2),0,1);
+				$this->fpdf->Cell($width,$pageH,$service_name,0,0,'L');
+				$this->fpdf->Cell($width*3,$pageH,$service_charge_name,0,0,'L');
+				$this->fpdf->Cell($width,$pageH,$units,0,0,'L');
+				$this->fpdf->Cell($width*2,$pageH,number_format($visit_charge_amount, 2),0,0,'L');
+				$this->fpdf->Cell($width,$pageH,number_format($total_item, 2),0,1,'L');
 				
 				$total = $total + $total_item;
 			endforeach;
@@ -503,17 +505,6 @@ class Accounts_model extends CI_Model
 		if($invoice == NULL)
 		{
 			$width = 60;
-			//payments
-			$this->fpdf->ln(20);
-			$this->fpdf->Cell(0, 5, 'PAYMENTS', 'B', 1, 'C');
-					
-			$this->fpdf->SetFont('Times','B',11);
-			$this->fpdf->Cell(10,$pageH,'#','B');
-			$this->fpdf->Cell($width,$pageH,'Time','B',0,'C');
-			$this->fpdf->Cell($width,$pageH,'Payment Method','B',0);
-			$this->fpdf->Cell($width,$pageH,'Amount (KSH)','B',1);
-			$this->fpdf->SetFont('Times','',10);
-			$this->fpdf->Ln(2);
 			
 			$payments_rs = $this->accounts_model->payments($visit_id);
 			$total_payments = 0;
@@ -526,32 +517,16 @@ class Accounts_model extends CI_Model
 					$x++;
 					$payment_method = $key_items->payment_method;
 					$amount_paid = $key_items->amount_paid;
-					$time = $key_items->time;
-					$time = date('jS M Y H:i a',strtotime($time));
-					
-					$this->fpdf->Cell(10,$pageH,$x,'B');
-					$this->fpdf->Cell($width,$pageH,$time,'B',0,'C');
-					$this->fpdf->Cell($width,$pageH,$payment_method,'B',0);
-					$this->fpdf->Cell($width,$pageH,number_format($amount_paid, 2),'B',1);
 					
 					$total_payments = $total_payments + $amount_paid;
 				endforeach;
+			}
 					
-				$this->fpdf->SetFont('Times','B',10);
-				$this->fpdf->Cell(10,$pageH,'','B');
-				$this->fpdf->Cell($width,$pageH,'','B',0,'C');
-				$this->fpdf->Cell($width,$pageH,'','B',0);
-				$this->fpdf->Cell($width,$pageH,number_format($total_payments, 2),'B',1);
-			}
-			
-			else
-			{
-				$this->fpdf->SetFont('Times','B',10);
-				$this->fpdf->Cell(10,$pageH,'','B');
-				$this->fpdf->Cell($width,$pageH,'','B',0,'C');
-				$this->fpdf->Cell($width,$pageH,'No Payments Made','B',0);
-				$this->fpdf->Cell($width,$pageH,$total_payments,'B',1);
-			}
+			$this->fpdf->SetFont('Times','B',10);
+			$this->fpdf->Cell(170,$pageH,'Total Paid','B');
+			$this->fpdf->Cell('20',$pageH,number_format($total_payments, 2),'B',1);
+			$this->fpdf->Cell(170,$pageH,'Balance','B');
+			$this->fpdf->Cell('20',$pageH,number_format(($total - $total_payments), 2),'B',1);
 		}
 		
 		/*$this->fpdf->SetFont('Times','B',10);

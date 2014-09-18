@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="dental_vitals.php" server="192.168.170.16/sumc/development/" local="130549935612856159" remote="130552329000000000" Dst="0" />
-<file name="family_history.php" server="192.168.170.16/sumc/development/" local="130546622892552449" remote="130552329000000000" Dst="0" />
-<file name="lifestyle.php" server="192.168.170.16/sumc/development/" local="130548158588784301" remote="130552329000000000" Dst="0" />
-<file name="medical_checkup.php" server="192.168.170.16/sumc/development/" local="130550069257040169" remote="130552329000000000" Dst="0" />
-<file name="patient_history.php" server="192.168.170.16/sumc/development/" local="130549841975740422" remote="130552329000000000" Dst="0" />
-<file name="soap.php" server="192.168.170.16/sumc/development/" local="130552434383966391" remote="130552329000000000" Dst="0" />
-<file name="vitals.php" server="192.168.170.16/sumc/development/" local="130548158589084318" remote="130552329000000000" Dst="0" />
-<file name="dental_vitals.php" server="192.168.170.16/sumc/" local="130549935612856159" remote="130552365000000000" Dst="0" />
+<file name="dental_vitals.php" server="192.168.170.16/sumc/development/" local="130547377659849492" remote="130547284800000000" Dst="0" />
+<file name="family_history.php" server="192.168.170.16/sumc/development/" local="130546622892552449" remote="130547113800000000" Dst="0" />
+<file name="lifestyle.php" server="192.168.170.16/sumc/development/" local="130548158588784301" remote="130548121200000000" Dst="0" />
+<file name="medical_checkup.php" server="192.168.170.16/sumc/development/" local="130546509304055559" remote="130547113800000000" Dst="0" />
+<file name="patient_history.php" server="192.168.170.16/sumc/development/" local="130549841975740422" remote="130549731600000000" Dst="0" />
+<file name="soap.php" server="192.168.170.16/sumc/development/" local="130549831349252622" remote="130549720800000000" Dst="0" />
+<file name="vitals.php" server="192.168.170.16/sumc/development/" local="130548158589084318" remote="130548121200000000" Dst="0" />
+<file name="dental_vitals.php" server="192.168.170.16/sumc/" local="130547377659849492" remote="130547969400000000" Dst="0" />
 <file name="family_history.php" server="192.168.170.16/sumc/" local="130546622892552449" remote="130547969400000000" Dst="0" />
-<file name="lifestyle.php" server="192.168.170.16/sumc/" local="130548158588784301" remote="130552365000000000" Dst="0" />
-<file name="medical_checkup.php" server="192.168.170.16/sumc/" local="130550069257040169" remote="130552365000000000" Dst="0" />
-<file name="patient_history.php" server="192.168.170.16/sumc/" local="130549841975740422" remote="130552365000000000" Dst="0" />
-<file name="soap.php" server="192.168.170.16/sumc/" local="130552434383966391" remote="130552365000000000" Dst="0" />
-<file name="vitals.php" server="192.168.170.16/sumc/" local="130548158589084318" remote="130552365000000000" Dst="0" />
+<file name="lifestyle.php" server="192.168.170.16/sumc/" local="130547386867546142" remote="130547969400000000" Dst="0" />
+<file name="medical_checkup.php" server="192.168.170.16/sumc/" local="130546509304055559" remote="130547969400000000" Dst="0" />
+<file name="patient_history.php" server="192.168.170.16/sumc/" local="130547386867766155" remote="130547969400000000" Dst="0" />
+<file name="soap.php" server="192.168.170.16/sumc/" local="130546509304375577" remote="130547969400000000" Dst="0" />
+<file name="vitals.php" server="192.168.170.16/sumc/" local="130547386867796157" remote="130547969400000000" Dst="0" />
 </dwsync>
