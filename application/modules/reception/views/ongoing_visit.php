@@ -95,7 +95,7 @@
 							  <th>Visit Type</th>
 							  <th>Time In</th>
 							  <th>Doctor</th>
-							  <th colspan="3">Actions</th>
+							  <th colspan="5">Actions</th>
 							</tr>
 						  </thead>
 						  <tbody>
@@ -304,6 +304,7 @@
 						{
 							$button = '
 							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-info">Patient Card</a></td>
+							<td><a href="'.site_url().'/nurse/dental_visit/'.$visit_id.'/a/1" class="btn btn-sm btn-danger">Dental Vitals</a></td>
 							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
 							<td><a href="'.site_url().'/nurse/send_to_pharmacy/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
 							';
@@ -313,6 +314,8 @@
 						{
 							$button = '
 							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/0" class="btn btn-sm btn-info">Patient Card</a></td>
+							<td><a href="'.site_url().'/nurse/dental_visit/'.$visit_id.'/a/0" class="btn btn-sm btn-danger">Dental Vitals</a></td>
+
 							<td><a href="'.site_url().'/nurse/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>
 							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
 							<td><a href="'.site_url().'/nurse/send_to_pharmacy/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>

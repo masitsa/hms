@@ -19,7 +19,7 @@ class Nurse extends auth
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
 		$v_data['query'] = $query;
@@ -39,7 +39,7 @@ class Nurse extends auth
 	public function nurse_queue($page_name = NULL)
 	{
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -144,6 +144,29 @@ class Nurse extends auth
 		}
 	}
 	
+	public function dental_visit($visit_id, $mike = NULL, $module = NULL){
+		$v_data['module'] = $module;
+		$v_data['visit_id'] = $visit_id;
+		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['content'] = $this->load->view('dental_visit', $v_data, true);
+		
+		$data['title'] = "Dental Visit";
+		
+		if($module == 0)
+		{
+			$data['sidebar'] = 'nurse_sidebar';
+		}
+		
+		else
+		{
+			$data['sidebar'] = 'doctor_sidebar';
+		}
+		if(($mike != NULL) && ($mike != 'a')){
+			$this->load->view('auth/template_no_sidebar', $data);	
+		}else{
+			$this->load->view('auth/template_sidebar', $data);	
+		}
+	}
 	public function close_queue_search()
 	{
 	}
@@ -160,8 +183,9 @@ class Nurse extends auth
 		$this->load->view('show_loaded_vitals',$data);	
 	}
 
-	public function save_vitals($vital,$vital_id,$visit_id)
+	public function save_vitals($vital_id,$visit_id)
 	{
+		$vital=$this->input->post('vital');
 		//  check if the data exists in the table
 		$table = "visit_vital";
 		$where ="visit_id = $visit_id and vital_id = $vital_id";
@@ -865,7 +889,21 @@ class Nurse extends auth
 		$result['highest_bar'] = $highest_bar;
 		echo json_encode($result);
 	}
+	public function send_to_accounts($primary_key,$module)
+	{
+		
 
+		$visit_data = array('pharmarcy'=>7,'nurse_visit'=>1);
+		$this->db->where(array("visit_id"=>$primary_key));
+		$this->db->update('visit', $visit_data);
+		if($module == 0){
+			redirect("nurse/nurse_queue");
+		}else{
+			redirect("doctor/doctor_queue");
+		}
+		
+
+	}
 	
 }
 ?>
