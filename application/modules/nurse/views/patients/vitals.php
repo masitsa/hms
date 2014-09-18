@@ -70,6 +70,8 @@ $(document).ready(function(){
 });
 
  function vitals_interface(visit_id){
+
+
    
     var XMLHttpRequestObject = false;
         
@@ -214,38 +216,26 @@ function getXMLHTTP() {
     }
     function save_vital(visit_id, vital_id){
         
-        var XMLHttpRequestObject = false;
-            
-        if (window.XMLHttpRequest) {
-        
-            XMLHttpRequestObject = new XMLHttpRequest();
-        } 
-            
-        else if (window.ActiveXObject) {
-            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-       
-        var vital = document.getElementById("vital"+vital_id).value;
         var config_url = $('#config_url').val();
-        var url = config_url+"/nurse/save_vitals/"+vital+"/"+vital_id+"/"+visit_id;
-    
-
-        if(XMLHttpRequestObject) {
-            
-            var obj = document.getElementById("display"+vital_id);
-                    
-            XMLHttpRequestObject.open("GET", url);
-                    
-            XMLHttpRequestObject.onreadystatechange = function(){
-                
-                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-                    load_vitals(vital_id, visit_id);
-                }
-            }
-                    
-            XMLHttpRequestObject.send(null);
+        var data_url = config_url+"/nurse/save_vitals/"+vital_id+"/"+visit_id;
+        //window.alert(data_url);
+         var patient_vital = $('#vital'+vital_id).val();//document.getElementById("vital"+vital_id).value;
+        $.ajax({
+        type:'POST',
+        url: data_url,
+        data:{vital: patient_vital},
+        dataType: 'text',
+        success:function(data){
+        load_vitals(vital_id, visit_id);
+        //obj.innerHTML = XMLHttpRequestObject.responseText;
+        },
+        error: function(xhr, status, error) {
+        //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+        alert(error);
         }
+
+        });
+        
     }
 
     function calculate_bmi(vitals_id, visit_id){

@@ -43,37 +43,16 @@
 			}
 			
 			if(($lower_limit == NULL) || ($upper_limit == NULL)){
-					echo
-					"<div style='width: 60px;'>
-					<table style='width: 60px;'>
-						<tr class='info'>
-							<td>".$visit_vital_value."</td>
-						</tr>
-					</table></div>
-					";
+					echo"<span class='label label-info'>".$visit_vital_value."</span>";
 			}
 			
 			else{
 				if(($visit_vital_value < $lower_limit) || ($visit_vital_value > $upper_limit)){
-					echo
-					"<div style='width: 60px;'>
-					<table style='width: 60px;'>
-						<tr class='error'>
-							<td>".$visit_vital_value."</td>
-						</tr>
-					</table></div>
-					";
+					echo"<span class='label label-danger'>".$visit_vital_value."</span>";
 				}
 			
 				else{
-					echo
-					"<div style='width: 60px;'>
-					<table style='width: 60px;'>
-						<tr class='info'>
-							<td>".$visit_vital_value."</td>
-						</tr>
-					</table></div>
-					";
+					echo"<span class='label label-info'>".$visit_vital_value."</span>";
 				}
 			}
 	}
