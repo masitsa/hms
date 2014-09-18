@@ -444,6 +444,11 @@ class Nurse extends auth
 	{
 		$this->nurse_model->save_family_disease($family_id, $patient_id, $disease_id);
 	}
+	
+	public function delete_family_disease($disease_id, $family_id, $patient_id)
+	{
+		$this->nurse_model->delete_family_disease($family_id, $patient_id, $disease_id);
+	}
 
 
 	public function save_lifestyle($visit_id){
@@ -770,14 +775,12 @@ class Nurse extends auth
 		{
 			FALSE;
 		}
-		
 	}
-
-
 	
-	public function save_illness($mec_id, $illness, $visit_id)
+	public function save_illness($mec_id, $visit_id)
 	{
-		$illness = str_replace('%20', ' ', $illness);
+		$illness = $this->input->post('illness');
+		//$illness = str_replace('%20', ' ', $illness);
 		
 		//check if illness has been saved
 		$query = $this->nurse_model->check_text_save($mec_id,$visit_id);

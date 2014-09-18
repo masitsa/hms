@@ -417,6 +417,22 @@ class Nurse_model extends CI_Model
 			return FALSE;
 		}
 	}
+	public function delete_condition($family_id, $patient_id, $disease_id)
+	{
+		$data = array(
+			'family_id'=>$family_id,
+			'patient_id'=>$patient_id,
+			'disease_id'=>$disease_id
+		);
+		$this->db->where($data);
+		if($this->db->delete('family_history_disease'))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
 	public function get_exercices_values(){
 		$table = "excersise";
 		$where = "excersise_id > 0 ";

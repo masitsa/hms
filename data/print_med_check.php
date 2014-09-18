@@ -352,7 +352,8 @@ for ($a=0; $a < $rows; $a++){
 	if($mec_name=="Family History"){
 	$pdf->SetFont('Times','B', 13);
 		$pdf->Cell(0,5,$mec_name,'B',1,'L', $fill);
-	;$pdf->Ln(3);
+	;
+	$pdf->Ln(3);
 		
 	$getf = new Lab;
 	$rsf = $getf-> get_family_history($visit_id);

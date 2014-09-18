@@ -1,6 +1,9 @@
 <style type="text/css">
 	textarea.form-control{min-height: 150px;}
 </style>
+<div class="center-align">
+    <a href="<?php echo site_url().'/doctor/print_checkup/'.$visit_id;?>" class="btn btn-danger btn-lg" target="_blank">Print Checkup</a>
+</div>
 <?php
 $exam_categories = $this->nurse_model->medical_exam_categories();
 
@@ -28,7 +31,7 @@ if($exam_categories->num_rows() > 0)
 		
 		if($mec_name=="Family History")
 		{
-			?>      
+			?>
             <div class="row">
                 <div class="col-md-12">
                     <!-- Widget -->
@@ -217,7 +220,7 @@ if($exam_categories->num_rows() > 0)
               <div class="widget boxed">
                     <!-- Widget head -->
                     <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Present Illness</h4>
+                      <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $mec_name; ?></h4>
                       <div class="widget-icons pull-right">
                         <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                         <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -239,46 +242,36 @@ if($exam_categories->num_rows() > 0)
     </div>
    
 </div>
+<div class="center-align">
+    <a href="<?php echo site_url().'/doctor/print_checkup/'.$visit_id;?>" class="btn btn-danger btn-lg" target="_blank">Print Checkup</a>
+</div>
 
 <script type="text/javascript">
 var host = $('#config_url').val();
 
-function save_illness(mec_id, visit_id){
-	
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
+function save_illness(mec_id, visit_id)
+{
 	var str1 = "gg";
 	var mec_id;
 	var n = str1.concat(mec_id); 
 	
-	var illness = document.getElementById(n).value;
-	//alert(illness);
-	var url = host+"/nurse/save_illness/"+mec_id+"/"+illness+"/"+visit_id;
+	var patient_illness = document.getElementById(n).value;
+	var data_url = host+"/nurse/save_illness/"+mec_id+"/"+visit_id;//alert(url);
 	
-	if(XMLHttpRequestObject) {
-		
-		//var obj = document.getElementById("insurance_company");
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+	$.ajax({
+			type:'POST',
+			url: data_url,
+			data:{illness: patient_illness},
+			dataType: 'text json',
+			success:function(data){
 
-				obj.innerHTML = XMLHttpRequestObject.responseText;
+				//obj.innerHTML = XMLHttpRequestObject.responseText;
+			},
+			error: function(xhr, status, error) {
+				//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+				alert(error);
 			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
+		});
 }
 
 function medical_exam(cat_items_id,format_id,visit_id){
