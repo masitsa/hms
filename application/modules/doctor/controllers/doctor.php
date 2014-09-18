@@ -9,6 +9,7 @@ class Doctor extends auth
 		parent:: __construct();
 		$this->load->model('nurse/nurse_model');
 		$this->load->model('reception/reception_model');
+		$this->load->model('doctor_model');
 		$this->load->model('database');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
@@ -164,6 +165,11 @@ class Doctor extends auth
 		
 		$data['total_events'] = $r;
 		echo json_encode($data);
+	}
+	
+	public function print_checkup($visit_id)
+	{
+		$this->doctor_model->print_checkup($visit_id);
 	}
 }
 ?>

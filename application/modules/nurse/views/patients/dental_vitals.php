@@ -433,6 +433,40 @@ else
 		}
 	}
 	
+	function delete_condition(cond, family, patient_id){
+		
+		var XMLHttpRequestObject = false;
+			
+		if (window.XMLHttpRequest) {
+		
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} 
+			
+		else if (window.ActiveXObject) {
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		//var condition = document.getElementById("checkbox"+cond+family);
+			
+		url = config_url+"/nurse/delete_family_disease/"+cond+"/"+family+"/"+patient_id;
+	
+		if(XMLHttpRequestObject) {
+					
+			XMLHttpRequestObject.open("GET", url);
+					
+			XMLHttpRequestObject.onreadystatechange = function(){
+				
+				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+					
+					$.get( config_url+"/nurse/get_family_history/<?php echo $visit_id;?>", function( data ) {
+						$("#new-nav").html(data);
+					});
+				}
+			}
+			
+			XMLHttpRequestObject.send(null);
+		}
+	}
+	
 	function toggleFieldh(myTFh,illness) 
 	{
 		var myTarget = document.getElementById(myTFh);
