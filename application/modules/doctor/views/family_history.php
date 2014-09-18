@@ -80,12 +80,12 @@ if($family_disease_query->num_rows() > 0)
 					
 					if($num_history == 0)
 					{
-						$this->fpdf->Image(base_url().'images/unchecked_checkbox.jpg', $current_x, $current_y, 5, 5);
+						$this->fpdf->Image(base_url().'images/unchecked_checkbox.jpg', $current_x, $current_y, 3, 3);
 					}
 					
 					else
 					{
-						$this->fpdf->Image(base_url().'images/checked_checkbox.jpg', $current_x, $current_y, 5, 5);
+						$this->fpdf->Image(base_url().'images/checked_checkbox.jpg', $current_x, $current_y, 3, 3);
 					}
 				}
 				$count_family++;

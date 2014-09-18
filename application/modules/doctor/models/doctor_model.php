@@ -335,12 +335,12 @@ class Doctor_model extends CI_Model
 													$results = $this->nurse_model->cat_items2($cat_items_id, $format_id,$visit_id);
 													if($results->num_rows() > 0)
 													{
-														$this->fpdf->Image(base_url().'images/checked_checkbox.jpg', null, null, 5, 5);
+														$this->fpdf->Image(base_url().'images/checked_checkbox.jpg', null, null, 3, 3);
 													} 
 												
 													else 
 													{ 
-														$this->fpdf->Image(base_url().'images/unchecked_checkbox.jpg', null, null, 5, 5);
+														$this->fpdf->Image(base_url().'images/unchecked_checkbox.jpg', null, null, 3, 3);
 													}
 												}
 											}	
