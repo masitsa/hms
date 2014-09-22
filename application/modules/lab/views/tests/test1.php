@@ -49,7 +49,7 @@ if($num_rows2 > 0){
 	
 	if($num_lab_visit > 0){
 		
-		echo"<hr>
+		echo"
 		<div class='row'>
 			<div class='col-md-12'>
 		<div class='center-align'>
@@ -138,7 +138,7 @@ if($num_rows2 > 0){
 				<td>".$test_format."</td>";
 					
 				if($this->session->userdata('test') ==0){
-					echo"<td><input type='text' id='laboratory_result2".$lab_test_format_id."' size='10' onkeyup='save_result_format(".$visit_charge_id.",".$lab_test_format_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
+					echo"<td><input type='text' class='form-control' id='laboratory_result2".$lab_test_format_id."' size='10' onkeyup='save_result_format(".$visit_charge_id.",".$lab_test_format_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
 					
 					echo"
 						<td>".$lab_test_format_units."</td>
@@ -148,7 +148,7 @@ if($num_rows2 > 0){
 						<td id='result_space".$lab_test_format_id."'></td>";
 				}
 				else {
-					echo"<td><input type='text' id='laboratory_result".$visit_charge_id."' size='10' onkeyup='save_result(".$visit_charge_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
+					echo"<td><input type='text' class='form-control'  id='laboratory_result".$visit_charge_id."' size='10' onkeyup='save_result(".$visit_charge_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
 									
 					echo "
 						<td>".$lab_test_units."</td>
@@ -186,7 +186,7 @@ if($num_rows2 > 0){
 					<td> </td>
 					
 						<td></td>
-						<td><textarea rows='5' cols='10' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit_id.")'>".$comment4."</textarea> </td>
+						<td><textarea rows='5' cols='10' class='form-control' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit_id.")'>".$comment4."</textarea> </td>
 						<td> </td>
 						<td ></td>			<td> </td>
 				</tr>";
@@ -257,3 +257,8 @@ if($num_rows2 > 0){
 	}
 }
 ?>
+<script type="text/javascript">
+
+	
+	
+</script>

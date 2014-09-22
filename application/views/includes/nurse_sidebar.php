@@ -11,7 +11,7 @@
                 <li><a href="<?php echo site_url();?>/nurse"><i class="icon-list"></i> Dashboard</a></li>
                 <li><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-home"></i> Control Panel</a></li>
                 <li><a href="<?php echo site_url();?>/nurse/nurse_queue"><i class="icon-sitemap"></i> Nurse Queue</a></li>
-
+                <li><a href="<?php echo site_url();?>/nurse/from_lab_queue"><i class="icon-sitemap"></i> Lab Queue</a></li>
                 <!-- Menu with sub menu -->
                 <li class="has_submenu">
                     <a href="#">

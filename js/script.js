@@ -1370,6 +1370,7 @@ function delete_diagnosis(id, visit_id){
 	}
 }
 
+
 			
 
 
@@ -1500,38 +1501,7 @@ function save_result_format(id, format, visit_id){
 	}
 }
 
-function save_result(id, visit_id){
-	
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	var res = document.getElementById("laboratory_result"+id).value;
-	var url = host+"data/lab/save_result.php?id="+id+"&result="+res;
 
-	if(XMLHttpRequestObject) {
-		
-		var obj = document.getElementById("result_space"+id);
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				//get_test_results(1, visit_id);
-				obj.innerHTML = XMLHttpRequestObject.responseText;
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 function save_comment(visit_charge_id){
 
 	var XMLHttpRequestObject = false;
@@ -1570,36 +1540,7 @@ function print_previous_test(visit_id, patient_id){
                          "resizable=no status=no,history=no top = 50 left = 100");
 }
 
-function finish_lab_test(visit_id){
 
-	var XMLHttpRequestObject = false;
-		
-	if (window.XMLHttpRequest) {
-	
-		XMLHttpRequestObject = new XMLHttpRequest();
-	} 
-		
-	else if (window.ActiveXObject) {
-		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	
-	var url = host+"data/lab/finish_lab_test.php?visit_id="+visit_id;
-			
-	if(XMLHttpRequestObject) {
-				
-		XMLHttpRequestObject.open("GET", url);
-				
-		XMLHttpRequestObject.onreadystatechange = function(){
-			
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				
-				window.location.href = host+"index.php/laboratory/lab_queue";
-			}
-		}
-				
-		XMLHttpRequestObject.send(null);
-	}
-}
 
 function get_previous_tests(page){
 	

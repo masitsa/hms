@@ -1,264 +1,209 @@
-<?php
+<div class="row">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="center-align">
+				<?php
+		        	if(($visit == 2)||(($visit == 3))||(($visit == 1))||(($visit == 4))){
+						echo "<input type='button' onClick='open_window_lab(8, ".$visit_id.")' value='Add Test' class='btn btn-large btn-primary'>";
+					}
+				
+				?>
+			</div>
+		</div>
+        <div class="row">
+            <div class="col-md-12">
 
-$patient_id = $this->nurse_model->get_patient_id($visit_id);
+              <!-- Widget -->
+              <div class="widget boxed">
+                    <!-- Widget head -->
+                    <div class="widget-head">
+                      <h4 class="pull-left"><i class="icon-reorder"></i>Tests</h4>
+                      <div class="widget-icons pull-right">
+                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>             
 
-$rs2 = $this->lab_model->get_lab_visit2($visit_id);
-$num_rows2 = count($rs2);
-if($num_rows2 > 0){
-	foreach ($rs2 as $key): 
-		$lab_visit = $key->lab_visit;
-	endforeach;
-}
-
-$get_test_rs = $this->lab_model->get_lab_visit_test($visit_id);
-$num_rows = count($get_test_rs);
-
-$rs3 = $this->lab_model->get_comment($visit_id);
-$num_rows3 = count($rs2);
-
-if($num_rows3 > 0){
-	foreach ($rs3 as $key3):
-		$comment = $key3->lab_visit_comment;
-	endforeach;
-}
-
-
-
-if ($num_rows >0 ){
-	foreach ($get_test_rs as $key_rs):
-		$lab_test = $key_rs->lab_visit;
-	endforeach;
-	if ($lab_test == 2){
-		echo "
-		<table align='center'>
-		<tr><td>
-		<input name='test' type='button' value='check test' onclick='open_window_laboratory(".$visit_id.",552)' />
+                <!-- Widget content -->
+                    <div class="widget-content">
+                        <div class="padd">
+							<div id="test_results"></div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
 		
-		</td></tr>
-		
-		</table>
-		
-		
-		";
-		
-	}else {}
+</div>
+   
+
+  <script type="text/javascript">
+	  $(document).ready(function(){
+	       get_test_results(100, <?php echo $visit_id?>);
+	  });
+  	function open_window_lab(test, visit_id){
+	  var config_url = $('#config_url').val();
+	  window.open(config_url+"/lab/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+	}
+	function get_test_results(page, visit_id){
+
+	  var XMLHttpRequestObject = false;
+	    
+	  if (window.XMLHttpRequest) {
+	  
+	    XMLHttpRequestObject = new XMLHttpRequest();
+	  } 
+	    
+	  else if (window.ActiveXObject) {
+	    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	  var config_url = $('#config_url').val();
+	  if((page == 1) || (page == 65) || (page == 85)){
+	    
+	    url = config_url+"/lab/test/"+visit_id;
+	  }
+	  
+	  else if ((page == 75) || (page == 100)){
+	    url = config_url+"/lab/test1/"+visit_id;
+	  }
+	 // alert(url);
+	  if(XMLHttpRequestObject) {
+	    if((page == 75) || (page == 85)){
+	      var obj = window.opener.document.getElementById("test_results");
+	    }
+	    else{
+	      var obj = document.getElementById("test_results");
+	    }
+	    XMLHttpRequestObject.open("GET", url);
+	    
+	    XMLHttpRequestObject.onreadystatechange = function(){
+	    
+	      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+	  //window.alert(XMLHttpRequestObject.responseText);
+	        obj.innerHTML = XMLHttpRequestObject.responseText;
+	        if((page == 75) || (page == 85)){
+	          window.close(this);
+	        }
+	        
+	      }
+	    }
+	    XMLHttpRequestObject.send(null);
+	  }
+	}
+
+	function save_result(id, visit_id){
+
+		var config_url = $('#config_url').val();
+		var res = document.getElementById("laboratory_result"+id).value;
+        var data_url = config_url+"/lab/save_result/"+id+"/"+res;
+     
+         var result_space = $('#result_space'+id).val();//document.getElementById("vital"+vital_id).value;
+         	
+        $.ajax({
+        type:'POST',
+        url: data_url,
+        data:{result: result_space},
+        dataType: 'text',
+        success:function(data){
+        load_vitals(vital_id, visit_id);
+        //obj.innerHTML = XMLHttpRequestObject.responseText;
+        },
+        error: function(xhr, status, error) {
+        //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+        alert(error);
+        }
+
+        });
 	
-}
-$get = new Lab;
-$lab_rs = $this->lab_model->get_lab_visit_item($visit_id);
-$num_lab_visit = count($lab_rs);
+		
+	}
+	function send_to_doc(visit_id){
 
-if($num_lab_visit > 0){
-	
-	echo"
-	<div class='navbar-inner2'>
-		<p style='text-align:center; color:#0e0efe;'>Laboratory Test</p>
-	</div>
-		<table class='table table-striped table-hover table-condensed'>
-			<tr>
-				<th>Test</th>
-				<th>Class</th>
-				<th>Format</th>
-				<th>Result</th>
-				<th>Units</th>
-				<th>Level</th>
-				<th>Male Range</th>
-				<th>Female Range</th>
-				<th></th>
-			<tr>
-	";
-	foreach ($lab_rs as $key):
+		var XMLHttpRequestObject = false;
+			
+		if (window.XMLHttpRequest) {
 		
-		$visit_charge_id = $key->visit_charge_id;
-	
-		$format_rs = $this->lab_model->get_lab_visit_result($visit_charge_id);
-		$num_format = count($format_rs);
-		
-		if($num_format > 0){
-			$rs = $this->lab_model->get_test($visit_charge_id);
-			$num_lab = count($rs);
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} 
+			
+		else if (window.ActiveXObject) {
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 		}
-		else{
-			$rs = $this->lab_model->get_m_test($visit_charge_id);
-			$num_lab = count($rs);
-		}
-		//echo "num lab = ".$num_lab;
-	foreach ($rs as $key2):
-		
-		$lab_test_name =$key2->lab_test_name;
-		$lab_test_class_name =$key2->lab_test_class_name;
-		$lab_test_units =$key2->lab_test_units;
-		$lab_test_upper_limit =$key2->lab_test_malelowerlimit;
-		$lab_test_lower_limit =$key2->lab_test_malelupperlimit;
-		$lab_test_upper_limit1 =$key2->lab_test_femalelowerlimit;
-		$lab_test_lower_limit1 =$key2->lab_test_femaleupperlimit;
-		$lab_visit_result =$key2->lab_visit_result;
-        $visit_charge_id =$key2->lab_visit_id;
-		
-		//echo $_SESSION['test'];
-		echo "hlkjasda".$this->session->userdata('test');
-		if($this->session->userdata('test') ==0){
-			$test_format =$key2->lab_test_formatname;
-			$lab_test_format_id =$key2->lab_test_format_id;
-			$lab_test_format_units =$key2->lab_test_format_units;
-			$lab_test_format_malelowerlimit =$key2->lab_test_format_malelowerlimit;
-			$lab_test_format_maleupperlimit =$key2->lab_test_format_maleupperlimit;
-			$lab_test_format_femalelowerlimit =$key2->lab_test_format_femalelowerlimit;
-			$lab_test_format_femaleupperlimit =$key2->lab_test_format_femaleupperlimit;
-			$lab_visit_result =$key2->lab_visit_results_result;
-		}
-		else{
-			$test_format ="-";
-		}
+		var config_url = $('#config_url').val();
+
+		var url = config_url+"/lab/send_to_doctor/"+visit_id;
+				
+		if(XMLHttpRequestObject) {
 					
-		if(!empty($lab_visit_result)){
-			$class = "class='success'";
-		}
-		else{
-			$class = "class=''";
-		}
-
-
-		if((($num_format > 0) && ($r == 0)) || ($num_format <= 0)){
-			echo "
-			<tr ".$class.">
-				<td>".$lab_test_name."</td>
-				<td>".$lab_test_class_name."</td>";
-		}
-		else{
-			echo "
-			<tr ".$class.">
-				<td></td>
-				<td></td>";
-		}
-		
-		echo"
-			<td>".$test_format."</td>";
+			XMLHttpRequestObject.open("GET", url);
+					
+			XMLHttpRequestObject.onreadystatechange = function(){
 				
-			if($this->session->userdata('test') ==0){
-				echo"<td><input type='text' id='laboratory_result2".$lab_test_format_id."' size='10' onkeyup='save_result_format(".$visit_charge_id.",".$lab_test_format_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
-				
-				echo"
-					<td>".$lab_test_format_units."</td>
-					<td></td>
-					<td>".$lab_test_format_malelowerlimit." - ".$lab_test_format_maleupperlimit ."</td>
-					<td>".$lab_test_format_femalelowerlimit." - ".$lab_test_format_femaleupperlimit ."</td>
-					<td id='result_space".$lab_test_format_id."'></td>";
-			}
-			else {
-				echo"<td><input type='text' id='laboratory_result".$visit_charge_id."' size='10' onkeyup='save_result(".$visit_charge_id.", ".$visit_id.")' value='".$lab_visit_result."'/></td>";
-								
-				echo "
-					<td>".$lab_test_units."</td>
-					<td></td>
-					<td>".$lab_test_upper_limit." - ".$lab_test_lower_limit."</td>
-					<td>".$lab_test_upper_limit1." - ".$lab_test_lower_limit1."</td>
-					<td id='result_space".$visit_charge_id."'></td>";
-			}
-			
-			if($this->session->userdata('test') ==0){
-				echo"<td><div class='ui-widget' id='value2".$lab_test_format_id."'></div></td>";
-			}
-			else {
-				echo"<td><div class='ui-widget' id='value".$visit_charge_id."'></div></td>";
-			} 
-				
-			echo "</tr>";
-		endforeach;
-		
-				if((($num_format > 0) && ($r == 0)) || ($num_format <= 0)){
-
-			}
-			
-			else{
-				$rsy2 = $this->lab_model->get_test_comment($visit_charge_id);
-				$num_rowsy2 = count($rsy2);
-
-				if($num_rowsy2 > 0){
-
-					foreach ($rsy2 as $keyy):
-						$comment4= $keyy->lab_visit_format_comments;
-					endforeach;
+				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+					
+					//window.location.href = host+"index.php/laboratory/lab_queue";
 				}
-				echo "<tr>
-				<td> </td>
+			}
+					
+			XMLHttpRequestObject.send(null);
+		}
+	}
+	function finish_lab_test(visit_id){
+
+		var XMLHttpRequestObject = false;
+			
+		if (window.XMLHttpRequest) {
+		
+			XMLHttpRequestObject = new XMLHttpRequest();
+		} 
+			
+		else if (window.ActiveXObject) {
+			XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var config_url = $('#config_url').val();
+		var url = config_url+"/lab/finish_lab_test/"+visit_id;
 				
-					<td></td>
-					<td><textarea rows='5' cols='10' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit_id.")'>".$comment4."</textarea> </td>
-					<td> </td>
-					<td ></td>			<td> </td>
-			</tr>";
+		if(XMLHttpRequestObject) {
+					
+			XMLHttpRequestObject.open("GET", url);
+					
+			XMLHttpRequestObject.onreadystatechange = function(){
+				
+				if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+					
+					//window.location.href = host+"index.php/laboratory/lab_queue";
 				}
-	endforeach;
-	
-	echo //MM.$lab_test.
-	"
-	</table>
-	
-	<div class='navbar-inner2'><p style='text-align:center; color:#0e0efe;'>Comments</p></div>
-	<table align='center'>
-		<tr>
-			<td><textarea rows='5' cols='10' id='test_comment' onkeyup='save_comment(".$visit_charge_id.")'>".$comment."</textarea></td>
-		</tr>
-	</table>
-	";
-	if ($lab_test == 12){
-		echo"
-		<table align='center'>
-			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
-				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit_id.")'/></td>
-				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit_id.")'/></td>
-			</tr>
-		</table>
-	";
+			}
+					
+			XMLHttpRequestObject.send(null);
+		}
 	}
+
+	function save_comment(visit_charge_id){
+		var config_url = $('#config_url').val();
+		var comment = document.getElementById("test_comment").value;
+        var data_url = config_url+"/lab/save_comment/"+comment+"/"+visit_charge_id;
+     
+        // var comment_tab = $('#comment').val();//document.getElementById("vital"+vital_id).value;
+         	
+        $.ajax({
+        type:'POST',
+        url: data_url,
+       // data:{comment: comment_tab},
+        dataType: 'text',
+        success:function(data){
+        //obj.innerHTML = XMLHttpRequestObject.responseText;
+        },
+        error: function(xhr, status, error) {
+        //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+       // alert(error);
+        }
+
+        });
 	
-	elseif ($lab_test == 22){
-		echo"
-		<table align='center'>
-			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
-				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit_id.")'/></td>
-				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit_id.")'/></td>
-			</tr>
-		</table>
-	";
+
+		
 	}
-	
-	else if($lab_visit == 5){
-	echo"
-		<table align='center'>
-			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
-				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit_id.")'/></td>
-				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit_id.")'/></td>
-			</tr>
-		</table>
-	";
-	}
-	
-	else if($lab_visit == 0){
-	echo"
-		<table align='center'>
-			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
-			</tr>
-		</table>
-	";
-	}
-	
-	else{
-		echo"
-		<table align='center'>
-			<tr>
-				<td><input type='button' value='Print' name='std' class='btn btn-large' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/></td>
-				<td><input type='button' value='Send to Doctor' name='std' class='btn btn-large' onClick='send_to_doc(".$visit_id.")'/></td>
-				<td><input type='button' class='btn btn-large' value='Done' onclick='finish_lab_test(".$visit_id.")'/></td>
-				 
-			</tr>
-		</table>
-	";
-	}
-}
-?>
+  </script>
