@@ -226,6 +226,52 @@ class Lab_model extends CI_Model
 
 		
 	}
+	function save_tests($res, $lab){
+		$data['visit_charge_results'] = $res;
+		
+		$this->db->where('visit_charge_id', $lab);
+		if($this->db->update('visit_charge', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+		
+		
+	}
+
+	function save_comment($comment, $visit_charge_id){
+
+		$table = "visit_charge";
+		$where = "visit_charge_id = ".$visit_charge_id;
+		$items = "visit_id";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		if(count($result) > 0){
+			foreach($result as $rs):
+				$visit_id = $rs->visit_id;
+			endforeach;
+		}
+		$data['lab_visit_comment'] = $comment;
+		
+		$this->db->where('visit_id', $visit_id);
+		if($this->db->update('visit', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+		
+	}
+	
 	
 }
 ?>
