@@ -124,7 +124,7 @@ class Reception extends auth
 	*	$visits = 3 :all other ongoing visits
 	*
 	*/
-	public function visit_list($visits, $page_name = NULL)
+	public function visit_list($visits, $page_name = 'none')
 	{
 		//Deleted visits
 		if($visits == 2)
@@ -137,7 +137,7 @@ class Reception extends auth
 			$delete = 0;
 		}
 		
-		if($page_name == NULL)
+		if(empty($page_name))
 		{
 			$segment = 4;
 		}
@@ -799,7 +799,7 @@ class Reception extends auth
 		$search = $visit_type_id.$strath_no.$surname.$other_name.$visit_date.$personnel_id;
 		$this->session->set_userdata('visit_search', $search);
 		
-		if($visits == 3)
+		if($visits == 13)
 		{
 			$this->appointment_list();
 		}
@@ -898,7 +898,7 @@ class Reception extends auth
 	{
 		$this->session->unset_userdata('visit_search');
 		
-		if($visit == 3)
+		if($visit == 13)
 		{
 			$this->appointment_list();
 		}
@@ -1057,7 +1057,8 @@ class Reception extends auth
 		
 		$data['title'] = 'Appointment List';
 		$v_data['title'] = 'Appointment List';
-		$v_data['visit'] = 3;
+		$v_data['visit'] = 13;
+		$v_data['page_name'] = 'none';
 		
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();

@@ -121,9 +121,19 @@ class Nurse extends auth
 	
 	public function patient_card($visit_id, $mike = NULL, $module = NULL)
 	{
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$visit_type = $patient['visit_type'];
+		$patient_type = $patient['patient_type'];
+		$patient_othernames = $patient['patient_othernames'];
+		$patient_surname = $patient['patient_surname'];
+		$patient_date_of_birth = $patient['patient_date_of_birth'];
+		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$gender = $patient['gender'];
+		
+		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
 		$v_data['module'] = $module;
 		$v_data['visit_id'] = $visit_id;
-		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
+		
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
