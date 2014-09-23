@@ -27,11 +27,11 @@ class Reception_model extends CI_Model
 	* 	@param int $page
 	*
 	*/
-	public function get_all_patients($table, $where, $per_page, $page)
+	public function get_all_patients($table, $where, $per_page, $page, $items = '*')
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('*');
+		$this->db->select($items);
 		$this->db->where($where);
 		$this->db->order_by('patient_date','desc');
 		$query = $this->db->get('', $per_page, $page);
@@ -248,8 +248,8 @@ class Reception_model extends CI_Model
 			$res = $query->row();
 			$staff_system_id = $res->staff_system_id;
 			$data = array(
-				'other_names'=>ucwords(strtolower($this->input->post('patient_surname'))),
-				'names'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+				'surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
+				'other_names'=>ucwords(strtolower($this->input->post('patient_othernames'))),
 				'title_id'=>$this->input->post('title_id'),
 				'DOB'=>$this->input->post('patient_dob'),
 				'gender_id'=>$this->input->post('gender_id'),
@@ -399,6 +399,7 @@ class Reception_model extends CI_Model
 		}
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
 		foreach ($result as $row)
 		{
 			$patient_id = $row->patient_id;
@@ -425,7 +426,7 @@ class Reception_model extends CI_Model
 			
 			if($check_id < 3)
 			{
-				$patient_data = $this->get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id);
+				$patient_data = $this->get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id, $patient_id);
 				$visit_type = $patient_data['visit_type'];
 				$patient_type = $patient_data['patient_type'];
 				$patient_othernames = $patient_data['patient_othernames'];
@@ -468,7 +469,7 @@ class Reception_model extends CI_Model
 					
 				if(($patient_surname == '0.00') && ($patient_othernames == '0.00'))
 				{
-					$patient_data = $this->get_strath_patient_data($visit_type_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id);
+					$patient_data = $this->get_strath_patient_data($visit_type_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id, $patient_id);
 					$patient_othernames = $patient_data['patient_othernames'];
 					$patient_surname = $patient_data['patient_surname'];
 					$patient_date_of_birth = $patient_data['patient_date_of_birth'];
@@ -488,7 +489,7 @@ class Reception_model extends CI_Model
 		return $patient;
 	}
 	
-	public function get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id)
+	public function get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id, $patient_id)
 	{
 		//staff & dependant
 		if($check_id == 2)
@@ -531,8 +532,8 @@ class Reception_model extends CI_Model
 				
 				else
 				{
-					$patient_othernames = '<span class="label label-important">Dependant not found</span>';
-					$patient_surname = '';
+					$patient_othernames = '<span class="label label-important">Dependant not found: '.$strath_no.'</span>';
+					$patient_surname = $patient_id;
 					$patient_date_of_birth = '';
 					$relationship = '';
 					$gender = '';
@@ -577,7 +578,7 @@ class Reception_model extends CI_Model
 				
 				else
 				{
-					$patient_othernames = '<span class="label label-important">Staff not found</span>';
+					$patient_othernames = '<span class="label label-important">Staff not found: '.$strath_no.'</span>';
 					$patient_surname = '';
 					$patient_date_of_birth = '';
 					$relationship = '';
@@ -624,8 +625,8 @@ class Reception_model extends CI_Model
 			
 			else
 			{
-				$patient_othernames = '<span class="label label-important">Student not found</span>';
-				$patient_surname = '';
+				$patient_othernames = '<span class="label label-important">Student not found: '.$strath_no.'</span>';
+				$patient_surname = $patient_id;
 				$patient_date_of_birth = '';
 				$relationship = '';
 				$gender = '';

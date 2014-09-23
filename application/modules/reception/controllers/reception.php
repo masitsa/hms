@@ -597,44 +597,6 @@ class Reception extends auth
 		}
 	}
 	
-	/*
-	*	Register dependant patient
-	*
-	*/
-	public function register_dependant_patient($dependant_staff)
-	{
-		//form validation rules
-		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
-		$this->form_validation->set_rules('patient_surname', 'Surname', 'required|xss_clean');
-		$this->form_validation->set_rules('patient_othernames', 'Other Names', 'required|xss_clean');
-		$this->form_validation->set_rules('patient_dob', 'Date of Birth', 'trim|xss_clean');
-		$this->form_validation->set_rules('gender_id', 'Gender', 'trim|xss_clean');
-		$this->form_validation->set_rules('religion_id', 'Religion', 'trim|xss_clean');
-		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'trim|xss_clean');
-		
-		//if form conatins invalid data
-		if ($this->form_validation->run() == FALSE)
-		{
-
-			$this->add_patient($dependant_staff);
-		}
-		
-		else
-		{
-			$patient_id = $this->reception_model->save_dependant_patient($dependant_staff);
-			
-			if($patient_id != FALSE)
-			{
-				echo 'SUCCESS :-)';
-			}
-			
-			else
-			{
-				echo 'Failure';
-			}
-		}
-	}
-	
 	public function update_patient_number()
 	{
 		if($this->strathmore_population->update_patient_numbers())
@@ -909,11 +871,18 @@ class Reception extends auth
 		}
 	}
 	
-	public function close_patient_search()
+	public function close_patient_search($page = NULL)
 	{
-		$this->session->unset_userdata('patient_search');
-		
-		$this->patients();
+		if($page == NULL)
+		{
+			$this->session->unset_userdata('patient_search');
+			$this->patients();
+		}
+		else
+		{
+			$this->session->unset_userdata('patient_dependants_search');
+			$this->staff_dependants();
+		}
 	}
 	
 	public function dependants($patient_id)
@@ -1258,6 +1227,220 @@ class Reception extends auth
 		else
 		{
 			echo 'FAILURE';
+		}
+	}
+	
+	public function staff_dependants()
+	{
+		$segment = 3;
+		
+		$patient_search = $this->session->userdata('patient_dependants_search');
+		$where = 'patients.visit_type_id = 2 AND patients.dependant_id > 0 AND patients.dependant_id = staff.Staff_Number AND staff.staff_system_id = staff_dependants.staff_id AND patients.patient_delete = 0';
+		
+		if(!empty($patient_search))
+		{
+			$where .= $patient_search;
+		}
+		
+		$table = 'patients, staff_dependants, staff';
+		$items = 'staff_dependants.*, patients.*, staff.Staff_Number';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/reception/staff_dependants';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reception_model->get_all_patients($table, $where, $config["per_page"], $page, $items);
+		
+		$data['title'] = 'Staff Dependants';
+		$v_data['title'] = 'Staff Dependants';
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['type'] = $this->reception_model->get_types();
+		$data['content'] = $this->load->view('patients/staff_dependants', $v_data, true);
+		
+		$data['sidebar'] = 'reception_sidebar';
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function search_staff_dependant_patients()
+	{
+		$strath_no = $this->input->post('strath_no');
+		$registration_date = $this->input->post('registration_date');
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND staff.Staff_Number LIKE \'%'.$strath_no.'%\' ';
+		}
+		
+		if(!empty($registration_date))
+		{
+			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.'%\' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['surname']))
+		{
+			$surnames = explode(" ",$_POST['surname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' staff_dependants.surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' staff_dependants.surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+		}
+		
+		else
+		{
+			$surname = '';
+		}
+		
+		//search other_names
+		if(!empty($_POST['othernames']))
+		{
+			$other_names = explode(" ",$_POST['othernames']);
+			$total = count($other_names);
+			
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$other_name .= ' staff_dependants.other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' staff_dependants.other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$other_name .= ') ';
+		}
+		
+		else
+		{
+			$other_name = '';
+		}
+		
+		$search = $strath_no.$surname.$other_name.$registration_date;
+		$this->session->set_userdata('patient_dependants_search', $search);
+			//echo $this->session->userdata('patient_dependants_search');
+		
+		$this->staff_dependants();
+	}
+	
+	/*
+	*	Register dependant patient
+	*
+	*/
+	public function add_staff_dependant()
+	{
+		//form validation rules
+		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
+		$this->form_validation->set_rules('staff_number', 'Staff Number', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_surname', 'Surname', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_othernames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_dob', 'Date of Birth', 'trim|xss_clean');
+		$this->form_validation->set_rules('gender_id', 'Gender', 'trim|xss_clean');
+		$this->form_validation->set_rules('religion_id', 'Religion', 'trim|xss_clean');
+		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			$patient_id = $this->reception_model->save_dependant_patient($this->input->post('staff_number'));
+			
+			if($patient_id != FALSE)
+			{
+				$this->session->set_userdata('patient_dependants_search', ' AND patients.patient_id = '.$patient_id);
+				
+				redirect('reception/staff_dependants');
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not add staff depndant. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['staff_number'] = 0;
+			$v_data['relationships'] = $this->reception_model->get_relationship();
+			$v_data['religions'] = $this->reception_model->get_religion();
+			$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
+			$v_data['titles'] = $this->reception_model->get_title();
+			$v_data['genders'] = $this->reception_model->get_gender();
+			$data['content'] = $this->load->view('patients/dependants', $v_data, true);
+			
+			$data['title'] = 'Add Staff Dependant';
+			$data['sidebar'] = 'reception_sidebar';
+			
+			$this->load->view('auth/template_sidebar', $data);
+		}
+	}
+	
+	function sort_staff_dependants()
+	{
+		$query = $this->db->get('staff_dependants');
+		
+		foreach($query->result() as $res)
+		{
+			$staff_dependant_id = $res->staff_dependants_id;
+			$names = $res->names;
+			
+			if(!empty($names))
+			{
+				$data['surname'] = $names;
+				
+				$this->db->where('staff_dependants_id', $staff_dependant_id);
+				$this->db->update('staff_dependants', $data);
+			}
 		}
 	}
 }

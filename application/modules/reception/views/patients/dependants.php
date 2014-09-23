@@ -1,8 +1,9 @@
+
 <?php 
 	//for the add patient page
-	if(isset($dependant_staff))
+	if($staff_number == 0)
 	{
-		$staff_query = $this->reception_model->get_staff($dependant_staff);
+		/*$staff_query = $this->reception_model->get_staff($staff_number);
 		
 		if($staff_query->num_rows() > 0)
 		{
@@ -10,8 +11,55 @@
 			
 			$patient_surname = $staff_result->Surname;
 			$patient_othernames = $staff_result->Other_names;
+		}*/
+		?>
+        <!-- Widget -->
+<div class="widget boxed">
+    <!-- Widget head -->
+    <div class="widget-head">
+        <h4 class="pull-left"><i class="icon-reorder"></i>Add Staff Dependants</h4>
+        <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+        </div>
+    
+    	<div class="clearfix"></div>
+    
+    </div>             
+    
+    <!-- Widget content -->
+    <div class="widget-content">
+    	<div class="padd">
+        <a href="<?php echo site_url().'/reception/staff_dependants'?>">Back to Staff Dependants</a>
+        <?php
+		$error = $this->session->userdata('error_message');
+		$validation_error = validation_errors();
+		
+		if(!empty($validation_error))
+		{
+			echo '<div class="alert alert-danger">'.$validation_error.'</div>';
+			$this->session->unset_userdata('error_message');
 		}
-		echo form_open("reception/register-dependant-patient/".$dependant_staff, array("class" => "form-horizontal"));
+		
+		if(!empty($error))
+		{
+			echo '<div class="alert alert-danger">'.$error.'</div>';
+			$this->session->unset_userdata('error_message');
+		}
+		echo form_open($this->uri->uri_string(), array("class" => "form-horizontal"));
+		?>
+
+<div class="row">
+	<div class="col-md-6">
+        
+        <div class="form-group">
+            <label class="col-lg-4 control-label">Staff ID: </label>
+            
+            <div class="col-lg-8">
+            	<input type="text" class="form-control" name="staff_number" placeholder="Staff ID">
+            </div>
+        </div>
+        <?php
 	}
 	
 	//for the add depandant page
@@ -51,14 +99,17 @@
 			}
 		}
 		echo form_open("reception/register_dependant/".$patient_id.'/'.$visit_type_id.'/'.$staff_no, array("class" => "form-horizontal"));
-	}
-?>
-<div style="margin-bottom:20px;">
-	<h3 class="center-align">Add Depandant for <?php echo $patient_surname;?> <?php echo $patient_othernames;?></h3>
-</div>
+		?>
+		<div style="margin-bottom:20px;">
+			<h3 class="center-align">Add Depandant for <?php echo $patient_surname;?> <?php echo $patient_othernames;?></h3>
+		</div>
 
 <div class="row">
 	<div class="col-md-6">
+        <?php
+	}
+?>
+        
         <div class="form-group">
             <label class="col-lg-4 control-label">Title: </label>
             
@@ -251,6 +302,19 @@
 </div>
 
 <div class="center-align">
-	<button class="btn btn-info btn-lg" type="submit">Add Patient</button>
+	<button class="btn btn-info btn-lg" type="submit">Add Dependant</button>
 </div>
-<?php echo form_close();?>
+<?php 
+
+echo form_close();
+
+if($staff_number == 0)
+{
+	?>
+    	</div>
+    </div>
+</div>
+<?php
+}
+
+?>
