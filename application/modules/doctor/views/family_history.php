@@ -77,15 +77,16 @@ if($family_disease_query->num_rows() > 0)
 						$current_x = $current_x + 30;
 					}
 					$current_y = $current_y - 5;
+					//$this->fpdf->Cell($width, $height, $current_x.', '.$current_y, 0, 0, 'C');
 					
 					if($num_history == 0)
 					{
-						$this->fpdf->Image(base_url().'images/unchecked_checkbox.jpg', $current_x, $current_y, 5, 5);
+						$this->fpdf->Image(base_url().'images/unchecked_checkbox.jpg', $current_x, $current_y, 3, 3);
 					}
 					
 					else
 					{
-						$this->fpdf->Image(base_url().'images/checked_checkbox.jpg', $current_x, $current_y, 5, 5);
+						$this->fpdf->Image(base_url().'images/checked_checkbox.jpg', $current_x, $current_y, 3, 3);
 					}
 				}
 				$count_family++;

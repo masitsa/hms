@@ -1,5 +1,5 @@
 <!-- search -->
-<?php echo $this->load->view('patients/search_patient', '', TRUE);?>
+<?php echo $this->load->view('patients/search/staff_dependants', '', TRUE);?>
 <!-- end search -->
 
 <div class="row">
@@ -36,69 +36,35 @@
 			$this->session->unset_userdata('success_message');
 		}
 				
-		$search = $this->session->userdata('patient_search');
+		$search = $this->session->userdata('patient_dependants_search');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/reception/close_patient_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/reception/close_patient_search/1" class="btn btn-warning">Close Search</a>';
 		}
 		
-		if($delete != 1)
-		{
-			$result = '<a href="'.site_url().'/reception/add-patient" class="btn btn-success pull-right">Add Patient</a>';
-		}
-		
-		else
-		{
-			$result = '';
-		}
+		$result = '<a href="'.site_url().'/reception/add_staff_dependant" class="btn btn-success pull-right">Add Dependant</a>';
 		
 		//if users exist display them
 		if ($query->num_rows() > 0)
 		{
 			$count = $page;
 			
-			if($delete == 0)
-			{
-				$result .= 
-				'
-					<table class="table table-hover table-bordered ">
-					  <thead>
-						<tr>
-						  <th>#</th>
-						  <th>Patient Type</th>
-						  <th>Surname</th>
-						  <th>Other Names</th>
-						  <th>Date Created</th>
-						  <th>Last Visit</th>
-						  <th colspan="5">Actions</th>
-						</tr>
-					  </thead>
-					  <tbody>
-				';
-			}
-			
-			//deleted patients
-			else
-			{
-				$result .= 
-				'
-					<table class="table table-hover table-bordered ">
-					  <thead>
-						<tr>
-						  <th>#</th>
-						  <th>Patient Type</th>
-						  <th>Surname</th>
-						  <th>Other Names</th>
-						  <th>Date Created</th>
-						  <th>Last Visit</th>
-						  <th>Date Deleted</th>
-						  <th>Deleted By</th>
-						</tr>
-					  </thead>
-					  <tbody>
-				';
-			}
+			$result .= 
+			'
+				<table class="table table-hover table-bordered ">
+				  <thead>
+					<tr>
+					  <th>#</th>
+					  <th>Staff Number</th>
+					  <th>Surname</th>
+					  <th>Other Names</th>
+					  <th>Date Created</th>
+					  <th>Last Visit</th>
+					  <th colspan="5">Actions</th>
+					</tr>
+				  </thead>
+				  <tbody>';
 			
 			$personnel_query = $this->personnel_model->get_all_personnel();
 			
@@ -114,6 +80,12 @@
 				$created = $row->patient_date;
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
+				$staff_number = $row->Staff_Number;
+				$patient_othernames = $row->other_names;
+				$patient_surname = $row->surname;
+				$patient_date_of_birth = $row->DOB;
+				$gender = $row->Gender;
+				
 				if($last_visit != NULL)
 				{
 					$last_visit = date('jS M Y',strtotime($last_visit));
@@ -123,13 +95,6 @@
 				{
 					$last_visit = '';
 				}
-				
-				$patient = $this->reception_model->patient_names2($patient_id);
-				$patient_type = $patient['patient_type'];
-				$patient_othernames = $patient['patient_othernames'];
-				$patient_surname = $patient['patient_surname'];
-				$patient_date_of_birth = $patient['patient_date_of_birth'];
-				$gender = $patient['gender'];
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -171,44 +136,23 @@
 				
 				$count++;
 				
-				if($delete == 1)
-				{
-					$deleted = $row->date_deleted;
-					$result .= 
-					'
-						<tr>
-							<td>'.$count.'</td>
-							<td>'.$patient_type.'</td>
-							<td>'.$patient_surname.'</td>
-							<td>'.$patient_othernames.'</td>
-							<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
-							<td>'.$last_visit.'</td>
-							<td>'.date('jS M Y H:i a',strtotime($deleted)).'</td>
-							<td>'.$deleted_by.'</td>
-						</tr> 
-					';
-				}
-				
-				else
-				{
-					$result .= 
-					'
-						<tr>
-							<td>'.$count.'</td>
-							<td>'.$patient_type.'</td>
-							<td>'.$patient_surname.'</td>
-							<td>'.$patient_othernames.'</td>
-							<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
-							<td>'.$last_visit.'</td>
-							<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
-							<td><a href="'.site_url().'/reception/lab_visit/'.$patient_id.'" class="btn btn-sm btn-info">Lab</a></td>
-							<td><a href="'.site_url().'/reception/initiate_pharmacy/'.$patient_id.'" class="btn btn-sm btn-warning">Pharmacy</a></td>
-							<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
-							<!--<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>-->
-							<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>
-						</tr> 
-					';
-				}
+				$result .= 
+				'
+					<tr>
+						<td>'.$count.'</td>
+						<td>'.$staff_number.'</td>
+						<td>'.$patient_surname.'</td>
+						<td>'.$patient_othernames.'</td>
+						<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
+						<td>'.$last_visit.'</td>
+						<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
+						<td><a href="'.site_url().'/reception/lab_visit/'.$patient_id.'" class="btn btn-sm btn-info">Lab</a></td>
+						<td><a href="'.site_url().'/reception/initiate_pharmacy/'.$patient_id.'" class="btn btn-sm btn-warning">Pharmacy</a></td>
+						<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
+						<!--<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>-->
+						<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>
+					</tr> 
+				';
 			}
 			
 			$result .= 
