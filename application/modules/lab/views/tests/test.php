@@ -120,6 +120,7 @@
 		
 	}
 	function send_to_doc(visit_id){
+	
 
 		var XMLHttpRequestObject = false;
 			
@@ -134,7 +135,7 @@
 		var config_url = $('#config_url').val();
 
 		var url = config_url+"/lab/send_to_doctor/"+visit_id;
-				
+					window.alert("what"+url);
 		if(XMLHttpRequestObject) {
 					
 			XMLHttpRequestObject.open("GET", url);
@@ -206,4 +207,11 @@
 
 		
 	}
+	function print_previous_test(visit_id, patient_id){
+		var config_url = $('#config_url').val();
+    	window.open(config_url+"/lab/print_test/"+visit_id+"/"+patient_id,"Popup","height=900,width=1200,,scrollbars=yes,"+
+                        "directories=yes,location=yes,menubar=yes," +
+                         "resizable=no status=no,history=no top = 50 left = 100");
+	}
+
   </script>

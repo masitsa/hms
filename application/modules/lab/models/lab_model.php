@@ -140,9 +140,14 @@ class Lab_model extends CI_Model
 		return $result;
 	}
 
-	function get_lab_visit($visit_id, $service_charge_id){
+	function get_lab_visit($visit_id, $service_charge_id=NULL){
 		$table = "visit_charge";
-		$where = "visit_id = ". $visit_id ." AND service_charge_id = ". $service_charge_id;
+		if($service_charge_id != NULL){
+				$where = "visit_id = ". $visit_id ." AND service_charge_id = ". $service_charge_id;
+		}else{
+				$where = "visit_id = ". $visit_id;
+		}
+		
 		$items = "*";
 		$order = "visit_id";
 		
@@ -271,7 +276,103 @@ class Lab_model extends CI_Model
 		}
 		
 	}
-	
+	function get_patient_id($visit_id)
+	{
+
+		$table = "visit";
+		$where = "visit_id = ".$visit_id;
+		$items = "patient_id";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		foreach ($result as $key):
+			# code...
+			$patient_id = $key->patient_id;
+		endforeach;
+		return $patient_id;
+	}
+	function get_patient2($id){
+
+		$table = "patients, visit";
+		$where = "visit.patient_id = patients.patient_id AND patients.patient_id = ".$id;
+		$items = "patients.strath_no, visit.visit_type, patients.patient_number, patients.patient_othernames, patients.patient_surname, patients.patient_date_of_birth, patients.gender_id,patients.visit_type_id ";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+
+		return $result;
+	}
+
+	function get_patient_3($strath_no){
+       	$table = "staff";
+		$where = "Staff_Number = '$strath_no'";
+		$items = "*";
+		$order = "staff_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;
+		
+	}
+	function dateDiff($time1, $time2, $interval) {
+	    // If not numeric then convert texts to unix timestamps
+	    if (!is_int($time1)) {
+	      $time1 = strtotime($time1);
+	    }
+	    if (!is_int($time2)) {
+	      $time2 = strtotime($time2);
+	    }
+	 
+	    // If time1 is bigger than time2
+	    // Then swap time1 and time2
+	    if ($time1 > $time2) {
+	      $ttime = $time1;
+	      $time1 = $time2;
+	      $time2 = $ttime;
+	    }
+	 
+	    // Set up intervals and diffs arrays
+	    $intervals = array('year','month','day','hour','minute','second');
+	    if (!in_array($interval, $intervals)) {
+	      return false;
+	    }
+	 
+	    $diff = 0;
+	    // Create temp time from time1 and interval
+	    $ttime = strtotime("+1 " . $interval, $time1);
+	    // Loop until temp time is smaller than time2
+	    while ($time2 >= $ttime) {
+	      $time1 = $ttime;
+	      $diff++;
+	      // Create new temp time from time1 and interval
+	      $ttime = strtotime("+1 " . $interval, $time1);
+	    }
+	 
+	    return $diff;
+  	}
+  	function get_lab_personnel($id){
+		$table = "personnel";
+		$where = "personnel_id = '$id'";
+		$items = "personnel_fname, personnel_surname";
+		$order = "personnel_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;
+		
+	}
+
+	function get_patient_2($strath_no){
+
+		$table = "student";
+		$where = "student_Number = '$strath_no'";
+		$items = "*";
+		$order = "student_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		return $result;
+		
+	}
 	
 }
 ?>

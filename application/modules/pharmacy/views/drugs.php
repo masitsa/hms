@@ -75,7 +75,7 @@
                                         ?>
                                        <tr>
 							            <tr> </tr>
-							        		<td><a onClick="close_drug('<?php echo $drugname;?>', <?php echo $visit_id?>, <?php echo $service_charge_id;?>)" href="#"><?php echo $drugname?></a></td>
+							        		<td><a onClick="close_drug('<?php echo $drugname;?>', <?php echo $visit_id?>, <?php echo $service_charge_id;?>,<?php echo $module?>)" href="#"><?php echo $drugname?></a></td>
 							                <td><?php echo $drugsclass;?></td>
 							         
 							                <td><?php echo $generic_name;?></td>
@@ -100,12 +100,29 @@
         </div>
 <script type="text/javascript">
   
-function close_drug(val, visit_id, service_charge_id){
+function close_drug(val, visit_id, service_charge_id,module){
 
+    if(module == 1){
 
-	var config_url = $('#config_url').val();
-	window.open(config_url+"/pharmacy/prescription/"+visit_id+"/"+service_charge_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
-                        "directories=yes,location=yes,menubar=yes," + 
-                         "resizable=no status=no,history=no top = 50 left = 100"); 
+        window.close(this);
+        var config_url = $('#config_url').val();
+        window.opener.location.href = config_url+"/pharmacy/prescription/"+visit_id+"/"+service_charge_id+"/"+module;
+    	
+    }else{
+        var config_url = $('#config_url').val();
+        window.open(config_url+"/pharmacy/prescription/"+visit_id+"/"+service_charge_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
+                            "directories=yes,location=yes,menubar=yes," + 
+                             "resizable=no status=no,history=no top = 50 left = 100");
+    } 
+}
+function close_drug1(val, visit_id, service_charge_id){
+
+    window.close(this);
+    var config_url = $('#config_url').val();
+    window.opener.location.href = config_url+"/pharmacy/prescription/"+visit_id+"/"+service_charge_id;
+    
+    // window.open(config_url+"/pharmacy/prescription/"+visit_id+"/"+service_charge_id,"Popup","height=1200,width=1300,,scrollbars=yes,"+ 
+ //                        "directories=yes,location=yes,menubar=yes," + 
+ //                         "resizable=no status=no,history=no top = 50 left = 100"); 
 }
 </script>

@@ -60,6 +60,8 @@ if(!empty($service_charge_id)){
 				endforeach;
 			}
 		}
+}else{
+	$service_charge_id =0;
 }
 
 if(!empty($delete)){
@@ -272,7 +274,7 @@ $p = 0;
 				            <label class="col-lg-4 control-label">Medicine: </label>
 				            
 				            <div class="col-lg-8">
-				            		<input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2(<?php echo $visit_id;?>)" value="<?php echo $service_charge_name;?>"/> <a href="#" onClick="myPopup2(<?php echo $visit_id;?>)">Get Drug</a>
+				            		<input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2(<?php echo $visit_id;?>)" value="<?php echo $service_charge_name;?>"/> <a href="#" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)">Get Drug</a>
 				            </div>
 				        </div>
 
@@ -388,7 +390,7 @@ $p = 0;
 				            <label class="col-lg-4 control-label">Quantity: </label>
 				            
 				            <div class="col-lg-8">
-				            	<input type="text" name="quantity" class='form-control' autocomplete="off" /> <?php echo $drug_size_type?> <input name="service_charge_id" id="service_charge_id" value="<?php echo $service_charge_id ?>" type="hidden">
+				            	<input type="text" name="quantity" class='form-control' autocomplete="off" /> <?php echo $drug_size_type?> <input name="service_charge_id" id="service_charge_id" value="<?php echo $service_charge_id;?>" type="hidden">
 				            </div>
 				        </div>
 				        <div class="form-group">
@@ -601,10 +603,23 @@ $p = 0;
 </div>
 
 <div class="row col-md-12">
- 	<div class="center-align">
- 	 <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
-            <input name="pharmacy_doctor"   onClick="send_to_pharmacy2(<?php echo $visit_id;?>);unload()" type="button" class="btn btn-large" value="Done" />
-    </div>
+	<?php
+		if($module == 1){
+			?>
+			<div class="center-align">
+			<?php echo '<a href="'.site_url().'/pharmacy/send_to_accounts/'.$visit_id.'" onclick="return confirm(\'Send to accounts?\');" class="btn btn-sm btn-success">Send to Accounts</a>';?>
+		 	</div>
+			<?php
+		}else{
+			?>
+			<div class="center-align">
+		 	 <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
+		            <input name="pharmacy_doctor"   onClick="send_to_pharmacy2(<?php echo $visit_id;?>);unload()" type="button" class="btn btn-large" value="Done" />
+		    </div>
+			<?php
+		}
+	?>
+ 	
  </div>  
                                         
   
@@ -614,9 +629,9 @@ $p = 0;
   
 	<script type="text/javascript">
 
-function myPopup2(visit_id) {
+function myPopup2(visit_id,module) {
 	var config_url = $('#config_url').val();
-	window.open(config_url+"/pharmacy/drugs/"+visit_id,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
+	window.open(config_url+"/pharmacy/drugs/"+visit_id+"/"+module,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
                         "directories=yes,location=yes,menubar=yes," + 
                          "resizable=no status=no,history=no top = 50 left = 100"); 
 }

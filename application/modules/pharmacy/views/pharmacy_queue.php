@@ -47,7 +47,7 @@
 						  <th>Visit Type</th>
 						  <th>Time In</th>
 						  <th>Doctor</th>
-						  <th colspan="4">Actions</th>
+						  <th colspan="2">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -235,10 +235,9 @@
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'/lab/test/'.$visit_id.'" class="btn btn-sm btn-info">Tests</a></td>
-							<td><a href="'.site_url().'/lab/test_history/'.$visit_id.'" class="btn btn-sm btn-danger">History</a></td>
-							'.$to_doctor.'
-							<td><a href="'.site_url().'/lab/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
+							<td><a href="'.site_url().'/pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
+						
+							<td><a href="'.site_url().'/pharmacy/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
 						</tr> 
 					';
 			}

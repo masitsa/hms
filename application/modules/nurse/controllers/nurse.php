@@ -765,7 +765,7 @@ class Nurse extends auth
 	}
 	public function send_to_pharmacy($visit_id)
 	{
-		$visit_data = array('nurse_visit'=>1,'lab_visit'=>6,'doc_visit'=>1);
+		$visit_data = array('nurse_visit'=>1,'pharmarcy'=>6,'doc_visit'=>1);
 		$this->db->where('visit_id',$visit_id);
 		if($this->db->update('visit', $visit_data))
 		{
@@ -892,12 +892,22 @@ class Nurse extends auth
 	public function send_to_accounts($primary_key,$module)
 	{
 		
-
-		$visit_data = array('pharmarcy'=>7,'nurse_visit'=>1);
+		if($module == 2){
+			$visit_data = array('pharmarcy'=>7,'nurse_visit'=>1,'lab_visit'=>1);
+		}else if($module == 1){
+			$visit_data = array('pharmarcy'=>7);
+		}else{
+			$visit_data = array('pharmarcy'=>7,'nurse_visit'=>1);
+		}
+		
 		$this->db->where(array("visit_id"=>$primary_key));
 		$this->db->update('visit', $visit_data);
 		if($module == 0){
 			redirect("nurse/nurse_queue");
+		}else if($module == 2){
+			redirect("lab/lab_queue");
+		}else if($module == 1){
+			redirect("pharmacy/pharmacy_queue");
 		}else{
 			redirect("doctor/doctor_queue");
 		}

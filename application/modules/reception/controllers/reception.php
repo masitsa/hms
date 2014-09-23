@@ -851,6 +851,7 @@ class Reception extends auth
 				"patient_insurance_id" => $patient_insurance_id,
 				"patient_insurance_number" => $patient_insurance_number,
 				"visit_date" => date("y-m-d"),
+				"nurse_visit"=>1,
 				"lab_visit" => 5
 			);
 			$this->database->insert_entry('visit', $insert);
@@ -885,7 +886,8 @@ class Reception extends auth
 					"patient_insurance_number" => $patient_insurance_number,
 					"visit_date" => date("y-m-d"),
 					"visit_time" => date("Y-m-d H:i:s"),
-					"pharmarcy" => 5
+					"nurse_visit" => 1,
+					"pharmarcy" => 6
 				);
 			$table = "visit";
 			$this->database->insert_entry($table, $insert);
