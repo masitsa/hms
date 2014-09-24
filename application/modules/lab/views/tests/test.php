@@ -17,7 +17,7 @@
               <div class="widget boxed">
                     <!-- Widget head -->
                     <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Tests</h4>
+                      <h4 class="pull-left"><i class="icon-reorder"></i>Tests for <?php echo $patient;?></h4>
                       <div class="widget-icons pull-right">
                         <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                         <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -94,11 +94,11 @@
 	}
 
 	function save_result(id, visit_id){
-
+		alert(id);
 		var config_url = $('#config_url').val();
 		var res = document.getElementById("laboratory_result"+id).value;
         var data_url = config_url+"/lab/save_result/"+id+"/"+res;
-     
+   
          var result_space = $('#result_space'+id).val();//document.getElementById("vital"+vital_id).value;
          	
         $.ajax({

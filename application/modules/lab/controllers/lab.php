@@ -95,8 +95,18 @@ class Lab extends auth
 		// end of it
 	}
 	public function test($visit_id){
-
-		$v_data = array('visit_id'=>$visit_id,'visit'=>1);
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$visit_type = $patient['visit_type'];
+		$patient_type = $patient['patient_type'];
+		$patient_othernames = $patient['patient_othernames'];
+		$patient_surname = $patient['patient_surname'];
+		$patient_date_of_birth = $patient['patient_date_of_birth'];
+		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$gender = $patient['gender'];
+		
+		$patient = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
+		
+		$v_data = array('visit_id'=>$visit_id,'visit'=>1,'patient'=>$patient);
 		$data['content'] = $this->load->view('tests/test', $v_data, true);
 		$data['sidebar'] = 'lab_sidebar';
 		$data['title'] = 'Laboratory Test List';
