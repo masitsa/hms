@@ -487,7 +487,17 @@ class Reception extends auth
 	public function lab_visit($primary_key)
 	{		
 		$v_data["patient_id"] = $primary_key;
-		$v_data['patient'] = $this->reception_model->patient_names2($primary_key);
+		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
+		$v_data['doctor'] = $this->reception_model->get_doctor();
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
+		$patient = $this->reception_model->patient_names2($primary_key);
+		$patient_type = $patient['patient_type'];
+		$patient_othernames = $patient['patient_othernames'];
+		$patient_surname = $patient['patient_surname'];
+		
+		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span>';
+
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
 		$data['content'] = $this->load->view('initiate_lab',$v_data,true);	
@@ -500,7 +510,17 @@ class Reception extends auth
 	public function initiate_pharmacy($primary_key)
 	{		
 		$v_data["patient_id"] = $primary_key;
-		$v_data['patient'] = $this->reception_model->patient_names2($primary_key);
+		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
+		$v_data['doctor'] = $this->reception_model->get_doctor();
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
+		$patient = $this->reception_model->patient_names2($primary_key);
+		$patient_type = $patient['patient_type'];
+		$patient_othernames = $patient['patient_othernames'];
+		$patient_surname = $patient['patient_surname'];
+		
+		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span>';
+
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
 
@@ -818,7 +838,7 @@ class Reception extends auth
 				"patient_insurance_number" => $patient_insurance_number,
 				"visit_date" => date("y-m-d"),
 				"nurse_visit"=>1,
-				"lab_visit" => 5
+				"lab_visit" => 12
 			);
 			$this->database->insert_entry('visit', $insert);
 	

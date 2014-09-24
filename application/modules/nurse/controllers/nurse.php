@@ -1046,14 +1046,13 @@ class Nurse extends auth
 		$data['visit_id'] = $visit_id;
 		$this->load->view('load_surgeries', $data);		
 	}
-	public function medication($medication,$medication_alergies,$food_allergies,$regular_treatment,$visit_id)
+	public function medication($visit_id)
 	{
-		$medication = str_replace('%20', ' ',$medication);
-		$medicine_allergies = str_replace('%20', ' ',$medication_alergies);
-		$food_allergies = str_replace('%20', ' ',$food_allergies);
-		$regular_treatment = str_replace('%20', ' ',$regular_treatment);
-
-
+		
+		$medication =$this->input->post('medication');
+		$medicine_allergies =$this->input->post('medicine_allergies');
+		$food_allergies =$this->input->post('food_allergies');
+		$regular_treatment =$this->input->post('regular_treatment');
 		
 		$patient_id = $this->nurse_model->get_patient_id($visit_id);
 
@@ -1076,7 +1075,7 @@ class Nurse extends auth
 		
 		else {
 			$this->db->where('patient_id',$patient_id);
-			$this->db->update('visit', $visit_data);
+			$this->db->update('medication', $visit_data);
 		}
 	
 

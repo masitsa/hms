@@ -18,8 +18,8 @@
         </div>
         <div class="col-md-3">
           <div class="center-align">
-            <?php echo form_open("nurse/send_to_pharmacy/".$visit_id, array("class" => "form-horizontal"));?>
-              <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy"/>
+           <?php echo form_open("nurse/send_to_labs/".$visit_id, array("class" => "form-horizontal"));?>
+              <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory"/>
             <?php echo form_close();?>
           </div>
         </div>

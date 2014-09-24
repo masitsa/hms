@@ -589,40 +589,31 @@ function delete_procedure(id, visit_id){
     }
 }
 function save_medication(visit_id){
-
-
-        var XMLHttpRequestObject = false;
-        
-    if (window.XMLHttpRequest) {
-    
-        XMLHttpRequestObject = new XMLHttpRequest();
-    } 
-        
-    else if (window.ActiveXObject) {
-        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-
-    var medication = document.getElementById("medication_description").value;
-    var medicine_allergies = document.getElementById("medicine_allergies").value;
-    var food_allergies = document.getElementById("food_allergies").value;
-    var regular_treatment = document.getElementById("regular_treatment").value;
     var config_url = $('#config_url').val();
-    var url = config_url+"/nurse/medication/"+medication+"/"+medicine_allergies+"/"+food_allergies+"/"+regular_treatment+"/"+visit_id;
-    
-        window.alert(url);
-    if(XMLHttpRequestObject) {
-                
-        XMLHttpRequestObject.open("GET", url);
-                
-        XMLHttpRequestObject.onreadystatechange = function(){
-            
-            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-                get_medication(visit_id);
-            }
-        }
-                
-        XMLHttpRequestObject.send(null);
+    var data_url = config_url+"/nurse/medication/"+visit_id;
+   
+     var patient_medication = $('#medication_description').val();
+     var patient_medicine_allergies = $('#medicine_allergies').val();
+     var patient_food_allergies = $('#food_allergies').val();
+     var patient_regular_treatment = $('#regular_treatment').val();
+     
+    $.ajax({
+    type:'POST',
+    url: data_url,
+    data:{medication: patient_medication,medicine_allergies: patient_medicine_allergies, food_allergies: patient_food_allergies, regular_treatment: patient_regular_treatment },
+    dataType: 'text',
+    success:function(data){
+     get_medication(visit_id);
+    //obj.innerHTML = XMLHttpRequestObject.responseText;
+    },
+    error: function(xhr, status, error) {
+    //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+    alert(error);
     }
+
+    });
+
+       
 }
 
 
