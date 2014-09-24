@@ -15,62 +15,55 @@ if($num_rows > 0){
 		$visit_objective_findings = $key1->visit_objective_findings;
 	endforeach;
 	echo
-	"	<table align='left'>
-			<tr>
-				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6' id='visit_symptoms1' disabled='disabled'>"; 
-					foreach ($rs2 as $key):
+	"
+	<div class='row'>
+		<div class='col-md-6'>
+			<textarea class='form-control' id='visit_symptoms1' disabled='disabled'>"; 
+			foreach ($rs2 as $key):
+
+				$objective_findings_name = $key->objective_findings_name;
+				$visit_objective_findings_id = $key->visit_objective_findings_id;
+				$objective_findings_class_name = $key->objective_findings_class_name;
+				$description= $key->description;
+				
+				
+				echo $objective_findings_class_name.":".$objective_findings_name." ->".$description."\n" ;
+			endforeach; 
+			echo $visit_objective_findings; echo "
+			</textarea>
+		</div>
 		
-						$objective_findings_name = $key->objective_findings_name;
-						$visit_objective_findings_id = $key->visit_objective_findings_id;
-						$objective_findings_class_name = $key->objective_findings_class_name;
-						$description= $key->description;
-						
-						
-						echo $objective_findings_class_name.":".$objective_findings_name." ->".$description."\n" ;
-					endforeach; 
-				echo $visit_objective_findings; echo "
-				</textarea>
-				</td>
-			</tr>
-		</table>
-		<table align='center'>
-			<tr>
-				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6' id='visit_objective_findings' onKeyUp='save_objective_findings(".$visit_id.")'>".$visit_objective_findings."</textarea>
-				</td>
-			</tr>
-		</table>
+		<div class='col-md-6'>
+			<textarea class='form-control' id='visit_objective_findings' onKeyUp='save_objective_findings(".$visit_id.")'>".$visit_objective_findings."</textarea>
+		</div>
+	</div>
 	";
 }
 
 else{
 	echo
-	"		<table align='left'>
-			<tr>
-				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6' id='visit_symptoms' disabled='disabled'>"; 
-					foreach ($rs2 as $key):
+	"
+	<div class='row'>
+		<div class='col-md-6'>
+			<textarea class='form-control' id='visit_symptoms' disabled='disabled'>"; 
+			foreach ($rs2 as $key):
+
+				$objective_findings_name = $key->objective_findings_name;
+				$visit_objective_findings_id = $key->visit_objective_findings_id;
+				$objective_findings_class_name = $key->objective_findings_class_name;
+				$description= $key->description;
+				
+				
+				echo $objective_findings_class_name.":".$objective_findings_name." ->".$description."\n" ;
+			endforeach; 
+			echo $visit_objective_findings; echo "
+			</textarea>
+		</div>
 		
-						$objective_findings_name = $key->objective_findings_name;
-						$visit_objective_findings_id = $key->visit_objective_findings_id;
-						$objective_findings_class_name = $key->objective_findings_class_name;
-						$description= $key->description;
-						
-						
-						echo $objective_findings_class_name.":".$objective_findings_name." ->".$description."\n" ;
-					endforeach; 
-				echo $visit_objective_findings; echo "
-</textarea>
-				</td>
-			</tr>
-		<table align='center'>
-			<tr>
-				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6' id='visit_objective_findings' onKeyUp='save_objective_findings(".$visit_id.")'>12345</textarea>
-				</td>
-			</tr>
-		</table>
+		<div class='col-md-6'>
+			<textarea class='form-control' id='visit_objective_findings' onKeyUp='save_objective_findings(".$visit_id.")'></textarea>
+		</div>
+	</div>
 	";
 }
 ?>

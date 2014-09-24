@@ -80,6 +80,7 @@ if($num_rows2 > 0){
 				$rs = $this->lab_model->get_test($visit_charge_id);
 				$num_lab = count($rs);
 			}
+			
 			else{
 				$rs = $this->lab_model->get_m_test($visit_charge_id);//die();
 				$num_lab = count($rs);
@@ -201,7 +202,7 @@ if($num_rows2 > 0){
 		<div class='row' style='margin-bottom: 20px;'>
 			<div class='col-md-12'>
 				<div class='center-align'><h3>General Comments</h3></div>
-				<textarea id='test_comment' onkeyup='save_comment(".$visit_charge_id.")' class='form-control'>".$comment."</textarea>
+				<textarea rows='5' id='test_comment' onkeyup='save_comment(".$visit_charge_id.")' class='form-control'>".$comment."</textarea>
 			</div>
 		</div>
 		";

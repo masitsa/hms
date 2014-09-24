@@ -18,59 +18,54 @@ if($num_rows > 0){
 	endforeach;
 	echo
 	"
-	<table align='left'>
-			<tr>
-				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6' class='form-control' id='visit_symptoms1' disabled='disabled'>"; 
-					$z=0;
-					foreach ($rs2 as $key):	
-						$count=$z+1;
-						$symptoms_name = $key->symptoms_name;
-						$status_name = $key->status_name;
-						$visit_symptoms_id = $key->visit_symptoms_id;
-						$description= $key->description;
-						
-						echo $symptoms_name." ->".$description."\n" ;
-					endforeach;
-					echo $visit_symptoms; echo "
-					</textarea>
-				</td>
-			</tr>
-		</table>
-		<table align='center'>
-			<tr>
-				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6' placeholder='Type Additional Symptoms Here' id='visit_symptoms' onKeyUp='save_symptoms(".$visit_id.")'>".$visit_symptoms."</textarea>
-				</td>
-			</tr>
-		</table>
+	<div class='row'>
+		<div class='col-md-6'>
+			<textarea class='form-control' class='form-control' id='visit_symptoms1' disabled='disabled'>"; 
+			$z=0;
+			foreach ($rs2 as $key):	
+				$count=$z+1;
+				$symptoms_name = $key->symptoms_name;
+				$status_name = $key->status_name;
+				$visit_symptoms_id = $key->visit_symptoms_id;
+				$description= $key->description;
+				
+				echo $symptoms_name." ->".$description."\n" ;
+			endforeach;
+			echo $visit_symptoms; echo "
+			</textarea>
+		</div>
+		
+		<div class='col-md-6'>
+			<textarea class='form-control' placeholder='Type Additional Symptoms Here' id='visit_symptoms' onKeyUp='save_symptoms(".$visit_id.")'>".$visit_symptoms."</textarea>
+		</div>
+	</div>
 	";
 }
 
 else{
 	echo
-	"<table align='left'>
-			<tr>
-				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6' id='visit_symptoms1' disabled='disabled'>"; 
-					$z=0;
-					foreach ($rs2 as $key):	
-						$count=$z+1;
-						$symptoms_name = $key->symptoms_name;
-						$status_name = $key->status_name;
-						$visit_symptoms_id = $key->visit_symptoms_id;
-						$description= $key->description;
-							
-							echo $symptoms_name." ->".$description."\n" ;
-					endforeach;
-					 echo $visit_symptoms; echo "
-		<table align='center'>
-			<tr>
-				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6' placeholder='Type Additional Symptoms Here' id='visit_symptoms' onKeyUp='save_symptoms(".$visit_id.")'></textarea>
-				</td>
-			</tr>
-		</table>
+	"
+	<div class='row'>
+		<div class='col-md-6'>
+			<textarea class='form-control' id='visit_symptoms1' disabled='disabled'>"; 
+			$z=0;
+			foreach ($rs2 as $key):	
+				$count=$z+1;
+				$symptoms_name = $key->symptoms_name;
+				$status_name = $key->status_name;
+				$visit_symptoms_id = $key->visit_symptoms_id;
+				$description= $key->description;
+					
+					echo $symptoms_name." ->".$description."\n" ;
+			endforeach;
+			 echo $visit_symptoms; echo "
+			 </textarea>
+		</div>
+		
+		<div class='col-md-6'>
+			<textarea class='form-control' placeholder='Type Additional Symptoms Here' id='visit_symptoms' onKeyUp='save_symptoms(".$visit_id.")'></textarea>
+		</div>
+	</div>
 	";
 }
 ?>

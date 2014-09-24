@@ -247,8 +247,6 @@ $(document).ready(function(){
 
  function vitals_interface(visit_id){
 
-
-   
     var XMLHttpRequestObject = false;
         
     if (window.XMLHttpRequest) {

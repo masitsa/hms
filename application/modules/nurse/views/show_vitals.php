@@ -81,7 +81,7 @@
     <label class="col-lg-4 control-label">Temperature: </label>
     
     <div class="col-lg-8">
-    	<input type="text" id="vital1" onfocusout = "save_vital(<?php echo $visit_id;?>, 1)" class="form-control"/>
+    	<input type="text" id="vital1" onkeyup = "save_vital(<?php echo $visit_id;?>, 1)" class="form-control"/>
         <div id="display1"></div>
     </div>
 </div>
@@ -89,7 +89,7 @@
     <label class="col-lg-4 control-label">Pulse: </label>
     
     <div class="col-lg-8">
-    	<input type="text" id="vital7" onfocusout = "save_vital(<?php echo $visit_id;?>, 7)" class="form-control"/>
+    	<input type="text" id="vital7" onkeyup = "save_vital(<?php echo $visit_id;?>, 7)" class="form-control"/>
         <div id="display7"></div>
     </div>
 </div>
@@ -98,7 +98,7 @@
     <label class="col-lg-4 control-label">Respiration: </label>
     
     <div class="col-lg-8">
-    	<input type="text" id="vital2" onfocusout = "save_vital(<?php echo $visit_id;?>, 2)" class="form-control"/>
+    	<input type="text" id="vital2" onkeyup = "save_vital(<?php echo $visit_id;?>, 2)" class="form-control"/>
         <div id="display2"></div>
     </div>
 </div>
@@ -107,7 +107,7 @@
     <label class="col-lg-4 control-label">Oxygen Saturation : </label>
     
     <div class="col-lg-8">
-    	<input type="text" id="vital11" onfocusout = "save_vital(<?php echo $visit_id;?>, 11)" class="form-control"/>
+    	<input type="text" id="vital11" onkeyup = "save_vital(<?php echo $visit_id;?>, 11)" class="form-control"/>
     	<div id="display11"></div>
     </div>
 </div>
@@ -116,7 +116,7 @@
     <label class="col-lg-4 control-label">Pain : </label>
     
     <div class="col-lg-8">
-    	<input type="text" id="vital10" onfocusout = "save_vital(<?php echo $visit_id;?>, 10)" class="form-control"/>
+    	<input type="text" id="vital10" onkeyup = "save_vital(<?php echo $visit_id;?>, 10)" class="form-control"/>
     	<div id="display10"></div>
     </div>
 </div>
