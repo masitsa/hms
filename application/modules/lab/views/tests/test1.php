@@ -86,6 +86,7 @@ if($num_rows2 > 0){
 			}
 			
 			//echo "num lab = ".$num_lab;
+			$r = 0;
 			foreach ($rs as $key2):
 			
 			$lab_test_name =$key2->lab_test_name;
@@ -166,6 +167,7 @@ if($num_rows2 > 0){
 				} 
 					
 				echo "</tr>";
+				$r++;
 			endforeach;
 			
 				if((($num_format > 0) && ($r == 0)) || ($num_format <= 0)){
@@ -175,6 +177,7 @@ if($num_rows2 > 0){
 				else{
 						$rsy2 = $this->lab_model->get_test_comment($visit_charge_id);
 						$num_rowsy2 = count($rsy2);
+						$comment4 = '';
 	
 						if($num_rowsy2 > 0){
 	
@@ -182,14 +185,10 @@ if($num_rows2 > 0){
 								$comment4= $keyy->lab_visit_format_comments;
 							endforeach;
 						}
-					echo "<tr>
-					<td> </td>
-					
-						<td></td>
-						<td><textarea rows='5' cols='10' class='form-control' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit_id.")'>".$comment4."</textarea> </td>
-						<td> </td>
-						<td ></td>			<td> </td>
-				</tr>";
+					echo "
+						<tr>
+							<td colspan='8'><textarea rows='5' class='form-control' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit_id.")' placeholder='".$lab_test_name." Comments'>".$comment4."</textarea> </td>
+						</tr>";
 					}
 		endforeach;
 		
@@ -201,7 +200,7 @@ if($num_rows2 > 0){
 		
 		<div class='row' style='margin-bottom: 20px;'>
 			<div class='col-md-12'>
-				<div class='center-align'><h3>Comments</h3></div>
+				<div class='center-align'><h3>General Comments</h3></div>
 				<textarea id='test_comment' onkeyup='save_comment(".$visit_charge_id.")' class='form-control'>".$comment."</textarea>
 			</div>
 		</div>

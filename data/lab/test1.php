@@ -177,12 +177,12 @@ if($num_lab_visit > 0){
 			
 			else{
 				$gety2 = new Lab;
-$rsy2 = $gety2->get_test_comment($visit_charge_id);
-$num_rowsy2 = mysql_num_rows($rsy2);
-
-if($num_rowsy2 > 0){
-	$comment4= mysql_result($rsy2, 0, "lab_visit_format_comments");
-}
+				$rsy2 = $gety2->get_test_comment($visit_charge_id);
+				$num_rowsy2 = mysql_num_rows($rsy2);
+				
+				if($num_rowsy2 > 0){
+					$comment4= mysql_result($rsy2, 0, "lab_visit_format_comments");
+				}
 				echo "<tr>
 				<td> </td>
 				
