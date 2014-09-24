@@ -22,26 +22,22 @@ if($num_rows > 0){
 	endforeach;
 	echo
 	"
-		<table align='center'>
-			<tr>
-				<td>
-					<textarea  rows='10' cols='100' class='form-control col-md-6' id='visit_plan' onKeyUp='save_plan(".$visit_id.")'>".$visit_plan."</textarea>
-				</td>
-			</tr>
-		</table>
+	<div class='row'>
+		<div class='col-md-12'>
+			<textarea class='form-control' id='visit_plan' onKeyUp='save_plan(".$visit_id.")'>".$visit_plan."</textarea>
+		</div>
+	</div>
 	";
 }
 
 else{
 	echo
 	"
-		<table align='center'>
-			<tr>
-				<td>
-					<textarea  rows='10' cols='100' class='form-control col-md-6' id='visit_plan' onKeyUp='save_plan(".$visit_id.")'></textarea>
-				</td>
-			</tr>
-		</table>
+	<div class='row'>
+		<div class='col-md-12'>
+			<textarea class='form-control' id='visit_plan' onKeyUp='save_plan(".$visit_id.")'></textarea>
+		</div>
+	</div>
 	";
 }
 

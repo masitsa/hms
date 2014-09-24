@@ -93,8 +93,54 @@
 	  }
 	}
 
+	function save_result_format(id, format, visit_id){
+		var config_url = $('#config_url').val();
+		
+		var res = document.getElementById("laboratory_result2"+format).value;
+		var data_url = config_url+"/lab/save_result_lab";
+         	
+        $.ajax({
+			type:'POST',
+			url: data_url,
+			data:{id: id, res: res, format: format, visit_id: visit_id},
+			dataType: 'text',
+			success:function(data){
+				//$("#result_space"+format).val(data);
+			},
+			error: function(xhr, status, error) {
+				//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+				alert(error);
+			}
+
+        });
+	}
+
+	function save_lab_comment(id, visit_id)
+	{
+		var config_url = $('#config_url').val();
+		
+		var res = document.getElementById("laboratory_comment"+id).value;
+		
+		var data_url = config_url+"/lab/save_lab_comment";
+			
+		$.ajax({
+			type:'POST',
+			url: data_url,
+			data:{visit_charge_id: id, lab_visit_format_comments: res, visit_id: visit_id},
+			dataType: 'text',
+			success:function(data){
+				//$("#result_space"+format).val(data);
+			},
+			error: function(xhr, status, error) {
+				//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+				alert(error);
+			}
+	
+		});
+	}
+
 	function save_result(id, visit_id){
-		alert(id);
+		
 		var config_url = $('#config_url').val();
 		var res = document.getElementById("laboratory_result"+id).value;
         var data_url = config_url+"/lab/save_result/"+id+"/"+res;
@@ -102,18 +148,17 @@
          var result_space = $('#result_space'+id).val();//document.getElementById("vital"+vital_id).value;
          	
         $.ajax({
-        type:'POST',
-        url: data_url,
-        data:{result: result_space},
-        dataType: 'text',
-        success:function(data){
-        load_vitals(vital_id, visit_id);
-        //obj.innerHTML = XMLHttpRequestObject.responseText;
-        },
-        error: function(xhr, status, error) {
-        //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
-        alert(error);
-        }
+			type:'POST',
+			url: data_url,
+			data:{result: result_space},
+			dataType: 'text',
+			success:function(data){
+				//$("#result_space"+id).val(data);
+			},
+			error: function(xhr, status, error) {
+				//alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+				alert(error);
+			}
 
         });
 	

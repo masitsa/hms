@@ -380,5 +380,40 @@ class Lab_model extends CI_Model
 		
 	}
 	
+	function save_tests_format2($visit_id)
+	{
+		$result = $this->input->post('res');
+		$format = $this->input->post('format');
+		
+		$data['lab_visit_results_result'] = $result;
+		$this->db->where(array('lab_visit_result_format' => $format, 'visit_id' => $visit_id));
+		
+		$this->db->update('lab_visit_results', $data);
+	}
+	
+	function get_lab_comments($visit_charge_id)
+	{
+		$this->db->where('visit_charge_id', $visit_charge_id);
+		$query = $this->db->get('lab_visit_format_comment');
+		
+		return $query;
+	}
+	
+	function save_new_lab_comment()
+	{
+		$data['lab_visit_format_comments'] = $this->input->post('lab_visit_format_comments');
+		$data['visit_charge_id'] = $this->input->post('visit_charge_id');
+		
+		$this->db->insert('lab_visit_format_comment', $data);
+	}
+	
+	function update_existing_lab_comment($visit_charge_id)
+	{
+		$data['lab_visit_format_comments'] = $this->input->post('lab_visit_format_comments');
+		$where['visit_charge_id'] = $visit_charge_id;
+		
+		$this->db->where($where);
+		$this->db->update('lab_visit_format_comment', $data);
+	}
 }
 ?>

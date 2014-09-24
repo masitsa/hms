@@ -22,7 +22,7 @@
 <file name="procedures_list.php" server="192.168.170.16/sumc/" local="130555080993263767" remote="130558592400000000" Dst="0" />
 <file name="show_loaded_vitals.php" server="192.168.170.16/sumc/" local="130555294732278940" remote="130558592400000000" Dst="0" />
 <file name="show_previous_vitals.php" server="192.168.170.16/sumc/" local="130555080993283769" remote="130558592400000000" Dst="0" />
-<file name="show_vitals.php" server="192.168.170.16/sumc/" local="130555294732298941" remote="130558592400000000" Dst="0" />
+<file name="show_vitals.php" server="192.168.170.16/sumc/" local="130560395267923302" remote="130560287400000000" Dst="0" />
 <file name="view_procedure.php" server="192.168.170.16/sumc/" local="130555080993923805" remote="130558592400000000" Dst="0" />
 <file name="symptoms_list.php" server="192.168.170.16/sumc/development/" local="130555080993903804" remote="130558580400000000" Dst="0" />
 <file name="dental_visit.php" server="192.168.170.16/sumc/development/" local="130555294732168933" remote="130558580400000000" Dst="0" />

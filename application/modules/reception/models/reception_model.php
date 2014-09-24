@@ -403,6 +403,7 @@ class Reception_model extends CI_Model
 		foreach ($result as $row)
 		{
 			$patient_id = $row->patient_id;
+			$patient_number = $row->patient_number;
 			$dependant_id = $row->dependant_id;
 			$strath_no = $row->strath_no;
 			$created_by = $row->created_by;
@@ -485,6 +486,7 @@ class Reception_model extends CI_Model
 		$patient['patient_surname'] = $patient_surname;
 		$patient['patient_date_of_birth'] = $patient_date_of_birth;
 		$patient['gender'] = $gender;
+		$patient['patient_number'] = $patient_number;
 
 		return $patient;
 	}
