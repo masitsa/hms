@@ -10,6 +10,9 @@ echo "
 			<input type='button' class='btn btn-warning' value='Laboratory Test' onclick='open_window_lab(0, ".$visit_id.")'/>
 			<input type='button' class='btn btn-info' value='Diagnose' onclick='open_window(6, ".$visit_id.")'/>
 			<input type='button' class='btn btn-success' value='Prescribe' onclick='open_window(1, ".$visit_id.")'/>
+			<!-- 
+			<a href='".site_url()."pharmacy/prescription/".$visit_id."' target='_blank' class='btn btn-success'>Prescribe</a>
+			-->
 		</p>
 	</div>";
 

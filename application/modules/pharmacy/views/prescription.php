@@ -1,7 +1,4 @@
 <?php
-
-
-
 $drug_size ="";
 $drug_size_type ="";
 
@@ -274,7 +271,22 @@ $p = 0;
 				            <label class="col-lg-4 control-label">Medicine: </label>
 				            
 				            <div class="col-lg-8">
-				            		<input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)" value="<?php echo $service_charge_name;?>"/> <a href="#" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)">Get Drug</a>
+				            		<input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)" value="<?php echo $service_charge_name;?>"/>
+                                    <?php
+									if($module == 1)
+									{
+										?> 
+                                    <a href="#" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)">Get Drug</a>
+                                    	<?php
+									}
+									
+									else
+									{
+										?> 
+                                    <a href="#" onClick="myPopup2_soap(<?php echo $visit_id;?>)">Get Drug</a>
+                                    	<?php
+									}
+									?>
 				            </div>
 				        </div>
 
@@ -632,6 +644,13 @@ $p = 0;
 function myPopup2(visit_id,module) {
 	var config_url = $('#config_url').val();
 	window.open(config_url+"/pharmacy/drugs/"+visit_id+"/"+module,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
+                        "directories=yes,location=yes,menubar=yes," + 
+                         "resizable=no status=no,history=no top = 50 left = 100"); 
+}
+
+function myPopup2_soap(visit_id) {
+	var config_url = $('#config_url').val();
+	window.open(config_url+"/pharmacy/drugs/"+visit_id,"Popup","height=1200,width=600,,scrollbars=yes,"+ 
                         "directories=yes,location=yes,menubar=yes," + 
                          "resizable=no status=no,history=no top = 50 left = 100"); 
 }
