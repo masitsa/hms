@@ -662,22 +662,9 @@ class Nurse_model extends CI_Model
 		return $result;
 		
 	}
+	
+	
 
-	function save_doctor_notes($doctor_notes, $patient_id){	
-		$rs = $this->get_doctor_notes($patient_id);
-		$num_doc_notes = count($rs);
-		
-		if($num_doc_notes == 0){	
-			$visit_data = array('patient_id'=>$patient_id,'doctor_notes'=>$doctor_notes);
-			$this->db->insert('doctor_notes', $visit_data);
-
-		}
-		else {
-			$visit_data = array('patient_id'=>$patient_id,'doctor_notes'=>$doctor_notes);
-			$this->db->where('patient_id',$patient_id);
-			$this->db->update('doctor_notes', $visit_data);
-		}
-	}
 
 	function get_nurse_notes($patient_id){
 		$table = "nurse_notes";
@@ -913,5 +900,49 @@ class Nurse_model extends CI_Model
 			return 0;
 		}
 	}
+	function get_medicals($id){
+		$table = "medication";
+		$where = "patient_id = ".$id;
+		$items = "*";
+		$order = "patient_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	function get_surgeries($patient_id){
+		$table = "surgery, month";
+		$where = "surgery.month_id = month.month_id AND patient_id = '$patient_id'";
+		$items = "*";
+		$order = "patient_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	function get_vaccines(){
+		$table = "vaccine";
+		$where = "vaccine_id > 0";
+		$items = "*";
+		$order = "vaccine_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+		
+	}
+	function check_vaccine($patient_id, $patient_vaccine){
+		$table = "patients_vaccine";
+		$where = "patient_id = '". $patient_id ."' AND vaccine_id = ". $patient_vaccine;
+		$items = "patient_vaccine_id, status_id ";
+		$order = "vaccine_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+
+		
+	}
+	
 }
 ?>

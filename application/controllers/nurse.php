@@ -827,4 +827,5 @@ function search_student($strath_no){
  
          $this->nurse($output);
 	}
-	}
+	
+}

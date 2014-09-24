@@ -312,6 +312,28 @@ function objective_findings(visit_id){
     XMLHttpRequestObject.send(null);
   }
 }
+function save_doctor_notes(visit_id){
+      var config_url = $('#config_url').val();
+        var data_url = config_url+"/nurse/save_doctor_notes/"+visit_id;
+        //window.alert(data_url);
+         var doctor_notes = $('#doctor_notes_item').val();//document.getElementById("vital"+vital_id).value;
+        $.ajax({
+        type:'POST',
+        url: data_url,
+        data:{notes: doctor_notes},
+        dataType: 'text',
+        success:function(data){
+        //obj.innerHTML = XMLHttpRequestObject.responseText;
+        },
+        error: function(xhr, status, error) {
+        //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+        alert(error);
+        }
+
+        });
+
+      
+    }
 
 function assessment(visit_id){
   var XMLHttpRequestObject = false;
@@ -573,36 +595,7 @@ function doctor_notes(visit_id){
   }
 }
 
-function save_doctor_notes(visit_id){
-  
-    var XMLHttpRequestObject = false;
-      
-    if (window.XMLHttpRequest) {
-    
-      XMLHttpRequestObject = new XMLHttpRequest();
-    } 
-      
-    else if (window.ActiveXObject) {
-      XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    var notes = document.getElementById("doctor_notes_item").value;
-    var config_url = $('#config_url').val();
-    var url = config_url+"/nurse/save_doctor_notes/"+notes+"/"+visit_id;
-       
-    if(XMLHttpRequestObject) {
-          
-      XMLHttpRequestObject.open("GET", url);
-          
-      XMLHttpRequestObject.onreadystatechange = function(){
-        
-        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-          //window.alert(XMLHttpRequestObject.responseText);
-        }
-      }
-          
-      XMLHttpRequestObject.send(null);
-    }
-  }
+
 function nurse_notes(visit_id){
     var XMLHttpRequestObject = false;
     

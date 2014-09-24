@@ -214,6 +214,27 @@ class Nurse extends auth
 			$this->db->insert('visit_vital', $visit_data);
 		}
 	}
+	public function save_nurse_notes($visit_id)
+	{
+		$notes=$this->input->post('notes');
+		$patient_id = $this->nurse_model->get_patient_id($visit_id);
+		$rs = $this->nurse_model->get_nurse_notes($patient_id);
+		$num_nurse_notes = count($rs);
+		$visit_data = array(
+        		"patient_id" => $patient_id,
+        		"nurse_notes" => $notes
+	    		);
+		
+		if($num_nurse_notes == 0){	
+
+			$this->db->insert('nurse_notes', $visit_data);
+		}
+		else {
+			$this->db->where('patient_id',$patient_id);
+			$this->db->update('nurse_notes', $visit_data);
+			
+		}
+	}
 	
 	public function dental_vitals($visit_id)
 	{
@@ -728,24 +749,32 @@ class Nurse extends auth
 		$visit_data = array('visit_id'=>$visit_id);
 		$this->load->view('soap/doctor_notes',$visit_data);
 	}
-	public function save_doctor_notes($notes,$visit_id){
-		$notes = str_replace('%20', ' ',$notes);
+	public function save_doctor_notes($visit_id){
+
+
+		$notes=$this->input->post('notes');
+
 		$patient_id = $this->nurse_model->get_patient_id($visit_id);
+		$rs = $this->nurse_model->get_doctor_notes($patient_id);
+		$num_doc_notes = count($rs);
 		
-		$this->nurse_model->save_doctor_notes($notes,$patient_id);
+		if($num_doc_notes == 0){	
+			$visit_data = array('patient_id'=>$patient_id,'doctor_notes'=>$notes);
+			$this->db->insert('doctor_notes', $visit_data);
+
+		}
+		else {
+			$visit_data = array('patient_id'=>$patient_id,'doctor_notes'=>$notes);
+			$this->db->where('patient_id',$patient_id);
+			$this->db->update('doctor_notes', $visit_data);
+		}
 
 	}
 	public function nurse_notes($visit_id){
 		$visit_data = array('visit_id'=>$visit_id);
 		$this->load->view('soap/nurse_notes',$visit_data);
 	}
-	public function save_nurse_notes($notes,$visit_id){
-		$notes = str_replace('%20', ' ',$notes);
-		$patient_id = $this->nurse_model->get_patient_id($visit_id);
-		
-		$this->nurse_model->save_nurse_notes($notes,$patient_id);
-
-	}
+	
 
 	public function send_to_doctor($visit_id)
 	{
@@ -1005,6 +1034,90 @@ class Nurse extends auth
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
+	}
+	public function load_medication($visit_id)
+	{
+		$data['visit_id'] = $visit_id;
+		$this->load->view('load_medication', $data);	
+
+	}
+	public function load_surgeries($visit_id)
+	{
+		$data['visit_id'] = $visit_id;
+		$this->load->view('load_surgeries', $data);		
+	}
+	public function medication($medication,$medication_alergies,$food_allergies,$regular_treatment,$visit_id)
+	{
+		$medication = str_replace('%20', ' ',$medication);
+		$medicine_allergies = str_replace('%20', ' ',$medication_alergies);
+		$food_allergies = str_replace('%20', ' ',$food_allergies);
+		$regular_treatment = str_replace('%20', ' ',$regular_treatment);
+
+
+		
+		$patient_id = $this->nurse_model->get_patient_id($visit_id);
+
+		$rs = $this->nurse_model->get_medicals($patient_id);
+		$num_medication= count($rs);
+		
+
+		$visit_data = array(
+        		"medication_name" => $medication,
+        		"patient_id" => $patient_id,
+        		"food_allergies" => $food_allergies,
+        		"medicine_allergies" => $medicine_allergies,
+        		"regular_treatment" => $regular_treatment
+	    		);
+
+		if($num_medication ==0){
+
+				$this->db->insert('medication', $visit_data);
+		}
+		
+		else {
+			$this->db->where('patient_id',$patient_id);
+			$this->db->update('visit', $visit_data);
+		}
+	
+
+	}
+
+	public function surgeries($date,$description,$month,$visit_id)
+	{
+
+		$patient_id = $this->nurse_model->get_patient_id($visit_id);
+		$description = str_replace('%20', ' ',$description);
+
+		$visit_data = array(
+        		"surgery_description" => $description,
+        		"surgery_year" => $date,
+        		"patient_id" => $patient_id,
+        		"month_id" => $month
+	    		);
+		$this->db->insert('surgery', $visit_data);
+	}
+	public function delete_surgeries($id){
+		
+		$this->db->where('surgery_id',$id);
+		$this->db->delete('surgery', $visit_data);
+	}
+	public function patient_vaccine($visit_id)
+	{
+		$data['visit_id'] = $visit_id;
+		$this->load->view('patient_vaccine', $data);		
+	}
+	public function vaccine($vaccine_id,$status,$visit_id)
+	{
+
+		$patient_id = $this->nurse_model->get_patient_id($visit_id);
+
+
+		$visit_data = array(
+        		"vaccine_id" => $vaccine_id,
+        		"status_id" => $status,
+        		"patient_id" => $patient_id
+	    		);
+		$this->db->insert('patients_vaccine', $visit_data);
 	}
 	
 }

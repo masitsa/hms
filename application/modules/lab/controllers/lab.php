@@ -546,7 +546,7 @@ class Lab extends auth
 					else{
 						$fill = FALSE;
 					}
-					
+					$next_name ="";
 					if ($counts<$num_lab-1){
 						$next_name = $rs[$count]->lab_test_name;
 					}
@@ -572,7 +572,7 @@ class Lab extends auth
 					$this->fpdf->Cell(50,$pageH,$lab_results,1,0,'L', $fill);
 					$this->fpdf->Cell(50,$pageH,$lab_test_units,1,0,'L', $fill);
 					
-					if($_SESSION['patient_sex'] == "Male"){
+					if($this->session->userdata('patient_sex') == "Male"){
 						$this->fpdf->Cell(30,$pageH,$lab_test_lower_limit." - ".$lab_test_upper_limit,1,1,'L', $fill);
 					}
 					

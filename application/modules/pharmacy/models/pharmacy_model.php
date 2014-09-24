@@ -316,5 +316,26 @@ class Pharmacy_model extends CI_Model
 		
 		return $result;
 	}
+	function get_visit_charge_id1($id){
+		$table = "pres";
+		$where = "prescription_id = ". $id;
+		$items = "service_charge_id";
+		$order = "service_charge_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	function check_deleted_visitcharge($id){
+		
+		$table = "visit_charge";
+		$where = "visit_charge_id = ". $id;
+		$items = "*";
+		$order = "visit_charge_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
 }
 ?>

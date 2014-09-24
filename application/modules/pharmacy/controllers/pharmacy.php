@@ -262,5 +262,28 @@ class Pharmacy extends auth
 	{
 		redirect('nurse/send_to_accounts/'.$primary_key.'/1');
 	}
+	public function delete_prescription($prescription_id,$visit_id,$visit_charge_id,$module)
+	{
+
+		$visit_charge_id = $this->pharmacy_model->get_visit_charge_id1($prescription_id);
+
+		//  delete the visit charge
+
+		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
+		$this->db->delete('visit_charge', $visit_data);
+		
+		//  check if the visit charge has been deleted
+
+		$rs = $this->pharmacy_model->check_deleted_visitcharge($visit_charge_id);
+		$num_rows =count($rs);
+
+		//echo BB.$visit_charge_id;
+		if($num_rows==0){
+			$this->db->where(array("prescription_id"=>$prescription_id));
+			$this->db->delete('pres', $visit_data);
+	
+		}
+		
+	}
 }
 ?>
