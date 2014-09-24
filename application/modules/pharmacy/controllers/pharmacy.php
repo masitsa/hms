@@ -58,7 +58,7 @@ class Pharmacy extends auth
 		
 	}
 
-	public function update_prescription($visit_id, $visit_charge_id, $prescription_id){
+	public function update_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
 		$this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
@@ -84,7 +84,12 @@ class Pharmacy extends auth
 			}
 		
 		}
+		if($module == 1){
+			redirect('pharmacy/prescription1/'.$visit_id.'/1');
+			
+		}else{
 			redirect('pharmacy/prescription/'.$visit_id);
+		}
 	}
 
 	public function drugs($visit_id,$module= NULL){

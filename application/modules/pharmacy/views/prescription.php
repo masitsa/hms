@@ -274,7 +274,7 @@ $p = 0;
 				            <label class="col-lg-4 control-label">Medicine: </label>
 				            
 				            <div class="col-lg-8">
-				            		<input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2(<?php echo $visit_id;?>)" value="<?php echo $service_charge_name;?>"/> <a href="#" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)">Get Drug</a>
+				            		<input type="text" name="passed_value" id="passed_value"  class="form-control" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)" value="<?php echo $service_charge_name;?>"/> <a href="#" onClick="myPopup2(<?php echo $visit_id;?>,<?php echo $module;?>)">Get Drug</a>
 				            </div>
 				        </div>
 
@@ -563,7 +563,7 @@ $p = 0;
 												$cons_list2 = $cons_list2."</select>";
 												$s++;
 											?>
-                                           	<?php echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id, array("class" => "form-horizontal"));?>
+                                           	<?php echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));?>
 									  		<tr>
     											<td><?php echo $s; ?></td>
     											<td width="200px"><?php echo $medicine;?></td>
@@ -579,7 +579,7 @@ $p = 0;
                                                 <td>
                                                 	<div class='btn-toolbar'>
                                                     	<div class='btn-group'>
-                                                        	<a class='btn' href='delete_prescritpion.php?prescription_id=<?php echo $id;?>&visit_id=<?php echo $visit_id?>&visit_charge_id=<?php echo $visit_charge_id?>'><i class='icon-remove'></i></a>
+                                                        	<a class='btn' href='delete_prescritpion/<?php echo $id;?>/<?php echo $visit_id?>/<?php echo $visit_charge_id?>/<?php echo $module;?>'><i class='icon-remove'></i></a>
                                                        	</div>
                                                      </div>
                                                  </td>

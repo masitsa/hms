@@ -760,4 +760,5 @@ function get_disease(visit_id){
   }
 }
 
+
 </script>
