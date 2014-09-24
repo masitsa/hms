@@ -235,4 +235,35 @@ function get_test_results(page, visit_id){
     XMLHttpRequestObject.send(null);
   }
 }
+
+function delete_cost(visit_charge_id, visit_id){
+	
+	var XMLHttpRequestObject = false;
+	
+	if (window.XMLHttpRequest) {
+		XMLHttpRequestObject = new XMLHttpRequest();
+	} 
+	
+	else if (window.ActiveXObject) {
+		XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	var url = config_url+"/lab/delete_cost/"+visit_charge_id+"/"+visit_id;
+	window.alert(url);
+	
+	if(XMLHttpRequestObject) {
+		var obj = document.getElementById("lab_table");
+		
+		XMLHttpRequestObject.open("GET", url);
+		
+		XMLHttpRequestObject.onreadystatechange = function(){
+			
+			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+				
+				obj.innerHTML = XMLHttpRequestObject.responseText;
+				window.location.href = host+"data/doctor/laboratory.php?visit_id="+visit_id;
+			}
+		}
+		XMLHttpRequestObject.send(null);
+	}
+}
 </script>

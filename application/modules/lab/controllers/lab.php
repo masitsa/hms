@@ -188,11 +188,16 @@ class Lab extends auth
 
 	}
 
-	
+	public function delete_cost($visit_charge_id, $visit_id)
+	{
+		$this->lab_model->delete_cost($visit_charge_id);
+		
+		$this->laboratory_list(0, $visit_id);
+	}
 
-	public function test_lab($visit_id,$service_charge_id=NULL){
-		$data = array('service_charge_id'=>$service_charge_id,'visit_id'=>$visit_id);
-		$this->load->view('test_lab',$data);
+	public function test_lab($visit_id, $service_charge_id=NULL){
+		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
+		$this->load->view('test_lab', $data);
 	}
 
 	public function save_result($id,$result,$visit_id)

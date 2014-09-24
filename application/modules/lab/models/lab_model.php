@@ -196,7 +196,7 @@ class Lab_model extends CI_Model
 	function save_lab_visit_format($visit_id, $service_charge_id, $lab_test_format_id){
 
 		$table = "visit_charge";
-		$where = "visit_id = ". $visit_id. "service_charge_id = ". $service_charge_id;
+		$where = "visit_id = ". $visit_id. " AND service_charge_id = ". $service_charge_id;
 		$items = "visit_charge_id";
 		$order = "visit_charge_id";
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -208,9 +208,15 @@ class Lab_model extends CI_Model
 			endforeach;
 			
 		}
-		$visit_data = array('visit_charge_id'=>$visit_charge_id,'lab_visit_result_format'=>$lab_test_format_id,'visit_id'=>$visit);
+		$visit_data = array('visit_charge_id'=>$visit_charge_id,'lab_visit_result_format'=>$lab_test_format_id,'visit_id'=>$visit_id);
 		$this->db->insert('lab_visit_results', $visit_data);
 
+	}
+	
+	function delete_cost($visit_charge_id)
+	{
+		$this->db->where('visit_charge_id', $visit_charge_id);
+		$this->db->delete('visit_charge');
 	}
 
 	function get_lab_test($visit_id){
