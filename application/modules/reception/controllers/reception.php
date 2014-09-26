@@ -905,6 +905,15 @@ class Reception extends auth
 		{
 			$this->session->unset_userdata('patient_search');
 			$this->patients();
+		} else if($page == 2)
+		{
+			$this->session->unset_userdata('patient_staff_search');
+			$this->staff();
+		}
+		else if($page == 3)
+		{
+			$this->session->unset_userdata('patient_student_search');
+			$this->students();
 		}
 		else
 		{
@@ -912,6 +921,7 @@ class Reception extends auth
 			$this->staff_dependants();
 		}
 	}
+	
 	
 	public function dependants($patient_id)
 	{
@@ -1321,7 +1331,132 @@ class Reception extends auth
 		
 		$this->load->view('auth/template_sidebar', $data);
 	}
-	
+	public function students()
+	{
+		$segment = 3;
+		
+		$patient_search = $this->session->userdata('patient_student_search');
+		$where = 'patients.visit_type_id = 1  AND patients.strath_no = student.student_Number AND patients.patient_delete = 0';
+		
+		if(!empty($patient_search))
+		{
+			$where .= $patient_search;
+		}
+		
+		$table = 'patients, student';
+		$items = 'student.*, patients.*';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/reception/students';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reception_model->get_all_patients($table, $where, $config["per_page"], $page, $items);
+		
+		$data['title'] = 'Students ';
+		$v_data['title'] = 'Students ';
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['type'] = $this->reception_model->get_types();
+		$data['content'] = $this->load->view('patients/students', $v_data, true);
+		
+		$data['sidebar'] = 'reception_sidebar';
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	public function staff()
+	{
+		$segment = 3;
+		
+		$patient_search = $this->session->userdata('patient_staff_search');
+		$where = 'patients.visit_type_id = 2  AND patients.strath_no = staff.Staff_Number AND patients.patient_delete = 0';
+		
+		if(!empty($patient_search))
+		{
+			$where .= $patient_search;
+		}
+		
+		$table = 'patients, staff';
+		$items = 'staff.*, patients.*';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/reception/staff';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reception_model->get_all_patients($table, $where, $config["per_page"], $page, $items);
+		
+		$data['title'] = 'Staff ';
+		$v_data['title'] = 'Staff ';
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['type'] = $this->reception_model->get_types();
+		$data['content'] = $this->load->view('patients/staff', $v_data, true);
+		
+		$data['sidebar'] = 'reception_sidebar';
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
 	public function search_staff_dependant_patients()
 	{
 		$strath_no = $this->input->post('strath_no');
@@ -1401,7 +1536,85 @@ class Reception extends auth
 		
 		$this->staff_dependants();
 	}
-	
+	public function search_staff_patients()
+	{
+		$strath_no = $this->input->post('strath_no');
+		$registration_date = $this->input->post('registration_date');
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND staff.Staff_Number LIKE \'%'.$strath_no.'%\' ';
+		}
+		
+		if(!empty($registration_date))
+		{
+			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.'%\' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['surname']))
+		{
+			$surnames = explode(" ",$_POST['surname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' staff.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' staff.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+		}
+		
+		else
+		{
+			$surname = '';
+		}
+		
+		//search other_names
+		if(!empty($_POST['othernames']))
+		{
+			$other_names = explode(" ",$_POST['othernames']);
+			$total = count($other_names);
+			
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$other_name .= ' staff.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' staff.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$other_name .= ') ';
+		}
+		
+		else
+		{
+			$other_name = '';
+		}
+		
+		$search = $strath_no.$surname.$other_name.$registration_date;
+		$this->session->set_userdata('patient_staff_search', $search);
+			//echo $this->session->userdata('patient_dependants_search');
+		
+		$this->staff();
+	}	
 	/*
 	*	Register dependant patient
 	*
