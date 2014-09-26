@@ -415,11 +415,11 @@ function get_test_results(page, visit_id){
   var config_url = $('#config_url').val();
   if((page == 1) || (page == 65) || (page == 85)){
     
-    url = config_url+"/lab/test/"+visit_id;
+    url = config_url+"/laboratory/test/"+visit_id;
   }
   
   else if ((page == 75) || (page == 100)){
-    url = config_url+"/lab/test1/"+visit_id;
+    url = config_url+"/laboratory/test1/"+visit_id;
   }
   //alert(url);
   if(XMLHttpRequestObject) {
@@ -491,7 +491,7 @@ function display_prescription(visit_id, page){
 
 function open_window_lab(test, visit_id){
   var config_url = $('#config_url').val();
-  window.open(config_url+"/lab/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
+  window.open(config_url+"/laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
 }
 
 function open_symptoms(visit_id){

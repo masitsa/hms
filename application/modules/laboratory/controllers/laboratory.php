@@ -2,7 +2,7 @@
 
 require_once "./application/modules/auth/controllers/auth.php";
 
-class Lab extends auth
+class Laboratory extends auth
 {	
 	function __construct()
 	{
@@ -18,30 +18,22 @@ class Lab extends auth
 	{
 		echo "no patient id";
 	}
-	public function lab_queue($page_name=NULL)
+	public function lab_queue($page_name = 12)
 	{
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND lab_visit = 12 AND pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit_department, visit, patients';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
 		{
 			$where .= $visit_search;
 		}
+		$segment = 4;
 		
-		if($page_name == NULL)
-		{
-			$segment = 3;
-		}
-		
-		else
-		{
-			$segment = 4;
-		}
-		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/lab/lab_queue/'.$page_name;
+		$config['base_url'] = site_url().'/laboratory/lab_queue/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -78,8 +70,8 @@ class Lab extends auth
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
 		
-		$data['title'] = 'Nurse Queue';
-		$v_data['title'] = 'Nurse Queue';
+		$data['title'] = 'Lab Queue';
+		$v_data['title'] = 'Lab Queue';
 		$v_data['module'] = 0;
 		
 		$v_data['type'] = $this->reception_model->get_types();
@@ -150,7 +142,7 @@ class Lab extends auth
 		$table = '`service_charge`, lab_test_class, lab_test';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/lab/laboratory_list/'.$lab.'/'.$visit_id;
+		$config['base_url'] = site_url().'/laboratory/laboratory_list/'.$lab.'/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 5;
 		$config['per_page'] = 15;
@@ -202,7 +194,8 @@ class Lab extends auth
 	{
 		$this->lab_model->delete_cost($visit_charge_id);
 		
-		$this->laboratory_list(0, $visit_id);
+		//$this->laboratory_list(0, $visit_id);
+		$this->test_lab($visit_id);
 	}
 
 	public function test_lab($visit_id, $service_charge_id=NULL){
@@ -217,21 +210,19 @@ class Lab extends auth
 
 	}
 	public function finish_lab_test($visit_id){
-		redirect('lab/lab_queue');
+		redirect('laboratory/lab_queue');
 	}
 
 	public function save_comment($comment,$id){
 		$comment = str_replace('%20', ' ',$comment);
 		$this->lab_model->save_comment($comment, $id);
 	}
+
 	public function send_to_doctor($visit_id)
 	{
-
-		$visit_data = array('nurse_visit'=>1,'lab_visit'=>22,'doc_visit'=>1);
-		$this->db->where('visit_id',$visit_id);
-		if($this->db->update('visit', $visit_data))
+		if($this->reception_model->set_visit_department($visit_id, 2))
 		{
-			redirect('lab/lab_queue');
+			redirect('laboratory/lab_queue');
 		}
 		else
 		{
@@ -265,7 +256,7 @@ class Lab extends auth
 		$table = 'visit, patients';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/lab/test_history/'.$page_name;
+		$config['base_url'] = site_url().'/laboratory/test_history/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;

@@ -36,10 +36,11 @@ class Login_model extends CI_Model
 			$result = $query->result();
 			//create user's login session
 			$newdata = array(
-                   'login_status'     => TRUE,
-                   'personnel_fname'     => $result[0]->personnel_fname,
-                   'personnel_email'     => $result[0]->personnel_email,
-                   'personnel_id'  => $result[0]->personnel_id
+                   'login_status'     	=> TRUE,
+                   'personnel_fname'  	=> $result[0]->personnel_fname,
+                   'first_name'     	=> $result[0]->personnel_fname,
+                   'personnel_email'	=> $result[0]->personnel_email,
+                   'personnel_id'  		=> $result[0]->personnel_id
                );
 
 			$this->session->set_userdata($newdata);

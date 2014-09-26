@@ -122,6 +122,7 @@
 </div>
 </div>
 <script type="text/javascript">
+var config_url = '<?php echo site_url();?>';
     $(document).ready(function(){
       get_lab_table(<?php echo $visit_id;?>);
     });
@@ -136,7 +137,7 @@
         else if (window.ActiveXObject) {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
-        var url = "<?php echo site_url();?>/lab/test_lab/"+visit_id;
+        var url = config_url+"/lab/test_lab/"+visit_id;
         //window.alert(url)   ;
         if(XMLHttpRequestObject) {
                     

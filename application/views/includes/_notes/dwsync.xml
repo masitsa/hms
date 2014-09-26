@@ -23,4 +23,5 @@
 <file name="header.php" server="192.168.170.16/sumc/" local="130542264105498617" remote="130552525800000000" Dst="0" />
 <file name="footer.php" server="192.168.170.16/sumc/" local="130542264062776173" remote="130552525800000000" Dst="0" />
 <file name="sidebar.php" server="192.168.170.16/sumc/" local="130542243556963308" remote="130552525800000000" Dst="0" />
+<file name="lab_sidebar.php" server="192.168.170.16/sumc/development/" local="130558539185097926" remote="130561033800000000" Dst="0" />
 </dwsync>

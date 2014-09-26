@@ -26,4 +26,5 @@
 <file name="change_patient_type.php" server="192.168.170.16/sumc/development/" local="130555080999054099" remote="130558580400000000" Dst="0" />
 <file name="change_patient_type.php" server="192.168.170.16/sumc/" local="130555080999054099" remote="130558592400000000" Dst="0" />
 <file name="search_staff.php" server="192.168.170.16/sumc/" local="130559495636161241" remote="130559403600000000" Dst="0" />
+<file name="search_staff.php" server="192.168.170.16/sumc/development/" local="130559495636161241" remote="130560304800000000" Dst="0" />
 </dwsync>

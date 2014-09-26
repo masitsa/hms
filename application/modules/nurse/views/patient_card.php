@@ -81,6 +81,7 @@
                 <li><a href="#patient-history" data-toggle="tab">Patient history</a></li>
                 <li><a href="#soap" data-toggle="tab">SOAP</a></li>
                 <li><a href="#medical-checkup" data-toggle="tab">Medical Checkup</a></li>
+                <li><a href="#visit_trail" data-toggle="tab">Visit Trail</a></li>
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
                 <div class="tab-pane active" id="vitals-pane">
@@ -109,22 +110,28 @@
                   <?php echo $this->load->view("patients/medical_checkup", '', TRUE);?>
                   
                 </div>
+
+                 <div class="tab-pane" id="visit_trail">
+                  
+                  <?php echo $this->load->view("patients/visit_trail", '', TRUE);?>
+                  
+                </div>
                 
               </div>
             </div>
 
               <div class="row">
                
-	<?php if ($module == 0){?>
-        <div class="col-md-3">
-          <div class="center-align">
-            <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
-              <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor"/>
-            <?php echo form_close();?>
-          </div>
-          
-        </div>
-    <?php } ?>
+				<?php if ($module == 0){?>
+                    <div class="col-md-3">
+                      <div class="center-align">
+                        <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
+                          <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor"/>
+                        <?php echo form_close();?>
+                      </div>
+                      
+                    </div>
+                <?php } ?>
                 <div class="col-md-3">
                   <div class="center-align">
                     <?php echo form_open("nurse/send_to_pharmacy/".$visit_id, array("class" => "form-horizontal"));?>

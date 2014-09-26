@@ -20,8 +20,9 @@ class Doctor extends auth
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
-		$table = 'visit, patients';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
+		
+		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
 		$v_data['query'] = $query;
 		$v_data['page'] = 0;
@@ -41,15 +42,16 @@ class Doctor extends auth
 	public function doctor_queue($page_name = NULL)
 	{
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
+		
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
+		
+		$table = 'visit_department, visit, patients';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
 		{
 			$where .= $visit_search;
 		}
-		
-		$table = 'visit, patients';
 		
 		if($page_name != NULL)
 		{

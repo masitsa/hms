@@ -51,9 +51,20 @@ class Reception_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
+		$this->db->select('visit.*, visit_department.created AS visit_created, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
+		$this->db->where($where);
+		$this->db->order_by('visit_department.created','ASC');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	public function get_all_ongoing_visits2($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all users
+		$this->db->from($table);
 		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
 		$this->db->where($where);
-		$this->db->order_by('visit_time','ASC');
+		$this->db->order_by('visit.visit_date','ASC');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -1333,5 +1344,155 @@ class Reception_model extends CI_Model
 		
 		return $result;
   	}
+	/*
+	*	Retrieve a single dependant
+	*	@param int $strath_no
+	*
+	*/
+	public function get_visit_departments()
+	{
+		$this->db->from('departments');
+		$this->db->select('*');
+		$this->db->where('visit = 1');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	/*
+	*	Create remove visit department
+	*
+	*/
+	public function remove_visit_department($visit_id)
+	{
+		$update['visit_department_status'] = 0;
+		$update['modified_by'] = $this->session->userdata('personnel_id');
+		$update['last_modified'] = date('Y-m-d H:i:s');
+		
+		$this->db->where(array('visit_department_status' => 1, 'visit_id' => $visit_id));
+		
+		if($this->db->update('visit_department', $update))
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Create visit department
+	*
+	*/
+	public function set_visit_department($visit_id, $department_id)
+	{
+		if($this->remove_visit_department($visit_id))
+		{
+			$data = array(
+				'visit_id'=>$visit_id,
+				'department_id'=>$department_id,
+				'created'=>date('Y-m-d H:i:s'),
+				'created_by'=>$this->session->userdata('personnel_id'),
+				'modified_by'=>$this->session->userdata('personnel_id')
+			);
+			
+			if($this->db->insert('visit_department', $data))
+			{
+				return TRUE;
+			}
+			else{
+				return FALSE;
+			}
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function save_visit_consultation_charge($visit_id, $service_charge_id)
+	{
+		//add charge for visit
+		$service_charge = $this->reception_model->get_service_charge($service_charge_id);		
+		
+		$visit_charge_data = array(
+			"visit_id" => $visit_id,
+			"service_charge_id" => $service_charge_id,
+			"visit_charge_amount" => $service_charge
+		);
+		if($this->db->insert('visit_charge', $visit_charge_data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function set_last_visit_date($patient_id, $visit_date)
+	{
+		$patient_date = array(
+			"last_visit" => $visit_date
+		);
+		$this->db->where('patient_id', $patient_id);
+		$this->db->update('patients', $patient_date);
+	}
+	
+	public function create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card)
+	{
+		$visit_data = array(
+			"visit_date" => $visit_date,
+			"patient_id" => $patient_id,
+			"personnel_id" => $doctor_id,
+			"patient_insurance_id" => $patient_insurance_id,
+			"patient_insurance_number" => $patient_insurance_number,
+			"visit_type" => $patient_type,
+			"time_start"=>$timepicker_start,
+			"time_end"=>$timepicker_end,
+			"appointment_id"=>$appointment_id,
+			"close_card"=>$close_card,
+		);
+
+		$this->db->insert('visit', $visit_data);
+		$visit_id = $this->db->insert_id();
+		
+		return $visit_id;
+	}
+	
+	public function coming_from($visit_id)
+	{
+		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.visit_department_status = 0';
+		$this->db->select('departments.departments_name');
+		$this->db->where($where);
+		$this->db->order_by('visit_department.last_modified','DESC');
+		$query = $this->db->get('visit_department, departments', 1, 0);
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			return $row->departments_name;
+		}
+		
+		else
+		{
+			return 'Reception';
+		}
+	}
+	
+	public function get_visit_trail($visit_id)
+	{
+		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.created_by = personnel.personnel_id';
+		$this->db->select('departments.departments_name, personnel.personnel_fname, visit_department.*');
+		$this->db->where($where);
+		$this->db->order_by('visit_department.created','ASC');
+		$query = $this->db->get('visit_department, departments, personnel');
+		
+		return $query;
+		
+	}
 }
 ?>
