@@ -1168,7 +1168,7 @@ class Reception extends auth
 		redirect('reception/appointment_list');
 	}
 	
-	public function delete_patient($patient_id)
+	public function delete_patient($patient_id, $page)
 	{
 		if($this->reception_model->delete_patient($patient_id))
 		{
@@ -1180,7 +1180,25 @@ class Reception extends auth
 			$this->session->set_userdata('error_message', 'Could not delete patient. Please <a href="'.site_url().'/reception/delete_patient/'.$patient_id.'">try again</a>');
 		}
 		
-		redirect('reception/patients');
+		if($page == 1)
+		{
+			redirect('reception/patients');
+		}
+		
+		if($page == 2)
+		{
+			redirect('reception/staff');
+		}
+		
+		if($page == 3)
+		{
+			redirect('reception/staff_dependants');
+		}
+		
+		if($page == 4)
+		{
+			redirect('reception/students');
+		}
 	}
 	
 	public function delete_visit($visit_id, $visit)
@@ -1512,12 +1530,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$surname .= ' staff_dependants.other_names LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+					$surname .= ' staff.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
 				}
 				
 				else
 				{
-					$surname .= ' staff_dependants.other_names LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+					$surname .= ' staff.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
 				}
 				$count++;
 			}
@@ -1541,12 +1559,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$other_name .= ' staff_dependants.other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+					$other_name .= ' staff.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
 				}
 				
 				else
 				{
-					$other_name .= ' staff_dependants.other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+					$other_name .= ' staff.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
 				}
 				$count++;
 			}
