@@ -58,7 +58,7 @@ class Charts extends authentication {
 	{
 		$highest_bar = 0;
 		//nurse total
-		$nurse_total = $this->reports_model->get_queue_total(NULL, 'nurse_visit = 0');
+		$nurse_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 7');
 		$result['bars'] = $nurse_total;
 		
 		if($nurse_total > $highest_bar)
@@ -67,7 +67,7 @@ class Charts extends authentication {
 		}
 		
 		//doctor total
-		$doctor_total = $this->reports_model->get_queue_total(NULL, 'doc_visit = 0 AND nurse_visit = 1');
+		$doctor_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 2');
 		$result['bars'] .= $doctor_total.',';
 		
 		if($doctor_total > $highest_bar)
@@ -76,7 +76,7 @@ class Charts extends authentication {
 		}
 		
 		//dental total
-		$dental_total = $this->reports_model->get_queue_total(NULL, 'dental_visit = 1');
+		$dental_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 10');
 		$result['bars'] .= $dental_total.',';
 		
 		if($dental_total > $highest_bar)
@@ -85,7 +85,7 @@ class Charts extends authentication {
 		}
 		
 		//lab total
-		$lab_total = $this->reports_model->get_queue_total(NULL, 'doc_visit = 1 AND nurse_visit = 1 AND lab_visit = 0');
+		$lab_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 4');
 		$result['bars'] .= $lab_total.',';
 		
 		if($lab_total > $highest_bar)
@@ -94,7 +94,7 @@ class Charts extends authentication {
 		}
 		
 		//pharmacy total
-		$pharmacy_total = $this->reports_model->get_queue_total(NULL, 'doc_visit = 1 AND nurse_visit = 1 AND pharmarcy = 6');
+		$pharmacy_total = $this->reports_model->get_queue_total(NULL, 'visit_department.department_id = 5');
 		$result['bars'] .= $pharmacy_total;
 		
 		if($pharmacy_total > $highest_bar)

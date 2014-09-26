@@ -16,9 +16,9 @@ class Lab_model extends CI_Model
 	}
 
 	function get_lab_visit_test($visit_id ){
-		$table = "visit";
+		$table = "visit_department";
 		$where = "visit_id = ".$visit_id;
-		$items = "*";
+		$items = "department_id";
 		$order = "visit_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);

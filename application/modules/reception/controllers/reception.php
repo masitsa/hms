@@ -19,7 +19,7 @@ class Reception extends auth
 		
 		$where = 'visit.visit_delete = 0 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit, patients';
-		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 10, 0);
+		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, 10, 0);
 		$v_data['query'] = $query;
 		$v_data['page'] = 0;
 		
@@ -221,7 +221,7 @@ class Reception extends auth
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
-		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, $config["per_page"], $page);
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -467,6 +467,7 @@ class Reception extends auth
 	public function set_visit($primary_key)
 	{
 		$v_data["patient_id"] = $primary_key;
+		$v_data['visit_departments'] = $this->reception_model->get_visit_departments();
 		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
 		$v_data['doctor'] = $this->reception_model->get_doctor();
 		$v_data['type'] = $this->reception_model->get_types();
@@ -535,7 +536,12 @@ class Reception extends auth
 	public function save_visit($patient_id)
 	{
 		$this->form_validation->set_rules('visit_date', 'Visit Date', 'required');
-		$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+		$this->form_validation->set_rules('department_id', 'Department', 'required|is_natural_no_zero');
+		if($_POST['department_id'] == 7)
+		{
+			//if nurse visit doctor must be selected
+			$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+		}
 		$this->form_validation->set_rules('patient_type', 'Patient Type', 'required|is_natural_no_zero');
 		$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
 		
@@ -583,39 +589,35 @@ class Reception extends auth
 			}
 			else
 			{
-				$visit_data = array(
-        		"visit_date" => $visit_date,
-        		"patient_id" => $patient_id,
-        		"personnel_id" => $doctor_id,
-        		"patient_insurance_id" => $patient_insurance_id,
-				"patient_insurance_number" => $patient_insurance_number,
-        		"visit_type" => $patient_type,
-				"time_start"=>$timepicker_start,
-				"time_end"=>$timepicker_end,
-				"appointment_id"=>$appointment_id,
-				"close_card"=>$close_card,
-	    		);
-		
-				$this->db->insert('visit', $visit_data);
-				$visit_id = $this->db->insert_id();
-
-				$service_charge = $this->reception_model->get_service_charge($service_charge_id);
-
-				$visit_charge_data = array(
-					"visit_id" => $visit_id,
-					"service_charge_id" => $service_charge_id,
-					"visit_charge_amount" => $service_charge
-		    	);
-				$this->db->insert('visit_charge', $visit_charge_data);
-
-				$patient_date = array(
-					"last_visit" => $visit_date
-		    	);
-				$this->db->where('patient_id', $patient_id);
-				$this->db->update('patients', $patient_date);
+				//create visit
+				$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
+				
+				//save consultation charge
+				$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);
+				
+				//set visit department if not appointment
+				if($appointment_id == 0)
+				{
+					//update patient last visit
+					$this->reception_model->set_last_visit_date($patient_id, $visit_date);
+					
+					$department_id = $this->input->post('department_id');
+					if($this->reception_model->set_visit_department($visit_id, $department_id))
+					{
+						$this->session->set_userdata('success_message', 'Visit has been initiated');
+					}
+					else
+					{
+						$this->session->set_userdata('error_message', 'Internal error. Could not add the visit');
+					}
+				}
+				
+				else
+				{
+					$this->session->set_userdata('success_message', 'Visit has been initiated');
+				}
 				
 				$this->visit_list(0);
-
 			}
 			
 		}
@@ -1045,7 +1047,7 @@ class Reception extends auth
 		
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
         $v_data["links"] = $this->pagination->create_links();
-		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, $config["per_page"], $page);
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;

@@ -1,20 +1,15 @@
 <?php
 
 $patient_id = $this->nurse_model->get_patient_id($visit_id);
+$coming_from = $this->reception_model->coming_from($visit_id);
 
-$rs2 = $this->lab_model->get_lab_visit2($visit_id);
-$num_rows2 = count($rs2);
-
-if($num_rows2 > 0){
-	foreach ($rs2 as $key): 
-		$lab_visit = $key->lab_visit;
-	endforeach;
+if(!empty($coming_from)){
 
 	$get_test_rs = $this->lab_model->get_lab_visit_test($visit_id);
 	$num_rows = count($get_test_rs);
 	
 	$rs3 = $this->lab_model->get_comment($visit_id);
-	$num_rows3 = count($rs2);
+	$num_rows3 = count($rs3);
 	
 	if($num_rows3 > 0){
 		foreach ($rs3 as $key3):
@@ -24,15 +19,16 @@ if($num_rows2 > 0){
 	
 	if ($num_rows >0 ){
 		foreach ($get_test_rs as $key_rs):
-			$lab_test = $key_rs->lab_visit;
+			$lab_test = $key_rs->department_id;
 		endforeach;
 		//echo $lab_test;
 		
-		if ($lab_test == 2){
+		//coming from reception
+		if(($lab_test == 1)){
 			echo "
 			<table align='center'>
 			<tr><td>
-			<input name='test' type='button' value='check test' onclick='open_window_laboratory(".$visit_id.",552)' />
+			<input name='test' type='button' value='Check Test' onclick='open_window_laboratory(".$visit_id.",552)' />
 			
 			</td></tr>
 			
@@ -226,7 +222,7 @@ if($num_rows2 > 0){
 		";
 		}
 		
-		else if($lab_visit == 5){
+		/*else if($coming_from == ''){
 		echo"
 			<div class='center-align'>
 				<input type='button' value='Print' name='std' class='btn btn-lg btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
@@ -234,9 +230,9 @@ if($num_rows2 > 0){
 				<input type='button' class='btn btn-lg btn-success' value='Done' onclick='finish_lab_test(".$visit_id.")'/>
 			</div>
 		";
-		}
+		}*/
 		
-		else if($lab_visit == 0){
+		else if(($coming_from == 'Lab') || ($coming_from == 'Nurse') || ($coming_from == 'Reception')){
 		echo"
 			<div class='center-align'>
 				<input type='button' value='Print' name='std' class='btn btn-lg btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>

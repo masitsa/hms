@@ -10,17 +10,17 @@ class Reports_model extends CI_Model
 		}
 		if($where == NULL)
 		{
-			$where = 'close_card = 0 AND visit_date = \''.$date.'\'';
+			$where = 'visit.visit_id = visit_department.visit_id AND visit.close_card = 0 AND visit.visit_date = \''.$date.'\'';
 		}
 		
 		else
 		{
-			$where .= ' AND close_card = 0 AND visit_date = \''.$date.'\' ';
+			$where .= ' AND visit.visit_id = visit_department.visit_id AND visit.close_card = 0 AND visit.visit_date = \''.$date.'\' ';
 		}
 		
-		$this->db->select('COUNT(visit_id) AS queue_total');
+		$this->db->select('COUNT(visit.visit_id) AS queue_total');
 		$this->db->where($where);
-		$query = $this->db->get('visit');
+		$query = $this->db->get('visit, visit_department');
 		
 		$result = $query->row();
 		

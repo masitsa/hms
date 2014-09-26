@@ -19,8 +19,8 @@ class Nurse extends auth
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
-		$table = 'visit, patients';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
 		$v_data['query'] = $query;
 		$v_data['page'] = 0;
@@ -39,7 +39,7 @@ class Nurse extends auth
 	public function nurse_queue($page_name = NULL)
 	{
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -56,7 +56,7 @@ class Nurse extends auth
 		{
 			$segment = 4;
 		}
-		$table = 'visit, patients';
+		$table = 'visit_department, visit, patients';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/nurse/nurse_queue/'.$page_name;
@@ -154,7 +154,8 @@ class Nurse extends auth
 		}
 	}
 	
-	public function dental_visit($visit_id, $mike = NULL, $module = NULL){
+	public function dental_visit($visit_id, $mike = NULL, $module = NULL)
+	{
 		$v_data['module'] = $module;
 		$v_data['visit_id'] = $visit_id;
 		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
@@ -774,13 +775,10 @@ class Nurse extends auth
 		$visit_data = array('visit_id'=>$visit_id);
 		$this->load->view('soap/nurse_notes',$visit_data);
 	}
-	
 
 	public function send_to_doctor($visit_id)
 	{
-		$visit_data = array('nurse_visit'=>1);
-		$this->db->where('visit_id',$visit_id);
-		if($this->db->update('visit', $visit_data))
+		if($this->reception_model->set_visit_department($visit_id, 2))
 		{
 			redirect('nurse/nurse_queue');
 		}
@@ -791,9 +789,7 @@ class Nurse extends auth
 	}
 	public function send_to_labs($visit_id)
 	{
-		$visit_data = array('nurse_visit'=>1,'lab_visit'=>12,'doc_visit'=>1);
-		$this->db->where('visit_id',$visit_id);
-		if($this->db->update('visit', $visit_data))
+		if($this->reception_model->set_visit_department($visit_id, 4))
 		{
 			redirect('nurse/nurse_queue');
 		}
@@ -804,9 +800,7 @@ class Nurse extends auth
 	}
 	public function send_to_pharmacy($visit_id)
 	{
-		$visit_data = array('nurse_visit'=>1,'pharmarcy'=>6,'doc_visit'=>1);
-		$this->db->where('visit_id',$visit_id);
-		if($this->db->update('visit', $visit_data))
+		if($this->reception_model->set_visit_department($visit_id, 5))
 		{
 			redirect('nurse/nurse_queue');
 		}
@@ -886,8 +880,8 @@ class Nurse extends auth
 		$date = date('Y-m-d');
 		
 		//get nurse total
-		$table = 'patients, visit';
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 0 AND visit.visit_date = \''.$date.'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit_department, visit, patients';
 		$nurse_total = $this->nurse_model->get_queue_total($table, $where);
 		
 		if($nurse_total > $highest_bar)
@@ -896,7 +890,7 @@ class Nurse extends auth
 		}
 		
 		//get doctor total
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND nurse_visit = 1 AND doc_visit = 0 AND visit.visit_date = \''.$date.'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$doctor_total = $this->nurse_model->get_queue_total($table, $where);
 		
 		if($doctor_total > $highest_bar)
@@ -905,7 +899,7 @@ class Nurse extends auth
 		}
 		
 		//get lab total
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.lab_visit = 12 AND visit.visit_date = \''.$date.'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$lab_total = $this->nurse_model->get_queue_total($table, $where);
 		
 		if($lab_total > $highest_bar)
@@ -914,7 +908,7 @@ class Nurse extends auth
 		}
 		
 		//get pharnacy total
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.pharmarcy = 6 AND visit.visit_date = \''.$date.'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$pharmacy_total = $this->nurse_model->get_queue_total($table, $where);
 		
 		if($pharmacy_total > $highest_bar)
@@ -928,29 +922,24 @@ class Nurse extends auth
 		$result['highest_bar'] = $highest_bar;
 		echo json_encode($result);
 	}
-	public function send_to_accounts($primary_key,$module)
+	public function send_to_accounts($visit_id, $module)
 	{
-		
-		if($module == 2){
-			$visit_data = array('pharmarcy'=>7,'nurse_visit'=>1,'lab_visit'=>1);
-		}else if($module == 1){
-			$visit_data = array('pharmarcy'=>7);
-		}else{
-			$visit_data = array('pharmarcy'=>7,'nurse_visit'=>1);
+		if($this->reception_model->set_visit_department($visit_id, 6))
+		{
+			if($module == 0){
+				redirect("nurse/nurse_queue");
+			}else if($module == 2){
+				redirect("laboratory/lab_queue");
+			}else if($module == 1){
+				redirect("pharmacy/pharmacy_queue");
+			}else{
+				redirect("doctor/doctor_queue");
+			}
 		}
-		
-		$this->db->where(array("visit_id"=>$primary_key));
-		$this->db->update('visit', $visit_data);
-		if($module == 0){
-			redirect("nurse/nurse_queue");
-		}else if($module == 2){
-			redirect("lab/lab_queue");
-		}else if($module == 1){
-			redirect("pharmacy/pharmacy_queue");
-		}else{
-			redirect("doctor/doctor_queue");
+		else
+		{
+			echo 'error';
 		}
-		
 
 	}
 	function from_lab_queue($page_name = NULL){

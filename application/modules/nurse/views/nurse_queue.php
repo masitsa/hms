@@ -43,9 +43,9 @@
 						  <th>#</th>
 						  <th>Visit Date</th>
 						  <th>Patient</th>
-						  <th>Patient Type</th>
 						  <th>Visit Type</th>
-						  <th>Time In</th>
+						  <th>Sent At</th>
+						  <th>Coming From</th>
 						  <th>Doctor</th>
 						  <th colspan="5">Actions</th>
 						</tr>
@@ -67,6 +67,7 @@
 				{
 					$visit_time_out = '-';
 				}
+				$visit_created = date('H:i a',strtotime($row->visit_created));
 				$visit_id = $row->visit_id;
 				$patient_id = $row->patient_id;
 				$personnel_id = $row->personnel_id;
@@ -74,6 +75,7 @@
 				$strath_no = $row->strath_no;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
+				$coming_from = $this->reception_model->coming_from($visit_id);
 				
 				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
 				$visit_type = $patient['visit_type'];
@@ -126,11 +128,11 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$visit_date.'</td>
+							<td>'.$visit_created.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$patient_type.'</td>
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
+							<td>'.$coming_from.'</td>
 							<td>'.$doctor.'</td>
 							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/'.$module.'" class="btn btn-sm btn-info">Patient Card</a></td>
 							<td><a href="'.site_url().'/nurse/dental_visit/'.$visit_id.'/a/'.$module.'" class="btn btn-sm btn-danger">Dental Vitals</a></td>

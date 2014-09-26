@@ -29,11 +29,40 @@
 					<div class="col-md-6">
 				        
 					        <div class="form-group">
+						            <label class="col-lg-4 control-label">Department: </label>
+                                    
+						            <div class="col-lg-8">
+						     			 <select name="department_id" class="form-control">
+                                         	<option value="">----Select a Department----</option>
+				                        	<?php
+									                            	
+												if($visit_departments->num_rows() > 0){
+				                            		foreach($visit_departments->result() as $row):
+														$department_name = $row->departments_name;
+														$department_id = $row->department_id;
+														
+														if($department_id == set_value('department_id'))
+														{
+															echo "<option value='".$department_id."' selected='selected'>".$department_name."</option>";
+														}
+														
+														else
+														{
+															echo "<option value='".$department_id."'>".$department_name."</option>";
+														}
+													endforeach;
+												}
+											?>
+			                            </select>
+	                            	</div>
+	                            </div>
+				        
+					        <div class="form-group">
 						            <label class="col-lg-4 control-label">Doctor: </label>
                                     
 						            <div class="col-lg-8">
 						     			 <select name="personnel_id" class="form-control">
-                                         	<option value="0">----Select a Doctor----</option>
+                                         	<option value="">----Select a Doctor----</option>
 				                        	<?php
 									                            	
 												if(count($doctor) > 0){
@@ -62,7 +91,7 @@
 						            
 						            <div class="col-lg-8">
 						            	 <select name="patient_type" id="patient_type"  onChange='insurance_company("patient_type","insured");getCity("<?php echo site_url();?>/reception/load_charges/"+this.value);' class="form-control">
-						                    <option value="0">--- Select Patient Type---</option>
+						                    <option value="">--- Select Patient Type---</option>
 						                	<?php
 												if(count($type) > 0){
 						                    		foreach($type as $row):
