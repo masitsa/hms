@@ -1492,7 +1492,34 @@ class Reception_model extends CI_Model
 		$query = $this->db->get('visit_department, departments, personnel');
 		
 		return $query;
+	}
+	
+	public function get_student_data($strath_no)
+	{
+		$where = 'student_Number = '.$strath_no;
+		$this->db->select('*');
+		$this->db->where($where);
+		$query = $this->db->get('student');
 		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$student['student_number'] = $row->student_Number;
+			$student['patient_othernames'] = $row->Other_names;
+			$student['patient_surname'] = $row->Surname;
+			$student['patient_date_of_birth'] = $row->DOB;
+			$student['gender'] = $row->gender;
+		}
+		
+		else
+		{
+			$student['student_number'] = '';
+			$student['patient_othernames'] = '';
+			$student['patient_surname'] = '<span class="label label-important">Student not found: '.$strath_no.'</span>';
+			$student['patient_date_of_birth'] = '';
+			$student['gender'] = '';
+		}
+		return $student;
 	}
 }
 ?>

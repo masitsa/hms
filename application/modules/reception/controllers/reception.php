@@ -1331,20 +1331,27 @@ class Reception extends auth
 		
 		$this->load->view('auth/template_sidebar', $data);
 	}
+	
 	public function students()
 	{
 		$segment = 3;
 		
 		$patient_search = $this->session->userdata('patient_student_search');
-		$where = 'patients.visit_type_id = 1  AND patients.strath_no = student.student_Number AND patients.patient_delete = 0';
 		
 		if(!empty($patient_search))
 		{
+			$where = 'patients.visit_type_id = 1  AND patients.strath_no = student.student_Number AND patients.patient_delete = 0';
 			$where .= $patient_search;
+			$table = 'patients, student';
+			$items = 'student.*, patients.*';
 		}
 		
-		$table = 'patients, student';
-		$items = 'student.*, patients.*';
+		else
+		{
+			$where = 'patients.visit_type_id = 1 AND patients.patient_delete = 0';
+			$table = 'patients';
+			$items = 'patients.*';
+		}
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/reception/students';
@@ -1352,7 +1359,6 @@ class Reception extends auth
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
-		
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
 		$config['full_tag_close'] = '</ul>';
@@ -1386,6 +1392,7 @@ class Reception extends auth
 		$v_data['title'] = 'Students ';
 		
 		$v_data['query'] = $query;
+		$v_data['patient_search'] = $patient_search;
 		$v_data['page'] = $page;
 		$v_data['type'] = $this->reception_model->get_types();
 		$data['content'] = $this->load->view('patients/students', $v_data, true);

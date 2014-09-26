@@ -79,11 +79,25 @@
 				$created = $row->patient_date;
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
-				$student_number = $row->student_Number;
-				$patient_othernames = $row->Other_names;
-				$patient_surname = $row->Surname;
-				$patient_date_of_birth = $row->DOB;
-				$gender = $row->gender;
+				
+				if(!empty($patient_search))
+				{
+					$student_number = $row->student_Number;
+					$patient_othernames = $row->Other_names;
+					$patient_surname = $row->Surname;
+					$patient_date_of_birth = $row->DOB;
+					$gender = $row->gender;
+				}
+				
+				else
+				{
+					$patient = $this->reception_model->get_student_data($strath_no);
+					$student_number = $patient['student_number'];
+					$patient_othernames = $patient['patient_othernames'];
+					$patient_surname = $patient['patient_surname'];
+					$patient_date_of_birth = $patient['patient_date_of_birth'];
+					$gender = $patient['gender'];
+				}
 				
 				if($last_visit != NULL)
 				{
