@@ -1294,15 +1294,15 @@ class Reception extends auth
 		$segment = 3;
 		
 		$patient_search = $this->session->userdata('patient_dependants_search');
-		$where = 'patients.visit_type_id = 2 AND patients.dependant_id > 0 AND patients.dependant_id = staff.Staff_Number AND staff.staff_system_id = staff_dependants.staff_id AND patients.patient_delete = 0';
+		$where = 'patients.visit_type_id = 2 AND patients.dependant_id > 0 AND patients.dependant_id = staff.Staff_Number  AND patients.patient_delete = 0';
 		
 		if(!empty($patient_search))
 		{
 			$where .= $patient_search;
 		}
 		
-		$table = 'patients, staff_dependants, staff';
-		$items = 'staff_dependants.*, patients.*, staff.Staff_Number';
+		$table = 'patients,staff';
+		$items = 'patients.*,staff.*';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/reception/staff_dependants';
@@ -1512,12 +1512,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$surname .= ' staff_dependants.surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+					$surname .= ' staff_dependants.other_names LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
 				}
 				
 				else
 				{
-					$surname .= ' staff_dependants.surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+					$surname .= ' staff_dependants.other_names LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
 				}
 				$count++;
 			}

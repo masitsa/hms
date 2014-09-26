@@ -44,7 +44,6 @@
               <ul class="nav nav-tabs">
                 <li><a href="#staff" data-toggle="tab">Staff</a></li>
                 <li class="active"><a href="#student" data-toggle="tab">Student</a></li>
-                <li><a href="#dependant" data-toggle="tab">Dependant</a></li>
                 <li><a href="#other" data-toggle="tab">Other</a></li>
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
@@ -195,31 +194,7 @@
                   </form>
                 </div>
                 
-                <div class="tab-pane" id="dependant">
-                	<?php
-                    	if($dependant_staff != NULL)
-						{
-							echo $this->load->view("patients/dependants", '', TRUE);
-						}
-						
-						else
-						{
-					?>
-                        <p class="center-align">Enter the staff member's number</p>
-                        <form class="form-horizontal" role="form" method="POST" action="<?php echo site_url().'/reception/search_staff'?>">
-                        	<input type="hidden" name="dependant" value="1" />
-                            <div class="form-group">
-                                <label class="col-lg-2 control-label">Staff Number</label>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="staff_number" placeholder="Staff Number">
-                                </div>
-                                <div class="col-lg-2">
-                                    <button class="btn btn-info btn-lg" type="submit">Search</button>
-                                </div>
-                            </div>
-                        </form>
-                    <?php } ?>
-                </div>
+               
                 
                 <div class="tab-pane" id="other">
                   

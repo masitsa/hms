@@ -70,6 +70,8 @@
 			
 			foreach ($query->result() as $row)
 			{
+
+
 				$patient_id = $row->patient_id;
 				$dependant_id = $row->dependant_id;
 				$strath_no = $row->strath_no;
@@ -80,12 +82,33 @@
 				$created = $row->patient_date;
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
-				$staff_number = $row->Staff_Number;
-				$patient_othernames = $row->other_names;
-				$patient_surname = $row->surname;
-				$patient_date_of_birth = $row->DOB;
-				$gender = $row->Gender;
+				$staff_system_id = $row->staff_system_id;
+				// $staff_number = $row->Staff_Number;
+				// $patient_othernames = $row->other_names;
+				// $patient_surname = $row->surname;
+				// $patient_date_of_birth = $row->DOB;
+				// $gender = $row->Gender;
 				
+
+				if(!empty($patient_search))
+				{
+					$staff_number = $row->staff_number;
+					$patient_othernames = $row->other_names;
+					$patient_surname = $row->surname;
+					$patient_date_of_birth = $row->DOB;
+					$gender = $row->gender;
+				}
+				
+				else
+				{
+					$patient = $this->reception_model->get_staff_dependant_data($staff_system_id);
+					$staff_number = $patient['staff_id'];
+					$patient_othernames = $patient['patient_othernames'];
+					$patient_surname = $patient['patient_surname'];
+					$patient_date_of_birth = $patient['patient_date_of_birth'];
+					$gender = $patient['gender'];
+				}
+
 				if($last_visit != NULL)
 				{
 					$last_visit = date('jS M Y',strtotime($last_visit));
