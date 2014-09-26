@@ -560,7 +560,7 @@ class Reception_model extends CI_Model
 					$dependants_result = $dependant_query->row();
 					
 					$patient_othernames = $dependants_result->other_names;
-					$patient_surname = $dependants_result->names;
+					$patient_surname = $dependants_result->surname;
 					$patient_date_of_birth = $dependants_result->DOB;
 					$relationship = $dependants_result->relation;
 					$gender = $dependants_result->Gender;
@@ -1563,7 +1563,7 @@ class Reception_model extends CI_Model
 	}
 	public function get_staff_dependant_data($strath_no)
 	{
-		$where = 'staff.staff_system_id = staff_dependants.staff_id AND   staff_dependants.staff_id = '.$strath_no;
+		$where = 'staff.staff_system_id = staff_dependants.staff_id AND staff.Staff_Number = '.$strath_no;
 		$this->db->select('*');
 		$this->db->where($where);
 		$query = $this->db->get('staff_dependants,staff');

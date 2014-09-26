@@ -104,8 +104,8 @@
 				
 				else
 				{
-					$patient = $this->reception_model->get_staff_dependant_data($staff_system_id);
-					$staff_number = $patient['staff_id'];
+					$patient = $this->reception_model->patient_names2($patient_id);
+					//$staff_number = $patient['staff_id'];
 					$patient_othernames = $patient['patient_othernames'];
 					$patient_surname = $patient['patient_surname'];
 					$patient_date_of_birth = $patient['patient_date_of_birth'];
@@ -172,9 +172,9 @@
 						<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
 						<td>'.$last_visit.'</td>
 						<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
-						<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
-						<!--<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>-->
-						<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>
+						<!--<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>
+						<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>-->
+						<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'/3" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>
 					</tr> 
 				';
 			}
