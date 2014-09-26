@@ -904,21 +904,21 @@ class Reception extends auth
 		if($page == NULL)
 		{
 			$this->session->unset_userdata('patient_search');
-			$this->patients();
+			redirect('reception/patients');
 		} else if($page == 2)
 		{
 			$this->session->unset_userdata('patient_staff_search');
-			$this->staff();
+			redirect('reception/staff');
 		}
 		else if($page == 3)
 		{
 			$this->session->unset_userdata('patient_student_search');
-			$this->students();
+			redirect('reception/students');
 		}
 		else
 		{
 			$this->session->unset_userdata('patient_dependants_search');
-			$this->staff_dependants();
+			redirect('reception/staff_dependants');
 		}
 	}
 	
@@ -1621,6 +1621,84 @@ class Reception extends auth
 			//echo $this->session->userdata('patient_dependants_search');
 		
 		$this->staff();
+	}	
+	public function search_student_patients()
+	{
+		$strath_no = $this->input->post('strath_no');
+		$registration_date = $this->input->post('registration_date');
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND student.student_Number LIKE \'%'.$strath_no.'%\' ';
+		}
+		
+		if(!empty($registration_date))
+		{
+			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.'%\' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['surname']))
+		{
+			$surnames = explode(" ",$_POST['surname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' student.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' student.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+		}
+		
+		else
+		{
+			$surname = '';
+		}
+		
+		//search other_names
+		if(!empty($_POST['othernames']))
+		{
+			$other_names = explode(" ",$_POST['othernames']);
+			$total = count($other_names);
+			
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$other_name .= ' student.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' student.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$other_name .= ') ';
+		}
+		
+		else
+		{
+			$other_name = '';
+		}
+		
+		$search = $strath_no.$surname.$other_name.$registration_date;
+		$this->session->set_userdata('patient_student_search', $search);
+		
+		$this->students();
 	}	
 	/*
 	*	Register dependant patient

@@ -35,12 +35,10 @@
 			echo '<div class="alert alert-success">'.$success.'</div>';
 			$this->session->unset_userdata('success_message');
 		}
-				
-		$search = $this->session->userdata('patient_dependants_search');
 		
-		if(!empty($search))
+		if(!empty($patient_search))
 		{
-			echo '<a href="'.site_url().'/reception/close_patient_search/1" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/reception/close_patient_search/3" class="btn btn-warning">Close Search</a>';
 		}
 		
 		$result = '';

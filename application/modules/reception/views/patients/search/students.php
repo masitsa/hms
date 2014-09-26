@@ -25,7 +25,7 @@
                         <label class="col-lg-4 control-label">Student ID: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="strath_no" placeholder="Staff ID">
+                            <input type="text" class="form-control" name="strath_no" placeholder="Student ID">
                         </div>
                     </div>
                     
