@@ -84,7 +84,9 @@
 				$last_visit = $row->last_visit;
 				$staff_system_id = $row->staff_system_id;
 				$dependant_id = $row->dependant_id;
+
 				// $staff_number = $row->Staff_Number;
+
 				// $patient_othernames = $row->other_names;
 				// $patient_surname = $row->surname;
 				// $patient_date_of_birth = $row->DOB;
