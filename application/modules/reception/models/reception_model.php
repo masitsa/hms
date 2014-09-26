@@ -1521,5 +1521,32 @@ class Reception_model extends CI_Model
 		}
 		return $student;
 	}
+	public function get_staff_dependant_data($strath_no)
+	{
+		$where = 'staff.staff_system_id = staff_dependants.staff_id AND   staff_dependants.staff_id = '.$strath_no;
+		$this->db->select('*');
+		$this->db->where($where);
+		$query = $this->db->get('staff_dependants,staff');
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$student['staff_id'] = $row->staff_id;
+			$student['patient_othernames'] = $row->other_names;
+			$student['patient_surname'] = $row->surname;
+			$student['patient_date_of_birth'] = $row->DOB;
+			$student['gender'] = $row->gender;
+		}
+		
+		else
+		{
+			$student['staff_id'] = '';
+			$student['patient_othernames'] = '';
+			$student['patient_surname'] = '<span class="label label-important">Dependant not found: '.$strath_no.'</span>';
+			$student['patient_date_of_birth'] = '';
+			$student['gender'] = '';
+		}
+		return $student;
+	}
 }
 ?>

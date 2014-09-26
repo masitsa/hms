@@ -31,7 +31,7 @@ class Accounts extends auth
 			$where .= $visit_search;
 		}
 		
-		$table = 'visit, patients';
+		$table = 'visit, patients, visit_department';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/accounts/accounts_queue/';
