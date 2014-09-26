@@ -397,6 +397,12 @@ $(document).ready(function(){
     });
   });
 
+  $(function() {
+    $('#datetimepicker_other_patient').datetimepicker({
+      pickTime: false
+    });
+  });
+
    $(function() {
     $('#datetimepicker2').datetimepicker({
       pickDate: false

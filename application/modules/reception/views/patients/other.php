@@ -1,4 +1,16 @@
-<?php echo form_open("reception/register_other_patient", array("class" => "form-horizontal"));?>
+<?php 
+	echo form_open("reception/register_other_patient", array("class" => "form-horizontal"));
+	form_hidden('visit_type_id', 3);
+	if(isset($$dependant_parent))
+	{
+		form_hidden('dependant_id', $dependant_parent);
+	}
+	
+	else
+	{
+		form_hidden('dependant_id', 0);
+	}
+?>
 <div class="row">
 	<div class="col-md-6">
         <div class="form-group">
@@ -36,7 +48,7 @@
             <label class="col-lg-4 control-label">Surname: </label>
             
             <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_surname" placeholder="Surname">
+            	<input type="text" class="form-control" name="patient_surname" placeholder="Surname" value="<?php echo set_value('patient_surname');?>">
             </div>
         </div>
         
@@ -52,10 +64,10 @@
             <label class="col-lg-4 control-label">Date of Birth: </label>
             
             <div class="col-lg-8">
-                <div id="datetimepicker1" class="input-append">
+                <div id="datetimepicker_other_patient" class="input-append">
                     <input data-format="yyyy-MM-dd" class="form-control" type="text" name="patient_dob" placeholder="Date of Birth">
                     <span class="add-on">
-                        &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                        &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar" style="cursor:pointer;">
                         </i>
                     </span>
                 </div>

@@ -48,7 +48,7 @@ class Reception extends auth
 		}
 		
 		$patient_search = $this->session->userdata('patient_search');
-		$where = 'patient_delete = '.$delete;
+		$where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
 		
 		if(!empty($patient_search))
 		{
@@ -101,8 +101,8 @@ class Reception extends auth
 		
 		else
 		{
-			$data['title'] = 'All Patients';
-			$v_data['title'] = 'All Patients';
+			$data['title'] = 'Other Patients';
+			$v_data['title'] = 'Other Patients';
 		}
 		
 		$v_data['query'] = $query;
@@ -296,6 +296,28 @@ class Reception extends auth
 	}
 	
 	/*
+	*	Add a new patient
+	*
+	*/
+	public function add_other_dependant($dependant_parent)
+	{
+		$v_data['relationships'] = $this->reception_model->get_relationship();
+		$v_data['religions'] = $this->reception_model->get_religion();
+		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
+		$v_data['titles'] = $this->reception_model->get_title();
+		$v_data['genders'] = $this->reception_model->get_gender();
+		$v_data['dependant_parent'] = $dependant_parent;
+		$patient = $this->reception_model->patient_names2($dependant_parent);
+		$v_data['patient_othernames'] = $patient['patient_othernames'];
+		$v_data['patient_surname'] = $patient['patient_surname'];
+		$data['content'] = $this->load->view('add_other_dependant', $v_data, true);
+		
+		$data['title'] = 'Add Patients';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	
+	/*
 	*	Register other patient
 	*
 	*/
@@ -331,7 +353,7 @@ class Reception extends auth
 		else
 		{
 			$patient_id = $this->reception_model->save_other_patient();
-			
+			//echo $patient_id; die();
 			if($patient_id != FALSE)
 			{
 				$this->get_found_patients($patient_id);
@@ -531,7 +553,6 @@ class Reception extends auth
 		$data['sidebar'] = 'reception_sidebar';
 		$this->load->view('auth/template_sidebar', $data);	
 	}
-	
 	
 	public function save_visit($patient_id)
 	{
@@ -1768,5 +1789,59 @@ class Reception extends auth
 				$this->db->update('staff_dependants', $data);
 			}
 		}
+	}
+	
+	/*
+	*	Edit other patient
+	*
+	*/
+	public function edit_patient($patient_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
+		$this->form_validation->set_rules('patient_surname', 'Surname', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_othernames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_dob', 'Date of Birth', 'trim|xss_clean');
+		$this->form_validation->set_rules('gender_id', 'Gender', 'xss_clean');
+		$this->form_validation->set_rules('religion_id', 'Religion', 'xss_clean');
+		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'xss_clean');
+		$this->form_validation->set_rules('patient_email', 'Email Address', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_address', 'Postal Address', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_postalcode', 'Postal Code', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_town', 'Town', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_phone1', 'Primary Phone', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_phone2', 'Other Phone', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_kin_sname', 'Next of Kin Surname', 'trim|xss_clean');
+		$this->form_validation->set_rules('patient_kin_othernames', 'Next of Kin Other Names', 'trim|xss_clean');
+		$this->form_validation->set_rules('relationship_id', 'Relationship With Kin', 'xss_clean');
+		$this->form_validation->set_rules('patient_national_id', 'National ID', 'trim|xss_clean');
+		$this->form_validation->set_rules('next_of_kin_contact', 'Next of Kin Contact', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->reception_model->edit_other_patient($patient_id))
+			{
+				$this->session->set_userdata("success_message","Patient edited successfully");
+				//redirect('reception/patients');
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add patient. Please try again");
+			}
+		}
+		
+		$v_data['relationships'] = $this->reception_model->get_relationship();
+		$v_data['religions'] = $this->reception_model->get_religion();
+		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
+		$v_data['titles'] = $this->reception_model->get_title();
+		$v_data['genders'] = $this->reception_model->get_gender();
+		$v_data['patient'] = $this->reception_model->get_patient_data($patient_id);
+		$data['content'] = $this->load->view('patients/edit_other_patient', $v_data, true);
+		
+		$data['title'] = 'Edit Patients';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
 	}
 }

@@ -232,12 +232,52 @@ class Reception_model extends CI_Model
 			'patient_number'=>$this->strathmore_population->create_patient_number(),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id'),
-			'patient_kin_phonenumber1'=>$this->session->userdata('next_of_kin_contact')
+			'visit_type_id'=>$this->input->post('visit_type_id'),
+			'dependant_id'=>$this->input->post('dependant_id'),
+			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact')
 		);
 		
 		if($this->db->insert('patients', $data))
 		{
 			return $this->db->insert_id();
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Edit other patient
+	*
+	*/
+	public function edit_other_patient($patient_id)
+	{
+		$data = array(
+			'patient_surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
+			'patient_othernames'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+			'title_id'=>$this->input->post('title_id'),
+			'patient_date_of_birth'=>$this->input->post('patient_dob'),
+			'gender_id'=>$this->input->post('gender_id'),
+			'religion_id'=>$this->input->post('religion_id'),
+			'civil_status_id'=>$this->input->post('civil_status_id'),
+			'patient_email'=>$this->input->post('patient_email'),
+			'patient_address'=>$this->input->post('patient_address'),
+			'patient_postalcode'=>$this->input->post('patient_postalcode'),
+			'patient_town'=>$this->input->post('patient_town'),
+			'patient_phone1'=>$this->input->post('patient_phone1'),
+			'patient_phone2'=>$this->input->post('patient_phone2'),
+			'patient_kin_sname'=>$this->input->post('patient_kin_sname'),
+			'patient_kin_othernames'=>$this->input->post('patient_kin_othernames'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'patient_national_id'=>$this->input->post('patient_national_id'),
+			'modified_by'=>$this->session->userdata('personnel_id'),
+			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact')
+		);
+		
+		$this->db->where('patient_id', $patient_id);
+		if($this->db->update('patients', $data))
+		{
+			return TRUE;
 		}
 		else{
 			return FALSE;

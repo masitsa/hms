@@ -20,11 +20,11 @@
                         <i class="icon-th"></i> Patients
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>/reception/all-patients">All Patients</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/add-patient">Add Patients</a></li>
                         <li><a href="<?php echo site_url();?>/reception/staff">Staff</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/students">Students</a></li>
                         <li><a href="<?php echo site_url();?>/reception/staff_dependants">Staff Dependants</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/students">Students</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/all-patients">Others</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/add-patient">Add Patients</a></li>
                         <li><a href="<?php echo site_url();?>/reception/patients/1">Deleted Patients</a></li>
                     </ul>
                 </li>
