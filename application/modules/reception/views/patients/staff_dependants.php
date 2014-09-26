@@ -83,6 +83,7 @@
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
 				$staff_system_id = $row->staff_system_id;
+				$dependant_id = $row->dependant_id;
 				// $staff_number = $row->Staff_Number;
 				// $patient_othernames = $row->other_names;
 				// $patient_surname = $row->surname;
@@ -163,7 +164,7 @@
 				'
 					<tr>
 						<td>'.$count.'</td>
-						<td>'.$staff_number.'</td>
+						<td>'.$dependant_id.'</td>
 						<td>'.$patient_surname.'</td>
 						<td>'.$patient_othernames.'</td>
 						<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
