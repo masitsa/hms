@@ -1,9 +1,9 @@
-<?php
-if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require('authentication.php');
+<?php   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Charts extends authentication {
-	
+require_once "./application/modules/auth/controllers/auth.php";
+
+class Charts extends auth
+{
 	var $days;
 
 	function __construct()
