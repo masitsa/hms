@@ -484,7 +484,7 @@ class Nurse_model extends CI_Model
 		$meals=$this->input->post('meals');
 		$coffee=$this->input->post('coffee');
 		$housing=$this->input->post('housing');
-		$education=$this->input->post('education');
+		$education_id=$this->input->post('education');
 		$drugs=$this->input->post('drugs');
 		$diet=$this->input->post('diet');
 		$alcohol_qty=$this->input->post('alcohol_qty');
@@ -505,7 +505,7 @@ class Nurse_model extends CI_Model
 			'patient_id'=>$patient_id
 		);
 		
-		if($this->db->insert('dental_vitals', $data))
+		if($this->db->insert('lifestyle', $data))
 		{
 			return $this->db->insert_id();
 		}

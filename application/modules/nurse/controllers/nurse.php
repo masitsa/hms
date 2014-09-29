@@ -9,6 +9,7 @@ class Nurse extends auth
 		parent:: __construct();
 		$this->load->model('nurse_model');
 		$this->load->model('reception/reception_model');
+		$this->load->model('accounts/accounts_model');
 		$this->load->model('database');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
@@ -19,7 +20,7 @@ class Nurse extends auth
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
 		$v_data['query'] = $query;
@@ -39,7 +40,7 @@ class Nurse extends auth
 	public function nurse_queue($page_name = NULL)
 	{
 		// this is it
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -119,7 +120,7 @@ class Nurse extends auth
 		// end of it
 	}
 	
-	public function patient_card($visit_id, $mike = NULL, $module = NULL)
+	public function patient_card($visit_id, $mike = NULL, $module = NULL,$opener = NULL)
 	{
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$visit_type = $patient['visit_type'];
@@ -132,6 +133,7 @@ class Nurse extends auth
 		
 		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
 		$v_data['module'] = $module;
+		$v_data['mike'] = $mike;
 		$v_data['visit_id'] = $visit_id;
 		
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
@@ -498,11 +500,12 @@ class Nurse extends auth
 		
 		else
 		{
-			$patient_id = $this->nurse_model->get_patient_id($patient_id);
+			$patient_id = $this->nurse_model->get_patient_id($visit_id);
 			
 			if($patient_id != FALSE)
 			{
 				$this->nurse_model->submit_lifestyle_values($patient_id);
+				$this->patient_card($visit_id);	
 			}
 			
 			else
@@ -945,7 +948,7 @@ class Nurse extends auth
 	function from_lab_queue($page_name = NULL){
 		// this is it
 
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND doc_visit=1 AND lab_visit=22 AND visit.nurse_visit = 1 AND visit.pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND doc_visit=1 AND lab_visit=22 AND visit.nurse_visit = 1 AND visit.pharmarcy !=7 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))

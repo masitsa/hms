@@ -109,6 +109,11 @@ class Laboratory extends auth
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('tests/test1',$data);
 	}
+	public function test2($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('tests/test2',$data);
+	}
 	public function laboratory_list($lab,$visit_id){
 
 		//check patient visit type

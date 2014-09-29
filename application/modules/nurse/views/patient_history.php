@@ -1,6 +1,7 @@
 <!-- search -->
 <?php 
 
+		
 		 $patient_id = $this->nurse_model->get_patient_id($visit_id);
 		// this is it
 
@@ -89,7 +90,6 @@
 						<tr>
 						  <th>#</th>
 						  <th>Visit Date</th>
-						  <th>Patient</th>
 						  <th>Time In</th>
 						  <th>Waiting time</th>
 						  <th>Doctor</th>
@@ -100,7 +100,7 @@
 				';
 			
 			$personnel_query = $this->personnel_model->get_all_personnel();
-			
+			$count = 0;
 			foreach ($query->result() as $row)
 			{
 				$visit_date = date('jS M Y',strtotime($row->visit_date));
@@ -283,11 +283,10 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$visit_date.'</td>
-							<td>'.$patient.'</td>
 							<td>'.$visit_time.'</td>
 							<td align=center>'.$waiting_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a onclick="patient_history_popup('.$visit_id1.',0)" class="btn btn-sm btn-info">Patient Card</a></td>
+							<td><a onclick="patient_history_popup('.$visit_id1.',1)" class="btn btn-sm btn-info">Patient Card</a></td>
 						</tr> 
 					';
 			}
@@ -324,9 +323,8 @@
 
   <script>
 	  function patient_history_popup(visit_id,mike) {
-	  	window.alert("sdads");
 	    var config_url = $('#config_url').val();
-	    window.open( config_url+"/nurse/patient_card/"+visit_id+"/"+mike, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
+	    window.open( config_url+"/nurse/patient_card/"+visit_id+"/"+mike, "myWindow", "status = 1, height = auto, width = 100%, resizable = 0" )
 		}
 
   </script>

@@ -419,7 +419,7 @@ function get_test_results(page, visit_id){
   }
   
   else if ((page == 75) || (page == 100)){
-    url = config_url+"/laboratory/test1/"+visit_id;
+    url = config_url+"/laboratory/test2/"+visit_id;
   }
   //alert(url);
   if(XMLHttpRequestObject) {

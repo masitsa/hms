@@ -27,7 +27,18 @@
 				<?php echo form_open("reception/save_visit/".$patient_id, array("class" => "form-horizontal"));?>
 				<div class="row">
 					<div class="col-md-6">
-				        
+					 <div class="widget boxed">
+				        <!-- Widget head -->
+				        <div class="widget-head">
+				          <h4 class="pull-left"><i class="icon-reorder"></i>Patient Visit</h4>
+				          <div class="widget-icons pull-right">
+				            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+				            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+				          </div>
+				          <div class="clearfix"></div>
+				        </div> 
+				        <div class="widget-content">
+         				  <div class="padd">
 					        <div class="form-group">
 						            <label class="col-lg-4 control-label">Department: </label>
                                     
@@ -148,12 +159,26 @@
                             	</div>
 					            </div>
 					        </div>
-				        
+				        </div>
 
 				     </div>
+				    </div>
+				   </div>
 				     <!--end left -->
 				     <!-- start right -->
 				     <div class="col-md-6">
+				     <div class="widget boxed">
+				        <!-- Widget head -->
+				        <div class="widget-head">
+				          <h4 class="pull-left"><i class="icon-reorder"></i>Appointments</h4>
+				          <div class="widget-icons pull-right">
+				            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+				            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+				          </div>
+				          <div class="clearfix"></div>
+				        </div> 
+				        <div class="widget-content">
+         				  <div class="padd">
 				     			
 				        	<div class="form-group">
 				            <label class="col-lg-4 control-label">Visit Date: </label>
@@ -222,8 +247,9 @@
 				                    </div>
 								</div>
 					        </div>
-
-
+					       </div>
+					    </div>
+					 </div>
 						 	
 					</div>
 				     <!-- end right -->
@@ -232,6 +258,11 @@
 				 <div class="center-align">
 				 <input type="submit" value="Initiate Visit" class="btn btn-info btn-lg"/>
 				</div>
+				<div class="center-align">
+				 	<div class="alert alert-info center-align">Note: For Appointments ensure that you have filled in both sections on this page.</div>
+				</div>
+
+				
 				<?php echo form_close();?>
 				 <!-- end of form -->
 			</div>

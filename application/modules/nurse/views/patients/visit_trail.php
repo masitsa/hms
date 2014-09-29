@@ -96,9 +96,88 @@
 			<!-- Widget content -->
 			<div class="widget-content">
 				<div class="padd">
-					
 					<?php echo $trail;?>
 					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- Widget -->
+		<div class="widget">
+			<!-- Widget head -->
+			<div class="widget-head">
+				<h4 class="pull-left"><i class="icon-reorder"></i>Visit Charges</h4>
+				<div class="widget-icons pull-right">
+					<a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+					<a href="#" class="wclose"><i class="icon-remove"></i></a>
+				</div>
+				<div class="clearfix"></div>
+			</div>             
+			
+			<!-- Widget content -->
+			<div class="widget-content">
+				<div class="padd">
+				<table class="table table-hover table-bordered col-md-12">
+                      <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Service</th>
+                        <th>Item Name</th>
+                        <th>Charge</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                        $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
+                        $total = 0;
+                        if(count($item_invoiced_rs) > 0){
+                          $s=0;
+                          
+                          foreach ($item_invoiced_rs as $key_items):
+                            $s++;
+                            $service_charge_name = $key_items->service_charge_name;
+                            $visit_charge_amount = $key_items->visit_charge_amount;
+                            $service_name = $key_items->service_name;
+                             $units = $key_items->visit_charge_units;
+
+                             $visit_total = $visit_charge_amount * $units;
+
+                            ?>
+                              <tr>
+                                <td><?php echo $s;?></td>
+                                <td><?php echo $service_name;?></td>
+                                <td><?php echo $service_charge_name;?></td>
+                                <td><?php echo number_format($visit_total,2);?></td>
+                              </tr>
+                            <?php
+                              $total = $total + $visit_total;
+                          endforeach;
+                            ?>
+                            <tr>
+                              <td></td>
+                              <td></td>
+                              <td>Total :</td>
+                              <td> <?php echo number_format($total,2);?></td>
+                            </tr>
+                            <?php
+                        }else{
+                           ?>
+                            <tr>
+                              <td colspan="4"> No Charges</td>
+                            </tr>
+                            <?php
+                        }
+
+                        ?>
+                          
+                      </tbody>
+                    </table>
+
 				</div>
 			</div>
 		</div>

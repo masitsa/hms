@@ -1,4 +1,8 @@
+<?php if($mike == 1){
+
+}else{?>
 <div class="row">
+
 	<?php if ($module == 0){?>
         <div class="col-md-3">
           <div class="center-align">
@@ -30,7 +34,9 @@
             <?php echo form_close();?>
           </div>
         </div>
-      </div>
+
+    </div>
+ <?php } ?>
 <div class="row">
     <div class="col-md-12">
 
@@ -78,7 +84,13 @@
               <ul class="nav nav-tabs">
                 <li class="active"><a href="#vitals-pane" data-toggle="tab">Vitals</a></li>
                 <li><a href="#lifestyle" data-toggle="tab">Lifestyle</a></li>
+                <?php if($mike == 1){
+
+                }else{?>
                 <li><a href="#patient-history" data-toggle="tab">Patient history</a></li>
+                <?php
+                }
+                ?>
                 <li><a href="#soap" data-toggle="tab">SOAP</a></li>
                 <li><a href="#medical-checkup" data-toggle="tab">Medical Checkup</a></li>
                 <li><a href="#visit_trail" data-toggle="tab">Visit Trail</a></li>
@@ -92,12 +104,18 @@
                 <div class="tab-pane" id="lifestyle">
                 	<?php echo $this->load->view("patients/lifestyle", '', TRUE); ?>
                 </div>
-                
+                <?php
+                if($mike == 1){
+
+                }else{?>
                 <div class="tab-pane" id="patient-history">
                   
                   <?php echo $this->load->view("patient_history", '', TRUE);?>
                   
                 </div>
+                <?php
+                }
+                ?>
 
                  <div class="tab-pane" id="soap">
                   
@@ -120,40 +138,45 @@
               </div>
             </div>
 
+              <?php if($mike == 1){
+
+              }else{?>
               <div class="row">
-               
-				<?php if ($module == 0){?>
-                    <div class="col-md-3">
-                      <div class="center-align">
-                        <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
-                          <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor"/>
-                        <?php echo form_close();?>
+
+                <?php if ($module == 0){?>
+                      <div class="col-md-3">
+                        <div class="center-align">
+                          <?php echo form_open("nurse/send_to_doctor/".$visit_id, array("class" => "form-horizontal"));?>
+                            <input type="submit" class="btn btn-large btn-primary" value="Send To Doctor"/>
+                          <?php echo form_close();?>
+                        </div>
+                        
                       </div>
-                      
-                    </div>
-                <?php } ?>
-                <div class="col-md-3">
-                  <div class="center-align">
-                    <?php echo form_open("nurse/send_to_pharmacy/".$visit_id, array("class" => "form-horizontal"));?>
-                      <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy"/>
-                    <?php echo form_close();?>
+                  <?php } ?>
+                      <div class="col-md-3">
+                        <div class="center-align">
+                          <?php echo form_open("nurse/send_to_pharmacy/".$visit_id, array("class" => "form-horizontal"));?>
+                            <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy"/>
+                          <?php echo form_close();?>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="center-align">
+                         <?php echo form_open("nurse/send_to_labs/".$visit_id, array("class" => "form-horizontal"));?>
+                            <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory"/>
+                          <?php echo form_close();?>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="center-align">
+                          <?php echo form_open("nurse/send_to_accounts/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
+                            <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts"/>
+                          <?php echo form_close();?>
+                        </div>
+                      </div>
+
                   </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="center-align">
-                    <?php echo form_open("nurse/send_to_labs/".$visit_id, array("class" => "form-horizontal"));?>
-                      <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory"/>
-                    <?php echo form_close();?>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                <div class="center-align">
-                  <?php echo form_open("nurse/send_to_accounts/".$visit_id."/".$module, array("class" => "form-horizontal"));?>
-                    <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts"/>
-                  <?php echo form_close();?>
-                </div>
-              </div>
-              </div>
+               <?php } ?>
               
 
           </div>
