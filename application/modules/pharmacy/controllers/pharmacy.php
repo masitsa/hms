@@ -118,7 +118,25 @@ class Pharmacy extends auth
 			redirect('pharmacy/prescription/'.$visit_id);
 		}
 	}
-
+	public function search_drugs($visit_id)
+	{
+		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			$search = ' AND drugs_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$this->session->set_userdata('drugs_search', $search);
+		}
+		
+		$this->drugs($visit_id,0);
+	}
+	
+	public function close_drugs_search($visit_id)
+	{
+		$this->session->unset_userdata('drugs_search');
+		$this->drugs($visit_id,0);
+	}
 	public function drugs($visit_id,$module= NULL){
 
 		//check patient visit type

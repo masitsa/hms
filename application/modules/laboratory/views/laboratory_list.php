@@ -24,7 +24,7 @@
 									{
 										echo '<div class="alert alert-danger">'.$validation_error.'</div>';
 									}
-									echo form_open('nurse/search_laboratory_tests/'.$visit_id, array('class'=>'form-inline'));
+									echo form_open('laboratory/search_laboratory_tests/'.$visit_id, array('class'=>'form-inline'));
 									?>
                                     <div class="form-group">
                                             <?php

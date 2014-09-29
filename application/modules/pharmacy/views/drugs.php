@@ -4,7 +4,7 @@
               <div class="widget boxed">
                     <!-- Widget head -->
                     <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Procedure List</h4>
+                      <h4 class="pull-left"><i class="icon-reorder"></i>Drugs List</h4>
                       <div class="widget-icons pull-right">
                         <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                         <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -24,20 +24,20 @@
 									{
 										echo '<div class="alert alert-danger">'.$validation_error.'</div>';
 									}
-									echo form_open('nurse/search_procedures/'.$visit_id, array('class'=>'form-inline'));
+									echo form_open('pharmacy/search_drugs/'.$visit_id, array('class'=>'form-inline'));
 									?>
                                     <div class="form-group">
                                             <?php
-											$search = $this->session->userdata('procedure_search');
+											$search = $this->session->userdata('drugs_search');
                                             if(!empty($search))
 											{
 											?>
-                                            <a href="<?php echo site_url().'/nurse/close_procedure_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
+                                            <a href="<?php echo site_url().'/pharmacy/close_drugs_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
                                             <?php }?>
                                         	<input type="submit" class="btn btn-info pull-right" value="Search" name="search"/>
                                             
                                         <div class="input-group">
-                                            <input type="text" class="form-control col-md-6" name="search_item" placeholder="Search for a procedure">
+                                            <input type="text" class="form-control col-md-6" name="search_item" placeholder="Search for a drugs">
                                         </div>
                                     </div>
                                         

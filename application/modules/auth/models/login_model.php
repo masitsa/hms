@@ -111,4 +111,48 @@ class Login_model extends CI_Model
 		
 		return $result->total_orders;
 	}
+	public function change_user_password($personnel_id)
+	{
+		$current_password = $this->input->post('current_password');
+		$new_password = $this->input->post('new_password');
+		$confirm_new_password = $this->input->post('confirm_new_password');
+
+		if($new_password == $confirm_new_password)
+		{
+			$check = $this->check_password_match($personnel_id,$current_password);
+			
+			if($check == TRUE)
+			{
+				$data['personnel_password'] = md5($new_password);
+				
+				$this->db->where('personnel_id', $personnel_id);
+				$this->db->update('personnel', $data);
+				return TRUE;
+			}
+			else
+			{
+				return FALSE;	
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+	public function check_password_match($personnel_id,$current_password)
+	{
+		$this->db->select('*');
+		$this->db->where(array('personnel_id' => $personnel_id, 'personnel_password' => md5($current_password)));
+		$query = $this->db->get('personnel');
+		
+		//if users exists
+		if ($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
 }
