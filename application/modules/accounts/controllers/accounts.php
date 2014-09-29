@@ -22,16 +22,15 @@ class Accounts extends auth
 	
 	public function accounts_queue()
 	{
-		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0';
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 6 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit_department, visit, patients';
+		
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
 		{
 			$where .= $visit_search;
 		}
-		
-		$table = 'visit, patients, visit_department';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/accounts/accounts_queue/';

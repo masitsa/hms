@@ -6,7 +6,7 @@
 <file name="view_plan.php" server="192.168.170.16/sumc/development/" local="130560318705384175" remote="130560304800000000" Dst="0" />
 <file name="view_symptoms.php" server="192.168.170.16/sumc/development/" local="130560315156511191" remote="130560304800000000" Dst="0" />
 <file name="add_objective_findings.php" server="192.168.170.16/sumc/development/" local="130555080993333771" remote="130558580400000000" Dst="0" />
-<file name="disease.php" server="192.168.170.16/sumc/development/" local="130555080993473779" remote="130558580400000000" Dst="0" />
+<file name="disease.php" server="192.168.170.16/sumc/development/" local="130564556278447109" remote="130564507200000000" Dst="0" />
 <file name="get_diagnosis.php" server="192.168.170.16/sumc/development/" local="130555080993503781" remote="130558580400000000" Dst="0" />
 <file name="objective_finding.php" server="192.168.170.16/sumc/development/" local="130555080993523782" remote="130558580400000000" Dst="0" />
 <file name="symptoms.php" server="192.168.170.16/sumc/development/" local="130555080993763796" remote="130558580400000000" Dst="0" />

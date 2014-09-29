@@ -9,7 +9,7 @@
       <div class="widget boxed">
         <!-- Widget head -->
         <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
             <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -41,9 +41,9 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Visit Date</th>
 						  <th>Patient</th>
 						  <th>Doctor</th>
+						  <th>Coming From</th>
 						  <th>Invoice</th>
 						  <th>Payments</th>
 						  <th>Balance</th>
@@ -74,6 +74,7 @@
 				$strath_no = $row->strath_no;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
+				$coming_from = $this->reception_model->coming_from($visit_id);
 				
 				//staff & dependant
 				if($visit_type == 2)
@@ -235,9 +236,9 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$visit_date.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$doctor.'</td>
+							<td>'.$coming_from.'</td>
 							<td>'.$invoice_total.'</td>
 							<td>'.$payments_value.'</td>
 							<td>'.$balance.'</td>

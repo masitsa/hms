@@ -135,10 +135,10 @@
 							<td>'.$coming_from.'</td>
 							<td>'.$doctor.'</td>
 							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/'.$module.'" class="btn btn-sm btn-info">Patient Card</a></td>
-							<td><a href="'.site_url().'/nurse/dental_visit/'.$visit_id.'/a/'.$module.'" class="btn btn-sm btn-danger">Dental Vitals</a></td>
+							<td><a href="'.site_url().'/nurse/send_to_dentist/'.$visit_id.'" class="btn btn-sm btn-danger">To Dentist</a></td>
 							'.$to_doctor.'
-							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
-							<td><a href="'.site_url().'/nurse/send_to_pharmacy/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
+							<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'/'.$module.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
+							<td><a href="'.site_url().'/nurse/send_to_pharmacy/'.$visit_id.'/'.$module.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
 						</tr> 
 					';
 			}

@@ -375,10 +375,18 @@ class Accounts_model extends CI_Model
 		$personnel_fname = $personnel->personnel_fname;
 		
 		//doctor
-		$doctor_data = $this->personnel_model->get_single_personnel($doctor_id);
-		$doctor_surname = $doctor_data->personnel_onames;
-		$doctor_fname = $doctor_data->personnel_fname;
-		$doctor = $doctor_surname." ".$doctor_fname;
+		if($doctor_id > 0)
+		{
+			$doctor_data = $this->personnel_model->get_single_personnel($doctor_id);
+			$doctor_surname = $doctor_data->personnel_onames;
+			$doctor_fname = $doctor_data->personnel_fname;
+			$doctor = $doctor_surname." ".$doctor_fname;
+		}
+		
+		else
+		{
+			$doctor = '-';
+		}
 		
 		$totalxx = 0;
 			

@@ -1523,6 +1523,25 @@ class Reception_model extends CI_Model
 		}
 	}
 	
+	public function going_to($visit_id)
+	{
+		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.visit_department_status = 1';
+		$this->db->select('departments.departments_name');
+		$this->db->where($where);
+		$query = $this->db->get('visit_department, departments', 1, 0);
+		
+		if($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			return $row->departments_name;
+		}
+		
+		else
+		{
+			return 'Reception';
+		}
+	}
+	
 	public function get_visit_trail($visit_id)
 	{
 		$where = 'visit_department.visit_id = '.$visit_id.' AND visit_department.department_id = departments.department_id AND visit_department.created_by = personnel.personnel_id';
