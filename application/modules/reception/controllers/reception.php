@@ -10,6 +10,7 @@ class Reception extends auth
 		$this->load->model('reception_model');
 		$this->load->model('strathmore_population');
 		$this->load->model('database');
+		$this->load->model('administration/reports_model');
 	}
 	
 	public function index()
