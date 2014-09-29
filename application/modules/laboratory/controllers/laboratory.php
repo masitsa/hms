@@ -130,7 +130,7 @@ class Laboratory extends auth
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			$search = ' AND diseases_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$search = ' AND lab_test_name LIKE \'%'.$this->input->post('search_item').'%\'';
 			$this->session->set_userdata('lab_test_search', $search);
 		}
 		
@@ -175,7 +175,7 @@ class Laboratory extends auth
 		
 		$where = 'service_charge.service_charge_name = lab_test.lab_test_name
 		AND lab_test_class.lab_test_class_id = lab_test.lab_test_class_id  AND service_charge.service_id = 5  AND  service_charge.visit_type_id = '.$visit_t;
-		$test_search = $this->session->userdata('test_search');
+		$test_search = $this->session->userdata('lab_test_search');
 		
 		if(!empty($test_search))
 		{

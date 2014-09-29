@@ -36,7 +36,7 @@
 			
 			$result .= 
 				'
-					<table class="table table-hover table-bordered table-striped table-responsive">
+					<table class="table table-hover table-bordered table-striped table-responsive col-md-12">
 					  <thead>
 						<tr>
 						  <th>#</th>
