@@ -278,6 +278,109 @@ class Reception extends auth
 	}
 	
 	/*
+	*
+	*	$visits = 0 :ongoing visits of the current day
+	*	$visits = 1 :terminated visits
+	*	$visits = 2 :deleted visits
+	*	$visits = 3 :all other ongoing visits
+	*
+	*/
+	public function general_queue($page_name)
+	{
+		$segment = 4;
+		
+		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit_department, visit, patients';
+		
+		$visit_search = $this->session->userdata('general_queue_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/reception/general_queue/'.$page_name;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'General Queue';
+		$v_data['title'] = 'General Queue';
+		$v_data['page_name'] = $page_name;
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('general_queue', $v_data, true);
+		
+		if($page_name == 'nurse')
+		{
+			$data['sidebar'] = 'nurse_sidebar';
+		}
+		
+		else if($page_name == 'doctor')
+		{
+			$data['sidebar'] = 'doctor_sidebar';
+		}
+		
+		else if($page_name == 'laboratory')
+		{
+			$data['sidebar'] = 'lab_sidebar';
+		}
+		
+		else if($page_name == 'pharmacy')
+		{
+			$data['sidebar'] = 'pharmacy_sidebar';
+		}
+		
+		else if($page_name == 'accounts')
+		{
+			$data['sidebar'] = 'accounts_sidebar';
+		}
+		
+		else
+		{
+			$data['sidebar'] = 'reception_sidebar';
+		}
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+	}
+	
+	/*
 	*	Add a new patient
 	*
 	*/
