@@ -3,4 +3,7 @@
 <file name="administration.php" server="192.168.170.16/sumc/development/" local="130564044579794324" remote="130564507200000000" Dst="0" />
 <file name="charts.php" server="192.168.170.16/sumc/development/" local="130564026910618040" remote="130564507200000000" Dst="0" />
 <file name="reports.php" server="192.168.170.16/sumc/development/" local="130564077186456817" remote="130564507200000000" Dst="0" />
+<file name="administration.php" server="192.168.170.16/sumc/" local="130564044579794324" remote="130564638000000000" Dst="0" />
+<file name="charts.php" server="192.168.170.16/sumc/" local="130564026910618040" remote="130564638000000000" Dst="0" />
+<file name="reports.php" server="192.168.170.16/sumc/" local="130564077186456817" remote="130564638000000000" Dst="0" />
 </dwsync>

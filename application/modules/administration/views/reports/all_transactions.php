@@ -105,7 +105,7 @@
 						
 						if($personnel_id == $personnel_id2)
 						{
-							$doctor = $adm->personnel_fname;
+							$doctor = $adm->personnel_onames.' '.$adm->personnel_fname;
 							break;
 						}
 						

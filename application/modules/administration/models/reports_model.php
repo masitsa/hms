@@ -198,7 +198,7 @@ class Reports_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
 		$this->db->where($where);
-		$this->db->order_by('visit.visit_date','DESC');
+		$this->db->order_by('visit.visit_date','ASC');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -332,7 +332,7 @@ class Reports_model extends CI_Model
 		}
 		
 		$this->db->where($where);
-		$this->db->order_by('visit_date', 'DESC');
+		$this->db->order_by('visit_date', 'ASC');
 		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
 		$visits_query = $this->db->get($table);
 		
@@ -412,7 +412,7 @@ class Reports_model extends CI_Model
 						
 						if($personnel_id == $personnel_id2)
 						{
-							$doctor = $adm->personnel_fname;
+							$doctor = $adm->personnel_onames.' '.$adm->personnel_fname;
 							break;
 						}
 						

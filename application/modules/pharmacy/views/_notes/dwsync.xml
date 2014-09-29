@@ -3,9 +3,9 @@
 <file name="drugs.php" server="192.168.170.16/sumc/development/" local="130564613404324522" remote="130564507200000000" Dst="0" />
 <file name="prescription.php" server="192.168.170.16/sumc/development/" local="130564610382201667" remote="130564507200000000" Dst="0" />
 <file name="display_prescription.php" server="192.168.170.16/sumc/" local="130555080996223937" remote="130560304200000000" Dst="0" />
-<file name="drugs.php" server="192.168.170.16/sumc/" local="130560305790845505" remote="130560304200000000" Dst="0" />
-<file name="pharmacy_queue.php" server="192.168.170.16/sumc/" local="130559528923715180" remote="130560304200000000" Dst="0" />
-<file name="prescription.php" server="192.168.170.16/sumc/" local="130560303320434206" remote="130560304200000000" Dst="0" />
+<file name="drugs.php" server="192.168.170.16/sumc/" local="130564613404324522" remote="130564638000000000" Dst="0" />
+<file name="pharmacy_queue.php" server="192.168.170.16/sumc/" local="130564575012638643" remote="130564638000000000" Dst="0" />
+<file name="prescription.php" server="192.168.170.16/sumc/" local="130564610382201667" remote="130564638000000000" Dst="0" />
 <file name="display_prescription.php" server="192.168.170.16/sumc/development/" local="130555080996223937" remote="130560304800000000" Dst="0" />
 <file name="pharmacy_queue.php" server="192.168.170.16/sumc/development/" local="130564575012638643" remote="130564507200000000" Dst="0" />
 </dwsync>
