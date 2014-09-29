@@ -25,34 +25,12 @@
 		{
 			$count = $page;
 			
-			if($visit == 0)
-			{
-				$result .= 
+			$result .= 
 				'
 					<table class="table table-hover table-bordered ">
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Patient</th>
-						  <th>Visit Type</th>
-						  <th>Time In</th>
-						  <th>Doctor</th>
-						  <th>Actions</th>
-						</tr>
-					  </thead>
-					  <tbody>
-				';
-			}
-			
-			else
-			{
-				$result .= 
-				'
-					<table class="table table-hover table-bordered ">
-					  <thead>
-						<tr>
-						  <th>#</th>
-						  <th>Visit Date</th>
 						  <th>Patient</th>
 						  <th>Visit Type</th>
 						  <th>Time In</th>
@@ -62,7 +40,6 @@
 					  </thead>
 					  <tbody>
 				';
-			}
 			
 			$personnel_query = $this->personnel_model->get_all_personnel();
 			
@@ -123,44 +100,19 @@
 					$doctor = '-';
 				}
 				
-				if($department == 2){
-					$department = '<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-primary">Card</a></td>';
-				}else
-				{
-					$department =  '<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/0" class="btn btn-sm btn-primary">Card</a></td>';
-				}
 				$count++;
 				
-				if($visit == 0)
-				{
-
-					$result .= 
-					'
-						<tr>
-							<td>'.$count.'</td>
-							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$visit_type.'</td>
-							<td>'.$visit_time.'</td>
-							<td>'.$doctor.'</td>
-							'.$department.'
-						</tr> 
-					';
-				}
-				
-				else
-				{
-					$result .= 
-					'
-						<tr>
-							<td>'.$count.'</td>
-							<td>'.$patient_surname.' '.$patient_othernames.'</td>
-							<td>'.$visit_type.'</td>
-							<td>'.$visit_time.'</td>
-							<td>'.$visit_time_out.'</td>
-							<td>'.$doctor.'</td>
-						</tr> 
-					';
-				}
+				$result .= 
+				'
+					<tr>
+						<td>'.$count.'</td>
+						<td>'.$patient_surname.' '.$patient_othernames.'</td>
+						<td>'.$visit_type.'</td>
+						<td>'.$visit_time.'</td>
+						<td>'.$visit_time_out.'</td>
+						<td>'.$doctor.'</td>
+					</tr> 
+				';
 			}
 			
 			$result .= 

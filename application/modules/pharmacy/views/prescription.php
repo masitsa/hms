@@ -69,18 +69,8 @@ if(!empty($delete)){
 	
 	$del = new prescription();
 	$del->delete_prescription($delete);
-	
-	?>
-    <!--<script type="text/javascript">
-		window.location.href = "prescription.php?visit_id=<?php //echo $visit_id?>";
-	</script>-->
-    <?php
 }
 //if the update button is clicked
-
-
-
-
 $rs_forms = $this->pharmacy_model->get_drug_forms();
 $num_forms = count($rs_forms);
 
@@ -153,7 +143,16 @@ $time_list = "<select name = 'x' class='form-control'>";
 
 		$time = $key_items->drug_times_name;
 		$drug_times_id = $key_items->drug_times_id;
-		$time_list = $time_list."<option value='".$drug_times_id."'>".$time."</option>";
+		
+		if($drug_times_id == set_value('x'))
+		{
+			$time_list = $time_list."<option value='".$drug_times_id."' selected='selected'>".$time."</option>";
+		}
+		
+		else
+		{
+			$time_list = $time_list."<option value='".$drug_times_id."'>".$time."</option>";
+		}
 	endforeach;
 $time_list = $time_list."</select>";
 
@@ -165,7 +164,16 @@ $cons_list = "<select name = 'consumption' class='form-control'>";
 
 	$con = $key_cons->drug_consumption_name;
 	$drug_consumption_id = $key_cons->drug_consumption_id;
-	$cons_list = $cons_list."<option value='".$drug_consumption_id."'>".$con."</option>";
+		
+	if($drug_times_id == set_value('consumption'))
+	{
+		$cons_list = $cons_list."<option value='".$drug_consumption_id."' selected='selected'>".$con."</option>";
+	}
+	
+	else
+	{
+		$cons_list = $cons_list."<option value='".$drug_consumption_id."'>".$con."</option>";
+	}
 	endforeach;
 $cons_list = $cons_list."</select>";
 
@@ -176,7 +184,16 @@ $duration_list = "<select name = 'duration' class='form-control'>";
 	foreach ($duration_rs as $key_duration):
 	$durations = $key_duration->drug_duration_name;
 	$drug_duration_id = $key_duration->drug_duration_id;
-	$duration_list = $duration_list."<option value='".$drug_duration_id."'>".$durations."</option>";
+		
+	if($drug_times_id == set_value('duration'))
+	{
+		$duration_list = $duration_list."<option value='".$drug_duration_id."' selected='selected'>".$durations."</option>";
+	}
+	
+	else
+	{
+		$duration_list = $duration_list."<option value='".$drug_duration_id."'>".$durations."</option>";
+	}
 	endforeach;
 $duration_list = $duration_list."</select>";
 
@@ -311,7 +328,17 @@ $p = 0;
 				            <label class="col-lg-4 control-label">Allow substitution: </label>
 				            
 				            <div class="col-lg-8">
-				            	<input name="substitution" type="checkbox" value="Yes" />
+                            	<?php
+                                	if(set_value('substitution') == 'Yes')
+									{
+										echo '<input name="substitution" type="checkbox" value="Yes" checked="checked" />';
+									}
+                                	else
+									{
+										echo '<input name="substitution" type="checkbox" value="Yes"/>';
+									}
+								?>
+				            		
 				            </div>
 				        </div>
 				        <div class="form-group">
@@ -370,7 +397,7 @@ $p = 0;
 				            <label class="col-lg-4 control-label">Number of Days: </label>
 				            
 				            <div class="col-lg-8">
-				            	<input type="text" id="days" class='form-control' name="days"  autocomplete="off"/>
+				            	<input type="text" id="days" class='form-control' name="number_of_days"  autocomplete="off" value="<?php echo set_value('days');?>"/>
 				            </div>
 				        </div>
 				        <?php if($drug_size_type!=""){
@@ -419,7 +446,7 @@ $p = 0;
 				            <label class="col-lg-4 control-label">Quantity: </label>
 				            
 				            <div class="col-lg-8">
-				            	<input type="text" name="quantity" class='form-control' autocomplete="off" /> <?php echo $drug_size_type?> <input name="service_charge_id" id="service_charge_id" value="<?php echo $service_charge_id;?>" type="hidden">
+				            	<input type="text" name="quantity" class='form-control' autocomplete="off" value="<?php echo set_value('quantity');?>" /> <?php echo $drug_size_type?> <input name="service_charge_id" id="service_charge_id" value="<?php echo $service_charge_id;?>" type="hidden">
 				            </div>
 				        </div>
 				        <div class="form-group">
@@ -449,7 +476,7 @@ $p = 0;
 	<div class="row col-md-12">
  		<div class="center-align">
 			<input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
-			<input name="submit" type="submit" class="btn btn-large" value="Prescribe" />
+			<input name="submit" type="submit" class="btn btn-lg btn-info" value="Prescribe" />
 		</div>
 	</div>
 
@@ -473,157 +500,158 @@ $p = 0;
                 <div class="widget-content">
                     <div class="padd">
                     	<table class='table table-striped table-hover table-condensed'>
- 											 <tr>
-   												<th>No.</th>
-    											<th>Medicine:</th>
-    											<th>Dose</th>
-   											 	<th>Dose Unit</th>
-    											<th>Method</th>
-    											<th>Quantity</th>
-    											<th>Times</th>
-    											<th>Duration</th>
-   											 	<th>Number of Days</th>
-   											 	 <th>Allow Substitution</th>
-    											<th>Delete </th>
-                                               
-                                                <th></th>
-  											</tr>
-                                           <?php 
-                                           $rs = $this->pharmacy_model->select_prescription($visit_id);
-											$num_rows =count($rs);
-											$s=0;
-											if($num_rows > 0){
-                                        	foreach ($rs as $key_rs):
-                                        	
-											   	$service_charge_id =$key_rs->drugs_id;
-											   	$frequncy = $key_rs->drug_times_name;
-												$id = $key_rs->prescription_id;
-												$date1 = $key_rs->prescription_startdate;
-												$date2 = $key_rs->prescription_finishdate;
-												$sub = $key_rs->prescription_substitution;
-												$duration = $key_rs->drug_duration_name;
-												$sub = $key_rs->prescription_substitution;
-												$duration = $key_rs->drug_duration_name;
-												$consumption = $key_rs->drug_consumption_name;
-												$quantity = $key_rs->prescription_quantity;
-												$medicine = $key_rs->drugs_name;
-												$visit_charge_id = $key_rs->visit_charge_id;
-												
-												$substitution = "<select name='substitution".$id."' class='form-control'>";
-												if($sub == "No"){
-													$substitution = $substitution."<option selected>No</option><option>Yes</option>";
-												}
-												else{
-													$substitution = $substitution."<option>No</option><option selected>Yes</option>";
-												}
-												$substitution = $substitution."</select>";
-												
-												//$drugs = new prescription();
-												//$medicine = $drugs->get_drugs_name($service_charge_id);
-												
-												$rs2 = $this->pharmacy_model->get_drug($service_charge_id);
-												
-												foreach ($rs2 as $key_rs2 ):
-												$drug_type_id = $key_rs2->drug_type_id;
-												$admin_route_id = $key_rs2->drug_administration_route_id;
-												$dose = $key_rs2->drugs_dose;
-												$dose_unit_id = $key_rs2->drug_dose_unit_id;
-												
-												endforeach;
+                             <tr>
+                                <th>No.</th>
+                                <th>Medicine:</th>
+                                <th>Dose</th>
+                                <th>Dose Unit</th>
+                                <th>Method</th>
+                                <th>Quantity</th>
+                                <th>Times</th>
+                                <th>Duration</th>
+                                <th>Number of Days</th>
+                                 <th>Allow Substitution</th>
+                                <th>Delete </th>
+                               
+                                <th></th>
+                            </tr>
+                           <?php 
+                           $rs = $this->pharmacy_model->select_prescription($visit_id);
+                            $num_rows =count($rs);
+                            $s=0;
+                            if($num_rows > 0){
+                            foreach ($rs as $key_rs):
+                            
+                                $service_charge_id =$key_rs->drugs_id;
+                                $frequncy = $key_rs->drug_times_name;
+                                $id = $key_rs->prescription_id;
+                                $date1 = $key_rs->prescription_startdate;
+                                $date2 = $key_rs->prescription_finishdate;
+                                $sub = $key_rs->prescription_substitution;
+                                $duration = $key_rs->drug_duration_name;
+                                $sub = $key_rs->prescription_substitution;
+                                $duration = $key_rs->drug_duration_name;
+                                $consumption = $key_rs->drug_consumption_name;
+                                $quantity = $key_rs->prescription_quantity;
+                                $medicine = $key_rs->drugs_name;
+                                $visit_charge_id = $key_rs->visit_charge_id;
+                                $number_of_days = $key_rs->number_of_days;
+                                
+                                $substitution = "<select name='substitution".$id."' class='form-control'>";
+                                if($sub == "No"){
+                                    $substitution = $substitution."<option selected>No</option><option>Yes</option>";
+                                }
+                                else{
+                                    $substitution = $substitution."<option>No</option><option selected>Yes</option>";
+                                }
+                                $substitution = $substitution."</select>";
+                                
+                                //$drugs = new prescription();
+                                //$medicine = $drugs->get_drugs_name($service_charge_id);
+                                
+                                $rs2 = $this->pharmacy_model->get_drug($service_charge_id);
+                                
+                                foreach ($rs2 as $key_rs2 ):
+                                $drug_type_id = $key_rs2->drug_type_id;
+                                $admin_route_id = $key_rs2->drug_administration_route_id;
+                                $dose = $key_rs2->drugs_dose;
+                                $dose_unit_id = $key_rs2->drug_dose_unit_id;
+                                
+                                endforeach;
 
-												if(!empty($drug_type_id)){
-													$rs3 = $this->pharmacy_model->get_drug_type_name($drug_type_id);
-													$num_rows3 = count($rs3);
-													if($num_rows3 > 0){
-														foreach ($rs3 as $key_rs3):
-															$drug_type_name = $key_rs3->drug_type_name;
-														endforeach;
-													}
-												}
-												
-												if(!empty($dose_unit_id)){
+                                if(!empty($drug_type_id)){
+                                    $rs3 = $this->pharmacy_model->get_drug_type_name($drug_type_id);
+                                    $num_rows3 = count($rs3);
+                                    if($num_rows3 > 0){
+                                        foreach ($rs3 as $key_rs3):
+                                            $drug_type_name = $key_rs3->drug_type_name;
+                                        endforeach;
+                                    }
+                                }
+                                
+                                if(!empty($dose_unit_id)){
 
-													$rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
-													$num_rows3 = count($rs3);
-													if($num_rows3 > 0){
-														foreach ($rs3 as $key_rs3):
-															$doseunit = $key_rs3->drug_dose_unit_name;
-														endforeach;
-													}
-												}
-												
-												
-												if(!empty($admin_route_id)){
-													$rs3 = $this->pharmacy_model->get_admin_route2($admin_route_id);
-													$num_rows3 = count($rs3);
-													if($num_rows3 > 0){
-														foreach ($rs3 as $key_rs3):
-															$admin_route = $key_rs3->drug_administration_route_name;
-														endforeach;
-													}
-												}
-												
-												$time_list2 = "<select name = 'x".$id."' class='form-control'>";
-												
-													foreach ($times_rs as $key_items):
+                                    $rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
+                                    $num_rows3 = count($rs3);
+                                    if($num_rows3 > 0){
+                                        foreach ($rs3 as $key_rs3):
+                                            $doseunit = $key_rs3->drug_dose_unit_name;
+                                        endforeach;
+                                    }
+                                }
+                                
+                                
+                                if(!empty($admin_route_id)){
+                                    $rs3 = $this->pharmacy_model->get_admin_route2($admin_route_id);
+                                    $num_rows3 = count($rs3);
+                                    if($num_rows3 > 0){
+                                        foreach ($rs3 as $key_rs3):
+                                            $admin_route = $key_rs3->drug_administration_route_name;
+                                        endforeach;
+                                    }
+                                }
+                                
+                                $time_list2 = "<select name = 'x".$id."' class='form-control'>";
+                                
+                                    foreach ($times_rs as $key_items):
 
-														$time = $key_items->drug_times_name;
-														$drug_times_id = $key_items->drug_times_id;
-														$time_list2 = $time_list2."<option value='".$drug_times_id."'>".$time."</option>";
-													endforeach;
-												$time_list2 = $time_list2."</select>";
-												
-												$duration_list2 = "<select name = 'duration".$id."' class='form-control'>";
-												
-												foreach ($duration_rs as $key_duration):
-													$durations = $key_duration->drug_duration_name;
-													$drug_duration_id = $key_duration->drug_duration_id;
-													$duration_list2 = $duration_list2."<option value='".$drug_duration_id."'>".$durations."</option>";
-												endforeach;
-												$duration_list2 = $duration_list2."</select>";
-												
-												$cons_list2 = "<select name = 'consumption".$id."' class='form-control'>";
-												
-												foreach ($rs_cons as $key_cons):
-													$con = $key_cons->drug_consumption_name;
-													$drug_consumption_id = $key_cons->drug_consumption_id;
-													$cons_list2 = $cons_list2."<option value='".$drug_consumption_id."'>".$con."</option>";
-												endforeach;
-												$cons_list2 = $cons_list2."</select>";
-												$s++;
-											?>
-                                           	<?php echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));?>
-									  		<tr>
-    											<td><?php echo $s; ?></td>
-    											<td width="200px"><?php echo $medicine;?></td>
-    											<td><?php echo $dose;?></td>
-                                                <td><?php echo $doseunit?></td>
-    											<td><?php echo $cons_list2; ?></td>
-                                                <td><input type="text" name="quantity<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo $quantity?>"/></td>
-    											<td><?php echo $time_list2; ?></td>
-    											<td><?php echo $duration_list2; ?></td>
-                                        		<td><input type="text" id="datepicker3" name="days<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo  $date1?>"/></td>
-                       
-                                                <td><?php echo $substitution?></td>
-                                                <td>
-                                                	<div class='btn-toolbar'>
-                                                    	<div class='btn-group'>
-                                                        	<a class='btn' href='delete_prescritpion/<?php echo $id;?>/<?php echo $visit_id?>/<?php echo $visit_charge_id?>/<?php echo $module;?>'><i class='icon-remove'></i></a>
-                                                       	</div>
-                                                     </div>
-                                                 </td>
-                                                 <td>
-                                                 	<input name="update" type="submit" value="Update" />
-                                                 	<input type="hidden" name="hidden_id" value="<?php echo $id?>" />
-                                                    <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
-                                                 </td>
-											</tr>
-											<?php echo form_close();?>
-							          <?php
-							          endforeach;
-							          	}
+                                        $time = $key_items->drug_times_name;
+                                        $drug_times_id = $key_items->drug_times_id;
+                                        $time_list2 = $time_list2."<option value='".$drug_times_id."'>".$time."</option>";
+                                    endforeach;
+                                $time_list2 = $time_list2."</select>";
+                                
+                                $duration_list2 = "<select name = 'duration".$id."' class='form-control'>";
+                                
+                                foreach ($duration_rs as $key_duration):
+                                    $durations = $key_duration->drug_duration_name;
+                                    $drug_duration_id = $key_duration->drug_duration_id;
+                                    $duration_list2 = $duration_list2."<option value='".$drug_duration_id."'>".$durations."</option>";
+                                endforeach;
+                                $duration_list2 = $duration_list2."</select>";
+                                
+                                $cons_list2 = "<select name = 'consumption".$id."' class='form-control'>";
+                                
+                                foreach ($rs_cons as $key_cons):
+                                    $con = $key_cons->drug_consumption_name;
+                                    $drug_consumption_id = $key_cons->drug_consumption_id;
+                                    $cons_list2 = $cons_list2."<option value='".$drug_consumption_id."'>".$con."</option>";
+                                endforeach;
+                                $cons_list2 = $cons_list2."</select>";
+                                $s++;
+                            ?>
+                            <?php echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));?>
+                            <tr>
+                                <td><?php echo $s; ?></td>
+                                <td><?php echo $medicine;?></td>
+                                <td><?php echo $dose;?></td>
+                                <td><?php echo $doseunit?></td>
+                                <td><?php echo $cons_list2; ?></td>
+                                <td><input type="text" name="quantity<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo $quantity?>" size="3"/></td>
+                                <td><?php echo $time_list2; ?></td>
+                                <td><?php echo $duration_list2; ?></td>
+                                <td><input type="text" id="datepicker3" name="days<?php echo $id?>" class='form-control' autocomplete="off" value="<?php echo  $number_of_days;?>" size="3"/></td>
+       
+                                <td><?php echo $substitution?></td>
+                                <td>
+                                    <div class='btn-toolbar'>
+                                        <div class='btn-group'>
+                                            <a class='btn btn-primary btn-sm' href='<?php echo site_url();?>/pharmacy/delete_prescription/<?php echo $id;?>/<?php echo $visit_id?>/<?php echo $visit_charge_id?>/<?php echo $module;?>' onclick="return confirm('Are you sure you want to remove this drug?');"><i class='icon-remove'></i></a>
+                                        </div>
+                                     </div>
+                                 </td>
+                                 <td>
+                                    <input name="update" type="submit" value="Update" class="btn btn-sm btn-warning" />
+                                    <input type="hidden" name="hidden_id" value="<?php echo $id?>" />
+                                    <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
+                                 </td>
+                            </tr>
+                            <?php echo form_close();?>
+                      <?php
+                      endforeach;
+                        }
 
-							          ?>
+                      ?>
 							</table>
                     </div>
                 </div>
@@ -643,7 +671,7 @@ $p = 0;
 			?>
 			<div class="center-align">
 		 	 <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
-		            <input name="pharmacy_doctor"   onClick="send_to_pharmacy2(<?php echo $visit_id;?>);unload()" type="button" class="btn btn-large" value="Done" />
+		            <input name="pharmacy_doctor" onClick="send_to_pharmacy2(<?php echo $visit_id;?>);unload()" type="button" class="btn btn-lg btn-success" value="Done" />
 		    </div>
 			<?php
 		}
@@ -680,7 +708,6 @@ function send_to_pharmacy2(visit_id){
 	window.close(this);
 	//display_prescription(visit_id, 2);
 }
-
 	</script>
 
 

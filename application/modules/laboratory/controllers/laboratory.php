@@ -25,6 +25,8 @@ class Laboratory extends auth
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
 		$v_data['query'] = $query;
 		$v_data['page'] = 0;
+		$v_data['visit'] = 4;
+		$v_data['department'] = 4;
 		
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();

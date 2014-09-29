@@ -19,12 +19,14 @@ class Pharmacy extends auth
 		$this->session->unset_userdata('visit_search');
 		$this->session->unset_userdata('patient_search');
 		
-		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 		
 		$table = 'visit_department, visit, patients';
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, 6, 0);
 		$v_data['query'] = $query;
 		$v_data['page'] = 0;
+		$v_data['visit'] = 5;
+		$v_data['department'] = 5;
 		
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
@@ -38,9 +40,10 @@ class Pharmacy extends auth
 
 	public function prescription($visit_id,$service_charge_id=NULL,$module=NULL,$prescription_id=NULL)
 	{
-		$this->form_validation->set_rules('substitution', 'Substitution', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('substitution', 'Substitution', 'xss_clean');
 		// $this->form_validation->set_rules('prescription_finishdate', 'Finish Date', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('x', 'Times Per Day', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('number_of_days', 'Number of Day', 'required|xss_clean');
 		//$this->form_validation->set_rules('visit_charge_id', 'Cost', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('duration', 'Duration', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('consumption', 'Consumption', 'trim|required|xss_clean');
@@ -50,7 +53,6 @@ class Pharmacy extends auth
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-
 			$this->pharmacy_model->save_prescription($visit_id);
 			if($module == 1){
 				redirect('pharmacy/prescription1/'.$visit_id."/1");
@@ -306,13 +308,10 @@ class Pharmacy extends auth
 	}
 	public function delete_prescription($prescription_id,$visit_id,$visit_charge_id,$module)
 	{
-
-		$visit_charge_id = $this->pharmacy_model->get_visit_charge_id1($prescription_id);
-
 		//  delete the visit charge
 
 		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
-		$this->db->delete('visit_charge', $visit_data);
+		$this->db->delete('visit_charge');
 		
 		//  check if the visit charge has been deleted
 
@@ -322,10 +321,16 @@ class Pharmacy extends auth
 		//echo BB.$visit_charge_id;
 		if($num_rows==0){
 			$this->db->where(array("prescription_id"=>$prescription_id));
-			$this->db->delete('pres', $visit_data);
-	
+			$this->db->delete('pres');
 		}
-		
+		if($module == 1)
+		{
+			redirect('pharmacy/prescription1/'.$visit_id."/1");
+		}
+		else
+		{
+			redirect('pharmacy/prescription/'.$visit_id);
+		}
 	}
 }
 ?>

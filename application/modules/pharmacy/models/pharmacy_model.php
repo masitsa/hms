@@ -69,9 +69,8 @@ class Pharmacy_model extends CI_Model
 	
 	}
 
-	function select_prescription($visit_id){
-			
-			
+	function select_prescription($visit_id)
+	{		
 		$table = "pres, drugs, drug_times, drug_duration, drug_consumption, visit_charge, service_charge";
 		$where = "service_charge.service_charge_id = pres.service_charge_id 
 						AND service_charge.drug_id = drugs.drugs_id
@@ -80,7 +79,7 @@ class Pharmacy_model extends CI_Model
 						AND pres.drug_consumption_id = drug_consumption.drug_consumption_id
 						AND pres.visit_charge_id = visit_charge.visit_charge_id
 						 AND visit_charge.visit_id = ". $visit_id;
-		$items = "visit_charge.visit_charge_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name";
+		$items = "visit_charge.visit_charge_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
 		$order = "`drugs`.drugs_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -239,6 +238,7 @@ class Pharmacy_model extends CI_Model
 			'drug_duration_id'=>$this->input->post('duration'),
 			'drug_consumption_id'=>$this->input->post('consumption'),
 			'prescription_quantity'=>$this->input->post('quantity'),
+			'number_of_days'=>$this->input->post('number_of_days'),
 			'service_charge_id'=>$this->input->post('service_charge_id')
 		);
 		
@@ -326,8 +326,8 @@ class Pharmacy_model extends CI_Model
 		
 		return $result;
 	}
-	function check_deleted_visitcharge($id){
-		
+	function check_deleted_visitcharge($id)
+	{	
 		$table = "visit_charge";
 		$where = "visit_charge_id = ". $id;
 		$items = "*";

@@ -10,7 +10,7 @@
                 <!-- Use the class nred, ngreen, nblue, nlightblue, nviolet or norange to add background color. You need to use this in <li> tag. -->
                 <li><a href="<?php echo site_url();?>/pharmacy"><i class="icon-list"></i> Dashboard</a></li>
                 <li><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-home"></i> Control Panel</a></li>
-                <li><a href="<?php echo site_url();?>/lab/lab_queue"><i class="icon-sitemap"></i> Pharmacy Queue</a></li>
+                <li><a href="<?php echo site_url();?>/pharmacy/pharmacy_queue"><i class="icon-sitemap"></i> Pharmacy Queue</a></li>
 
                 <!-- Menu with sub menu -->
                 <li class="has_submenu">

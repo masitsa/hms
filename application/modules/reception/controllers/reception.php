@@ -508,52 +508,6 @@ class Reception extends auth
 		$data['sidebar'] = 'reception_sidebar';
 		$this->load->view('auth/template_sidebar', $data);	
 	}
-	public function lab_visit($primary_key)
-	{		
-		$v_data["patient_id"] = $primary_key;
-		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
-		$v_data['doctor'] = $this->reception_model->get_doctor();
-		$v_data['type'] = $this->reception_model->get_types();
-		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
-		$patient = $this->reception_model->patient_names2($primary_key);
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
-		
-		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span>';
-
-		$v_data['type'] = $this->reception_model->get_types();
-		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
-		$data['content'] = $this->load->view('initiate_lab',$v_data,true);	
-
-		$data['title'] = 'Add Patients';
-		$data['sidebar'] = 'reception_sidebar';
-		$this->load->view('auth/template_sidebar', $data);	
-	}
-	
-	public function initiate_pharmacy($primary_key)
-	{		
-		$v_data["patient_id"] = $primary_key;
-		$v_data['charge'] = $this->reception_model->get_service_charges($primary_key);
-		$v_data['doctor'] = $this->reception_model->get_doctor();
-		$v_data['type'] = $this->reception_model->get_types();
-		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
-		$patient = $this->reception_model->patient_names2($primary_key);
-		$patient_type = $patient['patient_type'];
-		$patient_othernames = $patient['patient_othernames'];
-		$patient_surname = $patient['patient_surname'];
-		
-		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span>';
-
-		$v_data['type'] = $this->reception_model->get_types();
-		$v_data['patient_insurance'] = $this->reception_model->get_patient_insurance($primary_key);
-
-		$data['content'] = $this->load->view('initiate_pharmacy',$v_data, TRUE);	
-
-		$data['title'] = 'Initiate Pharmacy Visit';
-		$data['sidebar'] = 'reception_sidebar';
-		$this->load->view('auth/template_sidebar', $data);	
-	}
 	
 	public function save_visit($patient_id)
 	{
@@ -563,9 +517,9 @@ class Reception extends auth
 		{
 			//if nurse visit doctor must be selected
 			$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+			$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
 		}
 		$this->form_validation->set_rules('patient_type', 'Patient Type', 'required|is_natural_no_zero');
-		$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
 		
 		$patient_insurance_id = $this->input->post("patient_insurance_id");
 		$patient_insurance_number = $this->input->post("insurance_id");
@@ -614,8 +568,11 @@ class Reception extends auth
 				//create visit
 				$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
 				
-				//save consultation charge
-				$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);
+				//save consultation charge for nurse visit
+				if($_POST['department_id'] == 7)
+				{
+					$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);
+				}
 				
 				//set visit department if not appointment
 				if($appointment_id == 0)
@@ -1019,7 +976,7 @@ class Reception extends auth
 		
 		if($page == 0)
 		{
-			redirect('reception');
+			redirect('reception/visit_list/0');
 		}
 		
 		if($page == 1)

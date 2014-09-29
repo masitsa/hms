@@ -9,7 +9,7 @@
       <div class="widget boxed">
         <!-- Widget head -->
         <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?></h4>
+          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
             <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -41,7 +41,6 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Visit Date</th>
 						  <th>Patient</th>
 						  <th>Visit Type</th>
 						  <th>Sent At</th>
@@ -128,10 +127,9 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$visit_date.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$visit_type.'</td>
-							<td>'.$visit_created.'</td>
+							<td>'.$visit_time.'</td>
 							<td>'.$coming_from.'</td>
 							<td>'.$doctor.'</td>
 							<td><a href="'.site_url().'/pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
