@@ -59,8 +59,18 @@ class Pharmacy extends auth
 			}
 			
 		}
-
-		$v_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'prescription_id'=>$prescription_id,'module'=>$module);
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$visit_type = $patient['visit_type'];
+		$patient_type = $patient['patient_type'];
+		$patient_othernames = $patient['patient_othernames'];
+		$patient_surname = $patient['patient_surname'];
+		$patient_date_of_birth = $patient['patient_date_of_birth'];
+		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$gender = $patient['gender'];
+		
+		$patient = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
+		
+		$v_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'prescription_id'=>$prescription_id,'module'=>$module,'patient'=>$patient);
 		$data['content'] = $this->load->view('prescription', $v_data, true);
 		
 		if($module == 1){
@@ -271,6 +281,17 @@ class Pharmacy extends auth
 	public function prescription1($visit_id,$module=NULL)
 	{	
 		$v_data['visit_id'] = $visit_id;
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$visit_type = $patient['visit_type'];
+		$patient_type = $patient['patient_type'];
+		$patient_othernames = $patient['patient_othernames'];
+		$patient_surname = $patient['patient_surname'];
+		$patient_date_of_birth = $patient['patient_date_of_birth'];
+		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$gender = $patient['gender'];
+		
+		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
+		
 		$v_data['module'] = $module;
 		
 		$data['content'] = $this->load->view('prescription', $v_data, TRUE);

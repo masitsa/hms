@@ -27,6 +27,7 @@ class Nurse extends auth
 		$v_data['page'] = 0;
 		
 		$v_data['visit'] = 0;
+		$v_data['department'] = 1;
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
@@ -382,6 +383,19 @@ class Nurse extends auth
 		
 		$this->procedures($visit_id);
 	}
+	public function search_diseases($visit_id)
+	{
+		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			$search = ' AND diseases_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$this->session->set_userdata('disease_search', $search);
+		}
+		
+		$this->disease($visit_id);
+	}
 	
 	public function close_procedure_search($visit_id)
 	{
@@ -389,6 +403,11 @@ class Nurse extends auth
 		$this->procedures($visit_id);
 	}
 
+	public function close_disease_search($visit_id)
+	{
+		$this->session->unset_userdata('disease_search');
+		$this->disease($visit_id);
+	}
 	function procedures($visit_id)
 	{
 		//check patient visit type
@@ -676,7 +695,7 @@ class Nurse extends auth
 		$order = 'diseases_id';
 		
 		$where = 'diseases_id > 0 ';
-		$desease_search = $this->session->userdata('desease_search');
+		$desease_search = $this->session->userdata('disease_search');
 		
 		if(!empty($desease_search))
 		{
@@ -790,22 +809,31 @@ class Nurse extends auth
 			FALSE;
 		}
 	}
-	public function send_to_labs($visit_id)
+	public function send_to_labs($visit_id,$module)
 	{
 		if($this->reception_model->set_visit_department($visit_id, 4))
 		{
-			redirect('nurse/nurse_queue');
+			if($module == 1){
+				redirect('doctor/doctor_queue');
+			}else{
+				redirect('nurse/nurse_queue');
+			}
+			
 		}
 		else
 		{
 			FALSE;
 		}
 	}
-	public function send_to_pharmacy($visit_id)
+	public function send_to_pharmacy($visit_id,$module)
 	{
 		if($this->reception_model->set_visit_department($visit_id, 5))
 		{
-			redirect('nurse/nurse_queue');
+			if($module == 1){
+				redirect('doctor/doctor_queue');
+			}else{
+				redirect('nurse/nurse_queue');
+			}
 		}
 		else
 		{
@@ -933,7 +961,7 @@ class Nurse extends auth
 				redirect("nurse/nurse_queue");
 			}else if($module == 2){
 				redirect("laboratory/lab_queue");
-			}else if($module == 1){
+			}else if($module == 3){
 				redirect("pharmacy/pharmacy_queue");
 			}else{
 				redirect("doctor/doctor_queue");

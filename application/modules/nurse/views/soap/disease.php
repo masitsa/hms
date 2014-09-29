@@ -24,20 +24,20 @@
 									{
 										echo '<div class="alert alert-danger">'.$validation_error.'</div>';
 									}
-									echo form_open('nurse/search_procedures/'.$visit_id, array('class'=>'form-inline'));
+									echo form_open('nurse/search_diseases/'.$visit_id, array('class'=>'form-inline'));
 									?>
                                     <div class="form-group">
                                             <?php
-											$search = $this->session->userdata('procedure_search');
-                                            if(!empty($search))
-											{
-											?>
-                                            <a href="<?php echo site_url().'/nurse/close_procedure_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
+                  											$search = $this->session->userdata('disease_search');
+                                                              if(!empty($search))
+                  											{
+                  											?>
+                                            <a href="<?php echo site_url().'/nurse/close_disease_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
                                             <?php }?>
                                         	<input type="submit" class="btn btn-info pull-right" value="Search" name="search"/>
                                             
                                         <div class="input-group">
-                                            <input type="text" class="form-control col-md-6" name="search_item" placeholder="Search for a procedure">
+                                            <input type="text" class="form-control col-md-6" name="search_item" placeholder="Search for a disease">
                                         </div>
                                     </div>
                                         

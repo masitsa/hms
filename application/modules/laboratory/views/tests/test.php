@@ -180,7 +180,7 @@
 		var config_url = $('#config_url').val();
 
 		var url = config_url+"/laboratory/send_to_doctor/"+visit_id;
-					window.alert("what"+url);
+					
 		if(XMLHttpRequestObject) {
 					
 			XMLHttpRequestObject.open("GET", url);

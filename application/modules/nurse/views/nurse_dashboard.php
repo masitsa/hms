@@ -13,7 +13,7 @@
     <?php 
 	if(!isset($doctor_appointments))
 	{
-		echo $this->load->view('administration/calender', '', TRUE);
+		echo $this->load->view('administration/dashboard/calender', '', TRUE);
 	}
 	
 	else

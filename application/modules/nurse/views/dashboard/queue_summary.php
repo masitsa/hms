@@ -123,10 +123,17 @@
 					$doctor = '-';
 				}
 				
+				if($department == 2){
+					$department = '<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-primary">Card</a></td>';
+				}else
+				{
+					$department =  '<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/0" class="btn btn-sm btn-primary">Card</a></td>';
+				}
 				$count++;
 				
 				if($visit == 0)
 				{
+
 					$result .= 
 					'
 						<tr>
@@ -135,11 +142,7 @@
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
-
-							<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/0" class="btn btn-sm btn-primary">Card</a></td>
-
-							<!--<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-primary">Card</a></td>-->
-
+							'.$department.'
 						</tr> 
 					';
 				}

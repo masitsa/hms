@@ -29,6 +29,7 @@ class Doctor extends auth
 		
 		$v_data['visit'] = 0;
 		$v_data['doctor_appointments'] = 1;
+		$v_data['department'] = 2;
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		

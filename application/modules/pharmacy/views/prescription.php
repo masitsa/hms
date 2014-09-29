@@ -249,6 +249,23 @@ $p = 0;
 </div>
 	<!-- end #header -->
 <div class="row">
+ <div class="col-md-12">
+
+      <!-- Widget -->
+      <div class="widget boxed">
+        <!-- Widget head -->
+        <div class="widget-head">
+          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $patient;?> </h4>
+          <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+          </div>
+          <div class="clearfix"></div>
+        </div>             
+
+        <!-- Widget content -->
+        <div class="widget-content">
+          <div class="padd">
 <?php echo form_open($this->uri->uri_string, array("class" => "form-horizontal"));?>
 <div class="row col-md-12">
 	<div class="col-md-4">
@@ -444,7 +461,7 @@ $p = 0;
           <div class="widget boxed">
                 <!-- Widget head -->
                 <div class="widget-head">
-                  <h4 class="pull-left"><i class="icon-reorder"></i>Usage</h4>
+                  <h4 class="pull-left"><i class="icon-reorder"></i>All Prescriptions</h4>
                   <div class="widget-icons pull-right">
                     <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                     <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -633,7 +650,10 @@ $p = 0;
 	?>
  	
  </div>  
-                                        
+ </div>
+ </div>
+    </div>
+    </div>                                   
   
 
 </div>

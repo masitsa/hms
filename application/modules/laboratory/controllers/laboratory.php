@@ -121,6 +121,25 @@ class Laboratory extends auth
 		$data['title'] = 'Laboratory Test List';
 		$this->load->view('auth/template_sidebar', $data);
 	}
+	public function search_laboratory_tests($visit_id)
+	{
+		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			$search = ' AND diseases_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$this->session->set_userdata('lab_test_search', $search);
+		}
+		
+		$this->laboratory_list(0,$visit_id);
+	}
+	
+	public function close_lab_test_search($visit_id)
+	{
+		$this->session->unset_userdata('lab_test_search');
+		$this->laboratory_list(0,$visit_id);
+	}
 	public function test1($visit_id)
 	{
 		$data = array('visit_id'=>$visit_id);
