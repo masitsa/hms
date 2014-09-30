@@ -22,6 +22,8 @@
                     </a>
                     <ul>
                         <li><a href="<?php echo site_url();?>/administration/services">Services</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/personnel">Personnel</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/import_data">Staff/ Student Import</a></li>
                     </ul>
                 </li>
 

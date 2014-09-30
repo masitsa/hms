@@ -6,4 +6,6 @@
 <file name="charts_model.php" server="192.168.170.16/sumc/" local="130555080988323485" remote="130564638000000000" Dst="0" />
 <file name="dates_model.php" server="192.168.170.16/sumc/" local="130555080988343486" remote="130564638000000000" Dst="0" />
 <file name="reports_model.php" server="192.168.170.16/sumc/" local="130564714774402559" remote="130564638000000000" Dst="0" />
+<file name="administration_model.php" server="192.168.170.16/sumc/development/" local="130565458887357775" remote="130565437800000000" Dst="0" />
+<file name="personnel_model.php" server="192.168.170.16/sumc/development/" local="130565527596067689" remote="130565437800000000" Dst="0" />
 </dwsync>

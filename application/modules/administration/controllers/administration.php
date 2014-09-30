@@ -8,6 +8,7 @@ class Administration extends auth
 	{
 		parent:: __construct();
 		$this->load->model('reception/reception_model');
+		$this->load->model('reception/strathmore_population');
 		$this->load->model('reports_model');
 		$this->load->model('administration_model');
 
@@ -171,6 +172,43 @@ class Administration extends auth
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
+	}
+	
+	public function import_data()
+	{
+		$data['content'] = $this->load->view('import_data', '', true);
+		$data['sidebar'] = 'admin_sidebar';
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function bulk_add_all_staff()
+	{
+		if($this->strathmore_population->get_hr_staff())
+		{
+			$this->session->set_userdata("success_message", "Staff imported successfully");
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message", "Staff could not be imported. Please try again");
+		}
+		
+		redirect('administration/import_data');
+	}
+	
+	public function bulk_add_all_students()
+	{
+		if($this->strathmore_population->get_hr_staff())
+		{
+			$this->session->set_userdata("success_message", "Students imported successfully");
+		}
+		
+		else
+		{
+			$this->session->set_userdata("error_message", "Students could not be imported. Please try again");
+		}
+		
+		redirect('administration/import_data');
 	}
 }
 ?>

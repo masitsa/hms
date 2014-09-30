@@ -6,7 +6,7 @@ class Auth extends MX_Controller
 	{
 		parent:: __construct();
 		$this->load->model('login_model');
-		$this->load->model('personnel/personnel_model');
+		$this->load->model('administration/personnel_model');
 		$this->load->model('reception/reception_model');
 		$this->load->model('administration/reports_model');
 		

@@ -9,14 +9,22 @@ class Strathmore_population extends CI_Model
 	*
 	*/
 
-	public function get_ams_student($student_id){
+	public function get_ams_student($student_id = NULL){
         $conn = oci_connect('AMS_QUERIES','MuYaibu1','//192.168.170.52:1521/orcl');
 		if (!$conn) {
 			$e = oci_error();
 			trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
 		
 		}else{
-			$sql = "SELECT * FROM   GAOWNER.VIEW_STUDENT_DETAILS WHERE STUDENT_NO='$student_id'";
+			if($student_id == NULL)
+			{
+				$sql = "SELECT * FROM GAOWNER.VIEW_STUDENT_DETAILS";
+			}
+			
+			else
+			{
+				$sql = "SELECT * FROM GAOWNER.VIEW_STUDENT_DETAILS WHERE STUDENT_NO='$student_id'";
+			}
 		
 			$rs4 = oci_parse($conn, $sql);
 	   		oci_execute($rs4);
@@ -43,20 +51,39 @@ class Strathmore_population extends CI_Model
 						$oname=str_replace("'", "", "$oname1");
 						$GUARDIAN_NAME=str_replace("'", "", "$GUARDIAN_NAME1");
 
-						if(!empty($STUDENT_NO)){
-
-						$data = array('title'=>'','Surname'=>$name,'Other_names'=>$oname,'DOB'=>$dob,'contact'=>$MOBILE_NO,'gender'=>$gender,'student_Number'=>$STUDENT_NO,'courses'=>$COURSES,'GUARDIAN_NAME'=>$GUARDIAN_NAME);
-
-						$this->db->insert('student', $data);
+						if(!empty($STUDENT_NO))
+						{
+							$exists = $this->student_exists($STUDENT_NO);
+							
+							$data = array('title'=>'','Surname'=>$name,'Other_names'=>$oname,'DOB'=>$dob,'contact'=>$MOBILE_NO,'gender'=>$gender,'student_Number'=>$STUDENT_NO,'courses'=>$COURSES,'GUARDIAN_NAME'=>$GUARDIAN_NAME,'faculty'=>$FACULTIES);
+			
+							if(!$exists)
+							{
+								$this->db->insert('student', $data);
+							}
+							
+							else
+							{
+								$this->db->where('student_Number', $STUDENT_NO);
+								$this->db->update('student', $data);
+							}
 						
 						$date = date("Y-m-d H:i:s");
 
 						//  data for patients patient date, visit type, strath number created by and modified by fields
-
-						$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>$date,'visit_type_id'=>1,'strath_no'=>$STUDENT_NO,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
+						
+						if($student_id != NULL)
+						{
+							$patient_data = array('patient_number'=>$this->create_patient_number(),'patient_date'=>$date,'visit_type_id'=>1,'strath_no'=>$STUDENT_NO,'created_by'=>$this->session->userdata('personnel_id'),'modified_by'=>$this->session->userdata('personnel_id'));
 
 						$this->db->insert('patients', $patient_data);
 						return $this->db->insert_id();
+						}
+						
+						else
+						{
+							return TRUE;
+						}
 						}else{
 							$this->session->set_userdata("error_message","Student could not be found");
 						return FALSE;
@@ -106,15 +133,22 @@ class Strathmore_population extends CI_Model
 				$Gender=mysql_result($rs1, $a,'Gender');	
 				$Title=mysql_result($rs1, $a,'Title');	
 				$Tel_1=mysql_result($rs1, $a,'Tel_1');
+				$Dept=mysql_result($rs1, $a,'Dept');
 				
 				$exists = $this->staff_exists($Employee_Code);
 				
 				if(!$exists)
 				{
 					//  insert data into the staff table
-					$data = array('title'=>$Title,'Surname'=>$Surname1,'Other_names'=>$Other_Name1,'DOB'=>$DOB,'contact'=>$Tel_1,'gender'=>$Gender,'Staff_Number'=>$Employee_Code,'staff_system_id'=>$E_ID);
-					echo 'title='.$Title.'<br/>Surname='.$Surname1.'<br/>Other_names='.$Other_Name1.'<br/>DOB='.$DOB.'<br/>contact='.$Tel_1.'<br/>gender='.$Gender.'<br/>Staff_Number='.$Employee_Code.'<br/>staff_system_id='.$E_ID;
+					$data = array('title'=>$Title,'Surname'=>$Surname1,'Other_names'=>$Other_Name1,'DOB'=>$DOB,'contact'=>$Tel_1,'gender'=>$Gender,'Staff_Number'=>$Employee_Code,'staff_system_id'=>$E_ID,'department'=>$Dept);
+					//echo 'title='.$Title.'<br/>Surname='.$Surname1.'<br/>Other_names='.$Other_Name1.'<br/>DOB='.$DOB.'<br/>contact='.$Tel_1.'<br/>gender='.$Gender.'<br/>Staff_Number='.$Employee_Code.'<br/>staff_system_id='.$E_ID;
 					$this->db->insert('staff', $data);
+				}
+				
+				else
+				{
+					$this->db->where('Staff_Number', $Employee_Code);
+					$this->db->update('staff', $data);
 				}
 			}
 			return TRUE;
@@ -131,6 +165,22 @@ class Strathmore_population extends CI_Model
 	{
 		$this->db->where('Staff_Number', $Employee_Code);
 		$query = $this->db->get('staff');
+		
+		if($query->num_rows() > 0)
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function student_exists($student_number)
+	{
+		$this->db->where('student_Number', $student_number);
+		$query = $this->db->get('student');
 		
 		if($query->num_rows() > 0)
 		{
