@@ -485,6 +485,7 @@ class Reception_model extends CI_Model
 				$patient_surname = $patient_data['patient_surname'];
 				$patient_date_of_birth = $patient_data['patient_date_of_birth'];
 				$gender = $patient_data['gender'];
+				$faculty = $patient_data['faculty'];
 			}
 			
 			//other patient
@@ -509,7 +510,7 @@ class Reception_model extends CI_Model
 				$patient_surname = $row->patient_surname;
 				$patient_date_of_birth = $row->patient_date_of_birth;
 				$gender_id = $row->gender_id;
-				
+				$faculty ='';
 				if($gender_id == 1)
 				{
 					$gender = 'M';
@@ -526,6 +527,8 @@ class Reception_model extends CI_Model
 					$patient_surname = $patient_data['patient_surname'];
 					$patient_date_of_birth = $patient_data['patient_date_of_birth'];
 					$gender = $patient_data['gender'];
+					$faculty = $patient_data['faculty'];
+
 				}
 				
 			}
@@ -538,6 +541,7 @@ class Reception_model extends CI_Model
 		$patient['patient_date_of_birth'] = $patient_date_of_birth;
 		$patient['gender'] = $gender;
 		$patient['patient_number'] = $patient_number;
+		$patient['faculty'] = $faculty;
 
 		return $patient;
 	}
@@ -573,7 +577,7 @@ class Reception_model extends CI_Model
 					$patient_surname = $row->patient_surname;
 					$patient_date_of_birth = $row->patient_date_of_birth;
 					$gender_id = $row->gender_id;
-					
+					$faculty = '';
 					if($gender_id == 1)
 					{
 						$gender = 'M';
@@ -621,7 +625,7 @@ class Reception_model extends CI_Model
 					$patient_surname = $row->patient_surname;
 					$patient_date_of_birth = $row->patient_date_of_birth;
 					$gender_id = $row->gender_id;
-					
+					$faculty = '';
 					if($gender_id == 1)
 					{
 						$gender = 'M';
@@ -670,6 +674,7 @@ class Reception_model extends CI_Model
 				$patient_surname = $row->patient_surname;
 				$patient_date_of_birth = $row->patient_date_of_birth;
 				$gender_id = $row->gender_id;
+				$faculty = '';
 				
 				if($gender_id == 1)
 				{
@@ -700,7 +705,7 @@ class Reception_model extends CI_Model
 			$patient_surname = $row->patient_surname;
 			$patient_date_of_birth = $row->patient_date_of_birth;
 			$gender_id = $row->gender_id;
-			
+			$faculty = '';
 			if($gender_id == 1)
 			{
 				$gender = 'M';

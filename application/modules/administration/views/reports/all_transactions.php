@@ -93,6 +93,7 @@
 				$patient_surname = $patient['patient_surname'];
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
 				$gender = $patient['gender'];
+				$faculty = $patient['faculty'];
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -134,7 +135,7 @@
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$visit_type.'</td>
 							<td>'.$doctor.'</td>
-							<td></td>
+							<td>'.$faculty.'</td>
 							<td>'.$strath_no.'</td>
 							<td></td>
 							<td>'.$cash.'</td>
