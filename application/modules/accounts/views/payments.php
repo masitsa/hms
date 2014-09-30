@@ -9,7 +9,7 @@
               <div class="widget boxed">
                     <!-- Widget head -->
                     <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Payment details for <?php echo $patient;?></h4>
+                      <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $patient;?></h4>
                       <div class="widget-icons pull-right">
                         <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                         <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -92,7 +92,8 @@
 								<div class="widget-head">
 								  <h4 class="pull-left"><i class="icon-reorder"></i>Receipts</h4>
 								  <div class=" pull-right">
-									<a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt</a>
+									<a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt A5</a>
+									<a href="<?php echo site_url();?>/accounts/print_receipt_new/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" style="margin-right:10px;" >Print Receipt</a>
 								  </div>
 								  <div class="clearfix"></div>
 								</div> 
