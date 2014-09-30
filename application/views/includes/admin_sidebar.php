@@ -21,7 +21,7 @@
                         <i class="icon-th"></i> Administration
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>/reception/appointment_list">Services</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/services">Services</a></li>
                     </ul>
                 </li>
 
