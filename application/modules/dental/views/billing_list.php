@@ -24,7 +24,7 @@
 									{
 										echo '<div class="alert alert-danger">'.$validation_error.'</div>';
 									}
-									echo form_open('nurse/search_dental_billing/'.$visit_id, array('class'=>'form-inline'));
+									echo form_open('dental/search_dental_billing/'.$visit_id, array('class'=>'form-inline'));
 									?>
                                     <div class="form-group">
                                             <?php
@@ -119,9 +119,11 @@
         XMLHttpRequestObject.onreadystatechange = function(){
             
             if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-                window.close(this);
-                
-                window.opener.document.getElementById("billing").innerHTML=XMLHttpRequestObject.responseText;
+				
+				$.get( "<?php echo site_url();?>/dental/view_billing/"+v_id, function( data ) {
+                	window.opener.document.getElementById("billing").innerHTML=data;
+                	window.close(this);
+				});
             }
         }
                 
