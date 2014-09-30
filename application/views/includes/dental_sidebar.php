@@ -19,7 +19,7 @@
                         <i class="icon-th"></i> Queues
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>/reception/visit_list/0/doctor">General Queue</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/visit_list/0/dental">General Queue</a></li>
                     </ul>
                 </li>
 

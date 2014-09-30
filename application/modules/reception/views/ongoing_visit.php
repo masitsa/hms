@@ -201,6 +201,14 @@
 							';
 						}
 						
+						else if($page_name == 'dental')
+						{
+							$button = '
+							<td><a href="'.site_url().'/dental/patient_card/'.$visit_id.'" class="btn btn-sm btn-success">Patient Card</a></td>
+							<td><a href="'.site_url().'/dental/send_to_account/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to accounts?\');">To Account</a></td>
+							';
+						}
+						
 						else if($page_name == 'nurse')
 						{
 							$button = '

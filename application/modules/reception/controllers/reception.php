@@ -268,6 +268,11 @@ class Reception extends auth
 			$data['sidebar'] = 'doctor_sidebar';
 		}
 		
+		else if($page_name == 'dental')
+		{
+			$data['sidebar'] = 'dental_sidebar';
+		}
+		
 		else
 		{
 			$data['sidebar'] = 'reception_sidebar';

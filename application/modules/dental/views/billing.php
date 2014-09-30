@@ -35,7 +35,7 @@
 	  });
   	function open_window_billing(visit_id){
 	  var config_url = $('#config_url').val();
-	  window.alert("sda");
+	  
 	  window.open(config_url+"/dental/dental_services/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
 	}
 	
