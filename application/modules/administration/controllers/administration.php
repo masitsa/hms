@@ -178,6 +178,7 @@ class Administration extends auth
 	{
 		$data['content'] = $this->load->view('import_data', '', true);
 		$data['sidebar'] = 'admin_sidebar';
+		$data['title'] = 'Import';
 		$this->load->view('auth/template_sidebar', $data);
 	}
 	

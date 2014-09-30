@@ -14,7 +14,7 @@
 <file name="nurse_sidebar.php" server="192.168.170.16/sumc/development/" local="130564683794120588" remote="130564588200000000" Dst="0" />
 <file name="reception_sidebar.php" server="192.168.170.16/sumc/development/" local="130564668652744551" remote="130564588200000000" Dst="0" />
 <file name="sidebar.php" server="192.168.170.16/sumc/development/" local="130555081006234509" remote="130561995600000000" Dst="0" />
-<file name="accounts_sidebar.php" server="192.168.170.16/sumc/development/" local="130564683934088594" remote="130564588200000000" Dst="0" />
+<file name="accounts_sidebar.php" server="192.168.170.16/sumc/development/" local="130565415685256756" remote="130565440200000000" Dst="0" />
 <file name="doctor_sidebar.php" server="192.168.170.16/sumc/development/" local="130564683891876179" remote="130564588200000000" Dst="0" />
 <file name="doctor_sidebar.php" server="192.168.170.16/sumc/" local="130564683891876179" remote="130564638000000000" Dst="0" />
 <file name="nurse_sidebar.php" server="192.168.170.16/sumc/" local="130564683794120588" remote="130564638000000000" Dst="0" />
@@ -26,8 +26,8 @@
 <file name="lab_sidebar.php" server="192.168.170.16/sumc/development/" local="130564683845163508" remote="130564588200000000" Dst="0" />
 <file name="nurse_model.php" server="192.168.170.16/sumc/development/" local="130561932981897506" remote="130561995600000000" Dst="0" />
 <file name="pharmacy_sidebar.php" server="192.168.170.16/sumc/development/" local="130564683745057782" remote="130564588200000000" Dst="0" />
-<file name="admin_sidebar.php" server="192.168.170.16/sumc/development/" local="130564075604965269" remote="130564507200000000" Dst="0" />
-<file name="dental_sidebar.php" server="192.168.170.16/sumc/development/" local="130564697232679230" remote="130564588200000000" Dst="0" />
+<file name="admin_sidebar.php" server="192.168.170.16/sumc/development/" local="130565536751991377" remote="130565440200000000" Dst="0" />
+<file name="dental_sidebar.php" server="192.168.170.16/sumc/development/" local="130565440610092375" remote="130565440200000000" Dst="0" />
 <file name="admin_sidebar.php" server="192.168.170.16/sumc/" local="130564075604965269" remote="130564638000000000" Dst="0" />
 <file name="dental_sidebar.php" server="192.168.170.16/sumc/" local="130565440610092375" remote="130565344800000000" Dst="0" />
 <file name="lab_sidebar.php" server="192.168.170.16/sumc/" local="130564683845163508" remote="130564638000000000" Dst="0" />
