@@ -101,7 +101,13 @@ class Accounts extends auth
 	
 	public function payments($visit_id){
 		$v_data = array('visit_id'=>$visit_id);
-		$v_data['patient'] = $this->reception_model->patient_names2(NULL, $visit_id);
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$visit_type = $patient['visit_type'];
+		$patient_type = $patient['patient_type'];
+		$patient_othernames = $patient['patient_othernames'];
+		$patient_surname = $patient['patient_surname'];
+		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
 		$data['content'] = $this->load->view('payments', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
@@ -135,5 +141,14 @@ class Accounts extends auth
 	public function print_invoice($visit_id)
 	{
 		$this->accounts_model->receipt($visit_id, TRUE);
+	}
+	
+	public function print_receipt_new($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['patient'] = $patient;
+		$this->load->view('receipt', $data);
 	}
 }

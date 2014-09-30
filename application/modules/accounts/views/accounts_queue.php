@@ -47,7 +47,7 @@
 						  <th>Invoice</th>
 						  <th>Payments</th>
 						  <th>Balance</th>
-						  <th colspan="4">Actions</th>
+						  <th colspan="5">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -242,7 +242,8 @@
 							<td>'.$invoice_total.'</td>
 							<td>'.$payments_value.'</td>
 							<td>'.$balance.'</td>
-							<td><a href="'.site_url().'/accounts/print_receipt/'.$visit_id.'/a/'.$module.'" target="_blank" class="btn btn-sm btn-info">Receipt</a></td>
+							<td><a href="'.site_url().'/accounts/print_receipt/'.$visit_id.'/a/'.$module.'" target="_blank" class="btn btn-sm btn-info">Receipt A5</a></td>
+							<td><a href="'.site_url().'/accounts/print_receipt_new/'.$visit_id.'" target="_blank" class="btn btn-sm btn-info">Receipt</a></td>
 							<td><a href="'.site_url().'/accounts/print_invoice/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice</a></td>
 							<td><a href="'.site_url().'/accounts/payments/'.$visit_id.'" class="btn btn-sm btn-primary" >Payments</a></td>
 							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'End this visit?\');">End Visit</a></td>
