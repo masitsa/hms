@@ -279,7 +279,7 @@ $(document).ready(function(){
                 }
                  previous_vitals(visit_id);
                 // get_family_history(visit_id);
-                 display_billing(visit_id);
+                 display_procedure(visit_id);
                  get_medication(visit_id);
                  get_surgeries(visit_id);
                  get_vaccines(visit_id);
@@ -493,7 +493,7 @@ function display_procedure(visit_id){
     
     var config_url = $('#config_url').val();
     var url = config_url+"/nurse/view_procedure/"+visit_id;
-    
+  
     if(XMLHttpRequestObject) {
                 
         XMLHttpRequestObject.open("GET", url);
@@ -733,7 +733,7 @@ function save_surgery(visit_id){
     var month = document.getElementById("month").value;
     var config_url = $('#config_url').val();
     var url = config_url+"/nurse/surgeries/"+date+"/"+description+"/"+month+"/"+visit_id;
-    window.alert(url);
+ 
     if(XMLHttpRequestObject) {
                 
         XMLHttpRequestObject.open("GET", url);

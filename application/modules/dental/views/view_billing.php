@@ -23,7 +23,7 @@ if(count($rs) >0){
 
 
 echo "
-	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Billing Info' onclick='myPopup34(".$visit_id.")'/></p></div>
+	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Billing Info7642' onclick='open_window_billing(".$visit_id.")'/></p></div>
 <table align='center' class='table table-striped table-hover table-condensed'>
 	<tr>
 		

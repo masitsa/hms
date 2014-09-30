@@ -11,6 +11,7 @@ class Laboratory extends auth
 		$this->load->model('reception/reception_model');
 		$this->load->model('database');
 		$this->load->model('reception/reception_model');
+		$this->load->model('accounts/accounts_model');
 		$this->load->model('nurse/nurse_model');
 	}
 	
