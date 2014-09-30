@@ -16,18 +16,14 @@
                 <li class="current"><a href="<?php echo site_url();?>/administration/reports/all_transactions"><i class="icon-list"></i> Reports</a></li>
 
                 <!-- Menu with sub menu -->
-                <!--<li class="has_submenu">
+             <li class="has_submenu">
                     <a href="#">
                         <i class="icon-th"></i> Administration
                     </a>
                     <ul>
-                        <li><a href="<?php echo site_url();?>/reception/appointment_list">Appointment List</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/visit_list/2">Deleted Visits</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/visit_list/0">Ongoing Visits</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/visit_list/3">Unclosed Visits</a></li>
-                        <li><a href="<?php echo site_url();?>/reception/visit_list/1">Visit History</a></li>
+                        <li><a href="<?php echo site_url();?>/reception/appointment_list">Services</a></li>
                     </ul>
-                </li>-->
+                </li>
 
             </ul>
 
