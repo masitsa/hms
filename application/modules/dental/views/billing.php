@@ -70,6 +70,71 @@
 	        XMLHttpRequestObject.send(null);
 	    }
 	}
+	function calculatebillingtotal(amount, id, procedure_id, v_id){
+       
+    var units = document.getElementById('units'+id).value;  
 
+	    billing_grand_total(id, units, amount);
+	    display_billing(v_id);
+	}
+
+	function billing_grand_total(procedure_id, units, amount){
+	    var XMLHttpRequestObject = false;
+	        
+	    if (window.XMLHttpRequest) {
+	    
+	        XMLHttpRequestObject = new XMLHttpRequest();
+	    } 
+	        
+	    else if (window.ActiveXObject) {
+	        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+	    
+	    var url = config_url+"/dental/billing_total/"+procedure_id+"/"+units+"/"+amount;
+	    
+	    if(XMLHttpRequestObject) {
+	                
+	        XMLHttpRequestObject.open("GET", url);
+	                
+	        XMLHttpRequestObject.onreadystatechange = function(){
+	            
+	            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+	                
+	            }
+	        }
+	                
+	        XMLHttpRequestObject.send(null);
+	    }
+	}
+
+	function delete_billing(id, visit_id){
+	    var XMLHttpRequestObject = false;
+	        
+	    if (window.XMLHttpRequest) {
+	    
+	        XMLHttpRequestObject = new XMLHttpRequest();
+	    } 
+	        
+	    else if (window.ActiveXObject) {
+	        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+	     var config_url = $('#config_url').val();
+	    var url = config_url+"/dental/delete_billing/"+id;
+	    
+	    if(XMLHttpRequestObject) {
+	                
+	        XMLHttpRequestObject.open("GET", url);
+	                
+	        XMLHttpRequestObject.onreadystatechange = function(){
+	            
+	            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+	                display_billing(visit_id);
+	            }
+	        }
+	                
+	        XMLHttpRequestObject.send(null);
+	    }
+	}
 
   </script>

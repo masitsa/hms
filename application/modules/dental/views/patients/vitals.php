@@ -514,42 +514,6 @@ function myPopup3(visit_id) {
     var config_url = $('#config_url').val();
     window.open( config_url+"/nurse/procedures/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
 }
-function display_billing(visit_id){
-
-    var XMLHttpRequestObject = false;
-        
-    if (window.XMLHttpRequest) {
-    
-        XMLHttpRequestObject = new XMLHttpRequest();
-    } 
-        
-    else if (window.ActiveXObject) {
-        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    
-    var config_url = $('#config_url').val();
-    var url = config_url+"/dental/view_billing/"+visit_id;
-    
-    if(XMLHttpRequestObject) {
-                
-        XMLHttpRequestObject.open("GET", url);
-                
-        XMLHttpRequestObject.onreadystatechange = function(){
-            
-            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-                document.getElementById("billing").innerHTML=XMLHttpRequestObject.responseText;
-            }
-        }
-                
-        XMLHttpRequestObject.send(null);
-    }
-}
-
-function myPopup34(visit_id) {
-    var config_url = $('#config_url').val();
-    window.open( config_url+"/nurse/billing/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
-}
 
 
 

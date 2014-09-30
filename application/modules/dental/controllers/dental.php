@@ -244,5 +244,27 @@ class Dental extends auth
 		$data = array('procedure_id'=>$service_id,'visit_id'=>$visit_id,'suck'=>$suck);
 		$this->load->view('billing/billing',$data);	
 	}
-	
+	public function billing_total($procedure_id,$units,$amount){
+		$visit_data = array('visit_charge_units'=>$units);
+		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->update('visit_charge', $visit_data);
+	}
+	function delete_billing($procedure_id)
+	{
+		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->delete('visit_charge', $visit_data);
+	}
+	public function send_to_accounts($visit_id)
+	{
+		if($this->reception_model->set_visit_department($visit_id, 6))
+		{
+				redirect("dental/dental_queue");
+		}
+		else
+		{
+			echo 'error';
+		}
+
+	}
+
 }

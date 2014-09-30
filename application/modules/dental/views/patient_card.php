@@ -4,7 +4,7 @@ if($mike == 0){
   <div class="row"> 
       <div class="col-md-12">
         <div class="center-align">
-          <?php echo form_open("nurse/send_to_accounts/".$visit_id, array("class" => "form-horizontal"));?>
+          <?php echo form_open("dental/send_to_accounts/".$visit_id, array("class" => "form-horizontal"));?>
             <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts"/>
           <?php echo form_close();?>
         </div>
@@ -117,7 +117,7 @@ if($mike == 0){
   <div class="row">
       <div class="col-md-12">
         <div class="center-align">
-          <?php echo form_open("nurse/send_to_accounts/".$visit_id, array("class" => "form-horizontal"));?>
+          <?php echo form_open("dental/send_to_accounts/".$visit_id, array("class" => "form-horizontal"));?>
             <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts"/>
           <?php echo form_close();?>
         </div>
