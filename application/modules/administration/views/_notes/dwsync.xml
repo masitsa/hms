@@ -2,6 +2,14 @@
 <dwsync>
 <file name="dashboard.php" server="192.168.170.16/sumc/development/" local="130564034665182940" remote="130564507200000000" Dst="0" />
 <file name="dashboard.php" server="192.168.170.16/sumc/" local="130564034665182940" remote="130564638000000000" Dst="0" />
-<file name="import_data.php" server="192.168.170.16/sumc/development/" local="130565549925464857" remote="130565440800000000" Dst="0" />
-<file name="services.php" server="192.168.170.16/sumc/development/" local="130565458887377776" remote="130565437800000000" Dst="0" />
+<file name="import_data.php" server="192.168.170.16/sumc/development/" local="130565551815112939" remote="130565442600000000" Dst="0" />
+<file name="services.php" server="192.168.170.16/sumc/development/" local="130565550722000416" remote="130565442000000000" Dst="0" />
+<file name="add_service.php" server="192.168.170.16/sumc/development/" local="130565550721760403" remote="130565442000000000" Dst="0" />
+<file name="add_service_charge.php" server="192.168.170.16/sumc/development/" local="130565550721940413" remote="130565442000000000" Dst="0" />
+<file name="service_charges.php" server="192.168.170.16/sumc/development/" local="130565550721960414" remote="130565442000000000" Dst="0" />
+<file name="add_service.php" server="192.168.170.16/sumc/" local="130565550721760403" remote="130565463000000000" Dst="0" />
+<file name="add_service_charge.php" server="192.168.170.16/sumc/" local="130565550721940413" remote="130565463000000000" Dst="0" />
+<file name="import_data.php" server="192.168.170.16/sumc/" local="130565551815112939" remote="130565463000000000" Dst="0" />
+<file name="services.php" server="192.168.170.16/sumc/" local="130565550722000416" remote="130565463000000000" Dst="0" />
+<file name="service_charges.php" server="192.168.170.16/sumc/" local="130565550721960414" remote="130565463000000000" Dst="0" />
 </dwsync>

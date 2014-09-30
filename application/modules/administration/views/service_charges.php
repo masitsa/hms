@@ -1,9 +1,8 @@
-
- <div class="row">
+<div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">
-		 <a href="<?php echo site_url()?>/administration/new_service" class="btn btn-sm btn-success">Add a New Service </a>
-
+		 <a href="<?php echo site_url()?>/administration/services" class="btn btn-sm btn-primary"> Back to services </a>
+		 <a href="<?php echo site_url()?>/administration/add_service_charge/<?php echo $service_id;?>" class="btn btn-sm btn-success"> Add service Charge </a>
 		</div>
 	</div>
 </div>
@@ -14,8 +13,9 @@
       <div class="widget boxed">
         <!-- Widget head -->
         <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> </h4>
+          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo $service_name;?></h4>
           <div class="widget-icons pull-right">
+         
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
             <a href="#" class="wclose"><i class="icon-remove"></i></a>
           </div>
@@ -46,7 +46,9 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Service Name</th>
+						  <th>Visit Type</th>
+						  <th>Service Charge Name</th>
+						  <th>Service Charge Amount</th>
 						  <th colspan="2">Actions</th>
 						</tr>
 					  </thead>
@@ -56,17 +58,20 @@
 			foreach ($query->result() as $row)
 			{
 				
-				$service_id = $row->service_id;
-				$service_name = $row->service_name;
+				$service_charge_id = $row->service_charge_id;
+				$service_charge_name = $row->service_charge_name;
+				$visit_type_name = $row->visit_type_name;
+				$service_charge_amount = $row->service_charge_amount;
 				
 				$count++;
 				$result .= 
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$service_name.'</td>
-							<td><a href="'.site_url().'/administration/service_charges/'.$service_id.'" class="btn btn-sm btn-success">Service Charges</a></td>
-							<td><a href="'.site_url().'/administration/edit_service/'.$service_id.'" class="btn btn-sm btn-info"> Edit </a></td>
+							<td>'.$visit_type_name.'</td>
+							<td>'.$service_charge_name.'</td>
+							<td>'.$service_charge_amount.'</td>
+							<td><a href="'.site_url().'/administration/edit_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-info"> Edit </a></td>
 						</tr> 
 					';
 			}

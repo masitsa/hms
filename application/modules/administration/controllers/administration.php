@@ -11,7 +11,7 @@ class Administration extends auth
 		$this->load->model('reception/strathmore_population');
 		$this->load->model('reports_model');
 		$this->load->model('administration_model');
-
+		$this->load->model('database');
 	}
 	
 	public function index()
@@ -102,7 +102,7 @@ class Administration extends auth
 	public function service_charges($service_id,$page_name = NULL)
 	{
 		// this is it
-		$where = 'service_id = $service_id';
+		$where = 'service.service_id = service_charge.service_id AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
 		$service_charge_search = $this->session->userdata('service_charge_search');
 		
 		if(!empty($service_charge_search))
@@ -119,10 +119,10 @@ class Administration extends auth
 		{
 			$segment = 4;
 		}
-		$table = 'service';
+		$table = 'service,service_charge,visit_type';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/administration/service_charges/'.$page_name;
+		$config['base_url'] = site_url().'/administration/service_charges/'.$service_id.'/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -162,9 +162,9 @@ class Administration extends auth
 		$data['title'] = 'Services Charges';
 		$v_data['title'] = 'Services Charges';
 		$v_data['module'] = 0;
-		
-		
-		$data['content'] = $this->load->view('services', $v_data, true);
+		$v_data['service_id'] = $service_id;
+		$v_data['service_name'] = $this->administration_model->get_service_names($service_id);
+		$data['content'] = $this->load->view('service_charges', $v_data, true);
 		
 		
 		$data['sidebar'] = 'admin_sidebar';
@@ -199,7 +199,7 @@ class Administration extends auth
 	
 	public function bulk_add_all_students()
 	{
-		if($this->strathmore_population->get_hr_staff())
+		if($this->strathmore_population->get_ams_student())
 		{
 			$this->session->set_userdata("success_message", "Students imported successfully");
 		}
@@ -210,6 +210,153 @@ class Administration extends auth
 		}
 		
 		redirect('administration/import_data');
+	}
+	
+	public function add_service_charge($service_id)
+	{
+		$v_data = array('service_id'=>$service_id);
+		$v_data['service_id'] = $service_id;
+
+		$data['title'] = 'Add Service Charge';
+		$v_data['title'] = 'Add Service Charge';
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['service_charge_id'] = $service_charge_id;
+		$v_data['service_name'] = $this->administration_model->get_service_names($service_id);
+		$data['content'] = $this->load->view('add_service_charge',$v_data,TRUE);
+		$data['sidebar'] = 'admin_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+
+	public function service_charge_add($service_id)
+	{
+		$this->form_validation->set_rules('service_charge_name', 'Service Charge name', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('patient_type', 'Patient Type', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('charge', 'charge', 'trim|required|xss_clean');
+
+		if ($this->form_validation->run() == FALSE)
+		{
+				$this->session->set_userdata("error_message","Fill in the fields");
+				$this->add_service_charge($service_id);
+		}
+		else
+		{
+				$result = $this->administration_model->submit_service_charges($service_id);
+				if($result == FALSE)
+				{
+					$this->session->set_userdata("error_message","Seems like there is a duplicate of this service charge. Please try again");
+					$this->add_service_charge($service_id);
+				}
+				else
+				{
+					$this->session->set_userdata("success_message","Successfully created a service charge");
+					$this->add_service_charge($service_id);
+				}
+		}
+
+	}
+	public function new_service()
+	{
+
+		$data['title'] = 'Add Service ';
+		$v_data['title'] = 'Add Service ';
+		$v_data['service_id'] = 0;
+		$data['content'] = $this->load->view('add_service',$v_data,TRUE);
+		$data['sidebar'] = 'admin_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+
+	public function service_add()
+	{
+		$this->form_validation->set_rules('service_name', 'Service Charge name', 'trim|required|xss_clean');
+
+		if ($this->form_validation->run() == FALSE)
+		{
+				$this->session->set_userdata("error_message","Fill in the fields");
+				$this->new_service();
+		}
+		else
+		{
+				$result = $this->administration_model->submit_service();
+				if($result == FALSE)
+				{
+					$this->session->set_userdata("error_message","Seems like there is a duplicate of this service . Please try again");
+					$this->new_service();
+				}
+				else
+				{
+					$this->session->set_userdata("success_message","Successfully created a service ");
+					$this->new_service();
+				}
+		}
+
+	}
+	public function edit_service($service_id)
+	{
+		$data['title'] = 'Edit  Service ';
+		$v_data['title'] = 'Edit Service ';
+		$v_data['service_id'] = $service_id;
+		$v_data['service_name'] = $this->administration_model->get_service_names($service_id);
+		$data['content'] = $this->load->view('add_service',$v_data,TRUE);
+		$data['sidebar'] = 'admin_sidebar';
+		$this->load->view('auth/template_sidebar', $data);
+	}
+
+	public function update_service($service_id)
+	{
+		$this->form_validation->set_rules('service_name', 'Service Charge name', 'trim|required|xss_clean');
+
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->session->set_userdata("error_message","Fill in the fields");
+			$this->edit_service($service_id);
+		}
+		else
+		{
+			$service_name = $this->input->post('service_name');
+			$visit_data = array('service_name'=>$service_name);
+			$this->db->where('service_id',$service_id);
+			$this->db->update('service', $visit_data);
+			$this->edit_service($service_id);
+		}
+		
+	}
+	public function edit_service_charge($service_id,$service_charge_id)
+	{
+		$v_data = array('service_id'=>$service_id);
+		$v_data['service_id'] = $service_id;
+
+		$data['title'] = 'Add Service Charge';
+		$v_data['title'] = 'Add Service Charge';
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['service_charge_id'] = $service_charge_id;
+		$v_data['service_name'] = $this->administration_model->get_service_names($service_id);
+		$data['content'] = $this->load->view('add_service_charge',$v_data,TRUE);
+		$data['sidebar'] = 'admin_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	public function update_service_charge($service_id,$service_charge_id)
+	{
+		$this->form_validation->set_rules('service_charge_name', 'Service Charge name', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('charge', 'Charge', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('patient_type', 'Patient Type', 'trim|required|xss_clean');
+
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->session->set_userdata("error_message","Fill in the fields");
+			$this->edit_service_charge($service_id,$service_charge_id);
+		}
+		else
+		{
+			$service_charge_name = $this->input->post('service_charge_name');
+			$patient_type = $this->input->post('patient_type');
+			$charge = $this->input->post('charge');
+
+			$visit_data = array('service_charge_name'=>$service_charge_name,'visit_type_id'=>$patient_type,'service_charge_amount'=>$charge);
+			$this->db->where('service_charge_id',$service_charge_id);
+			$this->db->update('service_charge', $visit_data);
+			$this->edit_service_charge($service_id,$service_charge_id);
+		}
+		
 	}
 }
 ?>
