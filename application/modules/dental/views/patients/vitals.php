@@ -279,7 +279,7 @@ $(document).ready(function(){
                 }
                  previous_vitals(visit_id);
                 // get_family_history(visit_id);
-                 display_billing(visit_id);
+                 display_procedure(visit_id);
                  get_medication(visit_id);
                  get_surgeries(visit_id);
                  get_vaccines(visit_id);
@@ -493,7 +493,7 @@ function display_procedure(visit_id){
     
     var config_url = $('#config_url').val();
     var url = config_url+"/nurse/view_procedure/"+visit_id;
-    
+  
     if(XMLHttpRequestObject) {
                 
         XMLHttpRequestObject.open("GET", url);
@@ -513,42 +513,6 @@ function display_procedure(visit_id){
 function myPopup3(visit_id) {
     var config_url = $('#config_url').val();
     window.open( config_url+"/nurse/procedures/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
-}
-function display_billing(visit_id){
-
-    var XMLHttpRequestObject = false;
-        
-    if (window.XMLHttpRequest) {
-    
-        XMLHttpRequestObject = new XMLHttpRequest();
-    } 
-        
-    else if (window.ActiveXObject) {
-        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    
-    var config_url = $('#config_url').val();
-    var url = config_url+"/dental/view_billing/"+visit_id;
-    
-    if(XMLHttpRequestObject) {
-                
-        XMLHttpRequestObject.open("GET", url);
-                
-        XMLHttpRequestObject.onreadystatechange = function(){
-            
-            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-                document.getElementById("billing").innerHTML=XMLHttpRequestObject.responseText;
-            }
-        }
-                
-        XMLHttpRequestObject.send(null);
-    }
-}
-
-function myPopup34(visit_id) {
-    var config_url = $('#config_url').val();
-    window.open( config_url+"/nurse/billing/"+visit_id, "myWindow", "status = 1, height = auto, width = 600, resizable = 0" )
 }
 
 
@@ -733,7 +697,7 @@ function save_surgery(visit_id){
     var month = document.getElementById("month").value;
     var config_url = $('#config_url').val();
     var url = config_url+"/nurse/surgeries/"+date+"/"+description+"/"+month+"/"+visit_id;
-    window.alert(url);
+ 
     if(XMLHttpRequestObject) {
                 
         XMLHttpRequestObject.open("GET", url);

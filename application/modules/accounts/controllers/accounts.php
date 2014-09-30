@@ -64,6 +64,7 @@ class Accounts extends auth
 		$this->pagination->initialize($config);
 		
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$v_data['type_links'] =1;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
 		
@@ -72,6 +73,138 @@ class Accounts extends auth
 		
 		$data['title'] = 'Accounts Queue';
 		$v_data['title'] = 'Accounts Queue';
+		$v_data['module'] = 0;
+		
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('accounts_queue', $v_data, true);
+		$data['sidebar'] = 'accounts_sidebar';
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+		
+
+	}
+	public function accounts_unclosed_queue()
+	{
+		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 0 ';
+		$table = 'visit_department, visit, patients';
+		
+		$visit_search = $this->session->userdata('visit_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/accounts/accounts_unclosed_queue/';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 3;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$v_data['type_links'] =2;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Accounts Unclosed Visits';
+		$v_data['title'] = 'Accounts Unclosed Visits';
+		$v_data['module'] = 0;
+		
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('accounts_queue', $v_data, true);
+		$data['sidebar'] = 'accounts_sidebar';
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+		
+
+	}
+	public function accounts_closed_visits()
+	{
+		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 1 ';
+		$table = 'visit_department, visit, patients';
+		
+		$visit_search = $this->session->userdata('visit_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/accounts/accounts_unclosed_queue/';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 3;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+        $v_data['type_links'] =3;
+		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Accounts closed Visits';
+		$v_data['title'] = 'Accounts closed Visits';
 		$v_data['module'] = 0;
 		
 		$v_data['type'] = $this->reception_model->get_types();

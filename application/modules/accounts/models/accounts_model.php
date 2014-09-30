@@ -66,10 +66,10 @@ class Accounts_model extends CI_Model
 				$visit_charge_units  = $key_values->visit_charge_units;
 				$discounted_value="";
 				
-				$dicount_rs = $this->get_discount_value($patient_id,$service_id1);
+				$dicount_rs = $this->get_dicountend_values($patient_id,$service_id1);
 				foreach ($dicount_rs as $key_disounts):
-					$percentage = mysql_result($rs1,0, "percentage");
-					$amount = mysql_result($rs1, 0, "amount");
+					$percentage = $key_disounts->percentage;
+					$amount = $key_disounts->amount;
 				endforeach;
 					$penn=((100-$percentage)/100);
 					$discounted_value="";	
@@ -144,7 +144,7 @@ class Accounts_model extends CI_Model
 		$table = "insurance_discounts";
 		$where = "insurance_id = (SELECT company_insurance_id FROM `patient_insurance` where patient_id = ". $patient_id .") and service_id = ". $service_id;
 		$items = "*";
-		$order = "visit_type_id";
+		$order = "insurance_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		

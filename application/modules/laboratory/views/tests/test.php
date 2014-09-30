@@ -1,15 +1,8 @@
+
+
 <div class="row">
 	<div class="col-md-12">
-		<div class="row">
-			<div class="center-align">
-				<?php
-		        	if(($visit == 2)||(($visit == 3))||(($visit == 1))||(($visit == 4))){
-						echo "<input type='button' onClick='open_window_lab(8, ".$visit_id.")' value='Add Test' class='btn btn-large btn-primary'>";
-					}
-				
-				?>
-			</div>
-		</div>
+		
         <div class="row">
             <div class="col-md-12">
 
@@ -28,7 +21,31 @@
                 <!-- Widget content -->
                     <div class="widget-content">
                         <div class="padd">
-							<div id="test_results"></div>
+	                        <div class="tabbable" style="margin-bottom: 18px;">
+				              <ul class="nav nav-tabs">
+				                <li class="active"><a href="#tests-pane" data-toggle="tab">Tests</a></li>
+				                <li ><a href="#visit_trail" data-toggle="tab">Visit Trail</a></li>
+				              </ul>
+				              <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
+				                <div class="tab-pane active" id="tests-pane">
+					                <div class="row">
+										<div class="center-align">
+											<?php
+									        	if(($visit == 2)||(($visit == 3))||(($visit == 1))||(($visit == 4))){
+													echo "<input type='button' onClick='open_window_lab(8, ".$visit_id.")' value='Add Test' class='btn btn-large btn-primary'>";
+												}
+											
+											?>
+										</div>
+									</div>
+				                  <div id="test_results"></div>
+				                </div>
+				                 <div class="tab-pane" id="visit_trail">
+				                  <?php echo $this->load->view("nurse/patients/visit_trail", '', TRUE);?>
+				                </div>
+				              </div>
+				           </div>
+							
     					</div>
     				</div>
     			</div>

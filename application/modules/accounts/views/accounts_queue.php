@@ -1,7 +1,7 @@
 <!-- search -->
-<?php //echo $this->load->view('patients/search_visit', '', TRUE);?>
+<?php //echo $this->load->view('patients/search_visit', '', TRUE); ?>
 <!-- end search -->
- 
+
 <div class="row">
     <div class="col-md-12">
 
@@ -9,7 +9,19 @@
       <div class="widget boxed">
         <!-- Widget head -->
         <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
+        	<?php
+        	if($type_links == 1){
+        		?>
+        		 <h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> for <?php echo date('jS M Y',strtotime(date('Y-m-d')));?></h4>
+
+        		<?php
+        	}else{
+        		?>
+        		<h4 class="pull-left"><i class="icon-reorder"></i><?php echo $title;?> </h4>
+
+        		<?php
+        	}
+        	?>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
             <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -41,14 +53,20 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
+						  <th>Visit Date</th>
 						  <th>Patient</th>
 						  <th>Doctor</th>
 						  <th>Coming From</th>
 						  <th>Invoice</th>
 						  <th>Payments</th>
-						  <th>Balance</th>
-						  <th colspan="5">Actions</th>
-						</tr>
+						  <th>Balance</th>';
+
+						  	if($type_links == 3){
+						  		$result .=  '<th colspan="2">Actions</th>';
+						  	}else{
+						  		$result .= '<th colspan="4">Actions</th>';
+						  	}
+				$result .= 	'</tr>
 					  </thead>
 					  <tbody>
 				';
@@ -236,6 +254,7 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
+							<td>'.$visit_date.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$doctor.'</td>
 							<td>'.$coming_from.'</td>
@@ -244,10 +263,15 @@
 							<td>'.$balance.'</td>
 							<td><a href="'.site_url().'/accounts/print_receipt/'.$visit_id.'/a/'.$module.'" target="_blank" class="btn btn-sm btn-info">Receipt A5</a></td>
 							<td><a href="'.site_url().'/accounts/print_receipt_new/'.$visit_id.'" target="_blank" class="btn btn-sm btn-info">Receipt</a></td>
-							<td><a href="'.site_url().'/accounts/print_invoice/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice</a></td>
-							<td><a href="'.site_url().'/accounts/payments/'.$visit_id.'" class="btn btn-sm btn-primary" >Payments</a></td>
-							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'End this visit?\');">End Visit</a></td>
-						</tr> 
+							<td><a href="'.site_url().'/accounts/print_invoice/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice</a></td>';
+							if($type_links == 3){
+
+							}else{
+							$result .='<td><a href="'.site_url().'/accounts/payments/'.$visit_id.'" class="btn btn-sm btn-primary" >Payments</a></td>
+							<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'End this visit?\');">End Visit</a></td>';
+							}
+
+						$result .='</tr> 
 					';
 			}
 			
