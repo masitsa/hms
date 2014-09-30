@@ -564,6 +564,7 @@ class Reception_model extends CI_Model
 					$patient_date_of_birth = $dependants_result->DOB;
 					$relationship = $dependants_result->relation;
 					$gender = $dependants_result->Gender;
+					$faculty = '';
 				}
 				
 				else if(($row->patient_surname != '0.00') && ($row->patient_othernames != '0.00'))
@@ -590,6 +591,7 @@ class Reception_model extends CI_Model
 					$patient_date_of_birth = '';
 					$relationship = '';
 					$gender = '';
+					$faculty ='';
 				}
 			}
 			
@@ -610,6 +612,7 @@ class Reception_model extends CI_Model
 					$patient_date_of_birth = $staff_result->DOB;
 					$patient_phone1 = $staff_result->contact;
 					$gender = $staff_result->gender;
+					$faculty = $staff_result->department;
 				}
 				
 				else if(($row->patient_surname != '0.00') && ($row->patient_othernames != '0.00'))
@@ -637,6 +640,7 @@ class Reception_model extends CI_Model
 					$relationship = '';
 					$gender = '';
 					$patient_type = '';
+					$faculty ='';
 				}
 			}
 		}
@@ -657,6 +661,7 @@ class Reception_model extends CI_Model
 				$patient_date_of_birth = $student_result->DOB;
 				$patient_phone1 = $student_result->contact;
 				$gender = $student_result->gender;
+				$faculty = $student_result->faculty;
 			}
 				
 			else if(($row->patient_surname != '0.00') && ($row->patient_othernames != '0.00'))
@@ -683,6 +688,7 @@ class Reception_model extends CI_Model
 				$patient_date_of_birth = '';
 				$relationship = '';
 				$gender = '';
+				$faculty ='';
 			}
 		}
 		
@@ -711,6 +717,7 @@ class Reception_model extends CI_Model
 		$patient['patient_surname'] = $patient_surname;
 		$patient['patient_date_of_birth'] = $patient_date_of_birth;
 		$patient['gender'] = $gender;
+		$patient['faculty'] = $faculty;
 
 		return $patient;
 	}
