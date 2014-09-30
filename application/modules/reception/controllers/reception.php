@@ -1928,4 +1928,9 @@ class Reception extends auth
 		$data['sidebar'] = 'reception_sidebar';
 		$this->load->view('auth/template_sidebar', $data);	
 	}
+	
+	public function patient_names($visit_id)
+	{
+		var_dump($this->reception_model->patient_names2(NULL, $visit_id));
+	}
 }
