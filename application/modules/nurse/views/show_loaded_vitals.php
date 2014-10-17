@@ -43,16 +43,16 @@
 			}
 			
 			if(($lower_limit == NULL) || ($upper_limit == NULL)){
-					echo"<span class='label label-info'>".$visit_vital_value."</span>";
+					echo"<div class='alert alert-info' style='margin-top:5px'>".$visit_vital_value."</div>";
 			}
 			
 			else{
 				if(($visit_vital_value < $lower_limit) || ($visit_vital_value > $upper_limit)){
-					echo"<span class='label label-danger'>".$visit_vital_value."</span>";
+					echo"<div class='alert alert-danger' style='margin-top:5px'>".$visit_vital_value."</div>";
 				}
 			
 				else{
-					echo"<span class='label label-info'>".$visit_vital_value."</span>";
+					echo"<div class='alert alert-info' style='margin-top:5px'>".$visit_vital_value."</div>";
 				}
 			}
 	}

@@ -12,6 +12,7 @@ class Pharmacy extends auth
 		$this->load->model('database');
 		$this->load->model('reception/reception_model');
 		$this->load->model('nurse/nurse_model');
+		$this->load->model('accounts/accounts_model');
 	}
 	
 	public function index()
@@ -93,6 +94,11 @@ class Pharmacy extends auth
 		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('consumption'.$prescription_id, 'Consumption', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'trim|required|xss_clean');
+
+		if($module == 1)
+		{
+			$this->form_validation->set_rules('units_given'.$prescription_id, 'Units Given', 'trim|required|xss_clean');	
+		}
 		
 		//if form conatins invalid data
 		if ($this->form_validation->run() == FALSE)
@@ -172,9 +178,9 @@ class Pharmacy extends auth
 		$table = 'drugs, service_charge, generic, brand,class';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/drugs/'.$visit_id;
+		$config['base_url'] = site_url().'/pharmacy/drugs/'.$visit_id.'/'.$module;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 4;
+		$config['uri_segment'] = 5;
 		$config['per_page'] = 15;
 		$config['num_links'] = 5;
 		
@@ -202,7 +208,7 @@ class Pharmacy extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$page = ($this->uri->segment(5)) ? $this->uri->segment(5) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->pharmacy_model->get_drugs($table, $where, $config["per_page"], $page, $order);
 		
@@ -322,7 +328,7 @@ class Pharmacy extends auth
 	}
 	public function send_to_accounts($primary_key)
 	{
-		redirect('nurse/send_to_accounts/'.$primary_key.'/1');
+		redirect('nurse/send_to_accounts/'.$primary_key.'/3');
 	}
 	public function delete_prescription($prescription_id,$visit_id,$visit_charge_id,$module)
 	{

@@ -78,7 +78,12 @@
 					$this->session->unset_userdata('success_message');
 				}
 			?>
+         <div class="clearfix"></div>
           </div>
+
+          <?php echo $this->load->view("allergies_brief", '', TRUE);?>
+        
+       <div class="clearfix"></div>
 
 			<div class="tabbable" style="margin-bottom: 18px;">
               <ul class="nav nav-tabs">

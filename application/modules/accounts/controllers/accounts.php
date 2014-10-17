@@ -86,12 +86,123 @@ class Accounts extends auth
 		
 
 	}
+
+	public function search_visits($pager)
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		$surnames = $this->input->post('surname');
+		$personnel_id = $this->input->post('personnel_id');
+		$visit_date = $this->input->post('visit_date');
+		$othernames = $this->input->post('othernames');
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
+		}
+		
+		
+		
+		if(!empty($personnel_id))
+		{
+			$personnel_id = ' AND visit.personnel_id = '.$personnel_id.' ';
+		}
+		
+		if(!empty($visit_date))
+		{
+			$visit_date = ' AND visit.visit_date = \''.$visit_date.'\' ';
+		}
+		
+		//search surname
+		$surnames = explode(" ",$surnames);
+		$total = count($surnames);
+		
+		$count = 1;
+		$surname = ' AND (';
+		for($r = 0; $r < $total; $r++)
+		{
+			if($count == $total)
+			{
+				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+			}
+			
+			else
+			{
+				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+			}
+			$count++;
+		}
+		$surname .= ') ';
+		
+		//search other_names
+		$other_names = explode(" ",$othernames);
+		$total = count($other_names);
+		
+		$count = 1;
+		$other_name = ' AND (';
+		for($r = 0; $r < $total; $r++)
+		{
+			if($count == $total)
+			{
+				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+			}
+			
+			else
+			{
+				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+			}
+			$count++;
+		}
+		$other_name .= ') ';
+		
+		$search = $visit_type_id.$surname.$other_name.$visit_date.$personnel_id;
+		$this->session->set_userdata('visit_accounts_search', $search);
+		if($pager == 1)
+		{
+			$this->accounts_queue();
+		}
+		else if($pager == 2)
+		{
+			$this->accounts_unclosed_queue();
+
+		}
+		else if($pager == 3)
+		{
+			$this->accounts_closed_visits();
+		}
+		else
+		{
+			$this->accounts_queue();
+		}
+		
+		
+	}
+	public function close_queue_search($pager)
+	{
+		$this->session->unset_userdata('visit_accounts_search');
+		if($pager == 1)
+		{
+			$this->accounts_queue();
+		}
+		else if($pager == 2)
+		{
+			$this->accounts_unclosed_queue();
+
+		}
+		else if($pager == 3)
+		{
+			$this->accounts_closed_visits();
+		}
+		else
+		{
+			$this->accounts_queue();
+		}
+	}
 	public function accounts_unclosed_queue()
 	{
 		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 0 ';
 		$table = 'visit_department, visit, patients';
 		
-		$visit_search = $this->session->userdata('visit_search');
+		$visit_search = $this->session->userdata('visit_accounts_search');
 		
 		if(!empty($visit_search))
 		{

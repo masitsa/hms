@@ -136,7 +136,7 @@ class Nurse extends auth
 		$v_data['module'] = $module;
 		$v_data['mike'] = $mike;
 		$v_data['visit_id'] = $visit_id;
-		
+		$v_data['dental'] = 0;
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
 		
 		$data['title'] = 'Patient Card';
@@ -207,10 +207,12 @@ class Nurse extends auth
 		
 		if($total_rows > 0){
 			// do an update to the data there
+			// $visit_data = array('vital_id'=>$vital_id,'visit_vitals_time'=>'$time','visit_id'=>$visit_id,'visit_vital_value'=>$vital);
+			// $this->db->where(array("visit_id"=>$visit_id,"vital_id"=>$vital_id));
+			// $this->db->update('visit_vital', $visit_data);
 			$time = date('h:i:s');
 			$visit_data = array('vital_id'=>$vital_id,'visit_vitals_time'=>'$time','visit_id'=>$visit_id,'visit_vital_value'=>$vital);
-			$this->db->where(array("visit_id"=>$visit_id,"vital_id"=>$vital_id));
-			$this->db->update('visit_vital', $visit_data);
+			$this->db->insert('visit_vital', $visit_data);
 		}else{
 			// do an insert
 			$time = date('h:i:s');

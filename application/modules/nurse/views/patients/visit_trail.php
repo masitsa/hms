@@ -144,6 +144,7 @@
                             $visit_charge_amount = $key_items->visit_charge_amount;
                             $service_name = $key_items->service_name;
                              $units = $key_items->visit_charge_units;
+                             $service_charge_id = $key_items->service_charge_id;
 
                              $visit_total = $visit_charge_amount * $units;
 
@@ -152,7 +153,21 @@
                                 <td><?php echo $s;?></td>
                                 <td><?php echo $service_name;?></td>
                                 <td><?php echo $service_charge_name;?></td>
-                                <td><?php echo number_format($visit_total,2);?></td>
+                                <?php
+                                if($service_charge_id == '10976')
+                                {
+                                	?>
+                                	<td><input type='text' name='amount_charge' placeholder='<?php echo number_format($visit_total,2);?>'><input type='submit' name='update_value' value='Update'></td>
+                                	<?php
+                                }
+                                else
+                                {
+                                	?>
+                               		 <td><?php echo number_format($visit_total,2);?></td>
+                               		 <?php
+                                }
+                                ?>
+
                               </tr>
                             <?php
                               $total = $total + $visit_total;

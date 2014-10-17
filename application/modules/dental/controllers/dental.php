@@ -132,6 +132,7 @@ class Dental extends auth
 
 		$v_data['mike'] = $mike;
 		$v_data['visit_id'] = $visit_id;
+		$v_data['dental'] = 1;
 		
 		$data['content'] = $this->load->view('patient_card', $v_data, true);
 		
@@ -265,6 +266,29 @@ class Dental extends auth
 			echo 'error';
 		}
 
+	}
+	public function send_to_pharmacy($visit_id)
+	{
+		if($this->reception_model->set_visit_department($visit_id, 5))
+		{
+			redirect("dental/dental_queue");
+		}
+		else
+		{
+			FALSE;
+		}
+	}
+	public function send_to_labs($visit_id)
+	{
+		if($this->reception_model->set_visit_department($visit_id, 4))
+		{
+			redirect("dental/dental_queue");
+			
+		}
+		else
+		{
+			FALSE;
+		}
 	}
 
 }

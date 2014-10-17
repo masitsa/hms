@@ -2,14 +2,29 @@
 if($mike == 0){
 ?>
   <div class="row"> 
-      <div class="col-md-12">
-        <div class="center-align">
-          <?php echo form_open("dental/send_to_accounts/".$visit_id, array("class" => "form-horizontal"));?>
-            <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts"/>
-          <?php echo form_close();?>
+  <div class="center-align"> 
+     <div class="col-md-3">
+          <div class="center-align">
+            <?php echo form_open("dental/send_to_pharmacy/".$visit_id, array("class" => "form-horizontal"));?>
+              <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy"/>
+            <?php echo form_close();?>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="center-align">
+           <?php echo form_open("dental/send_to_labs/".$visit_id, array("class" => "form-horizontal"));?>
+              <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory"/>
+            <?php echo form_close();?>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="center-align">
+            <?php echo form_open("dental/send_to_accounts/".$visit_id, array("class" => "form-horizontal"));?>
+              <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts"/>
+            <?php echo form_close();?>
+          </div>
         </div>
       </div>
-
   </div>
 <?php
 }else{
@@ -70,6 +85,7 @@ if($mike == 0){
                 }
                 ?>
                 <li><a href="#billing" data-toggle="tab">Billing</a></li>
+                <li><a href="#soap" data-toggle="tab">SOAP</a></li>
                 <li><a href="#visit_trail" data-toggle="tab">Visit Trail</a></li>
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
@@ -94,6 +110,10 @@ if($mike == 0){
                   
                     <?php echo $this->load->view("billing", '', TRUE);?>
                   </div>
+                   <div class="tab-pane" id="soap">
+               
+                    <?php echo $this->load->view("nurse/patients/soap", '', TRUE);?>
+                  </div>
 
                 
 
@@ -115,12 +135,28 @@ if($mike == 0){
     </div>
   </div>
   <div class="row">
-      <div class="col-md-12">
-        <div class="center-align">
-          <?php echo form_open("dental/send_to_accounts/".$visit_id, array("class" => "form-horizontal"));?>
-            <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts"/>
-          <?php echo form_close();?>
-        </div>
+      <div class="center-align"> 
+         <div class="col-md-3">
+              <div class="center-align">
+                <?php echo form_open("dental/send_to_pharmacy/".$visit_id, array("class" => "form-horizontal"));?>
+                  <input type="submit" class="btn btn-large btn-warning center-align" value="Send To Pharmacy"/>
+                <?php echo form_close();?>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="center-align">
+               <?php echo form_open("dental/send_to_labs/".$visit_id, array("class" => "form-horizontal"));?>
+                  <input type="submit" class="btn btn-large btn-success center-align" value="Send To Laboratory"/>
+                <?php echo form_close();?>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="center-align">
+                <?php echo form_open("dental/send_to_accounts/".$visit_id, array("class" => "form-horizontal"));?>
+                  <input type="submit" class="btn btn-large btn-danger center-align" value="Send To Accounts"/>
+                <?php echo form_close();?>
+              </div>
+            </div>
       </div>
 
   </div>

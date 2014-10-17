@@ -62,7 +62,7 @@
 				
 				else
 				{
-					$actions = 2;
+					$actions = 3;
 				}
 			
 			$result .= 
@@ -142,7 +142,7 @@
 				{
 					$doctor = '-';
 				}
-				
+				$v_data = array('visit_id'=>$visit_id);
 				$count++;
 				
 				if($page_name == 'nurse')
@@ -195,8 +195,11 @@
 				else
 				{
 					$buttons = '
+					<td><a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+					<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
-					<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>';
+					<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete Visit</a></td>';
+				
 				}
 				
 				$result .= 
@@ -212,6 +215,10 @@
 							'.$buttons.'
 						</tr> 
 					';
+				$result .=
+						'<tr id="visit_trail'.$visit_id.'" style="display:none;">
+							<td colspan="10">'.$this->load->view("nurse/patients/visit_trail", $v_data, TRUE).'</td>
+						</tr>';
 			}
 			
 			$result .= 
@@ -243,3 +250,27 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript">
+
+	function get_visit_trail(visit_id){
+
+		var myTarget2 = document.getElementById("visit_trail"+visit_id);
+		var button = document.getElementById("open_visit"+visit_id);
+		var button2 = document.getElementById("close_visit"+visit_id);
+
+		myTarget2.style.display = '';
+		button.style.display = 'none';
+		button2.style.display = '';
+	}
+	function close_visit_trail(visit_id){
+
+		var myTarget2 = document.getElementById("visit_trail"+visit_id);
+		var button = document.getElementById("open_visit"+visit_id);
+		var button2 = document.getElementById("close_visit"+visit_id);
+
+		myTarget2.style.display = 'none';
+		button.style.display = '';
+		button2.style.display = 'none';
+	}
+  </script>

@@ -43,7 +43,7 @@
 						            <label class="col-lg-4 control-label">Department: </label>
                                     
 						            <div class="col-lg-8">
-						     			 <select name="department_id" class="form-control">
+						     			 <select name="department_id" id="department_id" class="form-control" onchange="check_department_type()">
                                          	<option value="">----Select a Department----</option>
 				                        	<?php
 									                            	
@@ -67,7 +67,60 @@
 			                            </select>
 	                            	</div>
 	                            </div>
-				        
+	                        <div  id="patient_type_div" style="display:none;">
+	                        	<div class="form-group">
+						            <label class="col-lg-4 control-label">Patient Type: </label>
+						            
+						            <div class="col-lg-8">
+						            	 <select name="patient_type_id" id="patient_type_id"  onChange='insurance_company("patient_type","insured");getCity("<?php echo site_url();?>/reception/load_charges/"+this.value);' class="form-control">
+						                    <option value="">--- Select Patient Type---</option>
+						                	<?php
+												if(count($type) > 0){
+						                    		foreach($type as $row):
+														$type_name = $row->visit_type_name;
+														$type_id= $row->visit_type_id;
+														
+														if($type_id == set_value('patient_type'))
+														{
+															echo "<option value='".$type_id."' selected='selected'>".$type_name."</option>";
+														}
+														
+														else
+														{
+															echo "<option value='".$type_id."'>".$type_name."</option>";
+														}
+													endforeach;
+												}
+											?>
+						                    </select>
+           								 
+           							</div>
+						        </div>
+						        <div class="form-group">
+						        	<div  id="insured" style="display:none;">
+						            <label class="col-lg-4 control-label">Insurance Name: </label>
+						            
+						            <div class="col-lg-8">
+						                <select name="patient_insurance_id" class="form-control">
+						                        <option value="">--- Select Insurance Company---</option>
+						                            <?php
+
+						                            if(count($patient_insurance) > 0){	
+													foreach($patient_insurance as $row):
+															$company_name = $row->company_name;
+															$insurance_company_name = $row->insurance_company_name;
+															$patient_insurance_id = $row->patient_insurance_id;
+													echo "<option value=".$patient_insurance_id.">".$company_name." - ".$insurance_company_name."</option>";
+													endforeach;	} ?>
+						              </select>
+						              <br>
+           							</div>
+						       	 </div>
+						 	</div>
+
+
+	                        </div>
+				        	<div  id="department_type" style="display:none;">
 					        <div class="form-group">
 						            <label class="col-lg-4 control-label">Doctor: </label>
                                     
@@ -159,6 +212,7 @@
                             	</div>
 					            </div>
 					        </div>
+					       </div>
 				        </div>
 
 				     </div>
@@ -345,6 +399,26 @@
 			alert('Ensure you have selected The patient type');
 		}
 		
+	}
+
+	function check_department_type(){
+
+		var myTarget = document.getElementById("department_id").value;
+
+		var myTarget2 = document.getElementById("department_type");
+
+		var myTarget3 = document.getElementById("patient_type_div");
+
+		if(myTarget==7)
+		{
+		 	myTarget2.style.display = 'block';
+
+		}
+		else{
+	 	 	myTarget2.style.display = 'none';
+	 	 	myTarget3.style.display = 'block';	
+		}
+
 	}
 </script>
 

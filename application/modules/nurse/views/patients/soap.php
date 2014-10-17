@@ -1,5 +1,11 @@
 <?php echo form_open("reception/register-other-patient", array("class" => "form-horizontal"));?>
+<?php
+if($dental == 1)
+{
 
+}
+else{
+?>
 <div class="row">
 	<div class="col-md-12">
         <div class="row">
@@ -96,7 +102,9 @@
         </div>
     </div>
 </div>
-
+<?php
+}
+?>
 <div class="row">
  
     <div class="col-md-12">

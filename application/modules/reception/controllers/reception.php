@@ -11,6 +11,8 @@ class Reception extends auth
 		$this->load->model('strathmore_population');
 		$this->load->model('database');
 		$this->load->model('administration/reports_model');
+		$this->load->model('accounts/accounts_model');
+		$this->load->model('nurse/nurse_model');
 	}
 	
 	public function index()
@@ -621,17 +623,28 @@ class Reception extends auth
 	{
 		$this->form_validation->set_rules('visit_date', 'Visit Date', 'required');
 		$this->form_validation->set_rules('department_id', 'Department', 'required|is_natural_no_zero');
-		if($_POST['department_id'] == 7)
-		{
-			//if nurse visit doctor must be selected
-			$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
-			$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
+		$patient_type = '';
+		if(isset($_POST['department_id'])){
+			if($_POST['department_id'] == 7)
+			{
+				//if nurse visit doctor must be selected
+				$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
+				$this->form_validation->set_rules('patient_type', 'Patient Type', 'required|is_natural_no_zero');
+				$patient_type = $this->input->post("patient_type"); 
+			}
+
+			else 
+			{
+				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
+				$patient_type = $this->input->post("patient_type_id"); 
+			}
 		}
-		$this->form_validation->set_rules('patient_type', 'Patient Type', 'required|is_natural_no_zero');
+		
 		
 		$patient_insurance_id = $this->input->post("patient_insurance_id");
 		$patient_insurance_number = $this->input->post("insurance_id");
-		$patient_type = $this->input->post("patient_type"); 
+		
 		if($patient_type==4){
 			$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
 			$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
@@ -1377,12 +1390,12 @@ class Reception extends auth
 	{
 		$segment = 3;
 		
-		$patient_search = $this->session->userdata('patient_dependants_search');
+		$dependant_search = $this->session->userdata('patient_dependants_search');
 		$where = 'patients.visit_type_id = 2 AND patients.dependant_id > 0 AND patients.dependant_id = staff.Staff_Number  AND patients.patient_delete = 0';
 		
-		if(!empty($patient_search))
+		if(!empty($dependant_search))
 		{
-			$where .= $patient_search;
+			$where .= $dependant_search;
 		}
 		
 		$table = 'patients,staff';
@@ -1571,7 +1584,7 @@ class Reception extends auth
 	}
 	public function search_staff_dependant_patients()
 	{
-		$strath_no = $this->input->post('strath_no');
+		$strath_no = $this->input->post('staff_no');
 		$registration_date = $this->input->post('registration_date');
 		
 		if(!empty($strath_no))
@@ -1644,7 +1657,7 @@ class Reception extends auth
 		
 		$search = $strath_no.$surname.$other_name.$registration_date;
 		$this->session->set_userdata('patient_dependants_search', $search);
-			//echo $this->session->userdata('patient_dependants_search');
+			//$this->session->userdata('patient_dependants_search');
 		
 		$this->staff_dependants();
 	}

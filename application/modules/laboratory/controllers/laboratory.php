@@ -249,6 +249,7 @@ class Laboratory extends auth
 
 	public function save_result($id,$result,$visit_id)
 	{
+		$result = str_replace('%20', ' ',$result);
 		$data = array('id'=>$id,'result'=>$result,'visit_id'=>$visit_id);
 		$this->load->view('save_result',$data);
 
@@ -280,7 +281,7 @@ class Laboratory extends auth
 	public function test_history($visit_id,$page_name = NULL)
 	{
 		// this is it
-		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 0 AND lab_visit = 12 AND pharmarcy !=7 AND visit.visit_id = '.$visit_id.' AND  visit.visit_date = \''.date('Y-m-d').'\'';
+		$where = 'visit.patient_id = patients.patient_id AND visit.patient_id = (SELECT patient_id FROM visit WHERE visit.visit_id = visit_department.visit_id ) AND visit_department.department_id = 4 AND visit_department.visit_id != '.$visit_id.'  AND visit.visit_id = '.$visit_id.' ';
 		$visit_search = $this->session->userdata('visit_search');
 		
 		if(!empty($visit_search))
@@ -297,7 +298,7 @@ class Laboratory extends auth
 		{
 			$segment = 4;
 		}
-		$table = 'visit, patients';
+		$table = 'visit_department,visit, patients';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/laboratory/test_history/'.$page_name;
@@ -332,7 +333,7 @@ class Laboratory extends auth
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
-		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page, 'ASC');
+		$query = $this->lab_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page, 'ASC');
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;

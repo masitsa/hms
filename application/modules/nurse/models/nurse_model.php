@@ -201,14 +201,23 @@ class Nurse_model extends CI_Model
 	function get_previous_vitals($visit_id){
 		
 
-		$table = "visit_vital, visit, patients, vitals";
+		// $table = "visit_vital, visit, patients, vitals";
+		// $where = "visit_vital.vital_id = vitals.vitals_id 
+		// AND visit_vital.visit_id = visit.visit_id 
+		// AND visit.visit_id = $visit_id 
+		// AND visit.patient_id = patients.patient_id
+		// AND patients.patient_id = (SELECT patients.patient_id FROM patients, visit WHERE visit.visit_id = $visit_id AND visit.patient_id = patients.patient_id)
+		// ";
+		// $items = "visit_vital.visit_vital_value, vitals.vitals_name, visit.visit_id, visit.visit_date, visit_vital.vital_id";
+		// $order = "visit_id";
+
+		$table = "visit_vital, vitals,visit";
 		$where = "visit_vital.vital_id = vitals.vitals_id 
 		AND visit_vital.visit_id = visit.visit_id 
-		AND visit.visit_id = $visit_id 
-		AND visit.patient_id = patients.patient_id
-		AND patients.patient_id = (SELECT patients.patient_id FROM patients, visit WHERE visit.visit_id = $visit_id AND visit.patient_id = patients.patient_id)
-		AND visit.close_card = 1";
-		$items = "visit_vital.visit_vital_value, vitals.vitals_name, visit.visit_id, visit.visit_date";
+		AND visit_vital.visit_id = $visit_id 
+		AND visit.patient_id = (SELECT patient_id FROM visit WHERE visit.visit_id = $visit_id)
+		";
+		$items = "visit_vital.visit_vital_value, vitals.vitals_name, visit_vital.visit_id, visit.visit_date, visit_vital.vital_id";
 		$order = "visit_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);

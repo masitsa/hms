@@ -22,6 +22,8 @@
                         <div class="padd">
                               <!-- vitals from java script -->
                                 <div id="vitals"></div>
+
+
                                 <!-- end of vitals data -->
                         </div>
 
@@ -58,6 +60,34 @@
             </div>
         </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+
+              <!-- Widget -->
+              <div class="widget boxed">
+                    <!-- Widget head -->
+                    <div class="widget-head">
+                      <h4 class="pull-left"><i class="icon-reorder"></i>Previous Vitals</h4>
+                      <div class="widget-icons pull-right">
+                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>             
+
+                <!-- Widget content -->
+                    <div class="widget-content">
+                        <div class="padd">
+                             <div id="previous_vitals"></div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
     </div>
 </div>
 <div class="row">

@@ -1,5 +1,5 @@
 <!-- search -->
-<?php //echo $this->load->view('patients/search_visit', '', TRUE); ?>
+<?php echo $this->load->view('search/patient_search', '', TRUE);?>
 <!-- end search -->
 
 <div class="row">
@@ -34,11 +34,11 @@
           <div class="padd">
           
 <?php
-		$search = $this->session->userdata('visit_search');
+		$search = $this->session->userdata('visit_accounts_search');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/accounts/close_queue_search/'.$type_links.'" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -64,7 +64,7 @@
 						  	if($type_links == 3){
 						  		$result .=  '<th colspan="2">Actions</th>';
 						  	}else{
-						  		$result .= '<th colspan="4">Actions</th>';
+						  		$result .= '<th colspan="5">Actions</th>';
 						  	}
 				$result .= 	'</tr>
 					  </thead>

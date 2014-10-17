@@ -263,8 +263,9 @@ class Pharmacy_model extends CI_Model
 		$time = date("H:i:s");
 		
 		$visit_charge_qty = $this->input->post('quantity'.$prescription_id);
+		$visit_charge_units = $this->input->post('units_given'.$prescription_id);
 
-		$array = array('visit_charge_qty'=>$visit_charge_qty);
+		$array = array('visit_charge_qty'=>$visit_charge_qty,'visit_charge_units'=>$visit_charge_units);
 		$this->db->where('visit_charge_id', $visit_charge_id);
 		if($this->db->update('visit_charge', $array))
 		{
@@ -280,6 +281,7 @@ class Pharmacy_model extends CI_Model
 			'drug_times_id'=>$this->input->post('x'.$prescription_id),
 			'drug_duration_id'=>$this->input->post('duration'.$prescription_id),
 			'drug_consumption_id'=>$this->input->post('consumption'.$prescription_id),
+			'units_given'=>$this->input->post('units_given'.$prescription_id),
 			'prescription_quantity'=>$this->input->post('quantity'.$prescription_id)
 		);
 		
@@ -332,6 +334,17 @@ class Pharmacy_model extends CI_Model
 		$where = "visit_charge_id = ". $id;
 		$items = "*";
 		$order = "visit_charge_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	function select_invoice_drugs($visit_id,$service_charge_id){
+		
+		$table = "visit_charge";
+		$where = "visit_id = ". $visit_id ." AND service_charge_id = ".$service_charge_id;
+		$items = "sum(visit_charge_units) AS num_units";
+		$order = "visit_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		

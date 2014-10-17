@@ -47,7 +47,7 @@
 						  <th>Visit Type</th>
 						  <th>Time In</th>
 						  <th>Doctor</th>
-						  <th colspan="1">Actions</th>
+						  <th colspan="2">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -58,6 +58,7 @@
 			foreach ($query->result() as $row)
 			{
 				$visit_date = date('jS M Y',strtotime($row->visit_date));
+				$created_on = date('jS M Y',strtotime($row->visit_created));
 				$visit_time = date('H:i a',strtotime($row->visit_time));
 				if($row->visit_time_out != '0000-00-00 00:00:00')
 				{
@@ -67,7 +68,7 @@
 				{
 					$visit_time_out = '-';
 				}
-				$visit_id = $row->visit_id;
+				$visit_id = $row->previous_visit;
 				$patient_id = $row->patient_id;
 				$personnel_id = $row->personnel_id;
 				$dependant_id = $row->dependant_id;
@@ -229,13 +230,14 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$visit_date.'</td>
+							<td>'.$created_on.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$patient_type.'</td>
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
 							<td>'.$doctor.'</td>
-							<td><a href="'.site_url().'/laboratory/print_test/'.$visit_id.'/'.$patient_id.'" class="btn btn-sm btn-info">Print</a></td>
+							<td><a href="'.site_url().'/laboratory/test/'.$visit_id.'/'.$patient_id.'" class="btn btn-sm btn-primary">View Tests</a></td>
+							<td><a href="'.site_url().'/laboratory/print_test/'.$visit_id.'/'.$patient_id.'" class="btn btn-sm btn-success">Print</a></td>
 						</tr> 
 					';
 			}
