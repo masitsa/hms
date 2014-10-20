@@ -1619,5 +1619,63 @@ class Reception_model extends CI_Model
 		}
 		return $student;
 	}
+	
+	/*
+	*	Retrieve all students in SUMC db
+	*
+	*/
+	public function get_all_students()
+	{
+		$this->db->from('student');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve all students patients in SUMC db
+	*
+	*/
+	public function get_all_student_patients($student_no)
+	{
+		$this->db->from('patients');
+		$this->db->where('strath_no = \''.$student_no.'\' AND visit_type_id = 1');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	public function change_patient_id($standing_patient_id, $patient_id)
+	{
+		$where['patient_id'] = $patient_id;
+		$items['patient_id'] = $standing_patient_id;
+		
+		$this->db->where($where);
+		if($this->db->update('visit', $items))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function delete_duplicate_patient($patient_id)
+	{
+		$where['patient_id'] = $patient_id;
+		
+		$this->db->where($where);
+		if($this->db->delete('patients'))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
 }
 ?>
