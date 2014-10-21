@@ -24,10 +24,19 @@ if($num_rows > 0){
 	"
 	<div class='row'>
 		<div class='col-md-12'>
-			<textarea class='form-control' id='visit_plan' onKeyUp='save_plan(".$visit_id.")'>".$visit_plan."</textarea>
+			<textarea class='form-control' id='visit_plan' >".$visit_plan."</textarea>
 		</div>
 	</div>
 	";
+	echo "
+	<br>
+	<div class='row'>
+			<div class='center-align '>
+				<a class='btn btn-info btn-lg' type='submit' onclick='save_plan(".$visit_id.")'>Update Plan</a>
+			</div>
+	</div>
+
+		";
 }
 
 else{
@@ -35,16 +44,31 @@ else{
 	"
 	<div class='row'>
 		<div class='col-md-12'>
-			<textarea class='form-control' id='visit_plan' onKeyUp='save_plan(".$visit_id.")'></textarea>
+			<textarea class='form-control' id='visit_plan' ></textarea>
 		</div>
 	</div>
 	";
+	echo "
+	<br>
+	<div class='row'>
+			<div class='center-align '>
+				<a class='btn btn-info btn-lg' type='submit' onclick='save_plan(".$visit_id.")'>Save Plan</a>
+			</div>
+	</div>
+
+		";
 }
 
+
+
 echo "
+
 <div id='test_results'></div>
-<div id='disease_list'></div>
 <div id='prescription'></div>";
 
 
 ?>
+<script type="text/javascript">
+	
+	
+</script>

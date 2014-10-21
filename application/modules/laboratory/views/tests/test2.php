@@ -136,7 +136,7 @@ if(!empty($coming_from)){
 				<td>".$test_format."</td>";
 					
 				if($this->session->userdata('test') ==0){
-					echo"<td><input type='text' class='form-control' id='laboratory_result2".$lab_test_format_id."' size='10' onkeyup='save_result_format(".$visit_charge_id.",".$lab_test_format_id.", ".$visit_id.")' value='".$lab_visit_result."' readonly='readonly'/></td>";
+					echo"<td><input type='text' class='form-control' id='laboratory_result2".$lab_test_format_id."' size='10' onkeyup='save_result_format(".$visit_charge_id.",".$lab_test_format_id.", ".$visit_id.")' value='".$lab_visit_result."' readonly/></td>";
 					
 					echo"
 						<td>".$lab_test_format_units."</td>
@@ -146,7 +146,7 @@ if(!empty($coming_from)){
 						<td id='result_space".$lab_test_format_id."'></td>";
 				}
 				else {
-					echo"<td><input type='text' class='form-control'  id='laboratory_result".$visit_charge_id."' size='10' onkeyup='save_result(".$visit_charge_id.", ".$visit_id.")' value='".$lab_visit_result."' readonly='readonly'/></td>";
+					echo"<td><input type='text' class='form-control'  id='laboratory_result".$visit_charge_id."' size='10' onkeyup='save_result(".$visit_charge_id.", ".$visit_id.")' value='".$lab_visit_result."' readonly/></td>";
 									
 					echo "
 						<td>".$lab_test_units."</td>
@@ -184,7 +184,7 @@ if(!empty($coming_from)){
 						}
 					echo "
 						<tr>
-							<td colspan='8'><textarea rows='5' class='form-control' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit_id.")' placeholder='".$lab_test_name." Comments' readonly='readonly'>".$comment4."</textarea> </td>
+							<td colspan='8'><textarea rows='5' class='form-control' id='laboratory_comment".$visit_charge_id."'  onkeyup='save_lab_comment(".$visit_charge_id.", ".$visit_id.")' placeholder='".$lab_test_name." Comments' readonly>".$comment4."</textarea> </td>
 						</tr>";
 					}
 		endforeach;

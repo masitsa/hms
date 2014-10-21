@@ -22,7 +22,7 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
 <!DOCTYPE html>
 <html lang="en">
 	<style type="text/css">
-		.receipt_spacing{letter-spacing:5px;}
+		.receipt_spacing{letter-spacing:0px; font-size: 12px;}
 		.center-align{margin:0 auto; text-align:center;}
 		
 		.receipt_bottom_border{border-bottom: #888888 medium solid;}
@@ -56,7 +56,7 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
         
         <!-- Patient Details -->
     	<div class="row receipt_bottom_border" style="margin-bottom: 10px;">
-        	<div class="col-md-6">
+        	<div class="col-md-6 pull-left">
             	<div class="row">
                 	<div class="col-md-6">
                     	<strong>Patient Name:</strong> 
@@ -85,7 +85,7 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
                 </div>
             </div>
             
-        	<div class="col-md-6">
+        	<div class="col-md-6 pull-right">
             	<div class="row">
                 	<div class="col-md-6">
                     	<strong>Receipt Number:</strong> 
@@ -140,7 +140,7 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
                          $visit_total = $visit_charge_amount * $units;
 
                         ?>
-                          <tr>
+                          <tr >
                             <td><?php echo $s;?></td>
                             <td><?php echo $service_name;?></td>
                             <td><?php echo $service_charge_name;?></td>

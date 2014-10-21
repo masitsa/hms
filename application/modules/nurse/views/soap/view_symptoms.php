@@ -36,10 +36,19 @@ if($num_rows > 0){
 		</div>
 		
 		<div class='col-md-6'>
-			<textarea class='form-control' placeholder='Type Additional Symptoms Here' id='visit_symptoms' onKeyUp='save_symptoms(".$visit_id.")'>".$visit_symptoms."</textarea>
+			<textarea class='form-control' placeholder='Type Additional Symptoms Here' id='visit_symptoms' >".$visit_symptoms."</textarea>
 		</div>
 	</div>
 	";
+	echo "
+	<br>
+	<div class='row'>
+			<div class='center-align '>
+				<a class='btn btn-info btn-lg' type='submit' onclick='save_symptoms(".$visit_id.")'>Update Symptoms</a>
+			</div>
+	</div>
+
+		";
 }
 
 else{
@@ -63,9 +72,19 @@ else{
 		</div>
 		
 		<div class='col-md-6'>
-			<textarea class='form-control' placeholder='Type Additional Symptoms Here' id='visit_symptoms' onKeyUp='save_symptoms(".$visit_id.")'></textarea>
+			<textarea class='form-control' placeholder='Type Additional Symptoms Here' id='visit_symptoms'></textarea>
 		</div>
 	</div>
 	";
+	echo "
+	<br>
+	<div class='row'>
+			<div class='center-align '>
+				<a class='btn btn-info btn-lg' type='submit' onclick='save_symptoms(".$visit_id.")'>Save Symptoms</a>
+			</div>
+	</div>
+
+		";
 }
+
 ?>

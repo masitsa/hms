@@ -392,7 +392,7 @@ class Nurse extends auth
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			$search = ' AND diseases_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$search = ' AND diseases_name LIKE \'%'.$this->input->post('search_item').'%\' OR diseases_code LIKE \'%'.$this->input->post('search_item').'%\'';
 			$this->session->set_userdata('disease_search', $search);
 		}
 		

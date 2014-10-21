@@ -90,7 +90,9 @@
 						<tr>
 						  <th>#</th>
 						  <th>Visit Date</th>
-						  <th>Time In</th>
+						  <th>Assessment</th>
+						  <th>Diagnosis</th>
+						  <th>Plan</th>
 						  <th>Waiting time</th>
 						  <th>Doctor</th>
 						  <th colspan="4">Actions</th>
@@ -275,6 +277,41 @@
 				{
 					$doctor = '-';
 				}
+
+				//  get the visit assessment
+
+				$assesment_rs = $this->nurse_model->get_assessment($visit_id);
+				$assesment_num_rows = count($assesment_rs);
+				$assessment = '';
+				if($assesment_num_rows > 0){
+					foreach ($assesment_rs as $key_assessment):
+					$visit_assessment = $key_assessment->visit_assessment;
+					endforeach;
+					$assessment .="".$visit_assessment."";
+				}
+				else
+				{
+					$assessment .='-';
+				}
+				// end of the visit assessment
+
+
+				//  start of plan
+				$plan_rs = $this->nurse_model->get_plan($visit_id);
+				$plan_num_rows = count($plan_rs);
+				$plan = "";
+				if($plan_num_rows > 0){
+					foreach ($plan_rs as $key_plan):
+						$visit_plan = $key_plan->visit_plan;
+					endforeach;
+					$plan .="".$visit_plan."";
+					
+				}
+				else
+				{
+					$plan .="-";
+				}
+				// end of plan
 				
 				$count++;
 				
@@ -283,8 +320,11 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$visit_date.'</td>
+							<td>'.$assessment.'</td>
 							<td>'.$visit_time.'</td>
+							<td>'.$plan.'</td>
 							<td align=center>'.$waiting_time.'</td>
+							
 							<td>'.$doctor.'</td>
 							<td><a onclick="patient_history_popup('.$visit_id1.',1)" class="btn btn-sm btn-info">Patient Card</a></td>
 						</tr> 

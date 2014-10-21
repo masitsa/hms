@@ -110,7 +110,6 @@ $(document).ready(function(){
   } 
   var config_url = $('#config_url').val();
   var url = config_url+"/nurse/save_diagnosis/"+val+"/"+visit_id;
-      window.alert(url);
   if(XMLHttpRequestObject) {
         
     XMLHttpRequestObject.open("GET", url);

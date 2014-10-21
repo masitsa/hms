@@ -232,11 +232,21 @@ if(!empty($coming_from)){
 		";
 		}*/
 		
-		else if(($coming_from == 'Lab') || ($coming_from == 'Nurse') || ($coming_from == 'Reception')){
+		else if(($coming_from == 'Lab') || ($coming_from == 'Reception')){
 		echo"
 			<div class='center-align'>
 				<input type='button' value='Print' name='std' class='btn btn-lg btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
 				<a href='".site_url()."/laboratory/send_to_accounts/".$visit_id."' class='btn btn-lg btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts</a>
+			</div>
+		";
+		}
+		else if($coming_from == 'Nurse')
+		{
+			echo"
+			<div class='center-align'>
+				<input type='button' value='Print' name='std' class='btn btn-lg btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
+				<a href='".site_url()."/laboratory/send_to_doctor/".$visit_id."' class='btn btn-lg btn-info' onclick='return confirm(\'Send to doctor?\');'> Send to doctor </a>		
+				<a href='".site_url()."/laboratory/send_to_accounts/".$visit_id."' class='btn btn-lg btn-success' onclick='return confirm(\'Send to accounts?\');'> Send to accounts </a>
 			</div>
 		";
 		}
@@ -245,7 +255,6 @@ if(!empty($coming_from)){
 			echo"
 			<div class='center-align'>
 				<input type='button' value='Print' name='std' class='btn btn-lg btn-info' onclick='print_previous_test(".$visit_id.",".$patient_id.")'/>
-				<input type='button' value='Send to Doctor' name='std' class='btn btn-lg btn-warning' onClick='send_to_doc(".$visit_id.")'/>
 				<input type='button' class='btn btn-lg btn-success' value='Done' onclick='finish_lab_test(".$visit_id.")'/>
 			</div>
 		";

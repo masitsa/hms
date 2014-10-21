@@ -129,6 +129,7 @@ else{
                             <!-- visit Procedures from java script -->
                                 <div id="plan"></div>
                              <!-- end of visit procedures -->
+                             <div id='visit_diagnosis'></div>
                     </div>
                 </div>
             </div>
@@ -244,8 +245,9 @@ else{
       plan(<?php echo $visit_id;?>);
       doctor_notes(<?php echo $visit_id;?>);
       nurse_notes(<?php echo $visit_id?>);
-      display_prescription(<?php echo $visit_id?>,2);
       get_disease(<?php echo $visit_id?>);
+      display_prescription(<?php echo $visit_id?>,2);
+      
   });
   
   function symptoms(visit_id){
@@ -489,7 +491,9 @@ function display_prescription(visit_id, page){
         
         if(page == 1){
           window.close(this);
+        
         }
+        plan(visit_id);
       }
     }
     
@@ -750,10 +754,10 @@ function get_disease(visit_id){
   }
   var config_url = $('#config_url').val();
   var url = config_url+"/nurse/get_diagnosis/"+visit_id;
- 
-  var obj = document.getElementById("disease_list");
+
       
   if(XMLHttpRequestObject) {
+    var obj = document.getElementById("visit_diagnosis");
         
     XMLHttpRequestObject.open("GET", url);
         

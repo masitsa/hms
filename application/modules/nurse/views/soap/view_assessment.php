@@ -15,10 +15,19 @@ if($num_rows > 0){
 	"
 	<div class='row'>
 		<div class='col-md-12'>
-			<textarea class='form-control' id='visit_assessment' onKeyUp='save_assessment(".$visit_id.")'>".$visit_assessment."</textarea>
+			<textarea class='form-control' id='visit_assessment' >".$visit_assessment."</textarea>
 		</div>
 	</div>
 	";
+	echo "
+	<br>
+	<div class='row'>
+			<div class='center-align '>
+				<a class='btn btn-info btn-lg' type='submit' onclick='save_assessment(".$visit_id.")'>Update Assesment</a>
+			</div>
+	</div>
+
+		";
 }
 
 else{
@@ -26,9 +35,19 @@ else{
 	"
 	<div class='row'>
 		<div class='col-md-12'>
-			<textarea class='form-control' id='visit_assessment' onKeyUp='save_assessment(".$visit_id.")'></textarea>
+			<textarea class='form-control' id='visit_assessment' ></textarea>
 		</div>
 	</div>
 	";
+	echo "
+	<br>
+	<div class='row'>
+			<div class='center-align '>
+				<a class='btn btn-info btn-lg' type='submit' onclick='save_assessment(".$visit_id.")'>Save Assesment</a>
+			</div>
+	</div>
+
+		";
 }
+
 ?>

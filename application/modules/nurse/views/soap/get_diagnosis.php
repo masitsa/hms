@@ -8,6 +8,9 @@ if($num_rows > 0){
 
 	echo
 	"
+	<div class='center-align'>
+			<h3>Diagnosis</h3>
+		</div>
 
 			<table class='table table-striped table-hover table-condensed'>
 				<tr>
@@ -33,8 +36,8 @@ if($num_rows > 0){
 				<td>".$name."</td></tr>";
 	endforeach;
 }
-echo"</table>
-<table align='center'><tr align='center'><td><input type='button' class='btn btn-large' onClick='closeit(1, ".$visit_id.")' value='Done'/></td></tr></table>";
+// echo"</table>
+// <table align='center'><tr align='center'><td><input type='button' class='btn btn-large' onClick='closeit(1, ".$visit_id.")' value='Done'/></td></tr></table>";
 ?>
 <script type="text/javascript">
 	
