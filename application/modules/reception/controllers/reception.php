@@ -1946,4 +1946,42 @@ class Reception extends auth
 	{
 		var_dump($this->reception_model->patient_names2(NULL, $visit_id));
 	}
+	
+	public function sort_student_duplicates()
+	{
+		//select all students from sumc db
+		$query = $this->reception_model->get_all_students();
+		$faults_count = 0;
+		if($query->num_rows() > 0)
+		{
+			foreach($query->result() as $res)
+			{
+				$student_number = $res->student_Number;
+				
+				//check if there are duplicates in the patients table
+				$check = $this->reception_model->get_all_student_patients($student_number);
+				
+				if($check->num_rows() > 1)
+				{
+					$faults_count++;
+					
+					//get the patient id that will stand for the duplicates
+					$result = $check->result();
+					$standing_patient_id = $result[0]->patient_id;
+					
+					for($r = 1; $r < $check->num_rows(); $r++)
+					{
+						$patient_id = $result[$r]->patient_id;
+						//update visit data
+						if($this->reception_model->change_patient_id($standing_patient_id, $patient_id))
+						{
+							//delete duplicate
+							$this->reception_model->delete_duplicate_patient($patient_id);
+							echo 'Faults = '.$faults_count.' :: student = '.$student_number.' :: changed from = '.$patient_id.' :: changed to = '.$standing_patient_id.'<br/>';
+						}
+					}
+				}
+			}
+		}
+	}
 }
