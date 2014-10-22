@@ -1624,10 +1624,10 @@ class Reception_model extends CI_Model
 	*	Retrieve all students in SUMC db
 	*
 	*/
-	public function get_all_students()
+	public function get_all_students($per_page, $page)
 	{
 		$this->db->from('student');
-		$query = $this->db->get();
+		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
 	}

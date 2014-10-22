@@ -1947,10 +1947,10 @@ class Reception extends auth
 		var_dump($this->reception_model->patient_names2(NULL, $visit_id));
 	}
 	
-	public function sort_student_duplicates()
+	public function sort_student_duplicates($per_page, $page)
 	{
 		//select all students from sumc db
-		$query = $this->reception_model->get_all_students();
+		$query = $this->reception_model->get_all_students($per_page, $page);
 		$faults_count = 0;
 		if($query->num_rows() > 0)
 		{
