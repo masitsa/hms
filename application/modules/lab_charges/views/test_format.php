@@ -41,10 +41,9 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Class</th>
-						  <th>Test</th>
+						  <th>Lab test</th>
+						  <th>Format</th>
 						  <th>Units</th>
-						  <th>Price</th>
 						  <th>Male Lower Limit</th>
 						  <th>Male Upper Limit</th>
 						  <th>Female Lower Limit</th>
@@ -59,16 +58,14 @@
 			foreach ($query->result() as $row)
 			{
 				
-				$lab_test_class_id = $row->lab_test_class_id;
-				$lab_test_class = $row->lab_test_class_name;
-				$lab_test_name = $row->lab_test_name;
-				$lab_test_units = $row->lab_test_units;
-				$lab_test_price = $row->lab_test_price;
-				$lab_test_malelowerlimit = $row->lab_test_malelowerlimit;
-				$lab_test_malelupperlimit = $row->lab_test_malelupperlimit;
-				$lab_test_femalelowerlimit = $row->lab_test_femalelowerlimit;
-				$lab_test_femaleupperlimit = $row->lab_test_femaleupperlimit;
 				$lab_test_id = $row->lab_test_id;
+				$lab_test_formatname = $row->lab_test_formatname;
+				$lab_test_name = $row->lab_test_name;
+				$lab_test_format_units = $row->lab_test_format_units;
+				$lab_test_format_malelowerlimit = $row->lab_test_format_malelowerlimit;
+				$lab_test_format_maleupperlimit = $row->lab_test_format_maleupperlimit;
+				$lab_test_format_femalelowerlimit = $row->lab_test_format_femalelowerlimit;
+				$lab_test_format_femaleupperlimit = $row->lab_test_format_femaleupperlimit;
 				$count++;
 				
 				
@@ -76,14 +73,13 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$lab_test_class.'</td>
 							<td>'.$lab_test_name.'</td>
-							<td>'.$lab_test_units.'</td>
-							<td>'.$lab_test_price.'</td>
-							<td>'.$lab_test_malelowerlimit.'</td>
-							<td>'.$lab_test_malelupperlimit.'</td>
-							<td>'.$lab_test_femalelowerlimit.'</td>
-							<td>'.$lab_test_femaleupperlimit.'</td>
+							<td>'.$lab_test_formatname.'</td>
+							<td>'.$lab_test_format_units.'</td>
+							<td>'.$lab_test_format_malelowerlimit.'</td>
+							<td>'.$lab_test_format_maleupperlimit.'</td>
+							<td>'.$lab_test_format_femalelowerlimit.'</td>
+							<td>'.$lab_test_format_femaleupperlimit.'</td>
 							<td><a href="'.site_url().'/lab_charges/test_format/'.$lab_test_id.'" class="btn btn-sm btn-info">Formats</a></td>
 							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-success">Edit</a></td>
 							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-danger">Delete</a></td>
@@ -101,7 +97,7 @@
 		
 		else
 		{
-			$result .= "There are no patients";
+			$result .= "There are lab test formats";
 		}
 		
 		echo $result;

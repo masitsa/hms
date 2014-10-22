@@ -1,5 +1,5 @@
 <!-- search -->
-<?php //echo $this->load->view('patients/search_visit', '', TRUE);?>
+<?php echo $this->load->view('add/add_new_class', '', TRUE);?>
 <!-- end search -->
  
 <div class="row">
@@ -41,15 +41,8 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Class</th>
-						  <th>Test</th>
-						  <th>Units</th>
-						  <th>Price</th>
-						  <th>Male Lower Limit</th>
-						  <th>Male Upper Limit</th>
-						  <th>Female Lower Limit</th>
-						  <th>Female Upper Limit</th>
-						  <th colspan="4">Actions</th>
+						  <th>Class Name</th>
+						  <th colspan="2">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -59,16 +52,8 @@
 			foreach ($query->result() as $row)
 			{
 				
+				$lab_test_class_name = $row->lab_test_class_name;
 				$lab_test_class_id = $row->lab_test_class_id;
-				$lab_test_class = $row->lab_test_class_name;
-				$lab_test_name = $row->lab_test_name;
-				$lab_test_units = $row->lab_test_units;
-				$lab_test_price = $row->lab_test_price;
-				$lab_test_malelowerlimit = $row->lab_test_malelowerlimit;
-				$lab_test_malelupperlimit = $row->lab_test_malelupperlimit;
-				$lab_test_femalelowerlimit = $row->lab_test_femalelowerlimit;
-				$lab_test_femaleupperlimit = $row->lab_test_femaleupperlimit;
-				$lab_test_id = $row->lab_test_id;
 				$count++;
 				
 				
@@ -76,17 +61,9 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$lab_test_class.'</td>
-							<td>'.$lab_test_name.'</td>
-							<td>'.$lab_test_units.'</td>
-							<td>'.$lab_test_price.'</td>
-							<td>'.$lab_test_malelowerlimit.'</td>
-							<td>'.$lab_test_malelupperlimit.'</td>
-							<td>'.$lab_test_femalelowerlimit.'</td>
-							<td>'.$lab_test_femaleupperlimit.'</td>
-							<td><a href="'.site_url().'/lab_charges/test_format/'.$lab_test_id.'" class="btn btn-sm btn-info">Formats</a></td>
-							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-success">Edit</a></td>
-							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-danger">Delete</a></td>
+							<td>'.$lab_test_class_name.'</td>
+							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_class_id.'" class="btn btn-sm btn-success">Edit</a></td>
+							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_class_id.'" class="btn btn-sm btn-danger">Delete</a></td>
 							
 						</tr> 
 					';
@@ -101,7 +78,7 @@
 		
 		else
 		{
-			$result .= "There are no patients";
+			$result .= "There are lab test classes";
 		}
 		
 		echo $result;

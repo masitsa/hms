@@ -10,7 +10,7 @@ class Strathmore_population extends CI_Model
 	*/
 
 	public function get_ams_student($student_id = NULL){
-        $conn = oci_connect('AMS_QUERIES','MuYaibu1','//192.168.170.52:1521/orcl');
+        $conn = oci_connect('AMS_QUERIES','Sh!iuD_6eiqu_8ch','//192.168.170.52:1521/orcl');
 		if (!$conn) {
 			$e = oci_error();
 			trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);

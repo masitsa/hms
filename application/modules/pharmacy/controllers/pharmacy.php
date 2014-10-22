@@ -41,7 +41,7 @@ class Pharmacy extends auth
 
 	public function prescription($visit_id,$service_charge_id=NULL,$module=NULL,$prescription_id=NULL)
 	{
-		$this->form_validation->set_rules('substitution', 'Substitution', 'xss_clean');
+		//$this->form_validation->set_rules('substitution', 'Substitution', 'xss_clean');
 		// $this->form_validation->set_rules('prescription_finishdate', 'Finish Date', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('x', 'Times Per Day', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('number_of_days', 'Number of Day', 'required|xss_clean');
