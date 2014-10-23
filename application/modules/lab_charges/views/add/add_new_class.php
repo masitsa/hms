@@ -25,7 +25,7 @@
                         <label class="col-lg-4 control-label"> Class Name: </label>
                         
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="strath_no" placeholder="Class Name">
+                            <input type="text" class="form-control" name="class_name" placeholder="Class Name">
                         </div>
                     </div>
                  

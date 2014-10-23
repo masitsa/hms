@@ -1,5 +1,5 @@
 <!-- search -->
-<?php //echo $this->load->view('patients/search_visit', '', TRUE);?>
+<?php echo $this->load->view('search/test_search', '', TRUE);?>
 <!-- end search -->
  
 <div class="row">

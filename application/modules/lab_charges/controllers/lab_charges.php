@@ -21,11 +21,11 @@ class Lab_charges extends auth
 	{
 		// this is it
 		$where = 'lab_test_class.lab_test_class_id = lab_test.lab_test_class_id';
-		$visit_search = $this->session->userdata('visit_search');
+		$lab_tests = $this->session->userdata('lab_tests');
 		
-		if(!empty($visit_search))
+		if(!empty($lab_tests))
 		{
-			$where .= $visit_search;
+			$where .= $lab_tests;
 		}
 		
 		if($page_name == NULL)
@@ -248,16 +248,51 @@ class Lab_charges extends auth
     	if ($this->form_validation->run() == FALSE)
 		{
 
-			$this->lab_charges_model->add_class_name();
+			$checker = $this->lab_charges_model->add_classes();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the class");
+				redirect('lab_charges/classes');	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				
+			}
+
 		}
 		
 		else
 		{
 			
 			$this->session->set_userdata("error_message","Please enter the class name then try again");
-			$this->classes();	
+			redirect('lab_charges/classes');
 			
 		}
     }
+    public function search_lab_tests()
+	{
+		$lab_test_name = $this->input->post('lab_test_name');
+		$test_class = $this->input->post('test_class');
+		
+		if(!empty($lab_test_name))
+		{
+			$lab_test_name = ' AND lab_test.lab_test_name LIKE \'%'.$lab_test_name.'%\' ';
+		}
+		
+		if(!empty($test_class))
+		{
+			$test_class = ' AND lab_test_class.lab_test_class_name LIKE \''.$test_class.'%\' ';
+		}
+		
+		
+		
+		$search = $lab_test_name.$test_class;
+		$this->session->set_userdata('lab_tests', $search);
+		
+		$this->test_list();
+	}	
 }
 ?>
