@@ -648,31 +648,31 @@ class Nurse extends auth
 		$this->load->view('soap/add_objective_findings',$data);
 	}
 
-	function save_assessment($assessment,$visit_id){
-		$assessment = str_replace('%20', ' ',$assessment);
+	function save_assessment($visit_id){
+		$assessment = $this->input->post('notes');
 		$visit_data = array('visit_assessment'=>$assessment);
-
 		$this->db->where(array("visit_id"=>$visit_id));
 		$this->db->update('visit', $visit_data);
 	}
-	function save_plan($plan,$visit_id){
-		$plan = str_replace('%20', ' ',$plan);
+	function save_plan($visit_id){
+		$plan = $this->input->post('notes');
 		$visit_data = array('visit_plan'=>$plan);
-
 		$this->db->where(array("visit_id"=>$visit_id));
 		$this->db->update('visit', $visit_data);
 	}
 	
 
-	function save_objective_findings($objective_finding,$visit_id){
-		$objective_finding = str_replace('%20', ' ',$objective_finding);
+	function save_objective_findings($visit_id){
+		$objective_finding = $this->input->post('notes');
+		// $objective_finding = str_replace('%20', ' ',$objective_finding);
 		$visit_data = array('visit_objective_findings'=>$objective_finding);
 
 		$this->db->where(array("visit_id"=>$visit_id));
 		$this->db->update('visit', $visit_data);
 	}
-	function save_symptoms($symptoms,$visit_id){
-		$symptoms = str_replace('%20', ' ',$symptoms);
+	function save_symptoms($visit_id){
+		$symptoms=$this->input->post('notes');
+		//$symptoms = str_replace('%20', ' ',$symptoms);
 		$visit_data = array('visit_symptoms'=>$symptoms);
 
 		$this->db->where(array("visit_id"=>$visit_id));

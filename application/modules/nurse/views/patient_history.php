@@ -102,7 +102,7 @@
 				';
 			
 			$personnel_query = $this->personnel_model->get_all_personnel();
-			$count = 0;
+			$count = 1;
 			foreach ($query->result() as $row)
 			{
 				$visit_date = date('jS M Y',strtotime($row->visit_date));
@@ -280,14 +280,15 @@
 
 				//  get the visit assessment
 
-				$assesment_rs = $this->nurse_model->get_assessment($visit_id);
-				$assesment_num_rows = count($assesment_rs);
+				$assesment_rs = $this->nurse_model->get_assessment($visit_id1);
+				 $assesment_num_rows = count($assesment_rs);
 				$assessment = '';
 				if($assesment_num_rows > 0){
 					foreach ($assesment_rs as $key_assessment):
 					$visit_assessment = $key_assessment->visit_assessment;
 					endforeach;
 					$assessment .="".$visit_assessment."";
+					
 				}
 				else
 				{
@@ -297,7 +298,7 @@
 
 
 				//  start of plan
-				$plan_rs = $this->nurse_model->get_plan($visit_id);
+				$plan_rs = $this->nurse_model->get_plan($visit_id1);
 				$plan_num_rows = count($plan_rs);
 				$plan = "";
 				if($plan_num_rows > 0){
@@ -312,8 +313,28 @@
 					$plan .="-";
 				}
 				// end of plan
+
+				// start of diagnosis
+				$diagnosis_rs = $this->nurse_model->get_diagnosis($visit_id1);
+				$diagnosis_num_rows = count($diagnosis_rs);
+				//echo $num_rows;
+				$patient_diagnosis = "";
+				if($diagnosis_num_rows > 0){
+					foreach ($diagnosis_rs as $diagnosis_key):
+						$diagnosis_id = $diagnosis_key->diagnosis_id;
+						$diagnosis_name = $diagnosis_key->diseases_name;
+						$diagnosis_code = $diagnosis_key->diseases_code;
+						$patient_diagnosis .="".$diagnosis_code."-".$diagnosis_name."<br>";
+						
+					endforeach;
+				}
+				else
+				{
+					$patient_diagnosis .= "-";
+				}
+				// end of diagnosis
 				
-				$count++;
+				
 				
 				$result .= 
 					'
@@ -321,7 +342,7 @@
 							<td>'.$count.'</td>
 							<td>'.$visit_date.'</td>
 							<td>'.$assessment.'</td>
-							<td>'.$visit_time.'</td>
+							<td>'.$patient_diagnosis.'</td>
 							<td>'.$plan.'</td>
 							<td align=center>'.$waiting_time.'</td>
 							
@@ -329,6 +350,7 @@
 							<td><a onclick="patient_history_popup('.$visit_id1.',1)" class="btn btn-sm btn-info">Patient Card</a></td>
 						</tr> 
 					';
+					$count++;
 			}
 			
 			$result .= 

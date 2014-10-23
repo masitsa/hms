@@ -67,6 +67,10 @@
             <div class="center-align">
             	<button type="submit" class="btn btn-info btn-lg">Search</button>
             </div>
+             <br>
+            <div class="center-align">
+                <div class="alert alert-info center-align">Note: When searching SBS staff enter the whole details including the SBS letters. For a normal staff enter the number without the zero</div>
+            </div>
             <?php
             echo form_close();
             ?>

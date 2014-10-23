@@ -64,8 +64,13 @@
                 </div>
             </div>
             
+                
             <div class="center-align">
             	<button type="submit" class="btn btn-info btn-lg">Search</button>
+            </div>
+            <br>
+            <div class="center-align">
+                <div class="alert alert-info center-align">Note: When searching please enter the student number without the first zero.</div>
             </div>
             <?php
             echo form_close();

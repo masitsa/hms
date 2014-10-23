@@ -3,6 +3,9 @@
 </style>
 <div class="center-align">
     <a href="<?php echo site_url().'/doctor/print_checkup/'.$visit_id;?>" class="btn btn-danger btn-lg" target="_blank">Print Checkup</a>
+
+    <a href="<?php echo base_url('html2pdf_v4.03/examples/med_check.php?pid='.$visit_id)?>" class="btn btn-danger btn-lg" target="_blank">Print Jacinta</a>
+
 </div>
 <?php
 $exam_categories = $this->nurse_model->medical_exam_categories();

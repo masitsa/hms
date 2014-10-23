@@ -21,11 +21,11 @@ class Lab_charges extends auth
 	{
 		// this is it
 		$where = 'lab_test_class.lab_test_class_id = lab_test.lab_test_class_id';
-		$visit_search = $this->session->userdata('visit_search');
+		$lab_tests = $this->session->userdata('lab_tests');
 		
-		if(!empty($visit_search))
+		if(!empty($lab_tests))
 		{
-			$where .= $visit_search;
+			$where .= $lab_tests;
 		}
 		
 		if($page_name == NULL)
@@ -43,8 +43,8 @@ class Lab_charges extends auth
 		$config['base_url'] = site_url().'/lab_charges/test_list/'.$page_name;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
-		$config['per_page'] = 20;
-		$config['num_links'] = 5;
+		$config['per_page'] = 15;
+		$config['num_links'] = 4;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
 		$config['full_tag_close'] = '</ul>';
@@ -92,5 +92,207 @@ class Lab_charges extends auth
 		// end of it
 
 	}
+	public function test_format($primary_key,$page_name = NULL)
+	{
+		// this is it
+		$where = 'lab_test.lab_test_id = lab_test_format.lab_test_id AND lab_test_format.lab_test_id = '.$primary_key;
+		$visit_search = $this->session->userdata('visit_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		
+		if($page_name == NULL)
+		{
+			$segment = 5;
+		}
+		
+		else
+		{
+			$segment = 5;
+		}
+		$table = 'lab_test,lab_test_format';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/lab_charges/test_format/'.$primary_key.'/'.$page_name;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 15;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->lab_charges_model->get_all_test_list($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Test Format';
+		$v_data['title'] = 'Test Format';
+		$v_data['module'] = 0;
+		
+		
+		$data['content'] = $this->load->view('test_format', $v_data, true);
+		
+		
+		$data['sidebar'] = 'lab_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+
+	}
+	public function classes($page_name = NULL)
+    {
+    	// this is it
+		$where = 'lab_test_class_id > 0';
+		$visit_search = $this->session->userdata('visit_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		
+		if($page_name == NULL)
+		{
+			$segment = 5;
+		}
+		
+		else
+		{
+			$segment = 5;
+		}
+		$table = 'lab_test_class';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/lab_charges/test_format/'.$page_name;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 15;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->lab_charges_model->get_all_test_classes($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Test Classes';
+		$v_data['title'] = 'Test Classes';
+		$v_data['module'] = 0;
+		
+		
+		$data['content'] = $this->load->view('test_classes', $v_data, true);
+		
+		
+		$data['sidebar'] = 'lab_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+    }
+    function create_new_class()
+    {
+    	$this->form_validation->set_rules('class_name', 'Class Name', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->lab_charges_model->add_classes();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the class");
+				redirect('lab_charges/classes');	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('lab_charges/classes');
+			
+		}
+    }
+    public function search_lab_tests()
+	{
+		$lab_test_name = $this->input->post('lab_test_name');
+		$test_class = $this->input->post('test_class');
+		
+		if(!empty($lab_test_name))
+		{
+			$lab_test_name = ' AND lab_test.lab_test_name LIKE \'%'.$lab_test_name.'%\' ';
+		}
+		
+		if(!empty($test_class))
+		{
+			$test_class = ' AND lab_test_class.lab_test_class_name LIKE \''.$test_class.'%\' ';
+		}
+		
+		
+		
+		$search = $lab_test_name.$test_class;
+		$this->session->set_userdata('lab_tests', $search);
+		
+		$this->test_list();
+	}	
 }
 ?>

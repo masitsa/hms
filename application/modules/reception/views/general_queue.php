@@ -37,32 +37,32 @@
 				
 				if($page_name == 'nurse')
 				{
-					$actions = 4;
+					$actions = 5;
 				}
 				
 				else if($page_name == 'doctor')
 				{
-					$actions = 3;
+					$actions = 4;
 				}
 				
 				else if($page_name == 'laboratory')
 				{
-					$actions = 3;
+					$actions = 4;
 				}
 				
 				else if($page_name == 'pharmacy')
 				{
-					$actions = 2;
+					$actions = 3;
 				}
 				
 				else if($page_name == 'accounts')
 				{
-					$actions = 4;
+					$actions = 5;
 				}
 				
 				else
 				{
-					$actions = 3;
+					$actions = 4;
 				}
 			
 			$result .= 
@@ -148,6 +148,7 @@
 				if($page_name == 'nurse')
 				{
 					$buttons = '
+					<td><a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
 					<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/0" class="btn btn-sm btn-info">Patient Card</a></td>
 					<td><a href="'.site_url().'/nurse/send_to_doctor/'.$visit_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Send to doctor?\');">To Doctor</a></td>
 					<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
@@ -158,6 +159,7 @@
 				else if($page_name == 'doctor')
 				{
 					$buttons = '
+					<td><a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
 					<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-info">Patient Card</a></td>
 					<td><a href="'.site_url().'/doctor/send_to_labs/'.$visit_id.'/1" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
 					<td><a href="'.site_url().'/doctor/send_to_pharmacy/'.$visit_id.'/1" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
@@ -167,6 +169,7 @@
 				else if($page_name == 'laboratory')
 				{
 					$buttons = '
+					<td><a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
 					<td><a href="'.site_url().'/laboratory/test/'.$visit_id.'" class="btn btn-sm btn-info">Tests</a></td>
 					<td><a href="'.site_url().'/laboratory/test_history/'.$visit_id.'" class="btn btn-sm btn-danger">History</a></td>
 					<td><a href="'.site_url().'/laboratory/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
@@ -176,6 +179,7 @@
 				else if($page_name == 'pharmacy')
 				{
 					$buttons = '
+					<td><a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
 					<td><a href="'.site_url().'/pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
 				
 					<td><a href="'.site_url().'/pharmacy/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
@@ -185,6 +189,7 @@
 				else if($page_name == 'accounts')
 				{
 					$buttons = '
+					<td><a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
 					<td><a href="'.site_url().'/accounts/print_receipt/'.$visit_id.'/a/0" target="_blank" class="btn btn-sm btn-info">Receipt</a></td>
 					<td><a href="'.site_url().'/accounts/print_invoice/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice</a></td>
 					<td><a href="'.site_url().'/accounts/payments/'.$visit_id.'" class="btn btn-sm btn-primary" >Payments</a></td>

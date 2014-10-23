@@ -343,7 +343,7 @@ function save_doctor_notes(visit_id){
         });
 
       
-    }
+}
 
 function assessment(visit_id){
   var XMLHttpRequestObject = false;
@@ -526,33 +526,26 @@ function open_objective_findings(visit_id){
 
 
 function save_assessment(visit_id){
-  var XMLHttpRequestObject = false;
-    
-  if (window.XMLHttpRequest) {
-  
-    XMLHttpRequestObject = new XMLHttpRequest();
-  } 
-    
-  else if (window.ActiveXObject) {
-    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  
-  var assessment = document.getElementById("visit_assessment").value;
+ 
   var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/save_assessment/"+assessment+"/"+visit_id;
-
-  if(XMLHttpRequestObject) {
-        
-    XMLHttpRequestObject.open("GET", url);
-        
-    XMLHttpRequestObject.onreadystatechange = function(){
-      
-      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-      }
-    }
-        
-    XMLHttpRequestObject.send(null);
+  var data_url = config_url+"/nurse/save_assessment/"+visit_id;
+  //window.alert(data_url);
+   var assessment = $('#visit_assessment').val();//document.getElementById("vital"+vital_id).value;
+  $.ajax({
+  type:'POST',
+  url: data_url,
+  data:{notes: assessment},
+  dataType: 'text',
+  success:function(data){
+    window.alert("You have successfully updated the assessment");
+  //obj.innerHTML = XMLHttpRequestObject.responseText;
+  },
+  error: function(xhr, status, error) {
+  //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+  alert(error);
   }
+
+  });
 }
 
 function open_window(plan, visit_id){
@@ -640,104 +633,72 @@ function nurse_notes(visit_id){
 }
 
 function save_symptoms(visit_id){
-  //alert('jhjh');
-    var XMLHttpRequestObject = false;
-    
-  if (window.XMLHttpRequest) {
   
-    XMLHttpRequestObject = new XMLHttpRequest();
-  } 
-    
-  else if (window.ActiveXObject) {
-    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  
-  var symptoms = document.getElementById("visit_symptoms").value;
 
   var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/save_symptoms/"+symptoms+"/"+visit_id;
-  
-  if(XMLHttpRequestObject) {
-    
-    //var obj = window.opener.document.getElementById("symptoms_");
-        
-    XMLHttpRequestObject.open("GET", url);
-        
-    XMLHttpRequestObject.onreadystatechange = function(){
-      
-      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-        //obj.innerHTML = XMLHttpRequestObject.responseText;
-      }
-    }
-        
-    XMLHttpRequestObject.send(null);
+  var data_url = config_url+"/nurse/save_symptoms/"+visit_id;
+  //window.alert(data_url);
+   var symptoms = $('#visit_symptoms').val();//document.getElementById("vital"+vital_id).value;
+  $.ajax({
+  type:'POST',
+  url: data_url,
+  data:{notes: symptoms},
+  dataType: 'text',
+  success:function(data){
+    window.alert("You have successfully updated the symptoms");
+  //obj.innerHTML = XMLHttpRequestObject.responseText;
+  },
+  error: function(xhr, status, error) {
+  //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+  alert(error);
   }
+
+  });
 }
 
 function save_objective_findings(visit_id){
-  var XMLHttpRequestObject = false;
-    
-  if (window.XMLHttpRequest) {
-  
-    XMLHttpRequestObject = new XMLHttpRequest();
-  } 
-    
-  else if (window.ActiveXObject) {
-    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  
-  var objective_findings = document.getElementById("visit_objective_findings").value;
+ 
   var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/save_objective_findings/"+objective_findings+"/"+visit_id;
-  //alert(url);
-  
-  if(XMLHttpRequestObject) {
-    
-    //var obj = window.opener.document.getElementById("symptoms_");
-        
-    XMLHttpRequestObject.open("GET", url);
-        
-    XMLHttpRequestObject.onreadystatechange = function(){
-      
-      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-
-        //obj.innerHTML = XMLHttpRequestObject.responseText;
-        
-      }
-    }
-        
-    XMLHttpRequestObject.send(null);
+  var data_url = config_url+"/nurse/save_objective_findings/"+visit_id;
+  //window.alert(data_url);
+   var objective_findings = $('#visit_objective_findings').val();//document.getElementById("vital"+vital_id).value;
+  $.ajax({
+  type:'POST',
+  url: data_url,
+  data:{notes: objective_findings},
+  dataType: 'text',
+  success:function(data){
+    window.alert("You have successfully updated the objective findings");
+  //obj.innerHTML = XMLHttpRequestObject.responseText;
+  },
+  error: function(xhr, status, error) {
+  //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+  alert(error);
   }
+
+  });
 }
 function save_plan(visit_id){
-  var XMLHttpRequestObject = false;
-    
-  if (window.XMLHttpRequest) {
-  
-    XMLHttpRequestObject = new XMLHttpRequest();
-  } 
-    
-  else if (window.ActiveXObject) {
-    XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+ 
+  var config_url = $('#config_url').val();
+  var data_url = config_url+"/nurse/save_plan/"+visit_id;
+  //window.alert(data_url);
+   var plan = $('#visit_plan').val();//document.getElementById("vital"+vital_id).value;
+  $.ajax({
+  type:'POST',
+  url: data_url,
+  data:{notes: plan},
+  dataType: 'text',
+  success:function(data){
+    window.alert("You have successfully updated the visit plan");
+  //obj.innerHTML = XMLHttpRequestObject.responseText;
+  },
+  error: function(xhr, status, error) {
+  //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+  alert(error);
   }
-  
-  var plan = document.getElementById("visit_plan").value;
-   var config_url = $('#config_url').val();
-  var url = config_url+"/nurse/save_plan/"+plan+"/"+visit_id;
-  
-  if(XMLHttpRequestObject) {
-        
-    XMLHttpRequestObject.open("GET", url);
-        
-    XMLHttpRequestObject.onreadystatechange = function(){
-      
-      if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-      }
-    }
-        
-    XMLHttpRequestObject.send(null);
-  }
+
+  });
 }
 
 function get_disease(visit_id){

@@ -199,11 +199,15 @@ class Pharmacy_model extends CI_Model
 	public function save_prescription($visit_id)
 	{
 		$varpassed_value = $_POST['passed_value'];
-		$varsubstitution = $_POST['substitution'];
-		
-		if(empty($varsubstitution)){
+		if(isset($_POST['substitution'])){
+			$varsubstitution = $_POST['substitution'];
+		}
+		else
+		{
 			$varsubstitution = "No";
 		}
+		
+		
 		$date = date("Y-m-d"); 
 		$time = date("H:i:s");
 		$service_charge_id = $this->input->post('service_charge_id');
