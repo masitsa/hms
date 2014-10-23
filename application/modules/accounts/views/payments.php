@@ -241,7 +241,22 @@
 </div>
 <div class="row">
   <div class="center-align">
-    <a href= "<?php echo site_url();?>/reception/end_visit/<?php echo $visit_id?>/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+  	<!-- redirect to unclosed accounts queue -->
+    <?php
+    	if(isset($close_page))
+		{
+			?>
+			<a href= "<?php echo site_url();?>/reception/end_visit/<?php echo $visit_id;?>/<?php echo $close_page;?>" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+   			<?php
+		}
+		
+		else
+		{
+			?>
+			<a href= "<?php echo site_url();?>/reception/end_visit/<?php echo $visit_id?>/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to end visit?\');">End Visit</a>
+   			<?php
+		}
+   ?>
   </div>
 </div>
 

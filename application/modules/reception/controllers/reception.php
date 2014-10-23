@@ -1105,6 +1105,16 @@ class Reception extends auth
 			redirect('accounts/accounts_queue');
 		}
 		
+		if($page == 2)
+		{
+			redirect('accounts/accounts_unclosed_queue');
+		}
+		
+		if($page == 3)
+		{
+			redirect('accounts/accounts_closed_queue');
+		}
+		
 		else
 		{
 			redirect('reception/visit_list/'.$page);
@@ -1949,6 +1959,7 @@ class Reception extends auth
 	
 	public function sort_student_duplicates($per_page, $page)
 	{
+		echo 'Sorting duplicates for records from '.$page.' to '.$per_page.'<br/>';
 		//select all students from sumc db
 		$query = $this->reception_model->get_all_students($per_page, $page);
 		$faults_count = 0;
@@ -1980,6 +1991,54 @@ class Reception extends auth
 							echo 'Faults = '.$faults_count.' :: student = '.$student_number.' :: changed from = '.$patient_id.' :: changed to = '.$standing_patient_id.'<br/>';
 						}
 					}
+				}
+			}
+		}
+		echo '<br/>Finished';
+	}
+	
+	public function migrate_dependants()
+	{
+		//get all dependants
+		$staff_query = $this->reception_model->get_all_dependants();
+		
+		if($staff_query->num_rows() > 0)
+		{
+			foreach($staff_query->result() as $res)
+			{
+				$surname = $res->surname;
+				$other_names = $res->other_names;
+				$dob = $res->DOB;
+				$gender = $res->Gender;
+				$patient_id = $res->patient_id;
+				
+				if($gender == 'Male')
+				{
+					$gender_id = 1;
+				}
+				
+				else if($gender == 'Female')
+				{
+					$gender_id = 2;
+				}
+				
+				else
+				{
+					$gender_id = 0;
+				}
+				
+				$data = array
+				(
+					'patient_surname' => $surname,
+					'patient_othernames' => $other_names,
+					'gender_id' => $gender_id,
+					'patient_date_of_birth' => $dob
+				);
+				
+				$this->db->where('patient_id', $patient_id);
+				if($this->db->update('patients', $data))
+				{
+					echo 'Updated :: '.$surname.' '.$other_names.'<br/>';
 				}
 			}
 		}

@@ -183,8 +183,21 @@ class Accounts_model extends CI_Model
 	{
 		$table = "visit_charge, service_charge,service";
 		$where = "service_charge.service_id = service.service_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
-		$items = "service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount";
+		$items = "service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, service_charge.service_id";
 		$order = "visit_charge.service_charge_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+
+	}
+
+	public function get_patient_visit_charge($visit_id)
+	{
+		$table = "visit_charge, service_charge, service";
+		$where = "service_charge.service_id = service.service_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
+		$items = "DISTINCT(service_charge.service_id) AS service_id, service.service_name,";
+		$order = "service_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -543,6 +556,10 @@ class Accounts_model extends CI_Model
 		$this->fpdf->Cell($width,$pageH,'No Payments Made','B',0);
 		$this->fpdf->Cell($width,$pageH,$total_payments - $total,'B',1);*/
 		
+		$this->fpdf->Cell(25,$pageH,'Prepared By:','0',0,'L');
+		$this->fpdf->Cell(50,$pageH,'','B');
+		$this->fpdf->Cell(25,$pageH,'Approved By:','0',0, 'L');
+		$this->fpdf->Cell(50,$pageH,'','B');
 
 		$this->fpdf->Output();
 	}
