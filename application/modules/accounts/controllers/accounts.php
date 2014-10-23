@@ -74,6 +74,7 @@ class Accounts extends auth
 		$data['title'] = 'Accounts Queue';
 		$v_data['title'] = 'Accounts Queue';
 		$v_data['module'] = 0;
+		$v_data['close_page'] = 1;
 		
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
@@ -210,10 +211,10 @@ class Accounts extends auth
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/accounts/accounts_unclosed_queue/';
+		$config['base_url'] = site_url().'/accounts/accounts_unclosed_queue';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 3;
-		$config['per_page'] = 20;
+		$config['per_page'] = 40;
 		$config['num_links'] = 5;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
@@ -247,6 +248,7 @@ class Accounts extends auth
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
+		$v_data['close_page'] = 2;
 		
 		$data['title'] = 'Accounts Unclosed Visits';
 		$v_data['title'] = 'Accounts Unclosed Visits';
@@ -317,6 +319,7 @@ class Accounts extends auth
 		$data['title'] = 'Accounts closed Visits';
 		$v_data['title'] = 'Accounts closed Visits';
 		$v_data['module'] = 0;
+		$v_data['close_page'] = 3;
 		
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
@@ -343,7 +346,7 @@ class Accounts extends auth
 		$this->accounts_queue();
 	}
 	
-	public function payments($visit_id){
+	public function payments($visit_id, $close_page){
 		$v_data = array('visit_id'=>$visit_id);
 		
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
@@ -352,6 +355,7 @@ class Accounts extends auth
 		$patient_othernames = $patient['patient_othernames'];
 		$patient_surname = $patient['patient_surname'];
 		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
+		$v_data['close_page'] = $close_page;
 		$data['content'] = $this->load->view('payments', $v_data, true);
 		
 		$data['title'] = 'Patient Card';

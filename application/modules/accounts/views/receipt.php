@@ -26,6 +26,18 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
 		.center-align{margin:0 auto; text-align:center;}
 		
 		.receipt_bottom_border{border-bottom: #888888 medium solid;}
+		.row .col-md-12 table {
+			border:solid #000 !important;
+			border-width:1px 0 0 1px !important;
+			font-size:10px;
+		}
+		.row .col-md-12 th, .row .col-md-12 td {
+			border:solid #000 !important;
+			border-width:0 1px 1px 0 !important;
+		}
+		
+		.row .col-md-12 .title-item{float:left;width: 130px; font-weight:bold; text-align:right; padding-right: 20px;}
+		.title-img{float:left; padding-left:30px;}
 	</style>
     <head>
         <title>SUMC | Receipt</title>
@@ -38,6 +50,7 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
     </head>
     <body class="receipt_spacing">
     	<div class="row">
+        	<img src="<?php echo base_url();?>images/strathmore.gif" class="title-img"/>
         	<div class="col-md-12 center-align receipt_bottom_border">
             	<strong>
                 	Strathmore University Medical Center<br/>
@@ -58,28 +71,26 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
     	<div class="row receipt_bottom_border" style="margin-bottom: 10px;">
         	<div class="col-md-6 pull-left">
             	<div class="row">
-                	<div class="col-md-6">
-                    	<strong>Patient Name:</strong> 
-                    </div>
-                	<div class="col-md-6">
+                	<div class="col-md-12">
+                    	
+                    	<div class="title-item">Patient Name:</div>
+                        
                     	<?php echo $patient_surname.' '.$patient_othernames; ?>
                     </div>
                 </div>
             	
             	<div class="row">
-                	<div class="col-md-6">
-                    	<strong>Patient Number:</strong> 
-                    </div>
-                	<div class="col-md-6">
+                	<div class="col-md-12">
+                    	<div class="title-item">Patient Number:</div> 
+                        
                     	<?php echo $patient_number; ?>
                     </div>
                 </div>
                 
             	<div class="row">
-                	<div class="col-md-6">
-                    	<strong>Receipt Date:</strong> 
-                    </div>
-                	<div class="col-md-6">
+                	<div class="col-md-12">
+                    	<div class="title-item">Receipt Date:</div> 
+                        
                     	<?php echo $visit_date; ?>
                     </div>
                 </div>
@@ -87,19 +98,17 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
             
         	<div class="col-md-6 pull-right">
             	<div class="row">
-                	<div class="col-md-6">
-                    	<strong>Receipt Number:</strong> 
-                    </div>
-                	<div class="col-md-6">
+                	<div class="col-md-12">
+                    	<div class="title-item">Receipt Number:</div>
+                        
                     	<?php echo 'REC/00'.$visit_id; ?>
                     </div>
                 </div>
             	
             	<div class="row">
-                	<div class="col-md-6">
-                    	<strong>Att. Doctor::</strong> 
-                    </div>
-                	<div class="col-md-6">
+                	<div class="col-md-12">
+                    	<div class="title-item">Att. Doctor::</div> 
+                        
                     	<?php echo $doctor; ?>
                     </div>
                 </div>
@@ -119,51 +128,64 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
                   <tr>
                     <th>#</th>
                     <th>Service</th>
-                    <th>Item Name</th>
                     <th>Charge</th>
                   </tr>
                   </thead>
                   <tbody>
                     <?php
-                    $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
-                    $total = 0;
-                    if(count($item_invoiced_rs) > 0){
-                      $s=0;
-                      
-                      foreach ($item_invoiced_rs as $key_items):
-                        $s++;
-                        $service_charge_name = $key_items->service_charge_name;
-                        $visit_charge_amount = $key_items->visit_charge_amount;
-                        $service_name = $key_items->service_name;
-                         $units = $key_items->visit_charge_units;
-
-                         $visit_total = $visit_charge_amount * $units;
-
-                        ?>
-                          <tr >
-                            <td><?php echo $s;?></td>
-                            <td><?php echo $service_name;?></td>
-                            <td><?php echo $service_charge_name;?></td>
-                            <td><?php echo number_format($visit_total,2);?></td>
-                          </tr>
-                        <?php
-                          $total = $total + $visit_total;
-                      endforeach;
-                        ?>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td>Total :</td>
-                          <td> <?php echo number_format($total,2);?></td>
-                        </tr>
-                        <?php
-                    }else{
-                       ?>
-                        <tr>
-                          <td colspan="4"> No Charges</td>
-                        </tr>
-                        <?php
-                    }
+					$service_rs = $this->accounts_model->get_patient_visit_charge($visit_id);
+					$item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
+					$total = 0;
+					$s=0;
+					
+					if(count($service_rs) > 0)
+					{
+						foreach($service_rs as $serv)
+						{
+							$service_id = $serv->service_id;
+							$service_name = $serv->service_name;
+							$visit_total = 0;
+							$s++;
+							
+							if(count($item_invoiced_rs) > 0){
+							  
+							  foreach ($item_invoiced_rs as $key_items):
+								$service_id2 = $key_items->service_id;
+								
+								if($service_id2 == $service_id)
+								{
+									$visit_charge_amount = $key_items->visit_charge_amount;
+									$units = $key_items->visit_charge_units;
+			
+									$visit_total += $visit_charge_amount * $units;
+								}
+							  endforeach;
+							}
+		
+							?>
+							  <tr >
+								<td><?php echo $s;?></td>
+								<td><?php echo $service_name;?></td>
+								<td><?php echo number_format($visit_total,2);?></td>
+							  </tr>
+							<?php
+							$total = $total + $visit_total;
+						}
+						?>
+						<tr>
+						  <td></td>
+						  <td>Total :</td>
+						  <td> <?php echo number_format($total,2);?></td>
+						</tr>
+						<?php
+					}
+					else{
+					   ?>
+						<tr>
+						  <td colspan="3"> No Charges</td>
+						</tr>
+						<?php
+					}
 					
 					$payments_rs = $this->accounts_model->payments($visit_id);
 					$total_payments = 0;
@@ -183,11 +205,11 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
 
                     ?>
                     <tr class="receipt_bottom_border">
-                    	<td colspan="3">Total Paid</td>
+                    	<td colspan="2">Total Paid</td>
                         <td><?php echo number_format($total_payments, 2);?></td>
                     </tr>
                     <tr class="receipt_bottom_border">
-                    	<td colspan="3">Balance</td>
+                    	<td colspan="2">Balance</td>
                         <td><?php echo number_format($total - $total_payments, 2);?></td>
                     </tr>
                       
@@ -196,13 +218,11 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
             </div>
         </div>
         
-    	<div class="row" style="font-style:italic; font-size:10px">
-        	<div class="col-md-4">
+    	<div class="" style="font-style:italic; font-size:10px;">
+        	<div style="float:left; margin:0 10px 0 10px;">
             	Served by: <?php echo $served_by; ?>
             </div>
-        	<div class="col-md-4">
-            </div>
-        	<div class="col-md-4">
+        	<div style="float:right; margin:0 10px 0 10px;">
             	<?php echo $today; ?> Thank you
             </div>
         </div>

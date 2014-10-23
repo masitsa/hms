@@ -1624,10 +1624,10 @@ class Reception_model extends CI_Model
 	*	Retrieve all students in SUMC db
 	*
 	*/
-	public function get_all_students()
+	public function get_all_students($per_page, $page)
 	{
 		$this->db->from('student');
-		$query = $this->db->get();
+		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
 	}
@@ -1676,6 +1676,20 @@ class Reception_model extends CI_Model
 		{
 			return FALSE;
 		}
+	}
+	
+	/*
+	*	Retrieve all students in SUMC db
+	*
+	*/
+	public function get_all_dependants()
+	{
+		$this->db->select('patients.patient_id, staff_dependants.DOB, staff_dependants.Gender, staff_dependants.surname, staff_dependants.other_names');
+		$this->db->from('patients, staff_dependants');
+		$this->db->where('patients.visit_type_id = 2 AND patients.strath_no > 0 AND patients.strath_no = staff_dependants.staff_dependants_id');
+		$query = $this->db->get();
+		
+		return $query;
 	}
 }
 ?>
