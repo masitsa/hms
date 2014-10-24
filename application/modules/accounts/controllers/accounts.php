@@ -200,20 +200,23 @@ class Accounts extends auth
 	}
 	public function accounts_unclosed_queue()
 	{
+		//$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 6 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0';
 		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 0 ';
-		$table = 'visit_department, visit, patients';
+		$table = 'visit, patients';
 		
 		$visit_search = $this->session->userdata('visit_accounts_search');
+		$segment = 3;
 		
 		if(!empty($visit_search))
 		{
 			$where .= $visit_search;
+			$segment = 4;
 		}
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/accounts/accounts_unclosed_queue';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = $segment;
 		$config['per_page'] = 40;
 		$config['num_links'] = 5;
 		
@@ -241,10 +244,10 @@ class Accounts extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
 		$v_data['type_links'] =2;
         $v_data["links"] = $this->pagination->create_links();
-		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, $config["per_page"], $page);
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -267,20 +270,23 @@ class Accounts extends auth
 	}
 	public function accounts_closed_visits()
 	{
+		//$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 6 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 1';
 		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 1 ';
-		$table = 'visit_department, visit, patients';
+		$table = 'visit, patients';
 		
 		$visit_search = $this->session->userdata('visit_search');
+		$segment = 3;
 		
 		if(!empty($visit_search))
 		{
 			$where .= $visit_search;
+			$segment = 4;
 		}
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/accounts/accounts_unclosed_queue/';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		
@@ -308,10 +314,10 @@ class Accounts extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
         $v_data['type_links'] =3;
-		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page);
+		$query = $this->reception_model->get_all_ongoing_visits2($table, $where, $config["per_page"], $page);
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
