@@ -1,4 +1,4 @@
-<?php echo form_open("accounts/make_payments/".$visit_id, array("class" => "form-horizontal"));?>
+<?php echo form_open("accounts/make_payments/".$visit_id.'/'.$close_page, array("class" => "form-horizontal"));?>
 
 <div class="row">
 	<div class="col-md-7">

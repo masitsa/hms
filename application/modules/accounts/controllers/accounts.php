@@ -370,7 +370,7 @@ class Accounts extends auth
 		$this->load->view('auth/template_sidebar', $data);
 	}
 	
-	public function make_payments($visit_id){
+	public function make_payments($visit_id, $close_page){
 		$this->form_validation->set_rules('payment_method', 'Payment Method', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('amount_paid', 'Amount', 'trim|required|xss_clean');
 		
@@ -378,12 +378,12 @@ class Accounts extends auth
 		if ($this->form_validation->run())
 		{
 			$this->accounts_model->receipt_payment($visit_id);
-			redirect('accounts/payments/'.$visit_id);
+			redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 		}
 		else
 		{
 			$this->session->set_userdata("error_message","Fill in the fields");
-			redirect('accounts/payments/'.$visit_id);
+			redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 		}
 	}
 	
