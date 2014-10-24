@@ -1196,6 +1196,7 @@ class Reception extends auth
 		$key = $visit_id;
 		
 		$this->database->update_entry($table, $data, $key);
+		$this->reception_model->set_visit_department($visit_id, 7);
 		
 		$this->session->set_userdata('success_message', 'The patient has been added to the queue');
 		$this->visit_list(0);
