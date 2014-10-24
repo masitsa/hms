@@ -1262,39 +1262,46 @@ class Reception_model extends CI_Model
 				'sbs'=>'1'
 			);
 		}
-		
-		if($this->db->insert('staff', $data))
-		{
-			// check if exist in the patients table
-			
-			$check_patient = $this->check_patient_if_exist($staff_type,$strath_no);
-			
-			if(count($check_patient > 0)){
-					return TRUE;
-			}else{
-				$data2 = array(
-					'strath_no'=>$this->input->post('strath_no'),
-					'visit_type_id'=>2,
-					'patient_date'=>date('Y-m-d H:i:s'),
-					'patient_number'=>$this->strathmore_population->create_patient_number(),
-					'created_by'=>$this->session->userdata('personnel_id'),
-					'modified_by'=>$this->session->userdata('personnel_id')
-				);
-				
-				if($this->db->insert('patients', $data2))
-				{
-					return $this->db->insert_id();
-				}
-				else{
-					return FALSE;
-				}
-			}
-				
-		}
-		
-		else
+		$check_this_people = $this->check_staff_if_exist($staff_type,$strath_no);
+		if(count($check_this_people) > 0)
 		{
 			return FALSE;
+		}
+		else
+		{
+			if($this->db->insert('staff', $data))
+			{
+				// check if exist in the patients table
+				
+				 $check_patient = $this->check_patient_if_exist($staff_type,$strath_no);
+				// count($check_patient);
+				if(count($check_patient) > 0){
+						return TRUE;
+				}else{
+					$data2 = array(
+						'strath_no'=>$this->input->post('strath_no'),
+						'visit_type_id'=>2,
+						'patient_date'=>date('Y-m-d H:i:s'),
+						'patient_number'=>$this->strathmore_population->create_patient_number(),
+						'created_by'=>$this->session->userdata('personnel_id'),
+						'modified_by'=>$this->session->userdata('personnel_id')
+					);
+					
+					if($this->db->insert('patients', $data2))
+					{
+						return $this->db->insert_id();
+					}
+					else{
+						return FALSE;
+					}
+				}
+					
+			}
+			
+			else
+			{
+				return FALSE;
+			}
 		}
 	}
 	public function check_patient_if_exist($staff_type,$strath_no){
@@ -1303,8 +1310,20 @@ class Reception_model extends CI_Model
 		if($staff_type == "housekeeping"){
 		$where = "patient_national_id = ".$strath_no;
 		}else{
-		$where = "strath_no = ".$strath_no;
+		$where = "strath_no = '".$strath_no."'";
 		}
+		$items = "*";
+		$order = "patients.patient_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	
+	}
+	public function check_staff_if_exist($staff_type,$strath_no){
+		
+		$table = "staff";
+		$where = "strath_no = '".$strath_no."'";
 		$items = "*";
 		$order = "patients.patient_id";
 		
