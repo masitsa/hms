@@ -28,7 +28,7 @@ if($num_rows > 0){
 			<td>
 				<div class='btn-toolbar'>
 					<div class='btn-group'>
-						<a class='btn' href='#' onclick='delete_diagnosis(".$diagnosis_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
+						<a class='btn delete_diagnosis' href='".$diagnosis_id."' id='".$visit_id."'><i class='icon-remove'></i></a>
 					</div>
 				</div>
 			</td>

@@ -127,9 +127,9 @@ else{
                 <div class="widget-content">
                     <div class="padd">
                             <!-- visit Procedures from java script -->
-                                <div id="plan"></div>
+                             <div id="plan"></div>
                              <!-- end of visit procedures -->
-                             <div id='visit_diagnosis'></div>
+                             <div id='visit_diagnosis_original'></div>
                     </div>
                 </div>
             </div>
@@ -718,7 +718,8 @@ function get_disease(visit_id){
 
       
   if(XMLHttpRequestObject) {
-    var obj = document.getElementById("visit_diagnosis");
+    var obj = document.getElementById("visit_diagnosis_original");
+    var obj2 = document.getElementById("visit_diagnosis");
         
     XMLHttpRequestObject.open("GET", url);
         
@@ -726,6 +727,7 @@ function get_disease(visit_id){
       
       if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
         obj.innerHTML = XMLHttpRequestObject.responseText;
+        obj2.innerHTML = XMLHttpRequestObject.responseText;
       }
     }
     
@@ -733,5 +735,17 @@ function get_disease(visit_id){
   }
 }
 
-
+$(document).on("click","a.delete_diagnosis",function() 
+{
+    var diagnosis_id = $(this).attr('href');
+    var visit_id = $(this).attr('id');
+	var config_url = $('#config_url').val();
+	var url = config_url+"/nurse/delete_diagnosis/"+diagnosis_id;
+	
+	$.get(url, function( data ) {
+		get_disease(visit_id);
+	});
+	
+	return false;
+});
 </script>

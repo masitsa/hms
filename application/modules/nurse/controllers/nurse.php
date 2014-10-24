@@ -681,10 +681,7 @@ class Nurse extends auth
 
 
 	public function disease($visit_id){
-
-
-
-
+		
 		//check patient visit type
 		$rs = $this->nurse_model->check_visit_type($visit_id);
 		if(count($rs)>0){
@@ -710,7 +707,7 @@ class Nurse extends auth
 		$config['base_url'] = site_url().'/nurse/disease/'.$visit_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 4;
-		$config['per_page'] = 15;
+		$config['per_page'] = 10;
 		$config['num_links'] = 5;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
@@ -748,6 +745,7 @@ class Nurse extends auth
 		$v_data['title'] = 'Disease List';
 		
 		$v_data['visit_id'] = $visit_id;
+		//$v_data['all_diseases'] = $this->nurse_model->get_all_diseases($table, $order);
 		$data['content'] = $this->load->view('soap/disease', $v_data, true);
 		
 		$data['title'] = 'Disease List';
@@ -763,6 +761,19 @@ class Nurse extends auth
 
 		$visit_data = array('visit_id'=>$visit_id,'disease_id'=>$disease_id);
 		$this->db->insert('diagnosis', $visit_data);
+	}
+	function delete_diagnosis($diagnosis_id)
+	{
+		$this->db->where('diagnosis_id', $diagnosis_id);
+		if($this->db->delete('diagnosis'))
+		{
+			echo 'true';
+		}
+		
+		else
+		{
+			echo 'false';
+		}
 	}
 	function diagnose($visit_id){
 		$visit_data = array('visit_id'=>$visit_id);

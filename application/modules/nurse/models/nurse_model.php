@@ -660,6 +660,17 @@ class Nurse_model extends CI_Model
 		
 		return $query;
 	}
+
+	public function get_all_diseases($table, $order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get();
+		
+		return $query;
+	}
 	function get_doctor_notes($patient_id){
 		$table = "doctor_notes";
 		$where = "patient_id = ".$patient_id;
