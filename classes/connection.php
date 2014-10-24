@@ -8,9 +8,14 @@ class Database{
     function  __construct() {
          //connect to database
         //$this->connect=mysql_connect("localhost", "sumc_hms", "Oreo2014#")
-		$this->connect=mysql_connect("localhost", "root", "")
+		$this->connect=mysql_connect("localhost", "sungura", "123")
                     or die("Unable to connect to MySQL".mysql_error());
+?>
+<script>
+window.alert('WACHA UJINGA!!!!');
 
+</script>
+<?php
         //selecting a database
         $selected = mysql_select_db("sumc", $this->connect)
                     or die("Could not select database".mysql_error());
@@ -31,5 +36,8 @@ class Database{
 
         return $rs;
     }
+
+ 
+
 }
 ?>

@@ -51,7 +51,7 @@ class Reception extends auth
 		}
 		
 		$patient_search = $this->session->userdata('patient_search');
-		$where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
+		$where = 'visit_type_id > 2 AND patient_delete = '.$delete;
 		
 		if(!empty($patient_search))
 		{
@@ -748,7 +748,7 @@ class Reception extends auth
 		
 		if(!empty($strath_no))
 		{
-			$strath_no = ' AND patients.strath_no LIKE \'%'.$strath_no.'%\' ';
+			$strath_no = ' AND patients.strath_no LIKE '.$strath_no.' ';
 		}
 		
 		//search surname
@@ -829,7 +829,7 @@ class Reception extends auth
 		
 		if(!empty($strath_no))
 		{
-			$strath_no = ' AND patients.strath_no LIKE \'%'.$strath_no.'%\' ';
+			$strath_no = ' AND patients.strath_no LIKE '.$strath_no.' ';
 		}
 		
 		if(!empty($personnel_id))
@@ -1410,7 +1410,7 @@ class Reception extends auth
 		}
 		
 		$table = 'patients,staff';
-		$items = 'patients.*,staff.*';
+		$items = '*';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/reception/staff_dependants';
@@ -1535,7 +1535,7 @@ class Reception extends auth
 		$segment = 3;
 		
 		$patient_search = $this->session->userdata('patient_staff_search');
-		$where = 'patients.visit_type_id = 2  AND patients.strath_no = staff.Staff_Number AND patients.patient_delete = 0';
+		$where = 'patients.visit_type_id = 2  AND patients.strath_no = staff.Staff_Number AND patients.patient_delete = 0 AND patients.dependant_id = 0';
 		
 		if(!empty($patient_search))
 		{
@@ -1543,7 +1543,7 @@ class Reception extends auth
 		}
 		
 		$table = 'patients, staff';
-		$items = 'staff.*, patients.*';
+		$items = '*';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/reception/staff';
@@ -1595,19 +1595,27 @@ class Reception extends auth
 	}
 	public function search_staff_dependant_patients()
 	{
-		$strath_no = $this->input->post('staff_no');
+
+		$staff_no = $this->input->post('staff_no');
 		$registration_date = $this->input->post('registration_date');
 		
-		if(!empty($strath_no))
+		if(!empty($staff_no))
 		{
-			$strath_no = ' AND staff.Staff_Number LIKE \'%'.$strath_no.'%\' ';
+			$staff_no = ' AND patients.dependant_id LIKE '.$staff_no.' ';
+		}
+		else
+		{
+			$staff_no = '';
 		}
 		
 		if(!empty($registration_date))
 		{
 			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.'%\' ';
 		}
-		
+		else
+		{
+			$registration_date ='';
+		}
 		//search surname
 		if(!empty($_POST['surname']))
 		{
@@ -1666,9 +1674,8 @@ class Reception extends auth
 			$other_name = '';
 		}
 		
-		$search = $strath_no.$surname.$other_name.$registration_date;
+		$search = $staff_no.$surname.$other_name.$registration_date;
 		$this->session->set_userdata('patient_dependants_search', $search);
-			//$this->session->userdata('patient_dependants_search');
 		
 		$this->staff_dependants();
 	}
@@ -1679,7 +1686,7 @@ class Reception extends auth
 		
 		if(!empty($strath_no))
 		{
-			$strath_no = ' AND staff.Staff_Number LIKE \'%'.$strath_no.'%\' ';
+			$strath_no = ' AND patients.strath_no LIKE '.$strath_no.' ';
 		}
 		
 		if(!empty($registration_date))
@@ -1758,7 +1765,7 @@ class Reception extends auth
 		
 		if(!empty($strath_no))
 		{
-			$strath_no = ' AND student.student_Number LIKE \'%'.$strath_no.'%\' ';
+			$strath_no = ' AND student.student_Number LIKE '.$strath_no.' ';
 		}
 		
 		if(!empty($registration_date))
@@ -1949,6 +1956,47 @@ class Reception extends auth
 		$data['content'] = $this->load->view('patients/edit_other_patient', $v_data, true);
 		
 		$data['title'] = 'Edit Patients';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+
+	public function edit_staff_dependant_patient($patient_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('title_id', 'Title', 'is_numeric|xss_clean');
+		$this->form_validation->set_rules('patient_surname', 'Surname', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_othernames', 'Other Names', 'required|xss_clean');
+		$this->form_validation->set_rules('patient_dob', 'Date of Birth', 'trim|xss_clean');
+		$this->form_validation->set_rules('gender_id', 'Gender', 'xss_clean');
+		$this->form_validation->set_rules('religion_id', 'Religion', 'xss_clean');
+		$this->form_validation->set_rules('civil_status_id', 'Civil Status', 'xss_clean');
+		$this->form_validation->set_rules('relationship_id', 'Relationship With Kin', 'xss_clean');
+		$this->form_validation->set_rules('staff_number', 'Next of Kin Contact', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->reception_model->edit_staff_dependant_patient($patient_id))
+			{
+				$this->session->set_userdata("success_message","Patient edited successfully");
+				
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not edit patient. Please try again");
+			}
+		}
+		
+		$v_data['relationships'] = $this->reception_model->get_relationship();
+		$v_data['religions'] = $this->reception_model->get_religion();
+		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
+		$v_data['titles'] = $this->reception_model->get_title();
+		$v_data['genders'] = $this->reception_model->get_gender();
+		$v_data['patient'] = $this->reception_model->get_patient_data($patient_id);
+		$data['content'] = $this->load->view('patients/edit_staff_dependant', $v_data, true);
+		
+		$data['title'] = 'Edit Staff Dependant';
 		$data['sidebar'] = 'reception_sidebar';
 		$this->load->view('auth/template_sidebar', $data);	
 	}

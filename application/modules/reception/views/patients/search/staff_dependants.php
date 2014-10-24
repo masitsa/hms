@@ -15,9 +15,7 @@
     <!-- Widget content -->
     <div class="widget-content">
     	<div class="padd">
-			<?php
-            echo form_open("reception/search_staff_dependant_patients", array("class" => "form-horizontal"));
-            ?>
+			<?php echo form_open("reception/search_staff_dependant_patients", array("class" => "form-horizontal")); ?>
             <div class="row">
                 <div class="col-md-6">
                     
@@ -25,7 +23,6 @@
                         <label class="col-lg-4 control-label">Staff ID: </label>
                         
                         <div class="col-lg-8">
-                         <input type="hidden" class="form-control" name="strath_no" placeholder="Staff ID">
                             <input type="text" class="form-control" name="staff_no" placeholder="Staff ID">
                         </div>
                     </div>
