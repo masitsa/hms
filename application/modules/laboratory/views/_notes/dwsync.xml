@@ -5,7 +5,7 @@
 <file name="laboratory_list.php" server="192.168.170.16/sumc/" local="130564613404284520" remote="130564638000000000" Dst="0" />
 <file name="lab_queue.php" server="192.168.170.16/sumc/" local="130564575385529971" remote="130564638000000000" Dst="0" />
 <file name="save_result.php" server="192.168.170.16/sumc/" local="130558539183837854" remote="130564638000000000" Dst="0" />
-<file name="test_history.php" server="192.168.170.16/sumc/" local="130561145618105924" remote="130564638000000000" Dst="0" />
+<file name="test_history.php" server="192.168.170.16/sumc/" local="130580036713812893" remote="130586220000000000" Dst="0" />
 <file name="test_lab.php" server="192.168.170.16/sumc/" local="130555080991043640" remote="130564638000000000" Dst="0" />
 <file name="lab_queue.php" server="192.168.170.16/sumc/development/" local="130564575385529971" remote="130564507200000000" Dst="0" />
 <file name="save_result.php" server="192.168.170.16/sumc/development/" local="130558539183837854" remote="130561989000000000" Dst="0" />

@@ -52,6 +52,11 @@ foreach($rs as $key):
 		}
 	}
 	
+	else
+	{
+		$drug_type_name = '';
+	}
+	
 	if(!empty($dose_unit_id)){
 
 		$rs3 = $this->pharmacy_model->get_dose_unit2($dose_unit_id);
@@ -63,6 +68,11 @@ foreach($rs as $key):
 		}
 	}
 	
+	else
+	{
+		$doseunit = '';
+	}
+	
 	if(!empty($admin_route_id)){
 		$rs3 = $this->pharmacy_model->get_admin_route2($admin_route_id);
 		$num_rows3 = count($rs3);
@@ -71,6 +81,11 @@ foreach($rs as $key):
 				$admin_route = $key3->drug_administration_route_name;
 			endforeach;
 		}
+	}
+	
+	else
+	{
+		$admin_route = '';
 	}
 	echo"
 		<tr>
