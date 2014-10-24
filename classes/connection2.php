@@ -12,7 +12,7 @@ class Database_connection{
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        $selected = mysql_select_db("strathmore_population", $this->connect)
+        $selected = mysql_select_db("sumc", $this->connect)
                     or die("Could not select database".mysql_error());
     }
 

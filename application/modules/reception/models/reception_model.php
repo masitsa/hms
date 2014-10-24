@@ -283,6 +283,30 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
+
+	function edit_staff_dependant_patient($patient_id)
+	{
+		$data = array(
+			'patient_surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
+			'patient_othernames'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+			'title_id'=>$this->input->post('title_id'),
+			'patient_date_of_birth'=>$this->input->post('patient_dob'),
+			'gender_id'=>$this->input->post('gender_id'),
+			'religion_id'=>$this->input->post('religion_id'),
+			'civil_status_id'=>$this->input->post('civil_status_id'),
+			'relationship_id'=>$this->input->post('relationship_id'),
+			'modified_by'=>$this->session->userdata('personnel_id')
+		);
+		
+		$this->db->where('patient_id', $patient_id);
+		if($this->db->update('patients', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
 	
 	/*
 	*	Save dependant patient
@@ -298,20 +322,24 @@ class Reception_model extends CI_Model
 		{
 			$res = $query->row();
 			$staff_system_id = $res->staff_system_id;
-			$data = array(
-				'surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
-				'other_names'=>ucwords(strtolower($this->input->post('patient_othernames'))),
-				'title_id'=>$this->input->post('title_id'),
-				'DOB'=>$this->input->post('patient_dob'),
-				'gender_id'=>$this->input->post('gender_id'),
-				'religion_id'=>$this->input->post('religion_id'),
-				'staff_id'=>$staff_system_id,
-				'civil_status_id'=>$this->input->post('civil_status_id')
-			);
-			$this->db->insert('staff_dependants', $data);
+			// $data = array(
+			// 	'surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
+			// 	'other_names'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+			// 	'title_id'=>$this->input->post('title_id'),
+			// 	'DOB'=>$this->input->post('patient_dob'),
+			// 	'gender_id'=>$this->input->post('gender_id'),
+			// 	'religion_id'=>$this->input->post('religion_id'),
+			// 	'staff_id'=>$staff_system_id,
+			// 	'civil_status_id'=>$this->input->post('civil_status_id')
+			// );
+			// $this->db->insert('staff_dependants', $data);
 			
 			$data2 = array(
-				'strath_no'=>$this->db->insert_id(),
+				'patient_surname'=>ucwords(strtolower($this->input->post('patient_surname'))),
+				'patient_othernames'=>ucwords(strtolower($this->input->post('patient_othernames'))),
+				'title_id'=>$this->input->post('title_id'),
+				'patient_date_of_birth'=>$this->input->post('patient_dob'),
+				'gender_id'=>$this->input->post('gender_id'),
 				'dependant_id'=>$dependant_staff,
 				'visit_type_id'=>2,
 				'relationship_id'=>$this->input->post('relationship_id'),
@@ -454,6 +482,7 @@ class Reception_model extends CI_Model
 		foreach ($result as $row)
 		{
 			$patient_id = $row->patient_id;
+			$dependant_id = $row->dependant_id;
 			$patient_number = $row->patient_number;
 			$dependant_id = $row->dependant_id;
 			$strath_no = $row->strath_no;
@@ -476,7 +505,7 @@ class Reception_model extends CI_Model
 				$visit_type = 0;
 			}
 			
-			if($check_id < 3)
+			if($check_id < 3 && $dependant_id < 1)
 			{
 				$patient_data = $this->get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id, $patient_id);
 				$visit_type = $patient_data['visit_type'];
