@@ -1,7 +1,13 @@
 <!-- search -->
 <?php //echo $this->load->view('patients/search_visit', '', TRUE);?>
 <!-- end search -->
- 
+<!-- end search -->
+<div class="row">
+	<div class="col-md-12">
+	<a href="<?php echo site_url();?>/lab_charges/add_lab_test_format/<?php echo $test_iddd;?>" class="btn btn-success pull-left">Add lab test format</a>
+		<a href="<?php echo site_url();?>/lab_charges/test_list" class="btn btn-danger pull-right">Back to lab tests</a>
+	</div>
+</div>
 <div class="row">
     <div class="col-md-12">
 
@@ -61,6 +67,7 @@
 				$lab_test_id = $row->lab_test_id;
 				$lab_test_formatname = $row->lab_test_formatname;
 				$lab_test_name = $row->lab_test_name;
+				$lab_test_format_id = $row->lab_test_format_id;
 				$lab_test_format_units = $row->lab_test_format_units;
 				$lab_test_format_malelowerlimit = $row->lab_test_format_malelowerlimit;
 				$lab_test_format_maleupperlimit = $row->lab_test_format_maleupperlimit;
@@ -80,8 +87,7 @@
 							<td>'.$lab_test_format_maleupperlimit.'</td>
 							<td>'.$lab_test_format_femalelowerlimit.'</td>
 							<td>'.$lab_test_format_femaleupperlimit.'</td>
-							<td><a href="'.site_url().'/lab_charges/test_format/'.$lab_test_id.'" class="btn btn-sm btn-info">Formats</a></td>
-							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-success">Edit</a></td>
+							<td><a href="'.site_url().'/lab_charges/add_lab_test_format/'.$lab_test_id.'/'.$lab_test_format_id.'" class="btn btn-sm btn-success">Edit</a></td>
 							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-danger">Delete</a></td>
 							
 						</tr> 

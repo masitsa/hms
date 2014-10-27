@@ -119,23 +119,23 @@
                                         <option value="">----Select Gender---</option>
                                         <?php
                                         if(set_value('gender') == 'F')
-										{
-											$female = 'selected="selected"';
-											$male = '';
-										}
-										
-										else if(set_value('gender') == 'M')
-										{
-											$female = '';
-											$male = 'selected="selected"';
-										}
-										
-										else
-										{
-											$female = '';
-											$male = '';
-										}
-										?>
+                            										{
+                            											$female = 'selected="selected"';
+                            											$male = '';
+                            										}
+                            										
+                            										else if(set_value('gender') == 'M')
+                            										{
+                            											$female = '';
+                            											$male = 'selected="selected"';
+                            										}
+                            										
+                            										else
+                            										{
+                            											$female = '';
+                            											$male = '';
+                            										}
+                            										?>
                                         <option value="F" <?php echo $female;?>> Female </option>
                                         <option value="M" <?php echo $male;?>> Male </option>
                                     </select>

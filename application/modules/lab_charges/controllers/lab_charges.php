@@ -147,6 +147,7 @@ class Lab_charges extends auth
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
+        $v_data["test_iddd"] = $primary_key;
 		$query = $this->lab_charges_model->get_all_test_list($table, $where, $config["per_page"], $page, 'ASC');
 		
 		$v_data['query'] = $query;
@@ -294,5 +295,179 @@ class Lab_charges extends auth
 		
 		$this->test_list();
 	}	
+	public function close_test_search()
+	{
+		$this->session->unset_userdata('lab_tests');
+		$this->test_list();
+	}
+	function add_lab_test($test_id = NULL)
+	{
+		if($test_id > 0)
+		{
+			$v_data['title'] = "Edit laboratory test";
+			$v_data['lab_test_details'] = $this->lab_charges_model->get_lab_test_details($test_id);
+		}
+		else
+		{
+			$v_data['title'] = "Add laboratory test";
+			$v_data['lab_test_details'] = '';
+		}
+		
+		$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['test_id'] = $test_id;
+		$data['content'] = $this->load->view('add_lab_test', $v_data, true);
+		
+		$data['title'] = 'Add Lab test';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	function add_lab_test_format($test_id,$test_format = NULL)
+	{
+		if($test_format > 0)
+		{
+			$v_data['title'] = "Edit laboratory test format";
+			$v_data['lab_test_format_details'] = $this->lab_charges_model->get_lab_test_format_details($test_id);
+		}
+		else
+		{
+			$v_data['title'] = "Add laboratory test format";
+			$v_data['lab_test_format_details'] = '';
+		}
+		
+		$v_data['lab_test_details'] = $this->lab_charges_model->get_lab_test_details($test_id);
+		$v_data['test_id'] = $test_id;
+		$v_data['format_id'] = $test_format;
+		$data['content'] = $this->load->view('add_lab_test_format', $v_data, true);
+		
+		$data['title'] = 'Add Lab test format';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	function create_new_lab_test_format($test_id)
+    {
+    	$this->form_validation->set_rules('lab_test_format', 'Lab test Format', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->lab_charges_model->add_test_format($test_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test format");
+				redirect('lab_charges/add_lab_test_format/'.$test_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('lab_charges/add_lab_test_format/'.$test_id);					
+		}
+    }
+	function create_new_lab_test()
+    {
+    	$this->form_validation->set_rules('lab_test_class_id', 'Lab test Class', 'is_numeric|xss_clean');
+    	$this->form_validation->set_rules('lab_test_name', 'Lab test name', 'is_numeric|xss_clean');
+    	$this->form_validation->set_rules('price', 'Price', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->lab_charges_model->add_lab_test();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test");
+				redirect('lab_charges/add_lab_test');	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('lab_charges/add_lab_test');				
+		}
+    }
+
+    function update_lab_test($test_id)
+    {
+    	$this->form_validation->set_rules('lab_test_class_id', 'Lab test Class', 'is_numeric|xss_clean');
+    	$this->form_validation->set_rules('lab_test_name', 'Lab test name', 'is_numeric|xss_clean');
+    	$this->form_validation->set_rules('price', 'Price', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->lab_charges_model->edit_lab_test($test_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test");
+				redirect('lab_charges/add_lab_test/'.$test_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('lab_charges/add_lab_test/'.$test_id);				
+		}
+    }
+    function update_lab_test_format($test_id,$format_id)
+    {
+    	$this->form_validation->set_rules('lab_test_format', 'Lab test format name', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->lab_charges_model->edit_lab_test_format($test_id,$format_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test");
+				redirect('lab_charges/add_lab_test/'.$test_id.'/'.$format_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('lab_charges/add_lab_test/'.$test_id.'/'.$format_id);			
+		}
+    }
+
 }
 ?>
