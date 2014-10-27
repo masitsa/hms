@@ -12,11 +12,19 @@
                 <li class="current"><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-home"></i> Control Panel</a></li>
                 
                 <!--<li class="current"><a href="<?php echo base_url();?>index.php/welcome/control_panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-list"></i> Appointments</a></li>-->
-                
-                <li class="current"><a href="<?php echo site_url();?>/administration/reports/all_transactions"><i class="icon-list"></i> Reports</a></li>
+             	<li class="has_submenu">
+                    <a href="#">
+                        <i class="icon-th"></i> Reports
+                    </a>
+                    <ul>
+                        <li><a href="<?php echo site_url();?>/administration/reports/all_reports">All Transactions</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/reports/cash_report">Cash Report</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/reports/debtors_report">Debtors Report</a></li>
+                    </ul>
+                </li>
 
                 <!-- Menu with sub menu -->
-             <li class="has_submenu">
+             	<li class="has_submenu">
                     <a href="#">
                         <i class="icon-th"></i> Administration
                     </a>

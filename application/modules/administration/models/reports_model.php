@@ -294,7 +294,16 @@ class Reports_model extends CI_Model
 		}
 		
 		//payments
-		$this->db->from($table.', payments');
+		$table_search = $this->session->userdata('all_transactions_tables');
+		if(!empty($table_search))
+		{
+			$this->db->from($table);
+		}
+		
+		else
+		{
+			$this->db->from($table.', payments');
+		}
 		$this->db->select('SUM(payments.amount_paid) AS total_paid');
 		$this->db->where($where.' AND visit.visit_id = payments.visit_id');
 		$query = $this->db->get();
@@ -325,10 +334,16 @@ class Reports_model extends CI_Model
 		$where = 'visit.patient_id = patients.patient_id';
 		$table = 'visit, patients';
 		$visit_search = $this->session->userdata('all_transactions_search');
+		$table_search = $this->session->userdata('all_transactions_tables');
 		
 		if(!empty($visit_search))
 		{
 			$where .= $visit_search;
+		
+			if(!empty($table_search))
+			{
+				$table .= $table_search;
+			}
 		}
 		
 		$this->db->where($where);
@@ -431,31 +446,75 @@ class Reports_model extends CI_Model
 				$count++;
 				$cash = $this->reports_model->get_all_visit_payments($visit_id);
 				
-				//display the patient data
-				$report[$row_count][0] = $count;
-				$report[$row_count][1] = $visit_date;
-				$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
-				$report[$row_count][3] = $visit_type;
-				$report[$row_count][4] = $doctor;
-				$report[$row_count][5] = '';
-				$report[$row_count][6] = $strath_no;
-				$report[$row_count][7] = '';
-				$report[$row_count][8] = $cash;
-				$current_column = 9;
-				
 				//display services charged to patient
+				$total_invoiced2 = 0;
 				foreach($services_query->result() as $service)
 				{
 					$service_id = $service->service_id;
 					$visit_charge = $this->reports_model->get_all_visit_charges($visit_id, $service_id);
-					$total_invoiced += $visit_charge;
-					
-					$report[$row_count][$current_column] = $visit_charge;
-					$current_column++;
+					$total_invoiced2 += $visit_charge;
 				}
 				
-				//display total for the current visit
-				$report[$row_count][$current_column] = $total_invoiced;
+				//display all debtors
+				$debtors = $this->session->userdata('debtors');
+				if($debtors == 'true' && (($cash - $total_invoiced2) > 0))
+				{
+					//display the patient data
+					$report[$row_count][0] = $count;
+					$report[$row_count][1] = $visit_date;
+					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
+					$report[$row_count][3] = $visit_type;
+					$report[$row_count][4] = $doctor;
+					$report[$row_count][5] = '';
+					$report[$row_count][6] = $strath_no;
+					$report[$row_count][7] = '';
+					$report[$row_count][8] = $cash;
+					$current_column = 9;
+					
+					//display services charged to patient
+					foreach($services_query->result() as $service)
+					{
+						$service_id = $service->service_id;
+						$visit_charge = $this->reports_model->get_all_visit_charges($visit_id, $service_id);
+						$total_invoiced += $visit_charge;
+						
+						$report[$row_count][$current_column] = $visit_charge;
+						$current_column++;
+					}
+				
+					//display total for the current visit
+					$report[$row_count][$current_column] = $total_invoiced;
+				}
+				
+				//display cash & all transactions
+				else
+				{
+					//display the patient data
+					$report[$row_count][0] = $count;
+					$report[$row_count][1] = $visit_date;
+					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
+					$report[$row_count][3] = $visit_type;
+					$report[$row_count][4] = $doctor;
+					$report[$row_count][5] = '';
+					$report[$row_count][6] = $strath_no;
+					$report[$row_count][7] = '';
+					$report[$row_count][8] = $cash;
+					$current_column = 9;
+					
+					//display services charged to patient
+					foreach($services_query->result() as $service)
+					{
+						$service_id = $service->service_id;
+						$visit_charge = $this->reports_model->get_all_visit_charges($visit_id, $service_id);
+						$total_invoiced += $visit_charge;
+						
+						$report[$row_count][$current_column] = $visit_charge;
+						$current_column++;
+					}
+				
+					//display total for the current visit
+					$report[$row_count][$current_column] = $total_invoiced;
+				}
 			}
 		}
 		
