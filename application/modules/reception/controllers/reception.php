@@ -763,12 +763,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$surname .= ' patients.patient_surname LIKE '.mysql_real_escape_string($surnames[$r]).'';
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
 				}
 				
 				else
 				{
-					$surname .= ' patients.patient_surname LIKE '.mysql_real_escape_string($surnames[$r]).' AND ';
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
 				}
 				$count++;
 			}
@@ -792,12 +792,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$other_name .= ' patients.patient_othernames LIKE '.mysql_real_escape_string($other_names[$r]).'';
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
 				}
 				
 				else
 				{
-					$other_name .= ' patients.patient_othernames LIKE '.mysql_real_escape_string($other_names[$r]).' AND ';
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
 				}
 				$count++;
 			}
@@ -852,12 +852,12 @@ class Reception extends auth
 		{
 			if($count == $total)
 			{
-				$surname .= ' patients.patient_surname LIKE '.mysql_real_escape_string($surnames[$r]).'';
+				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
 			}
 			
 			else
 			{
-				$surname .= ' patients.patient_surname LIKE '.mysql_real_escape_string($surnames[$r]).' AND ';
+				$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
 			}
 			$count++;
 		}
@@ -873,12 +873,12 @@ class Reception extends auth
 		{
 			if($count == $total)
 			{
-				$other_name .= ' patients.patient_othernames LIKE '.mysql_real_escape_string($other_names[$r]).'';
+				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
 			}
 			
 			else
 			{
-				$other_name .= ' patients.patient_othernames LIKE '.mysql_real_escape_string($other_names[$r]).' AND ';
+				$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
 			}
 			$count++;
 		}
@@ -1628,12 +1628,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$surname .= ' staff.Surname LIKE '.mysql_real_escape_string($surnames[$r]).'';
+					$surname .= ' staff.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
 				}
 				
 				else
 				{
-					$surname .= ' staff.Surname LIKE '.mysql_real_escape_string($surnames[$r]).' AND ';
+					$surname .= ' staff.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
 				}
 				$count++;
 			}
@@ -1657,12 +1657,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$other_name .= ' staff.Other_names LIKE '.mysql_real_escape_string($other_names[$r]).'';
+					$other_name .= ' staff.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
 				}
 				
 				else
 				{
-					$other_name .= ' staff.Other_names LIKE '.mysql_real_escape_string($other_names[$r]).' AND ';
+					$other_name .= ' staff.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
 				}
 				$count++;
 			}
@@ -1706,12 +1706,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$surname .= ' staff.Surname LIKE '.mysql_real_escape_string($surnames[$r]).'';
+					$surname .= ' staff.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
 				}
 				
 				else
 				{
-					$surname .= ' staff.Surname LIKE '.mysql_real_escape_string($surnames[$r]).' AND ';
+					$surname .= ' staff.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
 				}
 				$count++;
 			}
@@ -1735,12 +1735,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$other_name .= ' staff.Other_names LIKE '.mysql_real_escape_string($other_names[$r]).'';
+					$other_name .= ' staff.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
 				}
 				
 				else
 				{
-					$other_name .= ' staff.Other_names LIKE '.mysql_real_escape_string($other_names[$r]).' AND ';
+					$other_name .= ' staff.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
 				}
 				$count++;
 			}
@@ -1785,12 +1785,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$surname .= ' student.Surname LIKE '.mysql_real_escape_string($surnames[$r]).'';
+					$surname .= ' student.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
 				}
 				
 				else
 				{
-					$surname .= ' student.Surname LIKE '.mysql_real_escape_string($surnames[$r]).' AND ';
+					$surname .= ' student.Surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
 				}
 				$count++;
 			}
@@ -1814,12 +1814,12 @@ class Reception extends auth
 			{
 				if($count == $total)
 				{
-					$other_name .= ' student.Other_names LIKE '.mysql_real_escape_string($other_names[$r]).'';
+					$other_name .= ' student.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
 				}
 				
 				else
 				{
-					$other_name .= ' student.Other_names LIKE '.mysql_real_escape_string($other_names[$r]).' AND ';
+					$other_name .= ' student.Other_names LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
 				}
 				$count++;
 			}

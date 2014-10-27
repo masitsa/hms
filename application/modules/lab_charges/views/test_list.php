@@ -1,7 +1,11 @@
 <!-- search -->
 <?php echo $this->load->view('search/test_search', '', TRUE);?>
 <!-- end search -->
- 
+<div class="row">
+	<div class="col-md-12">
+		<a href="<?php echo site_url();?>/lab_charges/add_lab_test" class="btn btn-success pull-right">Add a lab test</a>
+	</div>
+</div>
 <div class="row">
     <div class="col-md-12">
 
@@ -22,11 +26,11 @@
           <div class="padd">
           
 <?php
-		$search = $this->session->userdata('visit_search');
+		$search = $this->session->userdata('lab_tests');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/lab_charges/close_test_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -85,7 +89,7 @@
 							<td>'.$lab_test_femalelowerlimit.'</td>
 							<td>'.$lab_test_femaleupperlimit.'</td>
 							<td><a href="'.site_url().'/lab_charges/test_format/'.$lab_test_id.'" class="btn btn-sm btn-info">Formats</a></td>
-							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-success">Edit</a></td>
+							<td><a href="'.site_url().'/lab_charges/add_lab_test/'.$lab_test_id.'" class="btn btn-sm btn-success">Edit</a></td>
 							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-danger">Delete</a></td>
 							
 						</tr> 
