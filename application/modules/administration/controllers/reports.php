@@ -12,15 +12,56 @@ class Reports extends auth
 		$this->load->model('database');
 	}
 	
+	public function cash_report()
+	{
+		$search = ' AND payments.visit_id = visit.visit_id';
+		$table = ', payments';
+		$this->session->set_userdata('all_transactions_search', $search);
+		$this->session->set_userdata('all_transactions_tables', $table);
+		
+		$this->session->set_userdata('debtors', 'false');
+		$this->session->set_userdata('page_title', 'Cash Report');
+		
+		$this->all_transactions();
+	}
+	
+	public function all_reports()
+	{
+		$this->session->unset_userdata('all_transactions_search');
+		$this->session->unset_userdata('all_transactions_tables');
+		
+		$this->session->set_userdata('debtors', 'false2');
+		$this->session->set_userdata('page_title', 'All Transactions');
+		
+		$this->all_transactions();
+	}
+	
+	public function debtors_report()
+	{
+		$this->session->unset_userdata('all_transactions_search');
+		$this->session->unset_userdata('all_transactions_tables');
+		$this->session->set_userdata('page_title', 'Debtors Report');
+		
+		$this->session->set_userdata('debtors', 'true');
+		
+		$this->all_transactions();
+	}
+	
 	public function all_transactions()
 	{
 		$where = 'visit.patient_id = patients.patient_id';
 		$table = 'visit, patients';
 		$visit_search = $this->session->userdata('all_transactions_search');
+		$table_search = $this->session->userdata('all_transactions_tables');
 		
 		if(!empty($visit_search))
 		{
 			$where .= $visit_search;
+		
+			if(!empty($table_search))
+			{
+				$table .= $table_search;
+			}
 		}
 		$segment = 4;
 		
@@ -66,8 +107,9 @@ class Reports extends auth
 		$v_data['total_patients'] = $config['total_rows'];
 		$v_data['total_revenue'] = $this->reports_model->get_total_revenue($where, $table);
 		
-		$data['title'] = 'All Transactions';
-		$v_data['title'] = 'All Transactions';
+		$data['title'] = $this->session->userdata('page_title');
+		$v_data['title'] = $this->session->userdata('page_title');
+		$v_data['debtors'] = $this->session->userdata('debtors');
 		
 		$v_data['services_query'] = $this->reports_model->get_all_active_services();
 		$v_data['type'] = $this->reception_model->get_types();
@@ -126,6 +168,12 @@ class Reports extends auth
 		}
 		
 		$search = $visit_type_id.$strath_no.$visit_date.$personnel_id;
+		$visit_search = $this->session->userdata('all_transactions_search');
+		
+		if(!empty($visit_search))
+		{
+			$search .= $visit_search;
+		}
 		$this->session->set_userdata('all_transactions_search', $search);
 		
 		$this->all_transactions();
@@ -134,6 +182,29 @@ class Reports extends auth
 	public function export_transactions()
 	{
 		$this->reports_model->export_transactions();
+	}
+	
+	public function close_search()
+	{
+		$this->session->unset_userdata('all_transactions_search');
+		$this->session->unset_userdata('all_transactions_tables');
+		
+		$debtors = $this->session->userdata('debtors');
+		
+		if($debtors == 'true')
+		{
+			$this->debtors_report();
+		}
+		
+		else if($debtors == 'false')
+		{
+			$this->cash_report();
+		}
+		
+		else
+		{
+			$this->all_reports();
+		}
 	}
 }
 ?>
