@@ -26,6 +26,20 @@
           <div class="padd">
           
 <?php
+			$error = $this->session->userdata('error_message');
+			$success = $this->session->userdata('success_message');
+			
+			if(!empty($error))
+			{
+				echo '<div class="alert alert-danger">'.$error.'</div>';
+				$this->session->unset_userdata('error_message');
+			}
+			
+			if(!empty($success))
+			{
+				echo '<div class="alert alert-success">'.$success.'</div>';
+				$this->session->unset_userdata('success_message');
+			}
 		$search = $this->session->userdata('lab_tests');
 		
 		if(!empty($search))
@@ -72,10 +86,19 @@
 				$lab_test_malelupperlimit = $row->lab_test_malelupperlimit;
 				$lab_test_femalelowerlimit = $row->lab_test_femalelowerlimit;
 				$lab_test_femaleupperlimit = $row->lab_test_femaleupperlimit;
+				$lab_test_delete = $row->lab_test_delete;
 				$lab_test_id = $row->lab_test_id;
 				$count++;
 				
-				
+				if($lab_test_delete == 1)
+				{
+					$test_button = '<td><a href="'.site_url().'/lab_charges/activation/activate/test_lab/'.$lab_test_id.'" class="btn btn-sm btn-default">Activate</a></td>';
+
+				}
+				else
+				{
+					$test_button = '<td><a href="'.site_url().'/lab_charges/activation/deactivate/test_lab/'.$lab_test_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to deactivate this test?\');">Deactivate</a></td>';
+				}
 				$result .= 
 					'
 						<tr>
@@ -90,8 +113,7 @@
 							<td>'.$lab_test_femaleupperlimit.'</td>
 							<td><a href="'.site_url().'/lab_charges/test_format/'.$lab_test_id.'" class="btn btn-sm btn-info">Formats</a></td>
 							<td><a href="'.site_url().'/lab_charges/add_lab_test/'.$lab_test_id.'" class="btn btn-sm btn-success">Edit</a></td>
-							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-danger">Delete</a></td>
-							
+							'.$test_button.'
 						</tr> 
 					';
 			}

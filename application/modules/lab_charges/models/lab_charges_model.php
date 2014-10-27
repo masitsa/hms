@@ -52,6 +52,19 @@ class Lab_charges_model extends CI_Model
 		// end of checking
 		
 	}
+	public function edit_lab_test_class($class_id)
+	{
+		$class_name = $this->input->post('class_name');
+		$insert = array(
+				"lab_test_class_name" => $class_name
+			);
+		$this->db->where('lab_test_class_id',$class_id);
+		$this->db->update('lab_test_class', $insert);
+
+		return TRUE;
+		
+		// end of checking
+	}
 
 	public function check_class($class_name)
 	{
@@ -232,6 +245,33 @@ class Lab_charges_model extends CI_Model
 		$this->db->update('lab_test_format', $insert);
 
 		return TRUE;
+	}
+	public function get_all_tests_formats($test_id)
+	{
+		$this->db->from('lab_test_format');
+		$this->db->select('*');
+		$this->db->where('lab_test_id = \''.$test_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	function get_all_tests($class_id)
+	{
+		$this->db->from('lab_test');
+		$this->db->select('*');
+		$this->db->where('lab_test_class_id = \''.$class_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	function get_class_details($class_id)
+	{
+		$this->db->from('lab_test_class');
+		$this->db->select('*');
+		$this->db->where('lab_test_class_id = \''.$class_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
 	}
 }
 ?>

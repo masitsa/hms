@@ -28,6 +28,20 @@
           <div class="padd">
           
 <?php
+			$error = $this->session->userdata('error_message');
+			$success = $this->session->userdata('success_message');
+			
+			if(!empty($error))
+			{
+				echo '<div class="alert alert-danger">'.$error.'</div>';
+				$this->session->unset_userdata('error_message');
+			}
+			
+			if(!empty($success))
+			{
+				echo '<div class="alert alert-success">'.$success.'</div>';
+				$this->session->unset_userdata('success_message');
+			}
 		$search = $this->session->userdata('visit_search');
 		
 		if(!empty($search))
@@ -68,6 +82,7 @@
 				$lab_test_formatname = $row->lab_test_formatname;
 				$lab_test_name = $row->lab_test_name;
 				$lab_test_format_id = $row->lab_test_format_id;
+				$lab_test_format_delete = $row->lab_test_format_delete;
 				$lab_test_format_units = $row->lab_test_format_units;
 				$lab_test_format_malelowerlimit = $row->lab_test_format_malelowerlimit;
 				$lab_test_format_maleupperlimit = $row->lab_test_format_maleupperlimit;
@@ -75,7 +90,15 @@
 				$lab_test_format_femaleupperlimit = $row->lab_test_format_femaleupperlimit;
 				$count++;
 				
-				
+				if($lab_test_format_delete == 1)
+				{
+					$test_button = '<td><a href="'.site_url().'/lab_charges/activation/activate/test_format/'.$lab_test_format_id.'" class="btn btn-sm btn-default">Activate</a></td>';
+
+				}
+				else
+				{
+					$test_button = '<td><a href="'.site_url().'/lab_charges/activation/deactivate/test_format/'.$lab_test_format_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to deactivate this format?\');">Deactivate</a></td>';
+				}
 				$result .= 
 					'
 						<tr>
@@ -88,7 +111,7 @@
 							<td>'.$lab_test_format_femalelowerlimit.'</td>
 							<td>'.$lab_test_format_femaleupperlimit.'</td>
 							<td><a href="'.site_url().'/lab_charges/add_lab_test_format/'.$lab_test_id.'/'.$lab_test_format_id.'" class="btn btn-sm btn-success">Edit</a></td>
-							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_id.'" class="btn btn-sm btn-danger">Delete</a></td>
+							'.$test_button.'
 							
 						</tr> 
 					';
