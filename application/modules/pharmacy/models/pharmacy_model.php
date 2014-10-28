@@ -354,5 +354,16 @@ class Pharmacy_model extends CI_Model
 		
 		return $result;
 	}
+	public function get_all_previous_visits($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('visit.*, visit_department.created AS visit_created, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id, visit_department.visit_id AS previous_visit');
+		$this->db->where($where);
+		$this->db->order_by('visit_department.created','ASC');
+		$query = $this->db->get();
+		
+		return $query;
+	}
 }
 ?>
