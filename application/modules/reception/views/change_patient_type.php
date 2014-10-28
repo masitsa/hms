@@ -51,6 +51,8 @@
                                 <select class="form-control" name="visit_type_id">
                                    <option value="Select Patient Type">--Select Patient Type--</option>
                                    <option value="2">Staff</option>
+                                    <option value="3">Housekeeping</option>
+                                   <option value="4">SBS</option>
                                    <option value="1">Student</option>
                                 </select>
                             </div>

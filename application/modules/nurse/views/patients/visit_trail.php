@@ -128,6 +128,7 @@
                         <th>#</th>
                         <th>Service</th>
                         <th>Item Name</th>
+                        <th>Time Charged</th>
                         <th>Charge</th>
                       </tr>
                       </thead>
@@ -145,6 +146,7 @@
                             $service_name = $key_items->service_name;
                              $units = $key_items->visit_charge_units;
                              $service_charge_id = $key_items->service_charge_id;
+                             $visit_charge_timestamp = $key_items->visit_charge_timestamp;
 
                              $visit_total = $visit_charge_amount * $units;
 
@@ -153,6 +155,7 @@
                                 <td><?php echo $s;?></td>
                                 <td><?php echo $service_name;?></td>
                                 <td><?php echo $service_charge_name;?></td>
+                                <td><?php echo $visit_charge_timestamp;?></td>
                                 <?php
                                 if($service_charge_id == '10976')
                                 {
@@ -172,12 +175,36 @@
                             <?php
                               $total = $total + $visit_total;
                           endforeach;
+                           $payments_rs = $this->accounts_model->payments($visit_id);
+                           $total_payments = 0;
+                            if(count($payments_rs) > 0){
+                              $r=0;
+                              
+                              foreach ($payments_rs as $key_items):
+                                $r++;
+                                $payment_method = $key_items->payment_method;
+                                $amount_paid = $key_items->amount_paid;
+                                $time = $key_items->time;
+                               
+                                $total_payments = $total_payments + $amount_paid;
+
+                              endforeach;
+                          	}
                             ?>
                             <tr>
-                              <td></td>
-                              <td></td>
-                              <td>Total :</td>
+                             <td colspan="3"></td>
+                              <td><span>Total Invoice :</span></td>
                               <td> <?php echo number_format($total,2);?></td>
+                            </tr>
+                            <tr>
+                              <td colspan="3"></td>
+                              <td>Total Amount Paid :</td>
+                              <td> <?php echo number_format($total_payments,2);?></td>
+                            </tr>
+                            <tr>
+                              <td colspan="3"></td>
+                              <td>Balance :</td>
+                              <td> <?php echo number_format(($total - $total_payments),2);?></td>
                             </tr>
                             <?php
                         }else{

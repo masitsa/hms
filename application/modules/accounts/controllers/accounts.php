@@ -17,7 +17,13 @@ class Accounts extends auth
 	
 	public function index()
 	{
-		echo "no patient id";
+		$this->session->unset_userdata('all_transactions_search');
+		
+		$data['content'] = $this->load->view('dashboard', '', TRUE);
+		
+		$data['title'] = 'Dashboard';
+		$data['sidebar'] = 'accounts_sidebar';
+		$this->load->view('auth/template_sidebar', $data);
 	}
 	
 	public function accounts_queue()
@@ -387,12 +393,12 @@ class Accounts extends auth
 		}
 	}
 	
-	public function print_receipt($visit_id)
+	public function print_invoice($visit_id)
 	{
 		$this->accounts_model->receipt($visit_id);
 	}
 	
-	public function print_invoice($visit_id)
+	public function print_invoice_old($visit_id)
 	{
 		$this->accounts_model->receipt($visit_id, TRUE);
 	}

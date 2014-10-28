@@ -1139,6 +1139,94 @@ class Reception_model extends CI_Model
 			
 			}
 			
+		}else if($visit_type_id == 3 || $visit_type_id == 4){
+			// check if they exisit on the table for staff
+			$check_this_people = $this->check_staff_if_exist($visit_type_id,$strath_no);
+			if(count($check_this_people) > 0)
+			{
+				// change the patient type to 2
+				$data_array = array(
+				'visit_type_id'=>2
+				);
+				$this->db->where('patient_id', $patient_id);
+				$this->db->update('patients', $data_array);
+				// end of changing the patient type
+				return TRUE;
+			}
+			else
+			{
+				// get the patient data
+					$patient_data = $this->get_staff_details_from_patients($visit_type_id,$strath_no);
+					if(count($patient_data) > 0)
+					{
+						foreach ($patient_data as $key) {
+							# code...
+							$patient_surname = $key->patient_surname;
+							$patient_othernames = $key->patient_othernames;
+							$patient_date_of_birth = $key->patient_date_of_birth;
+							$gender_id = $key->gender_id;
+							$patient_id = $key->patient_id;
+							$contact = $key->patient_phone1;
+						}
+						if($gender_id == 1)
+						{
+							$gender = 'M';
+						}
+						else
+						{
+							$gender = 'F';
+						}
+						// insert into staff table
+						if($visit_type_id == 3)
+						{
+							$data = array(
+							'Other_names'=>ucwords(strtolower($patient_othernames)),
+							'Surname'=>ucwords(strtolower($patient_surname)),
+							'DOB'=>$patient_date_of_birth,
+							'gender'=>$gender,
+							'Staff_Number'=>$strath_no,
+							'contact'=>$contact,
+							'house_keeping'=>'1'
+							);
+						}
+						else
+						{
+							$data = array(
+							'Other_names'=>ucwords(strtolower($patient_othernames)),
+							'Surname'=>ucwords(strtolower($patient_surname)),
+							'DOB'=>$patient_date_of_birth,
+							'gender'=>$gender,
+							'Staff_Number'=>$strath_no,
+							'contact'=>$contact,
+							'sbs'=>'1'
+							);
+						}
+						if($this->db->insert('staff', $data))
+						{
+							// change the patient type to 2
+							$data_array = array(
+							'visit_type_id'=>2
+							);
+							$this->db->where('patient_id', $patient_id);
+							$this->db->update('patients', $data_array);
+							// end of changing the patient type
+							return TRUE;
+						}
+						else
+						{
+							return FALSE;
+						}
+						
+						// end of inserting
+					}
+					else
+					{
+						return FALSE;
+					}
+				// end of getting the patient data
+				
+			}
+			// end of checking
 		}else{
 			// check in the staff table
 			$staff_rs = $this->get_staff_number_from_staff($strath_no);
@@ -1202,7 +1290,32 @@ class Reception_model extends CI_Model
 	
 		
 	}
-	
+	public function get_staff_details_from_patients($visit_type_id,$strath_no)
+	{
+		if($visit_type_id == 3)
+		{
+			//housekeeping
+			$table = "patients";
+			$where = "patient_national_id = ".$strath_no;
+			$items = "*";
+			$order = "patients.patient_id";
+			
+			$result = $this->database->select_entries_where($table, $where, $items, $order);
+		}
+		else if($visit_type_id == 4)
+		{
+			// sbs
+			$table = "patients";
+			$where = "strath_no = ".$strath_no;
+			$items = "*";
+			$order = "patients.patient_id";
+			
+			$result = $this->database->select_entries_where($table, $where, $items, $order);
+		}
+
+		
+		return $result;
+	}
 	public function get_staff_number_from_staff($strath_no){
 		$table = "staff";
 		$where = "Staff_Number = ".$strath_no;
@@ -1323,15 +1436,16 @@ class Reception_model extends CI_Model
 	public function check_staff_if_exist($staff_type,$strath_no){
 		
 		$table = "staff";
-		$where = "strath_no = '".$strath_no."'";
+		$where = "Staff_Number = '".$strath_no."'";
 		$items = "*";
-		$order = "patients.patient_id";
+		$order = "staff_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
 	
 	}
+
 	public function bulk_add_sbs_staff()
 	{
 		$query = $this->db->get('staff2');

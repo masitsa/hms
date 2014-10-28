@@ -884,16 +884,16 @@ class Pharmacy extends auth
 		if($drug_details->num_rows() > 0)
 		{
 			$row = $drug_details->row();
-			$v_data['title'] = 'Edit '.$row->drugs_name.' Deduction';
+			$v_data['title'] = 'Edit '.$row->drugs_name.' Purchase';
 			$v_data['drugs_id'] = $drugs_id;
 			$v_data['container_types'] = $this->pharmacy_model->get_container_types();
 			$v_data['deduction_details'] = $deduction_details->row();
-			$data['content'] = $this->load->view('edit_drug_deduction', $v_data, true);
+			$data['content'] = $this->load->view('edit_drug_deductions', $v_data, true);
 		}
 		
 		else
 		{
-			$data['content'] = 'Could not find deduct details';
+			$data['content'] = 'Could not find deduction details';
 		}
 		$this->load->view('auth/template_sidebar', $data);
 	}
@@ -953,7 +953,8 @@ class Pharmacy extends auth
 		$v_data['page'] = $page;
 		$v_data['drugs_id'] = $drugs_id;
 		
-		$data['title'] = 'Deductions';
+		$data['title'] = 'Drugs List';
+		$v_data['title'] = 'Drugs List';
 		$data['sidebar'] = 'pharmacy_sidebar';
 		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
 		
@@ -970,37 +971,853 @@ class Pharmacy extends auth
 		}
 		
 		$this->load->view('auth/template_sidebar', $data);
-	}
+				
+    }
 	
-	 function activation($type,$page,$id)
+	public function brands()
+	{
+		// this is it
+		$where = 'brand_id > 0';
+		$brands_search = $this->session->userdata('brands_search');
+		
+		if(!empty($brands_search))
+		{
+			$where .= $brands_search;
+		}
+		
+		$segment = 3;
+		
+		$table = 'brand';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/brands';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 10;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->pharmacy_model->get_all_drug_brands($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Drug Brands';
+		$v_data['title'] = 'Drug Brands';
+		$v_data['module'] = 0;
+		
+		
+		$data['content'] = $this->load->view('setup/drug_brands', $v_data, true);
+		
+		
+		$data['sidebar'] = 'pharmacy_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+
+	} 
+	function add_brand($brand_id = NULL)
+	{
+		if($brand_id > 0)
+		{
+			$v_data['title'] = "Edit laboratory test";
+			$v_data['brand_details'] = $this->pharmacy_model->get_brands_details($brand_id);
+		}
+		else
+		{
+			$v_data['title'] = "Add new brand";
+			$v_data['brand_details'] = '';
+		}
+		
+		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['brand_id'] = $brand_id;
+		$data['content'] = $this->load->view('setup/add_brand', $v_data, true);
+		
+		$data['title'] = 'Add brand';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	function create_new_brand()
+	{
+		$this->form_validation->set_rules('brand_name', 'Brand name', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->add_brand();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the brand");
+				redirect('pharmacy/add_brand');	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_brand');	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the brand name then try again");
+			redirect('pharmacy/add_brand');					
+		}
+	}
+	public function search_brand()
+	{
+		$brand_name = $this->input->post('brand_name');
+		
+		if(!empty($brand_name))
+		{
+			$brand_name = ' AND brand_name LIKE \'%'.$brand_name.'%\' ';
+		}
+	
+		
+		
+		$search = $brand_name;
+		$this->session->set_userdata('brands_search', $search);
+		
+		$this->brands();
+	}	
+	public function close_brand_search()
+	{
+		$this->session->unset_userdata('brands_search');
+		$this->brands();
+	}
+	 function update_brand($brand_id)
     {
-    	// the pages are test format, tests, classes
-    	$date = date("Y-m-d");
-    	
-    	if($type == "deactivate")
-    	{
-    		$insert = array(
-			"drugs_deleted" => 1,
-			"deleted_by" => $this->session->userdata("personnel_id"),
-			"deleted_on" => $date
-			);
-			$this->db->where('drugs_id', $id);
-			$this->db->update('drugs', $insert);
-			$this->session->set_userdata("success_message","You have successfully deactivated the drug");
-			redirect('pharmacy/inventory');	
-    	}
-    	else if($type == "activate")
-    	{
-    		$insert = array(
-			"drugs_deleted" => 0,
-			"deleted_by" => $this->session->userdata("personnel_id"),
-			"deleted_on" => $date
-			);
-			$this->db->where('drugs_id', $id);
-			$this->db->update('drugs', $insert);
-			$this->session->set_userdata("success_message","You have successfully activated the drug");
-			redirect('pharmacy/inventory');	
-    	}
+    	$this->form_validation->set_rules('brand_name', 'Brand name', 'is_numeric|xss_clean');
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->edit_brand($brand_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test");
+				redirect('pharmacy/add_brand/'.$brand_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_brand/'.$brand_id);	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('pharmacy/add_brand/'.$brand_id);			
+		}
+    }
+    public function generics()
+	{
+		// this is it
+		$where = 'generic_id > 0';
+		$generics_search = $this->session->userdata('generics_search');
+		
+		if(!empty($generics_search))
+		{
+			$where .= $generics_search;
+		}
+		
+		$segment = 3;
+		
+		$table = 'generic';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/generics';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 10;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->pharmacy_model->get_all_drug_generics($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Generics';
+		$v_data['title'] = 'Generics';
+		$v_data['module'] = 0;
+		
+		
+		$data['content'] = $this->load->view('setup/generics', $v_data, true);
+		
+		
+		$data['sidebar'] = 'pharmacy_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+
+	} 
+	function add_generic($generic_id = NULL)
+	{
+		if($generic_id > 0)
+		{
+			$v_data['title'] = "Edit laboratory test";
+			$v_data['generic_details'] = $this->pharmacy_model->get_generics_details($generic_id);
+		}
+		else
+		{
+			$v_data['title'] = "Add new generic";
+			$v_data['generic_details'] = '';
+		}
+		
+		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['generic_id'] = $generic_id;
+		$data['content'] = $this->load->view('setup/add_generic', $v_data, true);
+		
+		$data['title'] = 'Add generic';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	function create_new_generic()
+	{
+		$this->form_validation->set_rules('generic_name', 'generic name', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->add_generic();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the generic");
+				redirect('pharmacy/add_generic');	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_generic');	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the generic name then try again");
+			redirect('pharmacy/add_generic');					
+		}
+	}
+	public function search_generic()
+	{
+		$generic_name = $this->input->post('generic_name');
+		
+		if(!empty($generic_name))
+		{
+			$generic_name = ' AND generic_name LIKE \'%'.$generic_name.'%\' ';
+		}
+	
+		
+		
+		$search = $generic_name;
+		$this->session->set_userdata('generics_search', $search);
+		
+		$this->generics();
+	}	
+	public function close_generic_search()
+	{
+		$this->session->unset_userdata('generics_search');
+		$this->generics();
+	}
+	 function update_generic($generic_id)
+    {
+    	$this->form_validation->set_rules('generic_name', 'generic name', 'is_numeric|xss_clean');
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->edit_generic($generic_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test");
+				redirect('pharmacy/add_generic/'.$generic_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_generic/'.$generic_id);	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('pharmacy/add_generic/'.$generic_id);			
+		}
+    }
+    public function classes()
+	{
+		// this is it
+		$where = 'class_id > 0';
+		$classes_search = $this->session->userdata('classes_search');
+		
+		if(!empty($classes_search))
+		{
+			$where .= $classes_search;
+		}
+		
+		$segment = 3;
+		
+		$table = 'class';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/classes';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 10;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->pharmacy_model->get_all_drug_classes($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'classes';
+		$v_data['title'] = 'classes';
+		$v_data['module'] = 0;
+		
+		
+		$data['content'] = $this->load->view('setup/classes', $v_data, true);
+		
+		
+		$data['sidebar'] = 'pharmacy_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+
+	} 
+	function add_class($class_id = NULL)
+	{
+		if($class_id > 0)
+		{
+			$v_data['title'] = "Edit laboratory test";
+			$v_data['class_details'] = $this->pharmacy_model->get_classes_details($class_id);
+		}
+		else
+		{
+			$v_data['title'] = "Add new class";
+			$v_data['class_details'] = '';
+		}
+		
+		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['class_id'] = $class_id;
+		$data['content'] = $this->load->view('setup/add_class', $v_data, true);
+		
+		$data['title'] = 'Add class';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	function create_new_class()
+	{
+		$this->form_validation->set_rules('class_name', 'class name', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->add_class();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the class");
+				redirect('pharmacy/add_class');	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_class');	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('pharmacy/add_class');					
+		}
+	}
+	public function search_class()
+	{
+		$class_name = $this->input->post('class_name');
+		
+		if(!empty($class_name))
+		{
+			$class_name = ' AND class_name LIKE \'%'.$class_name.'%\' ';
+		}
+	
+		
+		
+		$search = $class_name;
+		$this->session->set_userdata('classes_search', $search);
+		
+		$this->classes();
+	}	
+	public function close_class_search()
+	{
+		$this->session->unset_userdata('classes_search');
+		$this->classes();
+	}
+	 function update_class($class_id)
+    {
+    	$this->form_validation->set_rules('class_name', 'class name', 'is_numeric|xss_clean');
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->edit_class($class_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test");
+				redirect('pharmacy/add_class/'.$class_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_class/'.$class_id);	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('pharmacy/add_class/'.$class_id);			
+		}
+    }
+    public function types()
+	{
+		// this is it
+		$where = 'drug_type_id > 0';
+		$types_search = $this->session->userdata('types_search');
+		
+		if(!empty($types_search))
+		{
+			$where .= $types_search;
+		}
+		
+		$segment = 3;
+		
+		$table = 'drug_type';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/types';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 10;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->pharmacy_model->get_all_drug_types($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Drug types';
+		$v_data['title'] = 'Drug types';
+		$v_data['module'] = 0;
+		
+		
+		$data['content'] = $this->load->view('setup/drug_types', $v_data, true);
+		
+		
+		$data['sidebar'] = 'pharmacy_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+
+	} 
+	function add_type($drug_type_id = NULL)
+	{
+		if($drug_type_id > 0)
+		{
+			$v_data['title'] = "Edit laboratory test";
+			$v_data['type_details'] = $this->pharmacy_model->get_types_details($drug_type_id);
+		}
+		else
+		{
+			$v_data['title'] = "Add new type";
+			$v_data['type_details'] = '';
+		}
+		
+		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['drug_type_id'] = $drug_type_id;
+		$data['content'] = $this->load->view('setup/add_type', $v_data, true);
+		
+		$data['title'] = 'Add type';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	function create_new_type()
+	{
+		$this->form_validation->set_rules('drug_type_name', 'type name', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->add_type();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the type");
+				redirect('pharmacy/add_type');	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_type');	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the type name then try again");
+			redirect('pharmacy/add_type');					
+		}
+	}
+	public function search_type()
+	{
+		$drug_type_name = $this->input->post('drug_type_name');
+		
+		if(!empty($drug_type_name))
+		{
+			$drug_type_name = ' AND drug_type_name LIKE \'%'.$drug_type_name.'%\' ';
+		}
+	
+		
+		
+		$search = $drug_type_name;
+		$this->session->set_userdata('types_search', $search);
+		
+		$this->types();
+	}	
+	public function close_type_search()
+	{
+		$this->session->unset_userdata('types_search');
+		$this->types();
+	}
+	 function update_type($drug_type_id)
+    {
+    	$this->form_validation->set_rules('drug_type_name', 'type name', 'is_numeric|xss_clean');
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->edit_type($drug_type_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test");
+				redirect('pharmacy/add_type/'.$drug_type_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_type/'.$drug_type_id);	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('pharmacy/add_type/'.$drug_type_id);			
+		}
+    }
+    public function containers()
+	{
+		// this is it
+		$where = 'container_type_id > 0';
+		$containers_search = $this->session->userdata('containers_search');
+		
+		if(!empty($containers_search))
+		{
+			$where .= $containers_search;
+		}
+		
+		$segment = 3;
+		
+		$table = 'container_type';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/containers';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 10;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->pharmacy_model->get_all_drug_containers($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Drug containers';
+		$v_data['title'] = 'Drug containers';
+		$v_data['module'] = 0;
+		
+		
+		$data['content'] = $this->load->view('setup/drug_containers', $v_data, true);
+		
+		
+		$data['sidebar'] = 'pharmacy_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+
+	} 
+	function add_container_type($container_type_id = NULL)
+	{
+		if($container_type_id > 0)
+		{
+			$v_data['title'] = "Edit container types";
+			$v_data['container_type_details'] = $this->pharmacy_model->get_containers_details($container_type_id);
+		}
+		else
+		{
+			$v_data['title'] = "Add new container type";
+			$v_data['container_type_details'] = '';
+		}
+		
+		//$v_data['lab_test_classes'] = $this->lab_charges_model->get_lab_classes();
+		$v_data['container_type_id'] = $container_type_id;
+		$data['content'] = $this->load->view('setup/add_container_type', $v_data, true);
+		
+		$data['title'] = 'Add type';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	function create_new_container_type()
+	{
+		$this->form_validation->set_rules('container_type_name', 'type name', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->add_container_type();
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the type");
+				redirect('pharmacy/add_container_type');	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_container_type');	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the type name then try again");
+			redirect('pharmacy/add_container_type');					
+		}
+	}
+	public function search_container_type()
+	{
+		$container_type_name = $this->input->post('container_type_name');
+		
+		if(!empty($container_type_name))
+		{
+			$container_type_name = ' AND container_type_name LIKE \'%'.$container_type_name.'%\' ';
+		}
+	
+		
+		
+		$search = $container_type_name;
+		$this->session->set_userdata('containers_search', $search);
+		
+		$this->containers();
+	}	
+	public function close_container_type_search()
+	{
+		$this->session->unset_userdata('containers_search');
+		$this->containers();
+	}
+	 function update_container_type($container_type_id)
+    {
+    	$this->form_validation->set_rules('container_type_name', 'type name', 'is_numeric|xss_clean');
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->pharmacy_model->edit_container_type($container_type_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully created the lab test");
+				redirect('pharmacy/add_container_type/'.$container_type_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				redirect('pharmacy/add_container_type/'.$container_type_id);	
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('pharmacy/add_container_type/'.$container_type_id);			
+		}
     }
 }
 ?>

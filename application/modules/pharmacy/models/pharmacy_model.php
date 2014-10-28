@@ -461,7 +461,115 @@ class Pharmacy_model extends CI_Model
 		$where = "generic_id >= 0 ";
 		$items = "*";
 		$order = "generic_name";
+	}
+	
+	public function get_all_drug_brands($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by('brand_name','ASC');
+		$query = $this->db->get('', $per_page, $page);
+		return $query;
+	}
+	public function add_brand()
+	{
+		
+		$brand_name = $this->input->post('brand_name');
+		
+		//  check if this class name exisit
+		$check_rs = $this->check_brand($brand_name);
+		if(count($check_rs) > 0)
+		{
+			return FALSE;
 
+		}
+		else
+		{
+
+			$insert = array(
+					"brand_name" => $brand_name
+				);
+			$this->database->insert_entry('brand', $insert);
+
+			return TRUE;
+		}
+		// end of checking
+		
+	}
+	public function check_brand($brand_name)
+	{
+		$table = "brand";
+		$where = "brand_name = '$brand_name'";
+		$items = "*";
+		$order = "brand_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_brands_details($brand_id)
+	{
+		$this->db->from('brand');
+		$this->db->select('*');
+		$this->db->where('brand_id = \''.$brand_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	public function edit_brand($brand_id)
+	{
+		$brand_name = $this->input->post('brand_name');
+		$insert = array(
+				"brand_name" => $brand_name
+			);
+		$this->db->where('brand_id',$brand_id);
+		$this->db->update('brand', $insert);
+
+		return TRUE;
+	}
+	public function get_all_drug_generics($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by('generic_name','ASC');
+		$query = $this->db->get('', $per_page, $page);
+		return $query;
+	}
+	public function add_generic()
+	{
+		
+		$generic_name = $this->input->post('generic_name');
+		
+		//  check if this class name exisit
+		$check_rs = $this->check_generic($generic_name);
+		if(count($check_rs) > 0)
+		{
+			return FALSE;
+
+		}
+		else
+		{
+
+			$insert = array(
+					"generic_name" => $generic_name
+				);
+			$this->database->insert_entry('generic', $insert);
+
+			return TRUE;
+		}
+		// end of checking
+		
+	}
+	public function check_generic($generic_name)
+	{
+		$table = "generic";
+		$where = "generic_name = '$generic_name'";
+		$items = "*";
+		$order = "generic_id";
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
@@ -559,7 +667,68 @@ class Pharmacy_model extends CI_Model
 		$where = "container_type_id >= 0 ";
 		$items = "*";
 		$order = "container_type_name";
+	}
+	public function get_generics_details($generic_id)
+	{
+		$this->db->from('generic');
+		$this->db->select('*');
+		$this->db->where('generic_id = \''.$generic_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	public function edit_generic($generic_id)
+	{
+		$generic_name = $this->input->post('generic_name');
+		$insert = array(
+				"generic_name" => $generic_name
+			);
+		$this->db->where('generic_id',$generic_id);
+		$this->db->update('generic', $insert);
 
+		return TRUE;
+	}
+	public function get_all_drug_classes($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by('class_name','ASC');
+		$query = $this->db->get('', $per_page, $page);
+		return $query;
+	}
+	public function add_class()
+	{
+		
+		$class_name = $this->input->post('class_name');
+		
+		//  check if this class name exisit
+		$check_rs = $this->check_class($class_name);
+		if(count($check_rs) > 0)
+		{
+			return FALSE;
+
+		}
+		else
+		{
+
+			$insert = array(
+					"class_name" => $class_name
+				);
+			$this->database->insert_entry('class', $insert);
+
+			return TRUE;
+		}
+		// end of checking
+		
+	}
+	public function check_class($class_name)
+	{
+		$table = "class";
+		$where = "class_name = '$class_name'";
+		$items = "*";
+		$order = "class_id";
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;
@@ -673,6 +842,159 @@ class Pharmacy_model extends CI_Model
 		$query = $this->db->get('stock_deductions');
 		
 		return $query;
+	}
+	
+	public function get_classes_details($class_id)
+	{
+		$this->db->from('class');
+		$this->db->select('*');
+		$this->db->where('class_id = \''.$class_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	public function edit_class($class_id)
+	{
+		$class_name = $this->input->post('class_name');
+		$insert = array(
+				"class_name" => $class_name
+			);
+		$this->db->where('class_id',$class_id);
+		$this->db->update('class', $insert);
+
+		return TRUE;
+	}
+	public function get_all_drug_types($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by('drug_type_name','ASC');
+		$query = $this->db->get('', $per_page, $page);
+		return $query;
+	}
+	public function add_type()
+	{
+		
+		$drug_type_name = $this->input->post('drug_type_name');
+		
+		//  check if this class name exisit
+		$check_rs = $this->check_type($drug_type_name);
+		if(count($check_rs) > 0)
+		{
+			return FALSE;
+
+		}
+		else
+		{
+
+			$insert = array(
+					"drug_type_name" => $drug_type_name
+				);
+			$this->database->insert_entry('drug_type', $insert);
+
+			return TRUE;
+		}
+		// end of checking
+		
+	}
+	public function check_type($drug_type_name)
+	{
+		$table = "drug_type";
+		$where = "drug_type_name = '$drug_type_name'";
+		$items = "*";
+		$order = "drug_type_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_types_details($drug_type_id)
+	{
+		$this->db->from('drug_type');
+		$this->db->select('*');
+		$this->db->where('drug_type_id = \''.$drug_type_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	public function edit_type($drug_type_id)
+	{
+		$drug_type_name = $this->input->post('drug_type_name');
+		$insert = array(
+				"drug_type_name" => $drug_type_name
+			);
+		$this->db->where('drug_type_id',$drug_type_id);
+		$this->db->update('drug_type', $insert);
+
+		return TRUE;
+	}
+	public function get_all_drug_containers($table, $where, $per_page, $page, $order = NULL)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by('container_type_name','ASC');
+		$query = $this->db->get('', $per_page, $page);
+		return $query;
+	}
+	public function add_container_type()
+	{
+		
+		$container_type_name = $this->input->post('container_type_name');
+		
+		//  check if this class name exisit
+		$check_rs = $this->check_container_type($container_type_name);
+		if(count($check_rs) > 0)
+		{
+			return FALSE;
+
+		}
+		else
+		{
+
+			$insert = array(
+					"container_type_name" => $container_type_name
+				);
+			$this->database->insert_entry('container_type', $insert);
+
+			return TRUE;
+		}
+		// end of checking
+		
+	}
+	public function check_container_type($container_type_name)
+	{
+		$table = "container_type";
+		$where = "container_type_name = '$container_type_name'";
+		$items = "*";
+		$order = "container_type_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_containers_details($container_type_id)
+	{
+		$this->db->from('container_type');
+		$this->db->select('*');
+		$this->db->where('container_type_id = \''.$container_type_id.'\'');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	public function edit_container_type($container_type_id)
+	{
+		$container_type_name = $this->input->post('container_type_name');
+		$insert = array(
+				"container_type_name" => $container_type_name
+			);
+		$this->db->where('container_type_id',$container_type_id);
+		$this->db->update('container_type', $insert);
+
+		return TRUE;
 	}
 }
 ?>
