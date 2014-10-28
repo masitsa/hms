@@ -365,5 +365,314 @@ class Pharmacy_model extends CI_Model
 		
 		return $query;
 	}
+
+	public function get_drugs_list($table, $where, $per_page, $page, $order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('drugs.*, generic.generic_name, brand.brand_name, drug_type.drug_type_name, drug_administration_route.drug_administration_route_name , drug_dose_unit.drug_dose_unit_name, class.class_name, drug_consumption.drug_consumption_name');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	public function item_purchases($drugs_id)
+	{
+  		$table = "purchase, drugs";
+		$where = "drugs.drugs_id = ".$drugs_id." AND purchase.drugs_id = drugs.drugs_id";
+		$items = "purchase.purchase_pack_size, purchase.purchase_quantity";
+		$order = "purchase_pack_size";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		$total = 0;
+		
+		if(count($result) > 0){
+			
+			foreach ($result as $row2)
+			{
+				$purchase_pack_size = $row2->purchase_pack_size;
+				$purchase_quantity = $row2->purchase_quantity;
+				$total = $total + ($purchase_pack_size * $purchase_quantity);
+			}
+		}
+		return $total;
+	}
+	
+	public function item_deductions($drugs_id)
+	{
+  		$table = "stock_deductions, drugs";
+		$where = "drugs.drugs_id = ".$drugs_id." AND stock_deductions.drugs_id = drugs.drugs_id";
+		$items = "stock_deductions.stock_deductions_pack_size, stock_deductions.stock_deductions_quantity";
+		$order = "stock_deductions_pack_size";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		$total = 0;
+		
+		if(count($result) > 0){
+			
+			foreach ($result as $row2)
+			{
+				$stock_deductions_pack_size = $row2->stock_deductions_pack_size;
+				$stock_deductions_quantity = $row2->stock_deductions_quantity;
+				$total = $total + ($stock_deductions_pack_size * $stock_deductions_quantity);
+			}
+		}
+		return $total;
+	}
+	
+	public function get_drug_units_sold($drug_id)
+	{
+		$table = "visit_charge, service_charge";
+		$where = "visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.drug_id = ". $drug_id;
+		$items = "SUM(visit_charge.visit_charge_units) AS total_sold";
+		$order = "total_sold";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		$total_sold = 0;
+		if(count($result) > 0)
+		{
+			foreach ($result as $key) {
+				# code...
+				$total_sold = $key->total_sold;
+			}
+		}
+		return $total_sold;
+	}
+
+	function get_drug_classes()
+	{
+		$table = "class";
+		$where = "class_id >= 0 ";
+		$items = "*";
+		$order = "class_name";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+
+	function get_drug_generics()
+	{
+		$table = "generic";
+		$where = "generic_id >= 0 ";
+		$items = "*";
+		$order = "generic_name";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+
+	function get_drug_brands()
+	{
+		$table = "brand";
+		$where = "brand_id >= 0 ";
+		$items = "*";
+		$order = "brand_name";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+
+	function get_drug_dose_units()
+	{
+		$table = "drug_dose_unit";
+		$where = "drug_dose_unit_id >= 0 ";
+		$items = "*";
+		$order = "drug_dose_unit_name";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	
+	public function save_drug()
+	{
+		$array = array(
+			'drugs_name'=>$this->input->post('drugs_name'),
+			'quantity'=>$this->input->post('quantity'),
+			'drug_type_id'=>$this->input->post('drug_type_id'),
+			'batch_no'=>$this->input->post('batch_no'),
+			'drugs_unitprice'=>$this->input->post('drugs_unitprice'),
+			'drugs_packsize'=>$this->input->post('drugs_pack_size'),
+			'drugs_dose'=>$this->input->post('drug_dose'),
+			'drug_dose_unit_id'=>$this->input->post('drug_dose_unit_id'),
+			'brand_id'=>$this->input->post('brand_id'),
+			'generic_id'=>$this->input->post('generic_id'),
+			'drug_administration_route_id'=>$this->input->post('drug_administration_route_id'),
+			'drug_consumption_id'=>$this->input->post('drug_consumption_id'),
+			'class_id'=>$this->input->post('class_id')
+		);
+		if($this->db->insert('drugs', $array))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	public function edit_drug($drugs_id)
+	{
+		$array = array(
+			'drugs_name'=>$this->input->post('drugs_name'),
+			'quantity'=>$this->input->post('quantity'),
+			'drug_type_id'=>$this->input->post('drug_type_id'),
+			'batch_no'=>$this->input->post('batch_no'),
+			'drugs_unitprice'=>$this->input->post('drugs_unitprice'),
+			'drugs_packsize'=>$this->input->post('drugs_pack_size'),
+			'drugs_dose'=>$this->input->post('drug_dose'),
+			'drug_dose_unit_id'=>$this->input->post('drug_dose_unit_id'),
+			'brand_id'=>$this->input->post('brand_id'),
+			'generic_id'=>$this->input->post('generic_id'),
+			'drug_administration_route_id'=>$this->input->post('drug_administration_route_id'),
+			'drug_consumption_id'=>$this->input->post('drug_consumption_id'),
+			'class_id'=>$this->input->post('class_id')
+		);
+		
+		$this->db->where('drugs_id', $drugs_id);
+		if($this->db->update('drugs', $array))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	public function get_drug_details($drugs_id)
+	{
+		$this->db->where('drugs_id', $drugs_id);
+		$query = $this->db->get('drugs');
+		
+		return $query;
+	}
+
+	function get_container_types()
+	{
+		$table = "container_type";
+		$where = "container_type_id >= 0 ";
+		$items = "*";
+		$order = "container_type_name";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+
+	public function get_drugs_purchases($table, $where, $per_page, $page, $order)
+	{
+		//retrieve all purchases
+		$this->db->from($table);
+		$this->db->select('purchase.*, container_type.container_type_name');
+		$this->db->where($where);
+		$this->db->order_by($order,'DESC');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	public function purchase_drug($drugs_id)
+	{
+		$array = array(
+			'drugs_id'=>$drugs_id,
+			'container_type_id'=>$this->input->post('container_type_id'),
+			'purchase_quantity'=>$this->input->post('purchase_quantity'),
+			'purchase_pack_size'=>$this->input->post('purchase_pack_size'),
+			'expiry_date'=>$this->input->post('expiry_date')
+		);
+		if($this->db->insert('purchase', $array))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	public function edit_drug_purchase($purchase_id)
+	{
+		$array = array(
+			'container_type_id'=>$this->input->post('container_type_id'),
+			'purchase_quantity'=>$this->input->post('purchase_quantity'),
+			'purchase_pack_size'=>$this->input->post('purchase_pack_size'),
+			'expiry_date'=>$this->input->post('expiry_date')
+		);
+		$this->db->where('purchase_id', $purchase_id);
+		if($this->db->update('purchase', $array))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	public function get_purchase_details($purchase_id)
+	{
+		$this->db->where('purchase_id', $purchase_id);
+		$query = $this->db->get('purchase');
+		
+		return $query;
+	}
+
+	public function get_drugs_deductions($table, $where, $per_page, $page, $order)
+	{
+		//retrieve all purchases
+		$this->db->from($table);
+		$this->db->select('stock_deductions.*, container_type.container_type_name');
+		$this->db->where($where);
+		$this->db->order_by($order,'DESC');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	public function deduct_drug($drugs_id)
+	{
+		$array = array(
+			'drugs_id'=>$drugs_id,
+			'container_type_id'=>$this->input->post('container_type_id'),
+			'stock_deductions_quantity'=>$this->input->post('stock_deduction_quantity'),
+			'stock_deductions_pack_size'=>$this->input->post('stock_deduction_pack_size')
+		);
+		if($this->db->insert('stock_deductions', $array))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	public function edit_drug_deduction($stock_deduction_id)
+	{
+		$array = array(
+			'container_type_id'=>$this->input->post('container_type_id'),
+			'stock_deductions_quantity'=>$this->input->post('stock_deduction_quantity'),
+			'stock_deductions_pack_size'=>$this->input->post('stock_deduction_pack_size')
+		);
+		$this->db->where('stock_deductions_id', $stock_deduction_id);
+		if($this->db->update('stock_deductions', $array))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	public function get_deduction_details($stock_deduction_id)
+	{
+		$this->db->where('stock_deductions_id', $stock_deduction_id);
+		$query = $this->db->get('stock_deductions');
+		
+		return $query;
+	}
 }
 ?>

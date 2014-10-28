@@ -87,7 +87,7 @@ class Pharmacy extends auth
 		}
 		
 	}
-
+	
 	public function update_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
 		$this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
@@ -145,6 +145,7 @@ class Pharmacy extends auth
 		$this->session->unset_userdata('drugs_search');
 		$this->drugs($visit_id,0);
 	}
+	
 	public function drugs($visit_id,$module= NULL){
 
 		//check patient visit type
@@ -425,14 +426,581 @@ class Pharmacy extends auth
 		$v_data['doctors'] = $this->reception_model->get_doctor();
 		
 		$data['content'] = $this->load->view('prescription_history', $v_data, true);
-		
-		
 		$data['sidebar'] = 'pharmacy_sidebar';
-		
 		
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
 
 	}
+	
+	public function inventory()
+	{
+		$segment = 3;
+		$order = 'drugs.drugs_name';
+		$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id';
+		
+		$drugs_search = $this->session->userdata('drugs_list_search');
+		
+		if(!empty($drugs_search))
+		{
+			$where .= $drugs_search;
+		}
+		
+		$table = 'drugs, drug_type, generic, brand, class, drug_administration_route, drug_dose_unit, drug_consumption';
+		
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/inventory';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->pharmacy_model->get_drugs_list($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Drugs List';
+		$v_data['title'] = 'Drugs List';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$data['content'] = $this->load->view('drugs_list', $v_data, true);
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	/*
+	*	Add Drug
+	*
+	*/
+	public function add_drug()
+	{
+		//form validation rules
+		$this->form_validation->set_rules('drugs_name', 'Drug Name', 'required|xss_clean');
+		$this->form_validation->set_rules('drugs_pack_size', 'Pack Size', 'numeric|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drugs_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('batch_no', 'Batch Number', 'numeric|xss_clean');
+		$this->form_validation->set_rules('brand_id', 'Brand', 'numeric|xss_clean');
+		$this->form_validation->set_rules('generic_id', 'Generic', 'numeric|xss_clean');
+		$this->form_validation->set_rules('class_id', 'Class', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drug_type_id', 'Type', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drug_dose', 'Dose', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drug_dose_unit_id', 'Dose Unit', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drug_administration_route_id', 'Administration Route', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('drug_consumption_id', 'Consumption Method', 'required|numeric|xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->pharmacy_model->save_drug())
+			{
+				$this->session->userdata('success_message', 'Drug has been added successfully');
+				redirect('pharmacy/inventory');
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to add drug. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Add Drug';
+		$v_data['title'] = 'Add Drug';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
+		$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
+		$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
+		$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();
+		$v_data['drug_dose_units'] = $this->pharmacy_model->get_drug_dose_units();
+		$v_data['admin_routes'] = $this->pharmacy_model->get_admin_route();
+		$v_data['consumption'] = $this->pharmacy_model->get_consumption();
+		$data['content'] = $this->load->view('add_drug', $v_data, true);
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	/*
+	*	Edit Drug
+	*
+	*/
+	public function edit_drug($drugs_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('drugs_name', 'Drug Name', 'required|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drugs_pack_size', 'Pack Size', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drugs_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('batch_no', 'Batch Number', 'numeric|xss_clean');
+		$this->form_validation->set_rules('brand_id', 'Brand', 'numeric|xss_clean');
+		$this->form_validation->set_rules('generic_id', 'Generic', 'numeric|xss_clean');
+		$this->form_validation->set_rules('class_id', 'Class', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drug_type_id', 'Type', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drug_dose', 'Dose', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drug_dose_unit_id', 'Dose Unit', 'numeric|xss_clean');
+		$this->form_validation->set_rules('drug_administration_route_id', 'Administration Route', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('drug_consumption_id', 'Consumption Method', 'required|numeric|xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->pharmacy_model->edit_drug($drugs_id))
+			{
+				$this->session->userdata('success_message', 'Drug has been editted successfully');
+				redirect('pharmacy/inventory');
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to edit drug. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Edit Drug';
+		$v_data['title'] = 'Edit Drug';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
+		
+		if($drug_details->num_rows() > 0)
+		{
+			$v_data['drug_details'] = $drug_details->row();
+			$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
+			$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
+			$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
+			$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();
+			$v_data['drug_dose_units'] = $this->pharmacy_model->get_drug_dose_units();
+			$v_data['admin_routes'] = $this->pharmacy_model->get_admin_route();
+			$v_data['consumption'] = $this->pharmacy_model->get_consumption();
+			$data['content'] = $this->load->view('edit_drug', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find drug';
+		}
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function purchase_drug($drugs_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('container_type_id', 'Container Type', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('purchase_quantity', 'Purchase Quantity', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('purchase_pack_size', 'Pack Size', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('expiry_date', 'Expiry Date', 'xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->pharmacy_model->purchase_drug($drugs_id))
+			{
+				$this->session->userdata('success_message', 'Drug has been purchased successfully');
+				redirect('pharmacy/drug_purchases/'.$drugs_id);
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to purchase drug. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Buy Drug';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
+		
+		if($drug_details->num_rows() > 0)
+		{
+			$row = $drug_details->row();
+			$v_data['title'] = 'Buy '.$row->drugs_name;
+			$v_data['drugs_id'] = $drugs_id;
+			$v_data['container_types'] = $this->pharmacy_model->get_container_types();
+			$data['content'] = $this->load->view('buy_drug', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find drug';
+		}
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function edit_drug_purchase($purchase_id, $drugs_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('container_type_id', 'Container Type', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('purchase_quantity', 'Purchase Quantity', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('purchase_pack_size', 'Pack Size', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('expiry_date', 'Expiry Date', 'xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->pharmacy_model->edit_drug_purchase($purchase_id))
+			{
+				$this->session->userdata('success_message', 'Drug has been purchased successfully');
+				redirect('pharmacy/drug_purchases/'.$drugs_id);
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to purchase drug. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Edit Purchase';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
+		$purchase_details = $this->pharmacy_model->get_purchase_details($purchase_id);
+		
+		if($drug_details->num_rows() > 0)
+		{
+			$row = $drug_details->row();
+			$v_data['title'] = 'Edit '.$row->drugs_name.' Purchase';
+			$v_data['drugs_id'] = $drugs_id;
+			$v_data['container_types'] = $this->pharmacy_model->get_container_types();
+			$v_data['purchase_details'] = $purchase_details->row();
+			$data['content'] = $this->load->view('edit_drug_purchase', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find purchase details';
+		}
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function drug_purchases($drugs_id)
+	{
+		$segment = 4;
+		$order = 'purchase_date';
+		$where = 'purchase.container_type_id = container_type.container_type_id AND purchase.drugs_id = '.$drugs_id;
+		
+		$drugs_search = $this->session->userdata('drugs_purchases_search');
+		
+		if(!empty($drugs_search))
+		{
+			$where .= $drugs_search;
+		}
+		
+		$table = 'purchase, container_type';
+		
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/drug_purchases/'.$drugs_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->pharmacy_model->get_drugs_purchases($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['drugs_id'] = $drugs_id;
+		
+		$data['title'] = 'Drugs List';
+		$v_data['title'] = 'Drugs List';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
+		
+		if($drug_details->num_rows() > 0)
+		{
+			$row = $drug_details->row();
+			$v_data['title'] = $row->drugs_name.' Purchases';
+			$data['content'] = $this->load->view('drug_purchases', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find drug';
+		}
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function deduct_drug($drugs_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('container_type_id', 'Container Type', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('stock_deduction_quantity', 'deduct Quantity', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('stock_deduction_pack_size', 'Pack Size', 'required|numeric|xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->pharmacy_model->deduct_drug($drugs_id))
+			{
+				$this->session->userdata('success_message', 'Drug has been deducted successfully');
+				redirect('pharmacy/drug_deductions/'.$drugs_id);
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to deduct drug. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Deduct Drug';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
+		
+		if($drug_details->num_rows() > 0)
+		{
+			$row = $drug_details->row();
+			$v_data['title'] = 'Deduct '.$row->drugs_name;
+			$v_data['drugs_id'] = $drugs_id;
+			$v_data['container_types'] = $this->pharmacy_model->get_container_types();
+			$data['content'] = $this->load->view('deduct_drug', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find drug';
+		}
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function edit_drug_deduction($stock_deduction_id, $drugs_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('container_type_id', 'Container Type', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('stock_deduction_quantity', 'deduct Quantity', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('stock_deduction_pack_size', 'Pack Size', 'required|numeric|xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->pharmacy_model->edit_drug_deduction($stock_deduction_id))
+			{
+				$this->session->userdata('success_message', 'Drug has been deductd successfully');
+				redirect('pharmacy/drug_deductions/'.$drugs_id);
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to deduct drug. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Edit Deduction';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
+		$deduction_details = $this->pharmacy_model->get_deduction_details($stock_deduction_id);
+		
+		if($drug_details->num_rows() > 0)
+		{
+			$row = $drug_details->row();
+			$v_data['title'] = 'Edit '.$row->drugs_name.' Deduction';
+			$v_data['drugs_id'] = $drugs_id;
+			$v_data['container_types'] = $this->pharmacy_model->get_container_types();
+			$v_data['deduction_details'] = $deduction_details->row();
+			$data['content'] = $this->load->view('edit_drug_deduction', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find deduct details';
+		}
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function drug_deductions($drugs_id)
+	{
+		$segment = 4;
+		$order = 'stock_deductions_date';
+		$where = 'stock_deductions.container_type_id = container_type.container_type_id AND stock_deductions.drugs_id = '.$drugs_id;
+		
+		$drugs_search = $this->session->userdata('drugs_deductions_search');
+		
+		if(!empty($drugs_search))
+		{
+			$where .= $drugs_search;
+		}
+		
+		$table = 'stock_deductions, container_type';
+		
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/drug_deductions/'.$drugs_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->pharmacy_model->get_drugs_deductions($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['drugs_id'] = $drugs_id;
+		
+		$data['title'] = 'Deductions';
+		$data['sidebar'] = 'pharmacy_sidebar';
+		$drug_details = $this->pharmacy_model->get_drug_details($drugs_id);
+		
+		if($drug_details->num_rows() > 0)
+		{
+			$row = $drug_details->row();
+			$v_data['title'] = $row->drugs_name.' Deductions';
+			$data['content'] = $this->load->view('drug_deductions', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find drug';
+		}
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	 function activation($type,$page,$id)
+    {
+    	// the pages are test format, tests, classes
+    	$date = date("Y-m-d");
+    	
+    	if($type == "deactivate")
+    	{
+    		$insert = array(
+			"drugs_deleted" => 1,
+			"deleted_by" => $this->session->userdata("personnel_id"),
+			"deleted_on" => $date
+			);
+			$this->db->where('drugs_id', $id);
+			$this->db->update('drugs', $insert);
+			$this->session->set_userdata("success_message","You have successfully deactivated the drug");
+			redirect('pharmacy/inventory');	
+    	}
+    	else if($type == "activate")
+    	{
+    		$insert = array(
+			"drugs_deleted" => 0,
+			"deleted_by" => $this->session->userdata("personnel_id"),
+			"deleted_on" => $date
+			);
+			$this->db->where('drugs_id', $id);
+			$this->db->update('drugs', $insert);
+			$this->session->set_userdata("success_message","You have successfully activated the drug");
+			redirect('pharmacy/inventory');	
+    	}
+    }
 }
 ?>
