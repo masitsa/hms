@@ -183,7 +183,7 @@ class Accounts_model extends CI_Model
 	{
 		$table = "visit_charge, service_charge,service";
 		$where = "service_charge.service_id = service.service_id AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
-		$items = "service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, service_charge.service_id";
+		$items = "service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, service_charge.service_id,visit_charge.visit_charge_timestamp";
 		$order = "visit_charge.service_charge_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -231,18 +231,21 @@ class Accounts_model extends CI_Model
 	
 	public function receipt($visit_id, $invoice = NULL)
 	{
-		if($invoice != NULL)
-		{
-			$title = 'INVOICE';
-			$heading = 'Invoice';
-			$number = 'INV/00'.$visit_id;
-		}
-		else
-		{
-			$title = 'RECEIPT';
-			$heading = 'Receipt';
-			$number = 'REC/00'.$visit_id;
-		}
+		// if($invoice != NULL)
+		// {
+		// 	$title = 'INVOICE';
+		// 	$heading = 'Invoice';
+		// 	$number = 'INV/00'.$visit_id;
+		// }
+		// else
+		// {
+		// 	$title = 'RECEIPT';
+		// 	$heading = 'Receipt';
+		// 	$number = 'REC/00'.$visit_id;
+		// }
+		$title = 'INVOICE';
+		$heading = 'Invoice';
+		$number = 'INV/00'.$visit_id;
 		$personnel_id = $this->session->userdata('personnel_id');
 		/*
 			-----------------------------------------------------------------------------------------
@@ -556,7 +559,7 @@ class Accounts_model extends CI_Model
 		$this->fpdf->Cell($width,$pageH,'No Payments Made','B',0);
 		$this->fpdf->Cell($width,$pageH,$total_payments - $total,'B',1);*/
 		
-		$this->fpdf->Cell(25,$pageH,'Prepared By:','0',0,'L');
+		$this->fpdf->Cell(25,$pageH,'Served by: '.$personnel_surname.' '.$personnel_fname.'','0',0,'L');
 		$this->fpdf->Cell(50,$pageH,'','B');
 		$this->fpdf->Cell(25,$pageH,'Approved By:','0',0, 'L');
 		$this->fpdf->Cell(50,$pageH,'','B');

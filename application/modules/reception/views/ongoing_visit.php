@@ -221,6 +221,7 @@
 							';
 						}
 						
+						
 						else
 						{
 							$button = '<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
