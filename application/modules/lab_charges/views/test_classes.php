@@ -1,7 +1,14 @@
 <!-- search -->
 <?php echo $this->load->view('add/add_new_class', '', TRUE);?>
 <!-- end search -->
- 
+<?php
+if($class_id > 0)
+{
+
+}
+else
+{
+?>
 <div class="row">
     <div class="col-md-12">
 
@@ -69,17 +76,25 @@
 				
 				$lab_test_class_name = $row->lab_test_class_name;
 				$lab_test_class_id = $row->lab_test_class_id;
+				$lab_test_class_delete = $row->lab_test_class_delete;
 				$count++;
-				
+				if($lab_test_class_delete == 1)
+				{
+					$test_button = '<td><a href="'.site_url().'/lab_charges/activation/activate/test_class/'.$lab_test_class_id.'" class="btn btn-sm btn-default">Activate</a></td>';
+
+				}
+				else
+				{
+					$test_button = '<td><a href="'.site_url().'/lab_charges/activation/deactivate/test_class/'.$lab_test_class_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to deactivate this class?\');">Deactivate</a></td>';
+				}
 				
 				$result .= 
 					'
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$lab_test_class_name.'</td>
-							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_class_id.'" class="btn btn-sm btn-success">Edit</a></td>
-							<td><a href="'.site_url().'/laboratory/test_history/'.$lab_test_class_id.'" class="btn btn-sm btn-danger">Delete</a></td>
-							
+							<td><a href="'.site_url().'/lab_charges/classes/'.$lab_test_class_id.'" class="btn btn-sm btn-success">Edit</a></td>
+							'.$test_button.'
 						</tr> 
 					';
 			}
@@ -113,3 +128,6 @@
       </div>
     </div>
   </div>
+  <?php
+}
+  ?>

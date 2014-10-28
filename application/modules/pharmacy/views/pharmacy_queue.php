@@ -46,7 +46,7 @@
 						  <th>Sent At</th>
 						  <th>Coming From</th>
 						  <th>Doctor</th>
-						  <th colspan="2">Actions</th>
+						  <th colspan="3">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -133,6 +133,7 @@
 							<td>'.$coming_from.'</td>
 							<td>'.$doctor.'</td>
 							<td><a href="'.site_url().'/pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
+							<td><a href="'.site_url().'/pharmacy/prescription_history/'.$visit_id.'" class="btn btn-sm btn-default">Previous Prescription</a></td>
 						
 							<td><a href="'.site_url().'/pharmacy/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
 						</tr> 

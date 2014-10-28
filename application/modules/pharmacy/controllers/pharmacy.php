@@ -356,5 +356,83 @@ class Pharmacy extends auth
 			redirect('pharmacy/prescription/'.$visit_id);
 		}
 	}
+	public function prescription_history($visit_id,$page_name = NULL)
+	{
+		// this is it
+		$where = 'visit.patient_id = patients.patient_id AND visit.patient_id = (SELECT patient_id FROM visit WHERE visit.visit_id = visit_department.visit_id ) AND visit_department.department_id = 5 AND visit_department.visit_id != '.$visit_id.'  AND visit.visit_id = '.$visit_id.' ';
+		$visit_search = $this->session->userdata('visit_search');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		}
+		
+		if($page_name == NULL)
+		{
+			$segment = 3;
+		}
+		
+		else
+		{
+			$segment = 4;
+		}
+		$table = 'visit_department,visit, patients';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/pharmacy/prescription_history/'.$page_name;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+         $v_data["visit_id"] = $visit_id;
+		$query = $this->pharmacy_model->get_all_previous_visits($table, $where, $config["per_page"], $page, 'ASC');
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Prescription History';
+		$v_data['title'] = 'Prescription History';
+		$v_data['module'] = 0;
+		
+		$v_data['type'] = $this->reception_model->get_types();
+		$v_data['doctors'] = $this->reception_model->get_doctor();
+		
+		$data['content'] = $this->load->view('prescription_history', $v_data, true);
+		
+		
+		$data['sidebar'] = 'pharmacy_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+		// end of it
+
+	}
 }
 ?>

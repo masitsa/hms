@@ -168,7 +168,7 @@ class Lab_charges extends auth
 		// end of it
 
 	}
-	public function classes($page_name = NULL)
+	public function classes($class_id=NULL,$page_name = NULL)
     {
     	// this is it
 		$where = 'lab_test_class_id > 0';
@@ -222,14 +222,23 @@ class Lab_charges extends auth
 		$this->pagination->initialize($config);
 		
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+		$v_data["class_id"] = $class_id;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->lab_charges_model->get_all_test_classes($table, $where, $config["per_page"], $page, 'ASC');
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
+		if($class_id > 0)
+		{
+			$data['title'] = 'Edit Classes';
+			$v_data['title'] = 'Edit Classes';
+		}
+		else
+		{
+			$data['title'] = 'Test Classes';
+			$v_data['title'] = 'Test Classes';
+		}
 		
-		$data['title'] = 'Test Classes';
-		$v_data['title'] = 'Test Classes';
 		$v_data['module'] = 0;
 		
 		
@@ -326,7 +335,7 @@ class Lab_charges extends auth
 		if($test_format > 0)
 		{
 			$v_data['title'] = "Edit laboratory test format";
-			$v_data['lab_test_format_details'] = $this->lab_charges_model->get_lab_test_format_details($test_id);
+			$v_data['lab_test_format_details'] = $this->lab_charges_model->get_lab_test_format_details($test_format);
 		}
 		else
 		{
@@ -451,7 +460,7 @@ class Lab_charges extends auth
 			{
 
 				$this->session->set_userdata("success_message","You have successfully created the lab test");
-				redirect('lab_charges/add_lab_test/'.$test_id.'/'.$format_id);	
+				redirect('lab_charges/add_lab_test_format/'.$test_id.'/'.$format_id);	
 			}
 			else
 			{
@@ -465,8 +474,343 @@ class Lab_charges extends auth
 		{
 			
 			$this->session->set_userdata("error_message","Please enter the class name then try again");
-			redirect('lab_charges/add_lab_test/'.$test_id.'/'.$format_id);			
+			redirect('lab_charges/add_lab_test_format/'.$test_id.'/'.$format_id);			
 		}
+    }
+     function update_lab_test_class($class_id)
+    {
+    	$this->form_validation->set_rules('class_name', 'Class name', 'is_numeric|xss_clean');
+
+    	if ($this->form_validation->run() == FALSE)
+		{
+
+			$checker = $this->lab_charges_model->edit_lab_test_class($class_id);
+
+			if($checker == TRUE)
+			{
+
+				$this->session->set_userdata("success_message","You have successfully update the lab test class name");
+				redirect('lab_charges/classes/'.$class_id);	
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate name. Please try again");
+				
+			}
+
+		}
+		
+		else
+		{
+			
+			$this->session->set_userdata("error_message","Please enter the class name then try again");
+			redirect('lab_charges/classes/'.$class_id);			
+		}
+    }
+    function activation($type,$page,$id)
+    {
+    	// the pages are test format, tests, classes
+    	$date = date("Y-m-d");
+    	
+    	if($type == "deactivate")
+    	{
+
+    		// start of dicativation
+    		if($page == "test_format")
+    		{
+    			$lab_test_format_details = $this->lab_charges_model->get_lab_test_format_details($id);
+    			if($lab_test_format_details->num_rows() > 0)
+           		{
+       				$lab_test_format_details = $lab_test_format_details->result();
+									
+					foreach($lab_test_format_details as $format_details)
+					{
+						$lab_test_id = $format_details->lab_test_id;
+					}
+           		}
+    			$insert = array(
+				"lab_test_format_delete" => 1,
+				"deleted_by" => $this->session->userdata("personnel_id"),
+				"deleted_on" => $date
+				);
+				$this->db->where('lab_test_format_id', $id);
+				$this->db->update('lab_test_format', $insert);
+				$this->session->set_userdata("success_message","You have successfully deactivated the test format");
+				redirect('lab_charges/test_format/'.$lab_test_id);	
+    		}
+    		else if($page == "test_lab")
+    		{
+    			// get all the test formats
+    			$test_formats = $this->lab_charges_model->get_all_tests_formats($id);
+    			if($test_formats->num_rows() > 0)
+           		{
+       				$test_formats = $test_formats->result();
+									
+					foreach($test_formats as $format_results)
+					{
+						$lab_test_format_id = $format_results->lab_test_format_id;
+
+						$insert = array(
+						"lab_test_format_delete" => 1,
+						"deleted_by" => $this->session->userdata("personnel_id"),
+						"deleted_on" => $date
+						);
+						$this->db->where('lab_test_format_id', $lab_test_format_id);
+						$this->db->update('lab_test_format', $insert);
+					}
+					$insert_update = array(
+					"lab_test_delete" => 1,
+					"deleted_by" => $this->session->userdata("personnel_id"),
+					"deleted_on" => $date
+					);
+					$this->db->where('lab_test_id', $id);
+					$this->db->update('lab_test', $insert_update);
+					$this->session->set_userdata("success_message","You have successfully deactivated the test and all its test formats");
+					redirect('lab_charges/test_list/');	
+           		}
+           		else
+           		{
+           			$insert_update = array(
+					"lab_test_delete" => 1,
+					"deleted_by" => $this->session->userdata("personnel_id"),
+					"deleted_on" => $date
+					);
+					$this->db->where('lab_test_id', $id);
+					$this->db->update('lab_test', $insert_update);
+					$this->session->set_userdata("success_message","You have successfully deactivated the test and all its test formats");
+					redirect('lab_charges/test_list');
+           		}
+    			// end of getting the test formats
+
+    		}
+    		else if($page == "test_class")
+    		{
+    			$test_list = $this->lab_charges_model->get_all_tests($id);
+    			if($test_list->num_rows() > 0)
+	        	{
+	        		$test_list = $test_list->result();
+	        		foreach ($test_list as $test_values) 
+	        		{
+	        			$test_id = $test_values->lab_test_id;
+	        			$test_formats = $this->lab_charges_model->get_all_tests_formats($test_id);
+	        		 	# code...
+	        		 	if($test_formats->num_rows() > 0)
+		           		{
+		       				$test_formats = $test_formats->result();
+											
+							foreach($test_formats as $format_results)
+							{
+								$lab_test_format_id = $format_results->lab_test_format_id;
+
+								$insert = array(
+								"lab_test_format_delete" => 1,
+								"deleted_by" => $this->session->userdata("personnel_id"),
+								"deleted_on" => $date
+								);
+								$this->db->where('lab_test_format_id', $lab_test_format_id);
+								$this->db->update('lab_test_format', $insert);
+							}
+							$insert_update = array(
+							"lab_test_delete" => 1,
+							"deleted_by" => $this->session->userdata("personnel_id"),
+							"deleted_on" => $date
+							);
+							$this->db->where('lab_test_id', $test_id);
+							$this->db->update('lab_test', $insert_update);
+						
+		           		}
+		           		else
+		           		{
+		           			$insert_update = array(
+							"lab_test_delete" => 1,
+							"deleted_by" => $this->session->userdata("personnel_id"),
+							"deleted_on" => $date
+							);
+							$this->db->where('lab_test_id', $test_id);
+							$this->db->update('lab_test', $insert_update);
+							
+		           		}
+	        		} 
+	        		$insert_update = array(
+					"lab_test_class_delete" => 1,
+					"deleted_by" => $this->session->userdata("personnel_id"),
+					"deleted_on" => $date
+					);
+					$this->db->where('lab_test_class_id', $id);
+					$this->db->update('lab_test_class', $insert_update);
+					$this->session->set_userdata("success_message","You have successfully deactivated the class , all test and all its test formats");
+					redirect('lab_charges/classes');
+	    			
+	           }
+	           else
+	           {
+	           	$insert_update = array(
+				"lab_test_class_delete" => 1,
+				"deleted_by" => $this->session->userdata("personnel_id"),
+				"deleted_on" => $date
+				);
+				$this->db->where('lab_test_class_id', $id);
+				$this->db->update('lab_test_class', $insert_update);
+				$this->session->set_userdata("success_message","You have successfully deactivated the class , all test and all its test formats");
+				redirect('lab_charges/classes');
+	           }
+    		}
+    		
+
+
+    		// end of diactivations
+    	}
+    	else if($type == "activate")
+    	{
+    		// start of dicativation
+    		if($page == "test_format")
+    		{
+    			$lab_test_format_details = $this->lab_charges_model->get_lab_test_format_details($id);
+    			if($lab_test_format_details->num_rows() > 0)
+           		{
+       				$lab_test_format_details = $lab_test_format_details->result();
+									
+					foreach($lab_test_format_details as $format_details)
+					{
+						$lab_test_id = $format_details->lab_test_id;
+					}
+           		}
+    			$insert = array(
+				"lab_test_format_delete" => 0,
+				"deleted_by" => $this->session->userdata("personnel_id"),
+				"deleted_on" => $date
+				);
+				$this->db->where('lab_test_format_id', $id);
+				$this->db->update('lab_test_format', $insert);
+				$this->session->set_userdata("success_message","You have successfully activated the test format");
+				redirect('lab_charges/test_format/'.$lab_test_id);	
+    		}
+    		else if($page == "test_lab")
+    		{
+    			// get all the test formats
+    			$test_formats = $this->lab_charges_model->get_all_tests_formats($id);
+    			if($test_formats->num_rows() > 0)
+           		{
+       				$test_formats = $test_formats->result();
+									
+					foreach($test_formats as $format_results)
+					{
+						$lab_test_format_id = $format_results->lab_test_format_id;
+
+						$insert = array(
+						"lab_test_format_delete" => 0,
+						"deleted_by" => $this->session->userdata("personnel_id"),
+						"deleted_on" => $date
+						);
+						$this->db->where('lab_test_format_id', $lab_test_format_id);
+						$this->db->update('lab_test_format', $insert);
+					}
+					$insert_update = array(
+					"lab_test_delete" => 0,
+					"deleted_by" => $this->session->userdata("personnel_id"),
+					"deleted_on" => $date
+					);
+					$this->db->where('lab_test_id', $id);
+					$this->db->update('lab_test', $insert_update);
+					$this->session->set_userdata("success_message","You have successfully activated the test and its formats");
+					redirect('lab_charges/test_list');	
+           		}
+           		else
+           		{
+           			$insert_update = array(
+					"lab_test_delete" => 0,
+					"deleted_by" => $this->session->userdata("personnel_id"),
+					"deleted_on" => $date
+					);
+					$this->db->where('lab_test_id', $id);
+					$this->db->update('lab_test', $insert_update);
+					$this->session->set_userdata("success_message","You have successfully activated the test and its formats");
+					redirect('lab_charges/test_list');	
+           		}
+    			// end of getting the test formats
+
+    		}
+    		else if($page == "test_class")
+    		{
+    			$test_list = $this->lab_charges_model->get_all_tests($id);
+    			if($test_list->num_rows() > 0)
+	        	{
+	        		$test_list = $test_list->result();
+	        		foreach ($test_list as $test_values) 
+	        		{
+	        			$test_id = $test_values->lab_test_id;
+	        			$test_formats = $this->lab_charges_model->get_all_tests_formats($test_id);
+	        		 	# code...
+	        		 	if($test_formats->num_rows() > 0)
+		           		{
+		       				$test_formats = $test_formats->result();
+											
+							foreach($test_formats as $format_results)
+							{
+								$lab_test_format_id = $format_results->lab_test_format_id;
+
+								$insert = array(
+								"lab_test_format_delete" => 1,
+								"deleted_by" => $this->session->userdata("personnel_id"),
+								"deleted_on" => $date
+								);
+								$this->db->where('lab_test_format_id', $lab_test_format_id);
+								$this->db->update('lab_test_format', $insert);
+							}
+							$insert_update = array(
+							"lab_test_delete" => 0,
+							"deleted_by" => $this->session->userdata("personnel_id"),
+							"deleted_on" => $date
+							);
+							$this->db->where('lab_test_id', $test_id);
+							$this->db->update('lab_test', $insert_update);
+		           		}
+		           		else
+		           		{
+		           			$insert_update = array(
+							"lab_test_delete" => 0,
+							"deleted_by" => $this->session->userdata("personnel_id"),
+							"deleted_on" => $date
+							);
+							$this->db->where('lab_test_id', $test_id);
+							$this->db->update('lab_test', $insert_update);
+		           		}
+	        		} 
+	        		$insert_update = array(
+					"lab_test_class_delete" => 0,
+					"deleted_by" => $this->session->userdata("personnel_id"),
+					"deleted_on" => $date
+					);
+					$this->db->where('lab_test_class_id', $id);
+					$this->db->update('lab_test_class', $insert_update);
+					$this->session->set_userdata("success_message","You have successfully activated the class test, all tests and its formats");
+					redirect('lab_charges/classes');	
+	    			
+	           }
+	           else
+	           {
+	           	$insert_update = array(
+				"lab_test_class_delete" => 0,
+				"deleted_by" => $this->session->userdata("personnel_id"),
+				"deleted_on" => $date
+				);
+				$this->db->where('lab_test_class_id', $id);
+				$this->db->update('lab_test_class', $insert_update);
+				$this->session->set_userdata("success_message","You have successfully activated the class test, all tests and its formats");
+				redirect('lab_charges/classes');
+	           }
+    		}
+    		else
+    		{
+
+    		}
+    	}
+    	else
+    	{
+
+    	}
+
+    	
     }
 
 }
