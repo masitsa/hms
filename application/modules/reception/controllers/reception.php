@@ -1765,12 +1765,12 @@ class Reception extends auth
 		
 		if(!empty($strath_no))
 		{
-			$strath_no = ' AND student.student_Number LIKE '.$strath_no.' ';
+			$strath_no = ' AND student.student_Number LIKE \'%'.$strath_no.'%\'';
 		}
 		
 		if(!empty($registration_date))
 		{
-			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.' ';
+			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.' \'';
 		}
 		
 		//search surname
