@@ -77,7 +77,7 @@
 							<td>'.$count.'</td>
 							<td>'.$drug_type_name.'</td>
 							<td><a href="'.site_url().'/pharmacy/add_type/'.$drug_type_id.'" class="btn btn-sm btn-success">Edit</a></td>
-							'.$buttons.'
+							
 							
 						
 						</tr> 

@@ -1279,5 +1279,6 @@ class Pharmacy extends auth
 			redirect('pharmacy/add_container_type/'.$container_type_id);			
 		}
     }
+   
 }
 ?>
