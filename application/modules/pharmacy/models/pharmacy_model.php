@@ -458,9 +458,13 @@ class Pharmacy_model extends CI_Model
 	function get_drug_generics()
 	{
 		$table = "generic";
-		$where = "generic_id >= 0 ";
+		$where = "delete_generic = 0 ";
 		$items = "*";
 		$order = "generic_name";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
 	}
 	
 	public function get_all_drug_brands($table, $where, $per_page, $page, $order = NULL)
@@ -667,6 +671,10 @@ class Pharmacy_model extends CI_Model
 		$where = "container_type_id >= 0 ";
 		$items = "*";
 		$order = "container_type_name";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
 	}
 	public function get_generics_details($generic_id)
 	{

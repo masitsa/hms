@@ -888,7 +888,7 @@ class Pharmacy extends auth
 			$v_data['drugs_id'] = $drugs_id;
 			$v_data['container_types'] = $this->pharmacy_model->get_container_types();
 			$v_data['deduction_details'] = $deduction_details->row();
-			$data['content'] = $this->load->view('edit_drug_deductions', $v_data, true);
+			$data['content'] = $this->load->view('edit_drug_deduction', $v_data, true);
 		}
 		
 		else
@@ -1818,6 +1818,37 @@ class Pharmacy extends auth
 			$this->session->set_userdata("error_message","Please enter the class name then try again");
 			redirect('pharmacy/add_container_type/'.$container_type_id);			
 		}
+    }
+	
+	public function activation($type, $page, $id)
+    {
+    	// the pages are test format, tests, classes
+    	$date = date("Y-m-d");
+    	
+    	if($type == "deactivate")
+    	{
+    		$insert = array(
+			"drugs_deleted" => 1,
+			"deleted_by" => $this->session->userdata("personnel_id"),
+			"deleted_on" => $date
+			);
+			$this->db->where('drugs_id', $id);
+			$this->db->update('drugs', $insert);
+			$this->session->set_userdata("success_message","You have successfully disabled the drug");
+			redirect('pharmacy/inventory');	
+    	}
+    	else if($type == "activate")
+    	{
+    		$insert = array(
+			"drugs_deleted" => 0,
+			"deleted_by" => $this->session->userdata("personnel_id"),
+			"deleted_on" => $date
+			);
+			$this->db->where('drugs_id', $id);
+			$this->db->update('drugs', $insert);
+			$this->session->set_userdata("success_message","You have successfully enabled the drug");
+			redirect('pharmacy/inventory');	
+    	}
     }
 }
 ?>
