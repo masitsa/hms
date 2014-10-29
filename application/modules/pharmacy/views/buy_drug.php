@@ -107,7 +107,7 @@
             </div>
             
             <div class="center-align">
-            	<a href="<?php echo site_url().'pharmacy/drug_purchases/'.$drugs_id;?>" class="btn btn-lg btn-default">Back</a>
+            	<a href="<?php echo site_url().'/pharmacy/drug_purchases/'.$drugs_id;?>" class="btn btn-lg btn-default">Back</a>
                 <button class="btn btn-info btn-lg" type="submit">Add Purchase</button>
             </div>
             <?php echo form_close();?>

@@ -332,7 +332,7 @@
             </div>
             
             <div class="center-align">
-            	<a href="<?php echo site_url().'pharmacy/inventory';?>" class="btn btn-lg btn-default">Back</a>
+            	<a href="<?php echo site_url().'/pharmacy/inventory';?>" class="btn btn-lg btn-default">Back</a>
                 <button class="btn btn-info btn-lg" type="submit">Edit Drug</button>
             </div>
             <?php echo form_close();?>
