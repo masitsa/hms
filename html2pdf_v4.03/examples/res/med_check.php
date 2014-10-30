@@ -10,7 +10,7 @@
 </style>
 
 <?php session_start();
-$personnel_id=$_SESSION['personel_id'];
+//$personnel_id=$_SESSION['personel_id'];
 $get = new accounts;
 	$rs = $get->get_patient2($vid);
 	$strath_no = mysql_result($rs, 0, "strath_no");

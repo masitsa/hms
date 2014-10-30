@@ -46,11 +46,11 @@ class invoice{
 	
 	function get_patient_2($strath_no){
 		 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("sumc", $connect)
+        mysql_select_db("strathmore_population", $connect)
                     or die("Could not select database".mysql_error());
 		
 		$sql = "select * from student where student_Number=$strath_no";
@@ -64,11 +64,11 @@ class invoice{
 	
 	function get_patient_3($strath_no){
 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("sumc", $connect)
+        mysql_select_db("strathmore_population", $connect)
                     or die("Could not select database".mysql_error());
 		
 		$sql = "select * from staff where Staff_Number='$strath_no'";
@@ -82,11 +82,11 @@ class invoice{
 		function  get_patient_4($strath_no){
 			
 			//connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
-        mysql_select_db("sumc", $connect)
+        mysql_select_db("strathmore_population", $connect)
                     or die("Could not select database".mysql_error());
 					
 	$sqlq = "select * from staff_dependants where staff_dependants_id='$strath_no'";
