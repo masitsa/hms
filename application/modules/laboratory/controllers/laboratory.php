@@ -106,6 +106,25 @@ class Laboratory extends auth
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
 	}
+	public function queue_cheker($page_name = NULL)
+	{
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit_department, visit, patients';
+		$items = "*";
+		$order = "visit.visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+
+	}
 	public function test($visit_id){
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$visit_type = $patient['visit_type'];

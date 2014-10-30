@@ -1,7 +1,7 @@
 <!-- search -->
 <?php //echo $this->load->view('patients/search_visit', '', TRUE);?>
 <!-- end search -->
- 
+
 <div class="row">
     <div class="col-md-12">
 
@@ -172,3 +172,60 @@
       </div>
     </div>
   </div>
+  <audio id="sound1" src="<?php echo base_url();?>sound/beep.mp3"></audio>
+  <script type="text/javascript">
+  	$(document).ready(function(){
+		setInterval(function(){check_new_patients(<?php echo $module;?>)},10000);
+	 });
+	function check_new_patients(module)
+		{	
+
+		 var XMLHttpRequestObject = false;
+        
+		    if (window.XMLHttpRequest) {
+		    
+		        XMLHttpRequestObject = new XMLHttpRequest();
+		    } 
+		        
+		    else if (window.ActiveXObject) {
+		        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+		    }
+		    
+		    var config_url = $('#config_url').val();
+		    var url = config_url+"/nurse/check_queues/"+module;
+		    
+		    if(XMLHttpRequestObject) {
+		                
+		        XMLHttpRequestObject.open("GET", url);
+		                
+		        XMLHttpRequestObject.onreadystatechange = function(){
+		            
+		            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+		            	
+	         			var one = XMLHttpRequestObject.responseText;
+	         			if(one == 1)
+	         			{
+	         				 var audio1 = document.getElementById("sound1");
+						 	 if (audio1.paused !== true){
+							    audio1.pause();
+							 }
+							 else
+							 {
+								audio1.play();
+							 }
+	         			}
+	         			else
+	         			{
+
+	         			}
+			         	
+	         
+		            }
+		        }
+		                
+		        XMLHttpRequestObject.send(null);
+		    }
+		}
+	
+
+  </script>
