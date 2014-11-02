@@ -646,11 +646,23 @@ class Pharmacy_model extends CI_Model
 			'drug_consumption_id'=>$this->input->post('drug_consumption_id'),
 			'class_id'=>$this->input->post('class_id')
 		);
+
+
 		
 		$this->db->where('drugs_id', $drugs_id);
 		if($this->db->update('drugs', $array))
 		{
-			return TRUE;
+			$purchases_array = array(
+			'expiry_date'=>$this->input->post('expiry_date')
+			);
+			$this->db->where('drugs_id', $drugs_id);
+			if($this->db->update('purchase', $purchases_array))
+			{
+				return TRUE;
+			}else
+			{
+				return FALSE;
+			}
 		}
 		else{
 			return FALSE;
@@ -913,6 +925,18 @@ class Pharmacy_model extends CI_Model
 		$where = "drug_type_name = '$drug_type_name'";
 		$items = "*";
 		$order = "drug_type_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+
+	public function get_drug_purchase_details($drugs_id)
+	{
+		$table = "purchase";
+		$where = "drugs_id = '$drugs_id'";
+		$items = "*";
+		$order = "drugs_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		

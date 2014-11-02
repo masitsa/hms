@@ -8,7 +8,7 @@ class Database{
     function  __construct() {
          //connect to database
         //$this->connect=mysql_connect("localhost", "sumc_hms", "Oreo2014#")
-		$this->connect=mysql_connect("localhost", "root", "jacinta123")
+		$this->connect=mysql_connect("localhost", "root", "")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database

@@ -39,6 +39,7 @@ if(count($rs) > 0){
 			$oxygen = 0;
 			$pulse =0;
 			$pain = 0;
+			$recNew = $rs1;
 			if($vital_id == 1){
 				$temperature = $rs1->visit_vital_value;
 			}
@@ -100,7 +101,7 @@ if(count($rs) > 0){
 				$hwr = 0;
 			}
 			
-		
+		endforeach;
 		
 		
 		
@@ -126,7 +127,7 @@ if(count($rs) > 0){
 		';
 	
 	
-	endforeach;
+	
 	echo "</table>";
 }
 ?>

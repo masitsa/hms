@@ -467,7 +467,7 @@ class Laboratory extends auth
 		$majorSpacing = 7;
 		$pageH = 5;
 		$counter = 0;
-		
+		 $next_name ="";  $test_format=""; $lab_test_name=""; $fill="";
 		if($num_lab_visit > 0){
 			foreach ($lab_rs as $key_lab){
 				$visit_charge_id = $key_lab->visit_charge_id;
@@ -534,7 +534,7 @@ class Laboratory extends auth
 						else{
 							$fill = FALSE;
 						}
-						$next_name ="";
+						
 						if ($counts < ($num_lab-1)){
 							$next_name = $rs[$counts]->lab_test_name;
 						}
@@ -569,9 +569,7 @@ class Laboratory extends auth
 						}
 						$counter++;
 					}
-				}
-			}
-				
+			
 				if($test_format !="-"){ 
 					$this->fpdf->Ln(3);
 					$this->fpdf->SetFont('Times', 'B', 10);
@@ -579,7 +577,9 @@ class Laboratory extends auth
 					$this->fpdf->SetFont('Times', '', 10);
 					$this->fpdf->Cell(0,10,$comment4,0,1,'L', $fill=true);
 				
-				}
+				}	
+			}}
+				
 				if(($counter % 2) == 0){
 					$fill = TRUE;
 				}
@@ -595,6 +595,7 @@ class Laboratory extends auth
 				$this->fpdf->Cell(0,10,$comment,0,1,'L', $fill);
 		}
 		$this->fpdf->Output();
+
 	}
 	
 	public function save_result_lab()

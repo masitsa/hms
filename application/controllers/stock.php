@@ -123,9 +123,9 @@ class Stock extends CI_Controller {
         $crud->display_as('drug_administration_route_id','Administration Route');
         $crud->display_as('drug_consumption_id','Consumption Method');
 		
-        	$crud->display_as('drug_size','Drug Package Size E.g 100'."<br /> <strong style='background:red'>".'Applies Syrup bottles, cream, spray etc'."</strong>");
-			$crud->set_relation('drug_size_type', 'drug_dose_unit', '{drug_dose_unit_name}');
-		    $crud->display_as('drug_size_type','Package Size Unit E.g ml'."<br /> <strong style='background:red'>".'Applies Syrup bottles, cream, spray etc'."</strong>");
+    	$crud->display_as('drug_size','Drug Package Size E.g 100'."<br /> <strong style='background:red'>".'Applies Syrup bottles, cream, spray etc'."</strong>");
+		$crud->set_relation('drug_size_type', 'drug_dose_unit', '{drug_dose_unit_name}');
+	    $crud->display_as('drug_size_type','Package Size Unit E.g ml'."<br /> <strong style='background:red'>".'Applies Syrup bottles, cream, spray etc'."</strong>");
 		$crud->display_as('drugs_code','Code');
 		$crud->display_as('drugs_name','Drug');
         $crud->display_as('drugs_dose','Dose');
