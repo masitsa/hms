@@ -1,6 +1,21 @@
-<?php echo form_open("accounts/make_payments/".$visit_id.'/'.$close_page, array("class" => "form-horizontal"));?>
 
 <div class="row">
+          <?php
+            	$error = $this->session->userdata('error_message');
+				$success = $this->session->userdata('success_message');
+				
+				if(!empty($error))
+				{
+					echo '<div class="alert alert-danger">'.$error.'</div>';
+					$this->session->unset_userdata('error_message');
+				}
+				
+				if(!empty($success))
+				{
+					echo '<div class="alert alert-success">'.$success.'</div>';
+					$this->session->unset_userdata('success_message');
+				}
+			?>
 	<div class="col-md-7">
         <div class="row">
             <div class="col-md-12">
@@ -193,6 +208,8 @@
                 <!-- Widget content -->
                     <div class="widget-content">
                         <div class="padd">
+                        <?php echo form_open("accounts/make_payments/".$visit_id.'/'.$close_page, array("class" => "form-horizontal"));?>
+
                           <div class="form-group">
                               <label class="col-lg-4 control-label">Amount: </label>
                               
@@ -227,6 +244,7 @@
                             <div class="center-align">
                               <button class="btn btn-info btn-lg" type="submit">Add Payment Information</button>
                             </div>
+                            <?php echo form_close();?>
                         </div>
 
                      </div>
@@ -234,7 +252,69 @@
                 </div>
             </div>
         </div>
+		
+        <!-- Bill Methods -->
+        <div class="row">
+            <div class="col-md-12">
 
+              <!-- Widget -->
+              <div class="widget boxed">
+                    <!-- Widget head -->
+                    <div class="widget-head">
+                      <h4 class="pull-left"><i class="icon-reorder"></i>Billing Method</h4>
+                      <div class="widget-icons pull-right">
+                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>             
+
+                <!-- Widget content -->
+                    <div class="widget-content">
+                        <div class="padd">
+                        <?php echo form_open("accounts/add_billing/".$visit_id.'/'.$close_page, array("class" => "form-horizontal"));?>
+
+                          <div class="form-group">
+                              <label class="col-lg-4 control-label">Select Method: </label>
+                              
+                              <div class="col-lg-8">
+                                <select class="form-control" name="billing_method_id">
+                                	<option value="Select Billing Method">--- Select Billing Method ---</option>
+                                          <?php
+                                     if($billing_methods->num_rows > 0)
+                                     {
+                                        $methods = $billing_methods->result();
+                                        foreach($methods as $res)
+                                        {
+                                          $bill_to_id = $res->bill_to_id;
+                                          $bill_to_name = $res->bill_to_name;
+                                          
+										  if($bill_to == $bill_to_id)
+										  {
+                                          	echo '<option value="'.$bill_to_id.'" selected="selected">'.$bill_to_name.'</option>';
+										  }
+										  
+										  else
+                                          {
+                                          	echo '<option value="'.$bill_to_id.'">'.$bill_to_name.'</option>';
+										  }
+                                        }
+                                      }
+                                  ?>
+                                    </select>
+                              </div>
+                          </div>
+                            <div class="center-align">
+                              <button class="btn btn-info btn-lg" type="submit">Add Billing Information</button>
+                            </div>
+                            <?php echo form_close();?>
+                        </div>
+
+                     </div>
+                
+                </div>
+            </div>
+        </div>
+        <!-- End Bill Methods -->
 
     </div>
    
@@ -259,5 +339,3 @@
    ?>
   </div>
 </div>
-
-<?php echo form_close();?>

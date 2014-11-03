@@ -228,6 +228,21 @@ class Accounts_model extends CI_Model
 		}
 
 	}
+	public function add_billing($visit_id)
+	{
+		$billing_method_id = $this->input->post('billing_method_id');
+		$data = array('bill_to_id' => $billing_method_id);
+		
+		$this->db->where('visit_id', $visit_id);
+		if($this->db->update('visit', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+
+	}
 	
 	public function receipt($visit_id, $invoice = NULL)
 	{
@@ -650,5 +665,21 @@ class Accounts_model extends CI_Model
 		{
 			return FALSE;
 		}
+	}
+	
+	public function get_billing_methods()
+	{
+		$this->db->order_by('bill_to_name');
+		$query = $this->db->get('bill_to');
+		
+		return $query;
+	}
+	
+	public function get_bill_to($visit_id)
+	{
+		$this->db->where('visit_id', $visit_id);
+		$query = $this->db->get('visit');
+		$row = $query->row();
+		return $row->bill_to_id;
 	}
 }
