@@ -106,6 +106,25 @@ class Laboratory extends auth
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
 	}
+	public function queue_cheker($page_name = NULL)
+	{
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 4 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit_department, visit, patients';
+		$items = "*";
+		$order = "visit.visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+
+	}
 	public function test($visit_id){
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$visit_type = $patient['visit_type'];
@@ -448,7 +467,7 @@ class Laboratory extends auth
 		$majorSpacing = 7;
 		$pageH = 5;
 		$counter = 0;
-		
+		 $next_name ="";  $test_format=""; $lab_test_name=""; $fill="";
 		if($num_lab_visit > 0){
 			foreach ($lab_rs as $key_lab){
 				$visit_charge_id = $key_lab->visit_charge_id;
@@ -515,7 +534,7 @@ class Laboratory extends auth
 						else{
 							$fill = FALSE;
 						}
-						$next_name ="";
+						
 						if ($counts < ($num_lab-1)){
 							$next_name = $rs[$counts]->lab_test_name;
 						}
@@ -550,9 +569,7 @@ class Laboratory extends auth
 						}
 						$counter++;
 					}
-				}
-			}
-				
+			
 				if($test_format !="-"){ 
 					$this->fpdf->Ln(3);
 					$this->fpdf->SetFont('Times', 'B', 10);
@@ -560,7 +577,9 @@ class Laboratory extends auth
 					$this->fpdf->SetFont('Times', '', 10);
 					$this->fpdf->Cell(0,10,$comment4,0,1,'L', $fill=true);
 				
-				}
+				}	
+			}}
+				
 				if(($counter % 2) == 0){
 					$fill = TRUE;
 				}
@@ -576,6 +595,7 @@ class Laboratory extends auth
 				$this->fpdf->Cell(0,10,$comment,0,1,'L', $fill);
 		}
 		$this->fpdf->Output();
+
 	}
 	
 	public function save_result_lab()

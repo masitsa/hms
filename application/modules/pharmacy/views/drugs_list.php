@@ -1,3 +1,4 @@
+  <?php echo $this->load->view('search/search_drugs', '', TRUE);?>
       <div class="row">
         <div class="col-md-12">
               <!-- Widget -->
@@ -17,6 +18,13 @@
                         <div class="padd">
                           <div class="center-align">
                             <?php
+                                $search = $this->session->userdata('drugs_inventory_search');
+        
+                                if(!empty($search))
+                                {
+                                    echo '<a href="'.site_url().'/pharmacy/close_inventory_search" class="btn btn-warning">Close Search</a>';
+                                }
+                                $result = '';
                                 $error = $this->session->userdata('error_message');
                                 $success = $this->session->userdata('success_message');
                                 
@@ -36,7 +44,7 @@
                           
                             <div class="row">
                                 <div class="col-md-12">
-                                	<a href="<?php echo site_url().'pharmacy/add_drug';?>" class="btn btn-sm btn-success">Add Drug</a>
+                                	<a href="<?php echo site_url().'/pharmacy/add_drug';?>" class="btn btn-sm btn-success">Add Drug</a>
                                 	<div class="table-responsive">
                                         <table border="0" class="table table-hover table-condensed">
                                             <thead> 

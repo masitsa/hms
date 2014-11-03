@@ -305,6 +305,25 @@ class Pharmacy extends auth
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
 	}
+	public function queue_cheker($page_name = NULL)
+	{
+		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 5 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		$table = 'visit_department, visit, patients';
+		$items = "*";
+		$order = "visit.visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+
+	}
 	public function prescription1($visit_id,$module=NULL)
 	{	
 		$v_data['visit_id'] = $visit_id;
@@ -437,13 +456,14 @@ class Pharmacy extends auth
 	{
 		$segment = 3;
 		$order = 'drugs.drugs_name';
+		//$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id';
+		
 		$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id';
+		$drugs_inventory_search = $this->session->userdata('drugs_inventory_search');
 		
-		$drugs_search = $this->session->userdata('drugs_list_search');
-		
-		if(!empty($drugs_search))
+		if(!empty($drugs_inventory_search))
 		{
-			$where .= $drugs_search;
+			$where .= $drugs_inventory_search;
 		}
 		
 		$table = 'drugs, drug_type, generic, brand, class, drug_administration_route, drug_dose_unit, drug_consumption';
@@ -611,6 +631,7 @@ class Pharmacy extends auth
 			$v_data['drug_dose_units'] = $this->pharmacy_model->get_drug_dose_units();
 			$v_data['admin_routes'] = $this->pharmacy_model->get_admin_route();
 			$v_data['consumption'] = $this->pharmacy_model->get_consumption();
+			$v_data['drugs_id'] = $drugs_id;
 			$data['content'] = $this->load->view('edit_drug', $v_data, true);
 		}
 		
@@ -1114,6 +1135,12 @@ class Pharmacy extends auth
 		$this->session->unset_userdata('brands_search');
 		$this->brands();
 	}
+	public function close_inventory_search()
+	{
+		$this->session->unset_userdata('drugs_inventory_search');
+		$this->inventory();
+	}
+
 	 function update_brand($brand_id)
     {
     	$this->form_validation->set_rules('brand_name', 'Brand name', 'is_numeric|xss_clean');
@@ -1446,6 +1473,22 @@ class Pharmacy extends auth
 		$this->session->set_userdata('classes_search', $search);
 		
 		$this->classes();
+	}	
+	public function search_inventory_drugs()
+	{
+		$drug_name = $this->input->post('drug_name');
+		
+		if(!empty($drug_name))
+		{
+			$drug_name = ' AND drugs.drugs_name LIKE \''.$drug_name.'%\' ';
+		}
+	
+		
+		
+		$search = $drug_name;
+		$this->session->set_userdata('drugs_inventory_search', $search);
+		
+		$this->inventory();
 	}	
 	public function close_class_search()
 	{

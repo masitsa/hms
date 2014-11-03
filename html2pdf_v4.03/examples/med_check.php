@@ -194,7 +194,7 @@ AND family.family_id = family_history_disease.family_id";
 		$get2 = new accounts;
 		$rs2 = $get2->get_patient_3($strath_no);
 		//echo $strath_no;	
-		$connect = mysql_connect("localhost", "root", "")
+		$connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database

@@ -790,7 +790,7 @@ class Reception_model extends CI_Model
 
 	public function get_service_charges_per_type($patient_type){
 		$table = "service_charge";
-		$where = "visit_type_id = $patient_type and service_id = 1";
+		$where = "visit_type_id = $patient_type and service_id = 1 and service_charge_status = 1";
 		$items = "*";
 		$order = "visit_type_id";
 			//echo $sql;

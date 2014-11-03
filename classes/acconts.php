@@ -23,7 +23,7 @@ function get_invoice($visit_id){
 		
 	function get_patient_2($strath_no){
 		 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
@@ -32,9 +32,6 @@ function get_invoice($visit_id){
 		
 		$sql = "select * from student where student_Number=$strath_no";
 		////echo $sql;
-
-
-
 	        $rs4 = mysql_query($sql)
         or die ("unable to Select ".mysql_error());
 		
@@ -44,7 +41,7 @@ function get_invoice($visit_id){
 	
 	function get_patient_3($strath_no){
 //connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database
@@ -62,7 +59,7 @@ function get_invoice($visit_id){
 		function  get_patient_4($strath_no){
 			
 			//connect to database
-        $connect = mysql_connect("localhost", "root", "")
+        $connect = mysql_connect("localhost", "sumc_hms", "Oreo2014#")
                     or die("Unable to connect to MySQL".mysql_error());
 
         //selecting a database

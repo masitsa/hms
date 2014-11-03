@@ -358,7 +358,7 @@ class Accounts extends auth
 		$this->accounts_queue();
 	}
 	
-	public function payments($visit_id, $close_page){
+	public function payments($visit_id, $close_page = NULL){
 		$v_data = array('visit_id'=>$visit_id);
 		
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
@@ -376,7 +376,7 @@ class Accounts extends auth
 		$this->load->view('auth/template_sidebar', $data);
 	}
 	
-	public function make_payments($visit_id, $close_page){
+	public function make_payments($visit_id, $close_page = NULL){
 		$this->form_validation->set_rules('payment_method', 'Payment Method', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('amount_paid', 'Amount', 'trim|required|xss_clean');
 		

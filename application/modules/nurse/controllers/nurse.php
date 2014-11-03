@@ -94,6 +94,8 @@ class Nurse extends auth
 		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->reception_model->get_all_ongoing_visits($table, $where, $config["per_page"], $page, 'ASC');
+
+
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
@@ -121,6 +123,35 @@ class Nurse extends auth
 		// end of it
 	}
 	
+	public function check_queues($module = NULL)
+	{
+		
+
+		$table = 'visit_department, visit, patients';
+		if($module == 1)
+		{
+			$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
+		}
+		else
+		{
+		 $where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.department_id = 7 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+	
+		}
+		$items = "*";
+		$order = "visit.visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+
+	}
 	public function patient_card($visit_id, $mike = NULL, $module = NULL,$opener = NULL)
 	{
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);

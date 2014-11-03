@@ -29,6 +29,19 @@
 		$class_id = set_value('class_id');
 		$quantity = set_value('quantity');
 	}
+
+    $drug_purchase_details = $this->pharmacy_model->get_drug_purchase_details($drugs_id);
+    if(count($drug_purchase_details) > 0)
+    {
+        foreach ($drug_purchase_details as $key_details) {
+            # code...
+                $expiry_date = $key_details->expiry_date;
+        }
+    }
+    else
+    {
+        $expiry_date = '';
+    }
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -325,6 +338,19 @@
                                     }
                                 ?>
                             </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">Expiry Date: </label>
+                        
+                        <div class="col-lg-8">
+                            <div id="datetimepicker1" class="input-append">
+                                <input data-format="yyyy-MM-dd" class="form-control" type="text" name="expiry_date" placeholder="Expiry Date" value="<?php echo $expiry_date;?>">
+                                <span class="add-on">
+                                    &nbsp;<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                                    </i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     
