@@ -1550,7 +1550,7 @@ class Reception_model extends CI_Model
   	}
   	function check_patient_exist($patient_id,$visit_date){
   		$table = "visit";
-		$where = "visit.patient_id =" .$patient_id ." AND visit.visit_date = '$visit_date' AND close_card = 0";
+		$where = "visit.patient_id =" .$patient_id ." AND visit.visit_date = '$visit_date' AND close_card = 0 AND visit.visit_delete = 0";
 		$items = "*";
 		$order = "visit.visit_id";
 		
