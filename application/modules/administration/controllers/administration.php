@@ -102,7 +102,7 @@ class Administration extends auth
 	public function service_charges($service_id,$page_name = NULL)
 	{
 		// this is it
-		$where = 'service.service_id = service_charge.service_id AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
+		$where = 'service.service_id = service_charge.service_id AND service_charge.service_charge_status = 1 AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
 		$service_charge_search = $this->session->userdata('service_charge_search');
 		
 		if(!empty($service_charge_search))
