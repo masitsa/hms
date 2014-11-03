@@ -24,10 +24,31 @@ if(count($rs) > 0){
 				<th>Pain</th>
 			</tr>
 	';
+	function flip($arr)
+	{
+	    $out = array();
+
+	    foreach ($arr as $key => $subarr)
+	    {
+	            foreach ($subarr as $subkey => $subvalue)
+	            {
+	                 $out[$subkey][$key] = $subvalue;
+	            }
+	    }
+
+	    return $out;
+	}
 	
+	$response = flip($rs);
+	// print_r($response);
+	foreach ($response as $rs2):
+		// print_r($rs2);
+	endforeach;
 		foreach ($rs as $rs1):
 			$vital_id = $rs1->vital_id;
 			$visit_date = $rs1->visit_date;
+			$value = $rs1->visit_vital_value;
+
 			$height = 0;
 			$weight = 0;
 			$waist = 0;
@@ -39,7 +60,7 @@ if(count($rs) > 0){
 			$oxygen = 0;
 			$pulse =0;
 			$pain = 0;
-			$recNew = $rs1;
+			//$recNew = $rs1;
 			if($vital_id == 1){
 				$temperature = $rs1->visit_vital_value;
 			}
@@ -49,11 +70,11 @@ if(count($rs) > 0){
 			}
 			
 			else if($vital_id == 3){
-				$waist = $rs1->visit_vital_value;
+				 $waist = $rs1->visit_vital_value;
 			}
 			
 			else if($vital_id == 4){
-				$hip = $rs1->visit_vital_value;
+				 $hip = $rs1->visit_vital_value;
 			}
 			
 			else if($vital_id == 5){
@@ -101,16 +122,20 @@ if(count($rs) > 0){
 				$hwr = 0;
 			}
 			
+
+			  $recNew = array('temperature'=>$diastolic,'bmi'=>$bmi);
+
+
+			
 		endforeach;
-		
-		
-		
-		
+		foreach ($recNew as $rs5 => $valueu):
+ 			
+		endforeach;
 		echo '
 			<tr>
 				<td>'.$visit_date.'</td>
-				<td>'.$systolic.'</td>
-				<td>'.$diastolic.'</td>
+				<td>'.$value.'</td>
+				<td>'.$value.'</td>
 				<td>'.$weight.'</td>
 				<td>'.$height.'</td>
 				<td>'.$bmi.'</td>
