@@ -632,4 +632,23 @@ class Accounts_model extends CI_Model
 		
 		return $visit_date;
 	}
+	
+	public function end_visit($visit_id)
+	{
+		$data = array(
+        	"close_card" => 1
+    	);
+		
+		$this->db->where('visit_id', $visit_id);
+		
+		if($this->db->update('visit', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
+	}
 }
