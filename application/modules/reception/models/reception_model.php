@@ -564,6 +564,7 @@ class Reception_model extends CI_Model
 		}
 		
 		$patient['visit_type'] = $visit_type;
+		$patient['visit_type_id'] = $check_id;
 		$patient['patient_type'] = $patient_type;
 		$patient['patient_othernames'] = $patient_othernames;
 		$patient['patient_surname'] = $patient_surname;

@@ -51,8 +51,8 @@ class Reception extends auth
 		}
 		
 		$patient_search = $this->session->userdata('patient_search');
-		$where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
-		
+		// $where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
+		$where = 'visit_type_id = 3 AND patient_delete = '.$delete;
 		if(!empty($patient_search))
 		{
 			$where .= $patient_search;
@@ -295,8 +295,15 @@ class Reception extends auth
 	public function general_queue($page_name)
 	{
 		$segment = 4;
-		
-		$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+		if($page_name == "administration")
+		{
+		  $where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 ';
+		}
+		else
+		{
+			$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
+
+		}
 		$table = 'visit_department, visit, patients';
 		
 		$visit_search = $this->session->userdata('general_queue_search');
@@ -344,9 +351,17 @@ class Reception extends auth
 		
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
+		if($page_name == 'administration')
+		{
+			$data['title'] = 'All visits';
+			$v_data['title'] = 'All visits';
+		}
+		else
+		{
+			$data['title'] = 'General Queue';
+			$v_data['title'] = 'General Queue';
+		}
 		
-		$data['title'] = 'General Queue';
-		$v_data['title'] = 'General Queue';
 		$v_data['page_name'] = $page_name;
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
@@ -376,6 +391,10 @@ class Reception extends auth
 		else if($page_name == 'accounts')
 		{
 			$data['sidebar'] = 'accounts_sidebar';
+		}
+		else if($page_name == 'administration')
+		{
+			$data['sidebar'] = 'admin_sidebar';
 		}
 		
 		else
@@ -2090,5 +2109,90 @@ class Reception extends auth
 				}
 			}
 		}
+	}
+	public function search_general_queue($page_name)
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		$strath_no = $this->input->post('strath_no');
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
+		}
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND patients.strath_no LIKE '.$strath_no.' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['surname']))
+		{
+			$surnames = explode(" ",$_POST['surname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+		}
+		
+		else
+		{
+			$surname = '';
+		}
+		
+		//search other_names
+		if(!empty($_POST['othernames']))
+		{
+			$other_names = explode(" ",$_POST['othernames']);
+			$total = count($other_names);
+			
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$other_name .= ') ';
+		}
+		
+		else
+		{
+			$other_name = '';
+		}
+		
+		$search = $visit_type_id.$strath_no.$surname.$other_name;
+		$this->session->set_userdata('general_queue_search', $search);
+		
+		
+		
+		$this->general_queue($page_name);
+	}
+	public function close_general_queue_search($page_name)
+	{
+		$this->session->unset_userdata('general_queue_search');
+		$this->general_queue($page_name);
 	}
 }
