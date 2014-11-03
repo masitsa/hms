@@ -32,7 +32,22 @@
         <!-- Widget content -->
         <div class="widget-content">
           <div class="padd">
-          
+          <?php
+            	$error = $this->session->userdata('error_message');
+				$success = $this->session->userdata('success_message');
+				
+				if(!empty($error))
+				{
+					echo '<div class="alert alert-danger">'.$error.'</div>';
+					$this->session->unset_userdata('error_message');
+				}
+				
+				if(!empty($success))
+				{
+					echo '<div class="alert alert-success">'.$success.'</div>';
+					$this->session->unset_userdata('success_message');
+				}
+			?>
 <?php
 		$search = $this->session->userdata('visit_accounts_search');
 		
@@ -40,14 +55,58 @@
 		{
 			echo '<a href="'.site_url().'/accounts/close_queue_search/'.$type_links.'" class="btn btn-warning">Close Search</a>';
 		}
-		$result = '';
+		
+		if($module == 0)
+		{
+			$data['onSubmit'] = 'return confirm(\'Are you sure you want to end multiple visits?\');';
+			$result = form_open('accounts/bulk_close_visits/'.$page, $data);
+		}
+		
+		else
+		{
+			$result = '';
+		}
 		
 		//if users exist display them
 		if ($query->num_rows() > 0)
 		{
 			$count = $page;
 			
-			$result .= 
+			//accounts bulk close visit
+			if($module == 0)
+			{
+				$result .= '
+					<div class="center-align">
+						<button type="submit" class="btn btn-lg btn-danger">End Visits</button>
+					</div>
+					<table class="table table-hover table-bordered ">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th></th>
+						  <th>Visit Date</th>
+						  <th>Patient</th>
+						  <th>Doctor</th>
+						  <th>Coming From</th>
+						  <th>Invoice</th>
+						  <th>Payments</th>
+						  <th>Balance</th>';
+
+						  if($type_links == 3){
+							  $result .=  '<th colspan="2">Actions</th>';
+						  }
+						  else{
+							  $result .= '<th colspan="5">Actions</th>';
+						  }
+				$result .= 	'</tr>
+					  </thead>
+					  <tbody>
+				';
+			}
+			
+			else
+			{
+				$result .= 
 				'
 					<table class="table table-hover table-bordered ">
 					  <thead>
@@ -70,6 +129,7 @@
 					  </thead>
 					  <tbody>
 				';
+			}
 			
 			$personnel_query = $this->personnel_model->get_all_personnel();
 			
@@ -97,6 +157,13 @@
 				$patient_surname = $patient['patient_surname'];
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
 				$gender = $patient['gender'];
+				
+				$checkbox_data = array(
+								  'name'        => 'visit[]',
+								  'id'          => 'checkbox'.$visit_id,
+								  'class'          => 'css-checkbox lrg',
+								  'value'       => $visit_id
+								);
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -142,11 +209,22 @@
 				$invoice_total = $this->accounts_model->total($visit_id);
 
 				$balance = $this->accounts_model->balance($payments_value,$invoice_total);
-
+				
 				$result .= 
 					'
 						<tr>
-							<td>'.$count.'</td>
+							<td>'.$count.'</td>';
+				
+				//bulk close visits
+				if($module == 0)
+				{
+					$result .= 
+					'
+							<td>'.form_checkbox($checkbox_data).'<label for="checkbox'.$visit_id.'" name="checkbox79_lbl" class="css-label lrg klaus"></label>'.'</td>';
+				}
+				
+				$result .= 
+					'
 							<td>'.$visit_date.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$doctor.'</td>
@@ -169,10 +247,19 @@
 			}
 			
 			$result .= 
-			'
-						  </tbody>
-						</table>
-			';
+				'
+							  </tbody>
+							</table>
+				';
+		
+			if($module == 0)
+			{
+				$result .= '
+				<div class="center-align">
+					<button type="submit" class="btn btn-lg btn-danger">End Visits</button>
+				</div>
+				'.form_close();
+			}
 		}
 		
 		else

@@ -411,4 +411,36 @@ class Accounts extends auth
 		$data['patient'] = $patient;
 		$this->load->view('receipt', $data);
 	}
+	
+	public function bulk_close_visits($page)
+	{
+		$total_visits = sizeof($_POST['visit']);
+		
+		//check if any checkboxes have been ticked
+		if($total_visits > 0)
+		{	
+			for($r = 0; $r < $total_visits; $r++)
+			{	
+				$visit = $_POST['visit'];
+				$visit_id = $visit[$r]; 
+				
+				if($this->accounts_model->end_visit($visit_id))
+				{
+					$this->session->set_userdata('success_message', 'Visits ended successfully');
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'Unable to end visits');
+				}
+			}
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Please select visits to terminate first');
+		}
+		
+		redirect('accounts/accounts_unclosed_queue/'.$page);
+	}
 }

@@ -2,11 +2,12 @@
 <dwsync>
 <file name="print_invoice.php" server="192.168.170.16/sumc/development/" local="130555080989343543" remote="130590388800000000" Dst="0" />
 <file name="accounts_queue.php" server="192.168.170.16/sumc/development/" local="130589788904497684" remote="130590388800000000" Dst="0" />
-<file name="accounts_queue.php" server="192.168.170.16/sumc/" local="130585374323083125" remote="130585267200000000" Dst="0" />
+<file name="accounts_queue.php" server="192.168.170.16/sumc/" local="130594827021652277" remote="130594719000000000" Dst="0" />
 <file name="print_invoice.php" server="192.168.170.16/sumc/" local="130555080989343543" remote="130560304200000000" Dst="0" />
 <file name="payments.php" server="192.168.170.16/sumc/" local="130585434964439156" remote="130586016600000000" Dst="0" />
 <file name="payments.php" server="192.168.170.16/sumc/development/" local="130585434964439156" remote="130590388800000000" Dst="0" />
 <file name="receipt.php" server="192.168.170.16/sumc/" local="130585313676325851" remote="130585205400000000" Dst="0" />
 <file name="receipt.php" server="192.168.170.16/sumc/development/" local="130585313676325851" remote="130590388800000000" Dst="0" />
 <file name="dashboard.php" server="192.168.170.16/sumc/development/" local="130589788904497684" remote="130590388800000000" Dst="0" />
+<file name="dashboard.php" server="192.168.170.16/sumc/" local="130589788904497684" remote="130594719000000000" Dst="0" />
 </dwsync>
