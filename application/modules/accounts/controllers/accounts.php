@@ -280,7 +280,7 @@ class Accounts extends auth
 		$where = 'visit.visit_delete = 0  AND visit.patient_id = patients.patient_id AND visit.close_card = 1 ';
 		$table = 'visit, patients';
 		
-		$visit_search = $this->session->userdata('visit_search');
+		$visit_search = $this->session->userdata('visit_accounts_search');
 		$segment = 3;
 		
 		if(!empty($visit_search))
@@ -330,7 +330,7 @@ class Accounts extends auth
 		
 		$data['title'] = 'Accounts closed Visits';
 		$v_data['title'] = 'Accounts closed Visits';
-		$v_data['module'] = 0;
+		$v_data['module'] = 7;
 		$v_data['close_page'] = 3;
 		
 		$v_data['type'] = $this->reception_model->get_types();
@@ -361,6 +361,8 @@ class Accounts extends auth
 	public function payments($visit_id, $close_page = NULL){
 		$v_data = array('visit_id'=>$visit_id);
 		
+		$v_data['billing_methods'] = $this->accounts_model->get_billing_methods();
+		$v_data['bill_to'] = $this->accounts_model->get_bill_to($visit_id);
 		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
 		$visit_type = $patient['visit_type'];
 		$patient_type = $patient['patient_type'];
@@ -376,7 +378,8 @@ class Accounts extends auth
 		$this->load->view('auth/template_sidebar', $data);
 	}
 	
-	public function make_payments($visit_id, $close_page = NULL){
+	public function make_payments($visit_id, $close_page = NULL)
+	{
 		$this->form_validation->set_rules('payment_method', 'Payment Method', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('amount_paid', 'Amount', 'trim|required|xss_clean');
 		
@@ -391,6 +394,30 @@ class Accounts extends auth
 			$this->session->set_userdata("error_message","Fill in the fields");
 			redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 		}
+	}
+	
+	public function add_billing($visit_id, $close_page = NULL)
+	{
+		$this->form_validation->set_rules('billing_method_id', 'Billing Method', 'required|numeric');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->accounts_model->add_billing($visit_id))
+			{
+				$this->session->set_userdata('success_message', 'Billing method successfully added');
+			}
+			else
+			{
+				$this->session->set_userdata("error_message","Unable to add billing method. Please try again");
+			}
+		}
+		else
+		{
+			$this->session->set_userdata("error_message","Fill in the fields");
+		}
+		
+		redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 	}
 	
 	public function print_invoice($visit_id)
