@@ -47,11 +47,11 @@ class Doctor extends auth
 		$where = 'visit_department.visit_id = visit.visit_id AND visit_department.department_id = 2 AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\' AND visit.personnel_id = '.$this->session->userdata('personnel_id');
 		
 		$table = 'visit_department, visit, patients';
-		$visit_search = $this->session->userdata('visit_search');
+		$patient_visit_search = $this->session->userdata('patient_visit_search');
 		
-		if(!empty($visit_search))
+		if(!empty($patient_visit_search))
 		{
-			$where .= $visit_search;
+			$where .= $patient_visit_search;
 		}
 		
 		if($page_name != NULL)
@@ -173,6 +173,91 @@ class Doctor extends auth
 	public function print_checkup($visit_id)
 	{
 		$this->doctor_model->print_checkup($visit_id);
+	}
+	public function search_visit_patients($module = NULL)
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		$strath_no = $this->input->post('strath_no');
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
+		}
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND patients.strath_no LIKE '.$strath_no.' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['surname']))
+		{
+			$surnames = explode(" ",$_POST['surname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+		}
+		
+		else
+		{
+			$surname = '';
+		}
+		
+		//search other_names
+		if(!empty($_POST['othernames']))
+		{
+			$other_names = explode(" ",$_POST['othernames']);
+			$total = count($other_names);
+			
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$other_name .= ') ';
+		}
+		
+		else
+		{
+			$other_name = '';
+		}
+		
+		$search = $visit_type_id.$strath_no.$surname.$other_name;
+		$this->session->set_userdata('patient_visit_search', $search);
+		
+		$this->doctor_queue();
+		
+		
+	}
+	public function close_queue_search()
+	{
+		$this->session->unset_userdata('patient_visit_search');
+		$this->doctor_queue();
 	}
 }
 ?>

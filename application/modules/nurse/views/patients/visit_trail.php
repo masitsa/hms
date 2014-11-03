@@ -144,20 +144,56 @@
                             $service_charge_name = $key_items->service_charge_name;
                             $visit_charge_amount = $key_items->visit_charge_amount;
                             $service_name = $key_items->service_name;
+                            $service_id = $key_items->service_id;
                              $units = $key_items->visit_charge_units;
-                             $service_charge_id = $key_items->service_charge_id;
+                             $service_charge_idd = $key_items->service_charge_id;
                              $visit_charge_timestamp = $key_items->visit_charge_timestamp;
 
                              $visit_total = $visit_charge_amount * $units;
-
+                             $item_rs = $this->reception_model->get_service_charges_per_type($patient_type);
                             ?>
                               <tr>
                                 <td><?php echo $s;?></td>
                                 <td><?php echo $service_name;?></td>
-                                <td><?php echo $service_charge_name;?></td>
+                                <td> 
+                                <?php 
+                                	if($page_name == 'administration' && $service_id == 1)
+                                	{
+                                		?>
+                                		<select name="patient_type" id="patient_type"  onChange='insurance_company("patient_type","insured");getCity("<?php echo site_url();?>/reception/load_charges/"+this.value);' class="form-control">
+						                    <option value="">--- Select Patient Consultation type---</option>
+						                	<?php
+												if(count($item_rs) > 0){
+						                    		foreach($item_rs as $row):
+														$service_charge_id = $row->service_charge_id;
+														$service_charge_name= $row->service_charge_name;
+														
+														if($service_charge_id == $service_charge_idd)
+														{
+															echo "<option value='".$service_charge_id."' selected='selected'>".$service_charge_name."</option>";
+														}
+														
+														else
+														{
+															echo "<option value='".$service_charge_name."'>".$service_charge_name."</option>";
+														}
+													endforeach;
+												}
+											?>
+						                    </select>
+                                		<?php
+                                	}
+                                	else
+                                	{
+                                		echo $service_charge_name;
+                                	}
+                                	?>
+                                	
+
+                                </td>
                                 <td><?php echo $visit_charge_timestamp;?></td>
                                 <?php
-                                if($service_charge_id == '10976')
+                                if($service_charge_idd == '10976')
                                 {
                                 	?>
                                 	<td><input type='text' name='amount_charge' placeholder='<?php echo number_format($visit_total,2);?>'><input type='submit' name='update_value' value='Update'></td>
