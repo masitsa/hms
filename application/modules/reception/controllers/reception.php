@@ -660,13 +660,9 @@ class Reception extends auth
 			}
 		}
 		
-		
-		$patient_insurance_id = $this->input->post("patient_insurance_id");
-		$patient_insurance_number = $this->input->post("insurance_id");
-		
 		if($patient_type==4){
-			//$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
-			//$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
+			$this->form_validation->set_rules('patient_insurance_id', 'Insurance Company', 'required');
+			$this->form_validation->set_rules('insurance_id', 'Insurance Number', 'required');
 		}
 		
 		if ($this->form_validation->run() == FALSE)
@@ -676,6 +672,8 @@ class Reception extends auth
 		else
 		{
 			$service_charge_id = $this->input->post("service_charge_name");
+			$patient_insurance_id = $this->input->post("patient_insurance_id");
+			$patient_insurance_number = $this->input->post("insurance_id");
 
 			$doctor_id = $this->input->post('personnel_id');
 			//$visit_type = $this->get_visit_type($type_name);

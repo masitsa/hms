@@ -1,3 +1,6 @@
+<style type="text/css">
+	#insured_company{display:none;}
+</style>
 <div class="row">
     <div class="col-md-12">
 
@@ -67,7 +70,7 @@
 			                            </select>
 	                            	</div>
 	                            </div>
-	                        <div  id="patient_type_div" style="display:none;">
+	                        <!--<div  id="patient_type_div" style="display:none;">
 	                        	<div class="form-group">
 						            <label class="col-lg-4 control-label">Patient Type: </label>
 						            
@@ -97,29 +100,29 @@
            							</div>
 						        </div>
 						        <div class="form-group">
-						        	<div  id="insured" style="display:none;">
-						            <label class="col-lg-4 control-label">Insurance Name: </label>
-						            
-						            <div class="col-lg-8">
-						                <select name="patient_insurance_id" class="form-control">
-						                        <option value="">--- Select Insurance Company---</option>
-						                            <?php
+						        	<div id="insured_company">
+										<label class="col-lg-4 control-label">Insurance Name: </label>
+										
+										<div class="col-lg-8">
+											<select name="patient_insurance_id" class="form-control">
+													<option value="">--- Select Insurance Company---</option>
+														<?php
 
-						                            if(count($patient_insurance) > 0){	
-													foreach($patient_insurance as $row):
-															$company_name = $row->company_name;
-															$insurance_company_name = $row->insurance_company_name;
-															$patient_insurance_id = $row->patient_insurance_id;
-													echo "<option value=".$patient_insurance_id.">".$company_name." - ".$insurance_company_name."</option>";
-													endforeach;	} ?>
-						              </select>
-						              <br>
-           							</div>
-						       	 </div>
-						 	</div>
+														if(count($patient_insurance) > 0){	
+														foreach($patient_insurance as $row):
+																$company_name = $row->company_name;
+																$insurance_company_name = $row->insurance_company_name;
+																$patient_insurance_id = $row->patient_insurance_id;
+														echo "<option value=".$patient_insurance_id.">".$company_name." - ".$insurance_company_name."</option>";
+														endforeach;	} ?>
+										  </select>
+										  <br>
+										</div>
+									</div>
+								</div>
 
 
-	                        </div>
+	                        </div>-->
 				        	<div  id="department_type" style="display:none;">
 					        <div class="form-group">
 						            <label class="col-lg-4 control-label">Doctor: </label>
@@ -154,7 +157,7 @@
 						            <label class="col-lg-4 control-label">Patient Type: </label>
 						            
 						            <div class="col-lg-8">
-						            	 <select name="patient_type" id="patient_type"  onChange='insurance_company("patient_type","insured");getCity("<?php echo site_url();?>/reception/load_charges/"+this.value);' class="form-control">
+						            	 <select name="patient_type" id="patient_type"  onChange='getCity("<?php echo site_url();?>/reception/load_charges/"+this.value);' class="form-control">
 						                    <option value="">--- Select Patient Type---</option>
 						                	<?php
 												if(count($type) > 0){
@@ -178,27 +181,33 @@
            								 
            							</div>
 						        </div>
-						        <div class="form-group">
-						        	<div  id="insured" style="display:none;">
-						            <label class="col-lg-4 control-label">Insurance Name: </label>
-						            
-						            <div class="col-lg-8">
-						                <select name="patient_insurance_id" class="form-control">
-						                        <option value="">--- Select Insurance Company---</option>
-						                            <?php
+						        <div  id="insured_company">
+									<div class="form-group">
+										<label class="col-lg-4 control-label">Insurance Company: </label>
+										
+										<div class="col-lg-8">
+											<select name="patient_insurance_id" class="form-control">
+													<option value="">--- Select Insurance Company---</option>
+														<?php
 
-						                            if(count($patient_insurance) > 0){	
-													foreach($patient_insurance as $row):
-															$company_name = $row->company_name;
-															$insurance_company_name = $row->insurance_company_name;
-															$patient_insurance_id = $row->patient_insurance_id;
-													echo "<option value=".$patient_insurance_id.">".$company_name." - ".$insurance_company_name."</option>";
-													endforeach;	} ?>
-						              </select>
-						              <br>
-           							</div>
-						       	 </div>
-						 	</div>
+														if(count($patient_insurance) > 0){	
+														foreach($patient_insurance as $row):
+																$insurance_company_name = $row->insurance_company_name;
+																$patient_insurance_id = $row->insurance_company_id;
+															echo "<option value=".$patient_insurance_id.">".$insurance_company_name."</option>";
+														endforeach;	} ?>
+										  </select>
+										  <br>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-4 control-label">Insurance Number: </label>
+										
+										<div class="col-lg-8">
+											<input type="text" name="insurance_id" value="<?php echo set_value('insurance_id')?>" class="form-control"/>
+										</div>
+									</div>
+								</div>
 						 	 <div class="form-group">
 					            <label class="col-lg-4 control-label">Consultation Type: </label>
 					            
@@ -420,5 +429,18 @@
 		}
 
 	}
+	
+	$(document).on("change","select#patient_type",function(e){
+		var patient_type_id = $(this).val();
+		
+		if(patient_type_id == '4')
+		{
+			$('#insured_company').css('display', 'block');
+		}
+		else
+		{
+			$('#insured_company').css('display', 'none');
+		}
+	});
 </script>
 
