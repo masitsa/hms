@@ -1,5 +1,5 @@
 <!-- search -->
-<?php echo $this->load->view('search/search_patients', '', TRUE);?>
+<?php //echo $this->load->view('patients/search_visit', '', TRUE);?>
 <!-- end search -->
  
 <div class="row">
@@ -22,11 +22,11 @@
           <div class="padd">
           
 <?php
-		$search = $this->session->userdata('general_queue_search');
+		$search = $this->session->userdata('visit_search');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/reception/close_general_queue_search/'.$page_name.'" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/reception/close_general_queue_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -61,8 +61,9 @@
 				}
 				else if($page_name == 'administration')
 				{
-					$actions = 1;
+					$actions = 2;
 				}
+				
 				else
 				{
 					$actions = 4;
@@ -74,11 +75,12 @@
 					  <thead>
 						<tr>
 						  <th>#</th>
-						  <th>Visit Date</th>
 						  <th>Patient</th>
 						  <th>Visit Type</th>
 						  <th>Sent At</th>
-						  
+						  <th>Going To</th>
+						  <th>Coming From</th>
+						  <th>Doctor</th>
 						  <th colspan="'.$actions.'">Actions</th>
 						</tr>
 					  </thead>
@@ -119,6 +121,9 @@
 				$patient_surname = $patient['patient_surname'];
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
 				$gender = $patient['gender'];
+				 $visit_type_id = $patient['visit_type_id'];
+
+				
 				
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
@@ -153,8 +158,8 @@
 				{
 					$buttons = '
 					<td>
-						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Open Visit Trail</a>
-						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Visit Trail</a></td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
 
 					<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/0" class="btn btn-sm btn-info">Patient Card</a></td>
@@ -168,8 +173,8 @@
 				{
 					$buttons = '
 					<td>
-						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Open Visit Trail</a>
-						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Visit Trail</a></td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
 
 					<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-info">Patient Card</a></td>
@@ -182,8 +187,8 @@
 				{
 					$buttons = '
 					<td>
-						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Open Visit Trail</a>
-						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Visit Trail</a></td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
 
 					<td><a href="'.site_url().'/laboratory/test/'.$visit_id.'" class="btn btn-sm btn-info">Tests</a></td>
@@ -196,8 +201,8 @@
 				{
 					$buttons = '
 					<td>
-						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Open Visit Trail</a>
-						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Visit Trail</a></td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
 
 					<td><a href="'.site_url().'/pharmacy/prescription1/'.$visit_id.'/1" class="btn btn-sm btn-info">Prescription</a></td>
@@ -205,13 +210,37 @@
 					<td><a href="'.site_url().'/pharmacy/send_to_accounts/'.$visit_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Send to accounts?\');">To Accounts</a></td>
 					';
 				}
+				else if($page_name == 'administration')
+				{
+					$buttons = '
+					<td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
+					</td>';
+					//if staff was registered as other
+					if(($visit_table_visit_type == 2) && ($patient_table_visit_type != $visit_table_visit_type))
+					{
+						$buttons .= '<td><a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to change this patient type?\');">Change Patient Type</a></td>';
+					}
+					//if student was registered as other
+					else if(($visit_table_visit_type == 1) && ($patient_table_visit_type != $visit_table_visit_type))
+					{
+						$buttons .= '<td><a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-warning" onclick="return confirm(\'Do you really want to change this patient type?\');">Change Patient Type</a></td>';
+					}
+					
+					else
+					{
+						$buttons .= '<td></td>';
+					}
+					
+				}
 				
 				else if($page_name == 'accounts')
 				{
 					$buttons = '
 					<td>
-						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Open Visit Trail</a>
-						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Visit Trail</a></td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
 
 					<td><a href="'.site_url().'/accounts/print_receipt_new/'.$visit_id.'" target="_blank" class="btn btn-sm btn-info">Receipt</a></td>
@@ -220,22 +249,14 @@
 					<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'End this visit?\');">End Visit</a></td>
 					';
 				}
-				else if($page_name == 'administration')
-				{
-					$buttons = '
-					<td>
-						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Open Visit Trail</a>
-						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Visit Trail</a></td>
-					</td>';
-				}
 				
 				else
 				{
 
 					$buttons = '
 					<td>
-						<a  class="btn btn-sm btn-success" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Open Visit Trail</a>
-						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Visit Trail</a></td>
+						<a  class="btn btn-sm btn-danger" id="open_visit'.$visit_id.'" onclick="get_visit_trail('.$visit_id.');">Visit Trail</a>
+						<a  class="btn btn-sm btn-danger" id="close_visit'.$visit_id.'" style="display:none;" onclick="close_visit_trail('.$visit_id.');">Close Trail</a></td>
 					</td>
 					<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you really want to end this visit ?\');">End Visit</a></td>
 					<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete Visit</a></td>';
@@ -262,10 +283,12 @@
 					'
 						<tr>
 							<td>'.$count.'</td>
-							<td>'.$visit_date.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$visit_type.'</td>
 							<td>'.$visit_time.'</td>
+							<td>'.$sent_to.'</td>
+							<td>'.$coming_from.'</td>
+							<td>'.$doctor.'</td>
 							'.$buttons.'
 						</tr> 
 					';
@@ -273,9 +296,9 @@
 					{
 						$pink = 14;
 					}
-					else if($page_name == 'administration')
+					if($page_name == 'administration')
 					{
-						$pink = 6;
+						$pink = 14;
 					}
 					else if($page_name == 'laboratory')
 					{
@@ -283,9 +306,9 @@
 					}
 					else
 					{
-						$pink = 10;
+						$pink = 11;
 					}
-					$v_data['patient_type'] = $patient['visit_type_id'];
+					$v_data['patient_type'] = $visit_type_id;
 				$result .=
 						'<tr id="visit_trail'.$visit_id.'" style="display:none;">
 
@@ -346,5 +369,3 @@
 		button2.style.display = 'none';
 	}
   </script>
-
-  

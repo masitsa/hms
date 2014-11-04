@@ -365,10 +365,61 @@ class Administration extends auth
 	{
 		
 		$consultation_id = $this->input->post('consultation');
-		$visit_data = array('service_charge_id'=>$consultation_id);
+
+		$table = "visit_charge";
+		$where = "visit_charge_delete = 0 AND visit_charge_id = ".$visit_charge_id;
+		$items = "*";
+		$order = "visit_charge_id";
 		
-		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
-		$this->db->update('visit_charge', $visit_data);
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+			foreach ($result as $key):
+				# code...
+				$visit_id = $key->visit_id;
+				$visit_charge_units = $key->visit_charge_units;
+
+			endforeach;
+			$date = date('Y-m-d');
+			//  need to update this to one then
+			$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>$date);
+		
+			$this->db->where(array("visit_charge_id"=>$visit_charge_id));
+			$this->db->update('visit_charge', $visit_data);
+			// end of updating the charge to 1
+
+			// start to insert a new charge 
+			$service_charge = $this->reception_model->get_service_charge($consultation_id);		
+		
+			$visit_charge_data = array(
+				"visit_id" => $visit_id,
+				"service_charge_id" => $consultation_id,
+				"date" => $date,
+				"visit_charge_units" => $visit_charge_units,
+				"created_by" => $this->session->userdata("personnel_id"),
+				"visit_charge_amount" => $service_charge
+			);
+			if($this->db->insert('visit_charge', $visit_charge_data))
+			{
+				return TRUE;
+			}
+			
+			else
+			{
+				return FALSE;
+			}
+			// end of inserting a new charge
+		}
+		else
+		{
+			return FALSE;
+		}
+		// $visit_data = array('service_charge_id'=>$consultation_id);
+		
+		// $this->db->where(array("visit_charge_id"=>$visit_charge_id));
+		// $this->db->update('visit_charge', $visit_data);
 		
 	}
 }

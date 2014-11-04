@@ -402,7 +402,6 @@
 	}
 
 	function check_department_type(){
-
 		var myTarget = document.getElementById("department_id").value;
 
 		var myTarget2 = document.getElementById("department_type");

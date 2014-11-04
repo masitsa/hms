@@ -173,7 +173,7 @@
                                 	if($page_name == 'administration' && $service_id == 1)
                                 	{
                                 		?>
-                                		<select name="consultation_id" id="consultation_id"   class="form-control">
+                                		<select name="consultation_id" id="consultation_id<?php echo $visit_id;?>"   class="form-control">
 						                    <?php
 												if(count($item_rs) > 0){
 						                    		foreach($item_rs as $row):
@@ -182,7 +182,7 @@
 														
 														if($service_charge_id == $service_charge_idd)
 														{
-															echo "<option value='".$service_charge_id."' selected='selected'>".$service_charge_name."</option>";
+															echo "<option value='".$service_charge_id."' selected='selected'>".$service_charge_id."".$service_charge_name."</option>";
 														}
 														
 														else
@@ -212,7 +212,7 @@
 			                        }
 			                        else if(($page_name == 'administration') && $service_id == 1)
 			                        {
-			                        	echo '<td><a onclick="update_service_charge('.$visit_charge_id.')" class="btn btn-sm btn-success">Update Consultation</a></td>';
+			                        	echo '<td><a onclick="update_service_charge('.$visit_charge_id.','.$visit_id.')" class="btn btn-sm btn-success">Update Consultation</a></td>';
 
 			                        }
 			                        else
@@ -279,18 +279,17 @@
 <script type="text/javascript">
 	
 
-	function update_service_charge(visit_charge_id){
-        
+	function update_service_charge(visit_charge_id,visit_id){
+         
         var config_url = $('#config_url').val();
         var data_url = config_url+"/administration/update_visit_charge/"+visit_charge_id;
         
-        var consultation_id = $('#consultation_id').val();
-     
-         var consultation_value = $('#consultation_id'+consultation_id).val();
+        var consultation_id = $('#consultation_id'+visit_id).val();
+        
         $.ajax({
         type:'POST',
         url: data_url,
-        data:{consultation: consultation_value},
+        data:{consultation: consultation_id},
         dataType: 'text',
         success:function(data){
        	window.alert("You have successfully updated the charge");
