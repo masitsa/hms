@@ -122,6 +122,7 @@
 			<!-- Widget content -->
 			<div class="widget-content">
 				<div class="padd">
+
 				<table class="table table-hover table-bordered col-md-12">
                       <thead>
                       <tr>
@@ -130,9 +131,21 @@
                         <th>Item Name</th>
                         <th>Time Charged</th>
                         <th>Charge</th>
+                        <?php
+                        if($page_name == 'administration')
+                        {
+                        	echo "<th></th>";
+                        }
+                        else
+                        {
+
+                        }
+                        ?>
+                        
                       </tr>
                       </thead>
                       <tbody>
+
                         <?php
                         $item_invoiced_rs = $this->accounts_model->get_patient_visit_charge_items($visit_id);
                         $total = 0;
@@ -146,9 +159,9 @@
                             $service_name = $key_items->service_name;
                             $service_id = $key_items->service_id;
                              $units = $key_items->visit_charge_units;
-                             $service_charge_idd = $key_items->service_charge_id;
+                              $service_charge_idd = $key_items->service_charge_id;
                              $visit_charge_timestamp = $key_items->visit_charge_timestamp;
-
+                              $visit_charge_id = $key_items->visit_charge_id;
                              $visit_total = $visit_charge_amount * $units;
                              $item_rs = $this->reception_model->get_service_charges_per_type($patient_type);
                             ?>
@@ -160,9 +173,8 @@
                                 	if($page_name == 'administration' && $service_id == 1)
                                 	{
                                 		?>
-                                		<select name="patient_type" id="patient_type"  onChange='insurance_company("patient_type","insured");getCity("<?php echo site_url();?>/reception/load_charges/"+this.value);' class="form-control">
-						                    <option value="">--- Select Patient Consultation type---</option>
-						                	<?php
+                                		<select name="consultation_id" id="consultation_id"   class="form-control">
+						                    <?php
 												if(count($item_rs) > 0){
 						                    		foreach($item_rs as $row):
 														$service_charge_id = $row->service_charge_id;
@@ -175,7 +187,7 @@
 														
 														else
 														{
-															echo "<option value='".$service_charge_name."'>".$service_charge_name."</option>";
+															echo "<option value='".$service_charge_id."'>".$service_charge_name."</option>";
 														}
 													endforeach;
 												}
@@ -192,19 +204,22 @@
 
                                 </td>
                                 <td><?php echo $visit_charge_timestamp;?></td>
-                                <?php
-                                if($service_charge_idd == '10976')
-                                {
-                                	?>
-                                	<td><input type='text' name='amount_charge' placeholder='<?php echo number_format($visit_total,2);?>'><input type='submit' name='update_value' value='Update'></td>
-                                	<?php
-                                }
-                                else
-                                {
-                                	?>
-                               		 <td><?php echo number_format($visit_total,2);?></td>
-                               		 <?php
-                                }
+                               	<td><?php echo number_format($visit_total,2);?></td>
+                               	<?php
+			                        if(($page_name == 'administration') && $service_id != 1)
+			                        {
+			                        	echo '<td><a href="'.site_url().'/administration/delete_visit_charge/'.$visit_id.'/'.$service_charge_idd.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to delete this service charge ?\');">Delete Service Charge</a></td>';
+			                        }
+			                        else if(($page_name == 'administration') && $service_id == 1)
+			                        {
+			                        	echo '<td><a onclick="update_service_charge('.$visit_charge_id.')" class="btn btn-sm btn-success">Update Consultation</a></td>';
+
+			                        }
+			                        else
+			                        {}
+
+
+                               		
                                 ?>
 
                               </tr>
@@ -252,12 +267,41 @@
                         }
 
                         ?>
-                          
+                        
                       </tbody>
                     </table>
-
+	              
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	
+
+	function update_service_charge(visit_charge_id){
+        
+        var config_url = $('#config_url').val();
+        var data_url = config_url+"/administration/update_visit_charge/"+visit_charge_id;
+        
+        var consultation_id = $('#consultation_id').val();
+     
+         var consultation_value = $('#consultation_id'+consultation_id).val();
+        $.ajax({
+        type:'POST',
+        url: data_url,
+        data:{consultation: consultation_value},
+        dataType: 'text',
+        success:function(data){
+       	window.alert("You have successfully updated the charge");
+        //obj.innerHTML = XMLHttpRequestObject.responseText;
+        },
+        error: function(xhr, status, error) {
+        //alert("XMLHttpRequest=" + xhr.responseText + "\ntextStatus=" + status + "\nerrorThrown=" + error);
+        alert(error);
+        }
+
+        });
+        
+    }
+</script>

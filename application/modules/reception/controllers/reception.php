@@ -295,15 +295,10 @@ class Reception extends auth
 	public function general_queue($page_name)
 	{
 		$segment = 4;
-		if($page_name == "administration")
-		{
-		  $where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 ';
-		}
-		else
-		{
+		
 			$where = 'visit.visit_delete = 0 AND visit_department.visit_id = visit.visit_id AND visit_department.visit_department_status = 1 AND visit.patient_id = patients.patient_id AND visit.close_card = 0 AND visit.visit_date = \''.date('Y-m-d').'\'';
 
-		}
+		
 		$table = 'visit_department, visit, patients';
 		
 		$visit_search = $this->session->userdata('general_queue_search');

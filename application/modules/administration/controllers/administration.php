@@ -356,6 +356,19 @@ class Administration extends auth
 			$this->db->update('service_charge', $visit_data);
 			$this->edit_service_charge($service_id,$service_charge_id);
 		}
+		function delete_visit_charge($visit_id,$service_charge_id)
+		{
+
+		}
+	}
+	public function update_visit_charge($visit_charge_id)
+	{
+		
+		$consultation_id = $this->input->post('consultation');
+		$visit_data = array('service_charge_id'=>$consultation_id);
+		
+		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
+		$this->db->update('visit_charge', $visit_data);
 		
 	}
 }
