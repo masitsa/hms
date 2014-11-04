@@ -660,8 +660,8 @@ class Reception extends auth
 		$patient_insurance_number = $this->input->post("insurance_id");
 		
 		if($patient_type==4){
-			$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
-			$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
+			//$this->form_validation->set_rules('patient_insurance_id', 'Patients Insurance', 'required');
+			//$this->form_validation->set_rules('insurance_id', 'Input Insurance Number', 'required');
 		}
 		
 		if ($this->form_validation->run() == FALSE)
