@@ -759,10 +759,10 @@ class Reception_model extends CI_Model
 	
 	public function get_patient_insurance($patient_id)
 	{
-		$table = "company_insuarance";
-		$where = "company_insurance_id > 0";
+		$table = "insurance_company";
+		$where = "insurance_company_id > 0";
 		$items = "*";
-		$order = "company_name";
+		$order = "insurance_company_name";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
