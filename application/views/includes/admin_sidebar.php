@@ -10,7 +10,7 @@
                 <!-- Use the class nred, ngreen, nblue, nlightblue, nviolet or norange to add background color. You need to use this in <li> tag. -->
                 <li class="current"><a href="<?php echo site_url();?>/administration"><i class="icon-list"></i> Dashboard</a></li>
                 <li class="current"><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-home"></i> Control Panel</a></li>
-                <li class="current"><a href="<?php echo site_url();?>/reception/general_queue/administration"><i class="icon-list"></i> Visits</a></li>
+                <li class="current"><a href="<?php echo site_url();?>/reception/general_queue/administration"><i class="icon-list"></i> General Queue</a></li>
                
                 <!--<li class="current"><a href="<?php echo base_url();?>index.php/welcome/control_panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-list"></i> Appointments</a></li>-->
              	<li class="has_submenu">

@@ -182,7 +182,7 @@
 														
 														if($service_charge_id == $service_charge_idd)
 														{
-															echo "<option value='".$service_charge_id."' selected='selected'>".$service_charge_id."".$service_charge_name."</option>";
+															echo "<option value='".$service_charge_id."' selected='selected'>".$service_charge_name."</option>";
 														}
 														
 														else
@@ -208,7 +208,7 @@
                                	<?php
 			                        if(($page_name == 'administration') && $service_id != 1)
 			                        {
-			                        	echo '<td><a href="'.site_url().'/administration/delete_visit_charge/'.$visit_id.'/'.$service_charge_idd.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to delete this service charge ?\');">Delete Service Charge</a></td>';
+			                        	echo '<td><a href="'.site_url().'/administration/delete_visit_charge/'.$visit_charge_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to delete this service charge ?\');">Delete Service Charge</a></td>';
 			                        }
 			                        else if(($page_name == 'administration') && $service_id == 1)
 			                        {
