@@ -16,7 +16,9 @@ $visit_date = date('jS F Y',strtotime($this->accounts_model->get_visit_date($vis
 $doctor = $this->accounts_model->get_att_doctor($visit_id);
 
 //served by
-$served_by = $this->accounts_model->get_personnel($this->session->userdata('personnel_id'))
+$served_by = $this->accounts_model->get_personnel($this->session->userdata('personnel_id'));
+$credit_note_amount = $this->accounts_model->get_sum_credit_notes($visit_id);
+$debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 ?>
 
 <!DOCTYPE html>
@@ -186,7 +188,7 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
 						</tr>
 						<?php
 					}
-					
+					$total_amount = ($total + $debit_note_amount) - $credit_note_amount;
 					$payments_rs = $this->accounts_model->payments($visit_id);
 					$total_payments = 0;
 					
@@ -194,13 +196,18 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
 					{
 						$x=0;
 						
-						foreach ($payments_rs as $key_items):
-							$x++;
-							$payment_method = $key_items->payment_method;
-							$amount_paid = $key_items->amount_paid;
-							
-							$total_payments = $total_payments + $amount_paid;
-						endforeach;
+    					foreach ($payments_rs as $key_items):
+    						$x++;
+                            $payment_type = $key_items->payment_type;
+                            if($payment_type == 1)
+                            {
+    							$payment_method = $key_items->payment_method;
+    							$amount_paid = $key_items->amount_paid;
+    							
+    							$total_payments = $total_payments + $amount_paid;
+                            }
+    					endforeach;
+                        
 					}
 
                     ?>
@@ -210,7 +217,7 @@ $served_by = $this->accounts_model->get_personnel($this->session->userdata('pers
                     </tr>
                     <tr class="receipt_bottom_border">
                     	<td colspan="2">Balance</td>
-                        <td><?php echo number_format($total - $total_payments, 2);?></td>
+                        <td><?php echo number_format($total_amount - $total_payments, 2);?></td>
                     </tr>
                       
                   </tbody>

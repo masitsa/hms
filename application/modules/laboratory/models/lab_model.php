@@ -187,7 +187,7 @@ class Lab_model extends CI_Model
 			
 		}
 
-		$visit_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$service_charge_amount);
+		$visit_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$service_charge_amount,'created_by'=>$this->session->userdata("personnel_id"));
 		$this->db->insert('visit_charge', $visit_data);
 
 		
@@ -239,7 +239,7 @@ class Lab_model extends CI_Model
 	}
 	function save_tests($res, $lab){
 		$data['visit_charge_results'] = $res;
-		
+	
 		$this->db->where('visit_charge_id', $lab);
 		if($this->db->update('visit_charge', $data))
 		{

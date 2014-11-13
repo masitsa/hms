@@ -573,7 +573,7 @@ class Nurse extends auth
 	public function procedure_total($procedure_id,$units,$amount){
 		
 
-		$visit_data = array('visit_charge_units'=>$units);
+		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 		$this->db->where(array("visit_charge_id"=>$procedure_id));
 		$this->db->update('visit_charge', $visit_data);
 	}

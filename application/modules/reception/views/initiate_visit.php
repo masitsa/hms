@@ -70,7 +70,7 @@
 			                            </select>
 	                            	</div>
 	                            </div>
-	                        <!--<div  id="patient_type_div" style="display:none;">
+	                       <div  id="patient_type_div" style="display:none;">
 	                        	<div class="form-group">
 						            <label class="col-lg-4 control-label">Patient Type: </label>
 						            
@@ -122,7 +122,7 @@
 								</div>
 
 
-	                        </div>-->
+	                        </div>
 				        	<div  id="department_type" style="display:none;">
 					        <div class="form-group">
 						            <label class="col-lg-4 control-label">Doctor: </label>
