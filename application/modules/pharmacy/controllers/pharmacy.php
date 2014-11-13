@@ -1978,5 +1978,48 @@ class Pharmacy extends auth
 		$this->session->unset_userdata('patient_visit_search');
 		$this->pharmacy_queue();
 	}
+	
+	public function sort_drugs()
+	{
+		$this->db->where('drugs_id > 1341');
+		$query = $this->db->get('drugs');
+		
+		foreach($query->result() as $res)
+		{
+			$drug_id = $res->drugs_id;
+			$price = $res->drugs_unitprice;
+			$drugs_name = $res->drugs_name;
+			$markup = round(($price * 1.33), 0);
+			$markdown = $markup + 20;//round(($markup * 0.9), 0);
+			
+			$service_data = array(
+				'drug_id'=>$drug_id,
+				'service_charge_amount'=>$markdown,
+				'service_charge_status'=>1,
+				'service_id'=>4,
+				'visit_type_id'=>0,
+				'service_charge_name'=>$drugs_name,
+			);
+			
+			//check if drug exists
+			$where = array(
+				'drug_id'=>$drug_id,
+				'visit_type_id'=>0,
+			);
+			$this->db->where($where);
+			$query2 = $this->db->get('service_charge');
+			
+			if($query2->num_rows() > 0)
+			{
+				$this->db->where($where);
+				$this->db->update('service_charge', $service_data);
+			}
+			
+			else
+			{
+				$this->db->insert('service_charge', $service_data);
+			}
+		}
+	}
 }
 ?>
