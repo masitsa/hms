@@ -2179,13 +2179,19 @@ class Reception extends auth
 		$search = $visit_type_id.$strath_no.$surname.$other_name;
 		$this->session->set_userdata('general_queue_search', $search);
 		
-		
-		
 		$this->general_queue($page_name);
 	}
+	
 	public function close_general_queue_search($page_name)
 	{
 		$this->session->unset_userdata('general_queue_search');
 		$this->general_queue($page_name);
+	}
+	
+	public function check_patient($visit_id)
+	{
+		$result = $this->reception_model->patient_names2(NULL, $visit_id);
+		
+		var_dump($result);
 	}
 }
