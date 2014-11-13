@@ -220,7 +220,7 @@ class Pharmacy_model extends CI_Model
 		endforeach;
 		$visit_charge_qty = $this->input->post('quantity');
 
-		$array = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$visit_charge_amount,'date'=>$date,'time'=>$time,'visit_charge_qty'=>$visit_charge_qty);
+		$array = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$visit_charge_amount,'date'=>$date,'time'=>$time,'visit_charge_qty'=>$visit_charge_qty,'created_by'=>$this->session->userdata("personnel_id"));
 		if($this->db->insert('visit_charge', $array))
 		{
 			$visit_charge_id = $this->db->insert_id();
@@ -269,7 +269,7 @@ class Pharmacy_model extends CI_Model
 		$visit_charge_qty = $this->input->post('quantity'.$prescription_id);
 		$visit_charge_units = $this->input->post('units_given'.$prescription_id);
 
-		$array = array('visit_charge_qty'=>$visit_charge_qty,'visit_charge_units'=>$visit_charge_units);
+		$array = array('visit_charge_qty'=>$visit_charge_qty,'visit_charge_units'=>$visit_charge_units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 		$this->db->where('visit_charge_id', $visit_charge_id);
 		if($this->db->update('visit_charge', $array))
 		{

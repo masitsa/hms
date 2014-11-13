@@ -446,7 +446,17 @@ class Reception_model extends CI_Model
 		
 		return $result;
 	}	
-	
+	public function get_personnel_details($personnel_id)
+	{
+		$table = "personnel, job_title";
+		$where = "job_title.job_title_id = personnel.job_title_id AND  personnel.personnel_id = '$personnel_id'";
+		$items = "personnel.personnel_onames, personnel.personnel_fname, personnel.personnel_id";
+		$order = "personnel_onames";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}	
 	public function get_types()
 	{
 		$table = "visit_type";
@@ -1649,6 +1659,8 @@ class Reception_model extends CI_Model
 		$visit_charge_data = array(
 			"visit_id" => $visit_id,
 			"service_charge_id" => $service_charge_id,
+			"created_by" => $this->session->userdata("personnel_id"),
+			"date" => date("Y-m-d"),
 			"visit_charge_amount" => $service_charge
 		);
 		if($this->db->insert('visit_charge', $visit_charge_data))

@@ -317,7 +317,7 @@ class Nurse_model extends CI_Model
 			$visit_charge_amount = $key->service_charge_amount;
 		endforeach;
 
-		$visit_data = array('service_charge_id'=>$procedure_id,'visit_id'=>$v_id,'visit_charge_amount'=>$visit_charge_amount,'visit_charge_units'=>$suck);
+		$visit_data = array('service_charge_id'=>$procedure_id,'visit_id'=>$v_id,'visit_charge_amount'=>$visit_charge_amount,'visit_charge_units'=>$suck,'created_by'=>$this->session->userdata("personnel_id"),'date'=>date("Y-m-d"));
 		$this->db->insert('visit_charge', $visit_data);
 	}
 
