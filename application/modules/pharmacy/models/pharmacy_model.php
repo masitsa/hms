@@ -622,6 +622,30 @@ class Pharmacy_model extends CI_Model
 		);
 		if($this->db->insert('drugs', $array))
 		{
+			//calculate the price of the drug
+			$drug_id = $this->db->insert_id();
+			
+			$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
+			$markdown = $markup + 20;//round(($markup * 0.9), 0);
+			
+			$service_data = array(
+				'drug_id'=>$drug_id,
+				'service_charge_amount'=>$markdown,
+				'service_id'=>4,
+				'visit_type_id'=>0,
+				'service_charge_status'=>1,
+				'service_charge_name'=>$this->input->post('drugs_name'),
+			);
+			$this->db->insert('service_charge', $service_data);
+			
+			/*$service_data['visit_type_id'] = 2;
+			$this->db->insert('service_charge', $service_data);
+			
+			$service_data['visit_type_id'] = 3;
+			$this->db->insert('service_charge', $service_data);
+			
+			$service_data['visit_type_id'] = 4;
+			$this->db->insert('service_charge', $service_data);*/
 			return TRUE;
 		}
 		else{
@@ -646,12 +670,43 @@ class Pharmacy_model extends CI_Model
 			'drug_consumption_id'=>$this->input->post('drug_consumption_id'),
 			'class_id'=>$this->input->post('class_id')
 		);
-
-
 		
 		$this->db->where('drugs_id', $drugs_id);
 		if($this->db->update('drugs', $array))
 		{
+			//edit service charge
+			$drug_id = $drugs_id;
+			
+			$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
+			$markdown = $markup + 20;//round(($markup * 0.9), 0);
+			
+			$service_data = array(
+				'drug_id'=>$drug_id,
+				'service_charge_amount'=>$markdown,
+				'service_id'=>4,
+				'visit_type_id'=>0,
+				'service_charge_status'=>1,
+				'service_charge_name'=>$this->input->post('drugs_name'),
+			);
+			//check if drug exists
+			$where = array(
+				'drug_id'=>$drug_id,
+				'visit_type_id'=>0,
+			);
+			$this->db->where($where);
+			$query2 = $this->db->get('service_charge');
+			
+			if($query2->num_rows() > 0)
+			{
+				$this->db->where($where);
+				$this->db->update('service_charge', $service_data);
+			}
+			
+			else
+			{
+				$this->db->insert('service_charge', $service_data);
+			}
+			
 			$purchases_array = array(
 			'expiry_date'=>$this->input->post('expiry_date')
 			);

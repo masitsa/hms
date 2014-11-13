@@ -77,7 +77,7 @@
                                                 $quantity = $rs10->quantity;
                                                 $drugs_deleted = $rs10->drugs_deleted;
                                                 $markup = round(($drugs_unitprice * 1.33), 0);
-                                                $markdown = round(($markup * 0.9), 0);
+                                                $markdown = $markup + 20;//round(($markup * 0.9), 0);
                                                 $profit_margin = $markdown - $drugs_unitprice;
                                                 $drugs_id = $rs10->drugs_id;
                                                 $purchases = $this->pharmacy_model->item_purchases($drugs_id);

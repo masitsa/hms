@@ -11,7 +11,7 @@
 <file name="buy_drug.php" server="192.168.170.16/sumc/" local="130590468279296857" remote="130590360000000000" Dst="0" />
 <file name="add_drug.php" server="192.168.170.16/sumc/" local="130590467966121229" remote="130590359400000000" Dst="0" />
 <file name="deduct_drug.php" server="192.168.170.16/sumc/" local="130590468340904771" remote="130590360000000000" Dst="0" />
-<file name="drugs_list.php" server="192.168.170.16/sumc/" local="130589787011740512" remote="130590357000000000" Dst="0" />
+<file name="drugs_list.php" server="192.168.170.16/sumc/" local="130598244255188981" remote="130598136600000000" Dst="0" />
 <file name="drug_deductions.php" server="192.168.170.16/sumc/" local="130589778738737512" remote="130590357000000000" Dst="0" />
 <file name="drug_purchases.php" server="192.168.170.16/sumc/" local="130589771039207640" remote="130590357000000000" Dst="0" />
 <file name="edit_drug.php" server="192.168.170.16/sumc/" local="130590467856540661" remote="130590359400000000" Dst="0" />
