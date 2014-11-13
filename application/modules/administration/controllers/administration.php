@@ -356,10 +356,15 @@ class Administration extends auth
 			$this->db->update('service_charge', $visit_data);
 			$this->edit_service_charge($service_id,$service_charge_id);
 		}
-		function delete_visit_charge($visit_id,$service_charge_id)
-		{
+		
+	}
+	public function delete_visit_charge($visit_charge_id)
+	{
 
-		}
+		$visit_data = array('visit_charge_delete'=>1);
+		$this->db->where(array("visit_charge_id"=>$visit_charge_id));
+		$this->db->update('visit_charge', $visit_data);
+		redirect('reception/general_queue/administration');
 	}
 	public function update_visit_charge($visit_charge_id)
 	{
@@ -416,10 +421,6 @@ class Administration extends auth
 		{
 			return FALSE;
 		}
-		// $visit_data = array('service_charge_id'=>$consultation_id);
-		
-		// $this->db->where(array("visit_charge_id"=>$visit_charge_id));
-		// $this->db->update('visit_charge', $visit_data);
 		
 	}
 }

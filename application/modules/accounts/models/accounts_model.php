@@ -215,10 +215,75 @@ class Accounts_model extends CI_Model
 		
 		return $result;
 	}
+	public function get_sum_credit_notes($visit_id)
+	{
+		$table = "payments";
+		$where = "payments.payment_type = 3 AND payments.visit_id =". $visit_id;
+		$items = "SUM(payments.amount_paid) AS amount_paid";
+		$order = "payments.payment_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+
+			foreach ($result as $key):
+				# code...
+				$amount = $key->amount_paid;
+
+				if(!is_numeric($amount))
+				{
+					return 0;
+				}
+				else
+				{
+					return $amount;
+				}
+			endforeach;
+		}
+		else
+		{
+			return 0;
+		}
+
+	}
+	public function get_sum_debit_notes($visit_id)
+	{
+		$table = "payments";
+		$where = "payments.payment_type = 2 AND payments.visit_id =". $visit_id;
+		$items = "SUM(payments.amount_paid) AS amount_paid";
+		$order = "payments.payment_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+
+			foreach ($result as $key):
+				# code...
+				$amount = $key->amount_paid;
+
+				if(!is_numeric($amount))
+				{
+					return 0;
+				}
+				else
+				{
+					return $amount;
+				}
+			endforeach;
+		}
+		else
+		{
+			return 0;
+		}
+
+	}
 	public function receipt_payment($visit_id){
 		$amount = $this->input->post('amount_paid');
 		$payment_method=$this->input->post('payment_method');
-		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"));
+		$type_payment=$this->input->post('type_payment');
+		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"),'payment_type'=>$type_payment);
 		if($this->db->insert('payments', $data))
 		{
 			return $this->db->insert_id();

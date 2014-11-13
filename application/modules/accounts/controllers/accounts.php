@@ -382,7 +382,7 @@ class Accounts extends auth
 	{
 		$this->form_validation->set_rules('payment_method', 'Payment Method', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('amount_paid', 'Amount', 'trim|required|xss_clean');
-		
+		$this->form_validation->set_rules('type_payment', 'Type of payment', 'trim|required|xss_clean');
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{

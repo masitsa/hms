@@ -1,5 +1,5 @@
 <!-- search -->
-<?php //echo $this->load->view('patients/search_visit', '', TRUE);?>
+<?php echo $this->load->view('search/search_patients', '', TRUE);?>
 <!-- end search -->
  
 <div class="row">
@@ -22,11 +22,11 @@
           <div class="padd">
           
 <?php
-		$search = $this->session->userdata('visit_search');
+		$search = $this->session->userdata('general_queue_search');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/reception/close_general_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/reception/close_general_queue_search/'.$page_name.'" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
