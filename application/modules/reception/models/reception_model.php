@@ -507,6 +507,20 @@ class Reception_model extends CI_Model
 			{
 				$visit_type = $row->visit_type;
 				$check_id = $visit_type;
+				
+				//a student being charged as an outsider
+				if(($visit_type == 3) && ($visit_type_id == 1))
+				{
+					$check_id = $visit_type_id;
+					$visit_type = 0;
+				}
+				
+				//staff being charged as an outsider
+				if(($visit_type == 3) && ($visit_type_id == 2))
+				{
+					$check_id = $visit_type_id;
+					$visit_type = 0;
+				}
 			}
 			
 			else
