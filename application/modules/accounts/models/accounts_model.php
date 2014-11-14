@@ -7,7 +7,7 @@ class Accounts_model extends CI_Model
 	{
 		$table = "payments";
 		$where = "payments.visit_id =". $visit_id;
-		$items = "payments.amount_paid";
+		$items = "payments.amount_paid,payments.payment_type";
 		$order = "amount_paid";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -16,8 +16,12 @@ class Accounts_model extends CI_Model
 		
 		if(count($result) > 0){
 			foreach ($result as $row2):
-				$amount_paid = $row2->amount_paid;
-				$total = $total + $amount_paid;
+				$payment_type = $row2->payment_type;
+				if($payment_type == 1)
+				{
+					$amount_paid = $row2->amount_paid;
+					$total = $total + $amount_paid;
+				}
 			endforeach;
 		}
 		
@@ -29,7 +33,67 @@ class Accounts_model extends CI_Model
 		
 		return $value;
 	}
+	public function total_invoice($visit_id)
+	{
+		 $item_invoiced_rs = $this->get_patient_visit_charge_items($visit_id);
+         $credit_note_amount = $this->get_sum_credit_notes($visit_id);
+         $debit_note_amount = $this->get_sum_debit_notes($visit_id);
+         $total = 0;
+          $total_amount =  0;
+          if(count($item_invoiced_rs) > 0){
+            $s=0;
+            
+            foreach ($item_invoiced_rs as $key_items):
+              $s++;
+              $service_charge_name = $key_items->service_charge_name;
+              $visit_charge_amount = $key_items->visit_charge_amount;
+              $service_name = $key_items->service_name;
+              $units = $key_items->visit_charge_units;
 
+              $visit_total = $visit_charge_amount * $units;
+
+              $total = $total + $visit_total;
+            endforeach;
+            $total_amount = $total;
+          }
+          else
+          {
+          	$total_amount = 0;
+          }
+          $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
+
+          
+
+          return $total_amount;
+	}
+	public function total_payments($visit_id)
+	{
+	      $payments_rs = $this->accounts_model->payments($visit_id);
+	      $total_payments = 0;
+	      
+	      if(count($payments_rs) > 0)
+	      {
+	        $x=0;
+	        
+	          foreach ($payments_rs as $key_items):
+	            $x++;
+	                $payment_type = $key_items->payment_type;
+	                if($payment_type == 1)
+	                {
+	                  $payment_method = $key_items->payment_method;
+	                  $amount_paid = $key_items->amount_paid;
+	                  
+	                  $total_payments = $total_payments + $amount_paid;
+	                }
+	          endforeach;
+	                    
+	      }
+	      else
+	      {
+	      	$total_payments = 0;
+	      }
+	      return $total_payments;
+	}
 
 	public function total($visit_id)
 	{
@@ -283,7 +347,38 @@ class Accounts_model extends CI_Model
 		$amount = $this->input->post('amount_paid');
 		$payment_method=$this->input->post('payment_method');
 		$type_payment=$this->input->post('type_payment');
-		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"),'payment_type'=>$type_payment);
+
+		if($type_payment == 2 || $type_payment == 3)
+		{
+			$service_id = $this->input->post('service_id');
+		}
+		else
+		{
+			$service_id = 0;
+		}
+
+		if($payment_method == 1)
+		{
+			// check for cheque number if inserted
+			
+			$transaction_code = $this->input->post('cheque_number');
+		}
+		else if($payment_method == 3)
+		{
+			// check for insuarance number if inserted
+			$transaction_code = $this->input->post('insuarance_number');
+		}
+		else if($payment_method == 5)
+		{
+			//  check for mpesa code if inserted
+			$transaction_code = $this->input->post('mpesa_code');
+		}
+		else
+		{
+			$transaction_code = '';
+		}
+		
+		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"),'payment_type'=>$type_payment,'transaction_code'=>$transaction_code,'payment_service_id'=>$service_id,'payment_created'=>date("Y-m-d"),'payment_created_by'=>$this->session->userdata("personnel_id"));
 		if($this->db->insert('payments', $data))
 		{
 			return $this->db->insert_id();
@@ -746,5 +841,40 @@ class Accounts_model extends CI_Model
 		$query = $this->db->get('visit');
 		$row = $query->row();
 		return $row->bill_to_id;
+	}
+	public function get_all_service($patient_id)
+	{
+		$table = "service";
+		$where = "service_id > 0";
+		$items = "*";
+		$order = "service_id";
+		
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+
+	public function get_service_detail($service_id)
+	{
+		$table = "service";
+		$where = "service_id = ".$service_id;
+		$items = "*";
+		$order = "service_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+			foreach ($result as $key):
+				# code...
+				$service_name = $key->service_name;
+			endforeach;
+		}
+		else
+		{
+			$service_name = "";
+		}
+		return  $service_name;
 	}
 }

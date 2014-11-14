@@ -45,8 +45,8 @@
                   							   <div class="widget-head">
                   								  <h4 class="pull-left"><i class="icon-reorder"></i>Invoices Charges</h4>
                   								  <div class=" pull-right">
-                  									 <a href="<?php echo site_url();?>/accounts/print_invoice/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-success pull-right" >Print Invoice</a>
-
+                  									 <!-- <a href="<?php echo site_url();?>/accounts/print_invoice/<?php echo $visit_id;?>" target="_blank" style="margin-top:5px; margin-right:4px;" class="btn btn-sm btn-success pull-right" >Print Invoice</a> -->
+                                      <a href="<?php echo site_url();?>/accounts/print_invoice_new/<?php echo $visit_id;?>" target="_blank" style="margin-top:5px; margin-right:4px;" class="btn btn-sm btn-success pull-right" style="margin-right:10px;" >Print Invoice</a>
                   								  </div>
                   								  <div class="clearfix"></div>
                   								</div> 
@@ -88,12 +88,92 @@
                                             $total = $total + $visit_total;
                                         endforeach;
                                           $total_amount = $total ;
+                                          // enterring the payment stuff
+                                          $payments_rs = $this->accounts_model->payments($visit_id);
+                                          $total_payments = 0;
+                                          $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
+                                          if(count($payments_rs) > 0){
+                                            $x = $s;
+                                            foreach ($payments_rs as $key_items):
+                                              $x++;
+                                              $payment_method = $key_items->payment_method;
+                                              $amount_paid = $key_items->amount_paid;
+                                              $time = $key_items->time;
+                                              $payment_type = $key_items->payment_type;
+                                              $amount_paidd = number_format($amount_paid,2);
+                                              $payment_service_id = $key_items->payment_service_id;
+                                              
+                                              if($payment_service_id > 0)
+                                              {
+                                                $service_associate = $this->accounts_model->get_service_detail($payment_service_id);
+                                              }
+                                              else
+                                              {
+                                                $service_associate = " ";
+                                              }
+
+                                              if($payment_type == 2)
+                                              {
+                                                  $type = "Debit Note";
+                                                  $amount_paidd = $amount_paidd;
+                                              
+                                                  ?>
+                                                  <tr>
+                                                    <td><?php echo $x;?></td>
+                                                    <td colspan="2"><?php echo $service_associate;?></td>
+                                                  
+                                                    <td><?php echo $amount_paidd;?></td>
+                                                  </tr>
+                                                  <?php
+                                              }
+                                              else if($payment_type == 3)
+                                              {
+                                                   $type = "Credit Note";
+                                                   $amount_paidd = "($amount_paidd)";
+                                              
+                                                  ?>
+                                                  <tr>
+                                                    <td><?php echo $x;?></td>
+                                                    <td colspan="2"><?php echo $service_associate;?></td>
+                                                    <td><?php echo $amount_paidd;?></td>
+                                                  </tr>
+                                                  <?php
+                                              }
+                                              
+
+                                            endforeach;
+                                              
+                                            }
+                                            // end of the payments
+                                            $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
+                                            $payments_rs = $this->accounts_model->payments($visit_id);
+                                            $total_payments = 0;
+                                            
+                                            if(count($payments_rs) > 0)
+                                            {
+                                              $x=0;
+                                              
+                                                foreach ($payments_rs as $key_items):
+                                                  $x++;
+                                                      $payment_type = $key_items->payment_type;
+                                                      if($payment_type == 1)
+                                                      {
+                                                        $payment_method = $key_items->payment_method;
+                                                        $amount_paid = $key_items->amount_paid;
+                                                        
+                                                        $total_payments = $total_payments + $amount_paid;
+                                                      }
+                                                endforeach;
+                                                          
+                                            }
                                           ?>
+                                           <tr>
+                                            <td colspan="3"><strong>Total Payments:</strong></td>
+                                            <td><strong> <?php echo number_format($total_payments,2);?></strong></td>
+                                          </tr>
                                           <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td>Total :</td>
-                                            <td> <?php echo number_format($total_amount,2);?></td>
+                                            <td colspan="3"><strong>Total Invoice:</strong></td>
+                                            <td><strong> <?php echo number_format($total_amount - $total_payments,2);?></strong></td>
                                           </tr>
                                           <?php
                                       }else{
@@ -124,6 +204,7 @@
                                   <table class="table table-hover table-bordered col-md-12">
                                     <thead>
                                     <tr>
+                                      <th>Service Associate</th>
                                       <th>Time</th>
                                       <th>Debit</th>
                                       <th>Credit</th>
@@ -144,7 +225,17 @@
                                           $time = $key_items->time;
                                           $payment_type = $key_items->payment_type;
                                           $amount_paidd = number_format($amount_paid,2);
-                                         
+                                          $payment_service_id = $key_items->payment_service_id;
+                                          
+                                          if($payment_service_id > 0)
+                                          {
+                                            $service_associate = $this->accounts_model->get_service_detail($payment_service_id);
+                                          }
+                                          else
+                                          {
+                                            $service_associate = " ";
+                                          }
+
                                           if($payment_type == 2)
                                           {
                                               $type = "Debit Note";
@@ -152,6 +243,7 @@
                                           
                                               ?>
                                               <tr>
+                                                <td><?php echo $service_associate;?></td>
                                                 <td><?php echo $time;?></td>
                                                 <td><?php echo $amount_paidd;?></td>
                                                 <td></td>
@@ -165,6 +257,7 @@
                                           
                                               ?>
                                               <tr>
+                                                <td><?php echo $service_associate;?></td>
                                                 <td><?php echo $time;?></td>
                                                 <td></td>
                                                 <td><?php echo $amount_paidd;?></td>
@@ -176,13 +269,14 @@
                                         endforeach;
                                            ?>
                                             <tr>
-                                              <td>Totals</td>
-                                              <td><?php echo number_format($debit_note_amount,2);?></td>
-                                              <td><?php echo number_format($credit_note_amount,2);?></td>
+                                              
+                                              <td colspan="2"><strong>Totals</strong></td>
+                                              <td><strong><?php echo number_format($debit_note_amount,2);?></strong></td>
+                                              <td><strong><?php echo number_format($credit_note_amount,2);?></strong></td>
                                             </tr>
                                             <tr>
-                                              <td colspan="2">Difference </td>
-                                              <td><?php echo number_format($debit_note_amount - $credit_note_amount,2);?></td>
+                                              <td colspan="3"><strong>Difference </strong></td>
+                                              <td><strong><?php echo number_format($debit_note_amount - $credit_note_amount,2);?></strong></td>
                                             </tr>
                                           <?php
                                         }else{
@@ -206,7 +300,7 @@
                   								  <h4 class="pull-left"><i class="icon-reorder"></i>Receipts</h4>
                   								  <div class=" pull-right">
                   									<!-- <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt A5</a> -->
-                  									<a href="<?php echo site_url();?>/accounts/print_receipt_new/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" style="margin-right:10px;" >Print Receipt</a>
+                  									<a href="<?php echo site_url();?>/accounts/print_receipt_new/<?php echo $visit_id;?>" target="_blank" style="margin-top:5px; margin-right:4px;" class="btn btn-sm btn-primary pull-right" style="margin-right:10px;" >Print Receipt</a>
                   								  </div>
                   								  <div class="clearfix"></div>
                   								</div> 
@@ -254,10 +348,9 @@
                                         
                                            ?>
                                           <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td>Total :</td>
-                                            <td> <?php echo number_format($total_payments,2);?></td>
+                                            
+                                            <td colspan="3"><strong>Total : </strong></td>
+                                            <td><strong> <?php echo number_format($total_payments,2);?></strong></td>
                                           </tr>
                                           <?php
                                         }else{
@@ -280,8 +373,8 @@
                                    <table class="table table-hover table-bordered">
                                     <tbody>
                                         <tr>
-                                          <td colspan="3">Balance :</td>
-                                          <td> <?php echo number_format(($total_amount - $total_payments),2) ;?></td>
+                                          <td colspan="3"><strong>Balance :</strong></td>
+                                          <td><strong> <?php echo number_format(($total_amount - $total_payments),2) ;?> </strong></td>
 
                                         </tr>
                                     </tbody>
@@ -324,7 +417,7 @@
                                                       <label class="col-lg-4 control-label">Payment Method: </label>
                                                       
                                                       <div class="col-lg-8">
-                                                        <select class="form-control" name="payment_method">
+                                                        <select class="form-control" name="payment_method" onchange="check_payment_type(this.value)">
                                                                   <?php
                                                               $method_rs = $this->accounts_model->get_payment_methods();
                                                               $num_rows = count($method_rs);
@@ -344,14 +437,57 @@
                                                             </select>
                                                       </div>
                                                   </div>
-                                                  <div class="form-group">
-                                                    <div class="center-align">
-                                                      <input type="radio" name="type_payment" value="1" checked="checked">Normal
-                                                      <input type="radio" name="type_payment" value="2"> Debit Note
-                                                      <input type="radio" name="type_payment" value="3"> Credit Note
+                                                  <div id="mpesa_div" class="form-group" style="display:none;" >
+                                                      <label class="col-lg-4 control-label"> Mpesa TX Code: </label>
+                                                      
+                                                      <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="mpesa_code" placeholder="">
                                                       </div>
                                                   </div>
-                                                 
+                                                  <div id="insuarance_div" class="form-group" style="display:none;" >
+                                                      <label class="col-lg-4 control-label"> Insuarance Number: </label>
+                                                      <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="insuarance_number" placeholder="">
+                                                      </div>
+                                                  </div>
+                                                  <div id="cheque_div" class="form-group" style="display:none;" >
+                                                      <label class="col-lg-4 control-label"> Cheque Number: </label>
+                                                      
+                                                      <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="cheque_number" placeholder="">
+                                                      </div>
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <div class="center-align">
+                                                      <input type="radio" name="type_payment" value="1" checked="checked" onclick="getservices(1)">Normal
+                                                      <input type="radio" name="type_payment" value="2" onclick="getservices(2)"> Debit Note
+                                                      <input type="radio" name="type_payment" value="3" onclick="getservices(3)"> Credit Note
+                                                      </div>
+                                                  </div>
+                                                 <div id="service_div" class="form-group" style="display:none;">
+                                                      <label class="col-lg-4 control-label"> Services: </label>
+                                                      
+                                                      <div class="col-lg-8">
+                                                        <select class="form-control" name="service_id" >
+                                                                  <?php
+                                                              $service_rs = $this->accounts_model->get_all_service();
+                                                              $service_num_rows = count($service_rs);
+                                                             if($service_num_rows > 0)
+                                                              {
+                                                                
+                                                                foreach($service_rs as $service_res)
+                                                                {
+                                                                  $service_id = $service_res->service_id;
+                                                                  $service_name = $service_res->service_name;
+                                                                  
+                                                                    echo '<option value="'.$service_id.'">'.$service_name.'</option>';
+                                                                  
+                                                                }
+                                                              }
+                                                          ?>
+                                                            </select>
+                                                      </div>
+                                                  </div>
                                                     <div class="center-align">
                                                       <button class="btn btn-info btn-lg" type="submit">Add Payment Information</button>
                                                     </div>
@@ -461,3 +597,65 @@
 
   </div>
   <!-- END OF ROW -->
+<script type="text/javascript">
+  function getservices(id){
+
+        var myTarget1 = document.getElementById("service_div");
+        if(id == 1)
+        {
+          myTarget1.style.display = 'none';
+        }
+        else
+        {
+          myTarget1.style.display = 'block';
+        }
+        
+  }
+  function check_payment_type(payment_type_id){
+   
+    var myTarget1 = document.getElementById("cheque_div");
+
+    var myTarget2 = document.getElementById("mpesa_div");
+
+    var myTarget3 = document.getElementById("insuarance_div");
+
+    if(payment_type_id == 1)
+    {
+      // this is a check
+     
+      myTarget1.style.display = 'block';
+      myTarget2.style.display = 'none';
+      myTarget3.style.display = 'none';
+    }
+    else if(payment_type_id == 2)
+    {
+      myTarget1.style.display = 'none';
+      myTarget2.style.display = 'none';
+      myTarget3.style.display = 'none';
+    }
+    else if(payment_type_id == 3)
+    {
+      myTarget1.style.display = 'none';
+      myTarget2.style.display = 'none';
+      myTarget3.style.display = 'block';
+    }
+    else if(payment_type_id == 4)
+    {
+      myTarget1.style.display = 'none';
+      myTarget2.style.display = 'none';
+      myTarget3.style.display = 'none';
+    }
+    else if(payment_type_id == 5)
+    {
+      myTarget1.style.display = 'none';
+      myTarget2.style.display = 'block';
+      myTarget3.style.display = 'none';
+    }
+    else
+    {
+      myTarget2.style.display = 'none';
+      myTarget3.style.display = 'block';  
+    }
+
+  }
+</script>

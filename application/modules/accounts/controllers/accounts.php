@@ -383,9 +383,50 @@ class Accounts extends auth
 		$this->form_validation->set_rules('payment_method', 'Payment Method', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('amount_paid', 'Amount', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('type_payment', 'Type of payment', 'trim|required|xss_clean');
+		$payment_method = $this->input->post('payment_method');
+
+
+		if(!empty($payment_method))
+		{
+			if($payment_method == 1)
+			{
+				// check for cheque number if inserted
+				$this->form_validation->set_rules('cheque_number', 'Cheque Number', 'trim|required|xss_clean');
+			}
+			else if($payment_method == 3)
+			{
+				// check for insuarance number if inserted
+				$this->form_validation->set_rules('insuarance_number', 'Insuarance Number', 'trim|required|xss_clean');
+			}
+			else if($payment_method == 5)
+			{
+				//  check for mpesa code if inserted
+				$this->form_validation->set_rules('mpesa_code', 'Amount', 'trim|required|xss_clean');
+			}
+		}
+
+		// normal or credit note or debit note
+		$type_payment = $this->input->post('type_payment');
+		// type of payment 
+
+		if($type_payment == 1)
+		{
+
+		}
+		else if($type_payment == 2)
+		{
+			// debit note
+			$this->form_validation->set_rules('service_id', 'Amount', 'trim|required|xss_clean');
+		}
+		else if($type_payment == 3)
+		{
+			$this->form_validation->set_rules('service_id', 'Amount', 'trim|required|xss_clean');
+		}
+
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
+
 			$this->accounts_model->receipt_payment($visit_id);
 			redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 		}
@@ -430,6 +471,14 @@ class Accounts extends auth
 		$this->accounts_model->receipt($visit_id, TRUE);
 	}
 	
+	public function print_invoice_new($visit_id)
+	{
+		$data = array('visit_id'=>$visit_id);
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['patient'] = $patient;
+		$this->load->view('invoice', $data);
+	}
 	public function print_receipt_new($visit_id)
 	{
 		$data = array('visit_id'=>$visit_id);
@@ -439,6 +488,7 @@ class Accounts extends auth
 		$this->load->view('receipt', $data);
 	}
 	
+
 	public function bulk_close_visits($page)
 	{
 		$total_visits = sizeof($_POST['visit']);

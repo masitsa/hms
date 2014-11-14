@@ -198,7 +198,7 @@ $staff_id =set_value('staff_id');
             <label class="col-lg-5 control-label">Job Title: </label>
             
             <div class="col-lg-7">
-            	<select class="form-control" name="civil_status_id">
+            	<select class="form-control" name="job_title_id">
                 	<?php
                     	if($job_titles_query->num_rows() > 0)
 						{

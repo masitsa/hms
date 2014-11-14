@@ -57,8 +57,9 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
             	<strong>
                 	Strathmore University Medical Center<br/>
                     P.O. Box 59857 00200, Nairobi, Kenya<br/>
-                    info@strathmore.edu<br/>
-                    Madaraka Estate
+                    E-mail: sumedicalcentre@strathmore.edu. Tel : +254703034011<br/>
+                    Madaraka Estate<br/>
+
                 </strong>
             </div>
         </div>

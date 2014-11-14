@@ -232,7 +232,7 @@ class Reception_model extends CI_Model
 			'patient_number'=>$this->strathmore_population->create_patient_number(),
 			'created_by'=>$this->session->userdata('personnel_id'),
 			'modified_by'=>$this->session->userdata('personnel_id'),
-			'visit_type_id'=>$this->input->post('visit_type_id'),
+			'visit_type_id'=>3,
 			'dependant_id'=>$this->input->post('dependant_id'),
 			'patient_kin_phonenumber1'=>$this->input->post('next_of_kin_contact')
 		);

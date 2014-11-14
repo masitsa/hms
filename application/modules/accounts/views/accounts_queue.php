@@ -204,9 +204,9 @@
 					$to_doctor = '';
 				}
 				
-				$payments_value = $this->accounts_model->payments2($visit_id);
+				$payments_value = $this->accounts_model->total_payments($visit_id);
 
-				$invoice_total = $this->accounts_model->total($visit_id);
+				$invoice_total = $this->accounts_model->total_invoice($visit_id);
 
 				$balance = $this->accounts_model->balance($payments_value,$invoice_total);
 				
@@ -255,6 +255,7 @@
 			if($module == 0)
 			{
 				$result .= '
+				<br>
 				<div class="center-align">
 					<button type="submit" class="btn btn-lg btn-danger">End Visits</button>
 				</div>
