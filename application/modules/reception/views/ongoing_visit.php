@@ -103,8 +103,11 @@
 				}
 				
 				else
+
 				{
-					$result .= 
+					if($page == 'nurse' || $page == 'doctor')
+					{
+						$result .= 
 					'
 						<table class="table table-hover table-bordered ">
 						  <thead>
@@ -113,15 +116,36 @@
 							  <th>Visit Date</th>
 							  <th>Patient</th>
 							  <th>Patient Type</th>
-							  <th>Visit Type</th>
 							  <th>Time In</th>
 							  <th>Time Out</th>
 							  <th>Doctor</th>
-							  <th>Actions</th>
+							  <th>Diagnosis</th>
 							</tr>
 						  </thead>
 						  <tbody>
 					';
+					}
+					else
+					{
+						$result .= 
+						'
+							<table class="table table-hover table-bordered ">
+							  <thead>
+								<tr>
+								  <th>#</th>
+								  <th>Visit Date</th>
+								  <th>Patient</th>
+								  <th>Patient Type</th>
+								  <th>Visit Type</th>
+								  <th>Time In</th>
+								  <th>Time Out</th>
+								  <th>Doctor</th>
+								  <th>Actions</th>
+								</tr>
+							  </thead>
+							  <tbody>
+						';
+					}
 				}
 			}
 			
@@ -184,6 +208,26 @@
 				{
 					$doctor = '-';
 				}
+
+				// start of diagnosis
+				$diagnosis_rs = $this->nurse_model->get_diagnosis($visit_id);
+				$diagnosis_num_rows = count($diagnosis_rs);
+				//echo $num_rows;
+				$patient_diagnosis = "";
+				if($diagnosis_num_rows > 0){
+					foreach ($diagnosis_rs as $diagnosis_key):
+						$diagnosis_id = $diagnosis_key->diagnosis_id;
+						$diagnosis_name = $diagnosis_key->diseases_name;
+						$diagnosis_code = $diagnosis_key->diseases_code;
+						$patient_diagnosis .="".$diagnosis_code."-".$diagnosis_name."<br>";
+						
+					endforeach;
+				}
+				else
+				{
+					$patient_diagnosis .= "-";
+				}
+				// end of diagnosis
 				
 				$count++;
 				
@@ -206,6 +250,13 @@
 							$button = '
 							<td><a href="'.site_url().'/dental/patient_card/'.$visit_id.'" class="btn btn-sm btn-success">Patient Card</a></td>
 							<td><a href="'.site_url().'/dental/send_to_account/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to accounts?\');">To Account</a></td>
+							';
+						}
+						else if($page_name == 'ultra_sound')
+						{
+							$button = '
+							<td><a href="'.site_url().'/ultra_sound/patient_card/'.$visit_id.'" class="btn btn-sm btn-success">Patient Card</a></td>
+							<td><a href="'.site_url().'/ultra_sound/send_to_account/'.$visit_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to accounts?\');">To Account</a></td>
 							';
 						}
 						
@@ -261,20 +312,41 @@
 					
 					else
 					{
-						$result .= 
-						'
-							<tr>
-								<td>'.$count.'</td>
-								<td>'.$visit_date.'</td>
-								<td>'.$patient_surname.' '.$patient_othernames.'</td>
-								<td>'.$patient_type.'</td>
-								<td>'.$visit_type.'</td>
-								<td>'.$visit_time.'</td>
-								<td>'.$visit_time_out.'</td>
-								<td>'.$doctor.'</td>
-								<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>
-							</tr> 
-						';
+
+						if($page == 'nurse' || $page == 'doctor')
+						{
+							$result .= 
+							'
+								<tr>
+									<td>'.$count.'</td>
+									<td>'.$visit_date.'</td>
+									<td>'.$patient_surname.' '.$patient_othernames.'</td>
+									<td>'.$patient_type.'</td>
+									<td>'.$visit_time.'</td>
+									<td>'.$visit_time_out.'</td>
+									<td>'.$doctor.'</td>
+									<td>'.$patient_diagnosis.'</td>
+								</tr> 
+							';
+						}
+						else
+						{
+							$result .= 
+							'
+								<tr>
+									<td>'.$count.'</td>
+									<td>'.$visit_date.'</td>
+									<td>'.$patient_surname.' '.$patient_othernames.'</td>
+									<td>'.$patient_type.'</td>
+									<td>'.$visit_type.'</td>
+									<td>'.$visit_time.'</td>
+									<td>'.$visit_time_out.'</td>
+									<td>'.$doctor.'</td>
+									<td><a href="'.site_url().'/reception/delete_visit/'.$visit_id.'/'.$visit.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this visit?\');">Delete</a></td>
+								</tr> 
+							';
+						}
+						
 					}
 				}
 				

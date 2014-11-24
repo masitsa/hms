@@ -217,8 +217,24 @@ class Nurse_model extends CI_Model
 		AND visit_vital.visit_id = $visit_id 
 		AND visit.patient_id = (SELECT patient_id FROM visit WHERE visit.visit_id = $visit_id)
 		";
-		$items = "visit_vital.visit_vital_value, vitals.vitals_name, visit_vital.visit_id, visit.visit_date, visit_vital.vital_id";
-		$order = "visit_id";
+		$items = "visit_vital.visit_vital_value, vitals.vitals_name, visit_vital.visit_id, visit.visit_date, visit_vital.vital_id,visit_vital.visit_counter,visit_vital.visit_vitals_time";
+		$order = "visit_vital.visit_counter";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+		
+	}
+	function get_distict_vitals($visit_id){
+
+		$table = "visit_vital, vitals,visit";
+		$where = "visit_vital.vital_id = vitals.vitals_id 
+		AND visit_vital.visit_id = visit.visit_id 
+		AND visit_vital.visit_id = $visit_id 
+		AND visit.patient_id = (SELECT patient_id FROM visit WHERE visit.visit_id = $visit_id)
+		";
+		$items = "DISTINCT(visit_vital.visit_counter), visit_vital.visit_vitals_time";
+		$order = "visit_vital.visit_counter";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -246,6 +262,7 @@ class Nurse_model extends CI_Model
 		
 		return $result;
 	}
+
 	function visit_charge($visit_id){
 		$table = "visit_charge";
 		$where = "visit_charge.visit_id  = '$visit_id'";
@@ -962,6 +979,39 @@ class Nurse_model extends CI_Model
 		return $result;
 
 		
+	}
+
+	function check_visit_counter($visit_id)
+	{
+		$table = "visit_vital";
+		$where = "visit_id = '$visit_id'";
+		$items = "MAX(visit_counter) AS visit_counter";
+		$order = "visit_id";
+
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+			foreach ($result as $key) :
+				# code...
+				$visit_counter = $key->visit_counter;
+
+				if(!is_numeric($visit_counter))
+				{
+					$counter = 1;
+				}
+				else
+				{
+					$counter = $visit_counter + 1;
+				}
+			endforeach;
+		}
+		else
+		{
+			$counter = 1;
+		}
+		return $counter;
+
 	}
 	
 }

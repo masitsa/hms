@@ -14,8 +14,8 @@
 			$visit_vital_value = $rs1->visit_vital_value;
 		endforeach;
 
-		if (count($visit_range_rs) > 0)
-		{
+			if (count($visit_range_rs) > 0)
+			{
 
 				foreach ($visit_range_rs as $rs2):
 					$vitals_range_range = $rs2->vitals_range_range;

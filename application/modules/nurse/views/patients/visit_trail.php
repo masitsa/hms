@@ -162,7 +162,8 @@ if(!isset($page_name))
             foreach ($payments_rs as $key_items):
               $x++;
               $payment_method = $key_items->payment_method;
-              $amount_paid = $key_items->amount_paid;
+              
+                $amount_paid = $key_items->amount_paid;
               $time = $key_items->time;
               $payment_type = $key_items->payment_type;
               $amount_paidd = number_format($amount_paid,2);
@@ -332,8 +333,8 @@ if(!isset($page_name))
 															echo "<option value='".$service_charge_id."'>".$service_charge_name."</option>";
 														}
 													endforeach;
-												}
-											?>
+    												}
+    											?>
 						                    </select>
                                 		<?php
                                 	}
@@ -390,8 +391,10 @@ if(!isset($page_name))
                                 
                                 $time = $key_items->time;
                                 $payment_type = $key_items->payment_type;
-
-                                if($payment_type == 1)
+                                $payment_type = $key_items->payment_type;
+                                $payment_status = $key_items->payment_status;
+                                                                
+                                if($payment_type == 1 && $payment_status == 1)
                                 {
 	                                $amount_paid = $key_items->amount_paid;
 	                                $total_payments = $total_payments + $amount_paid;
@@ -405,6 +408,8 @@ if(!isset($page_name))
 
                               endforeach;
                           	}
+
+
                             ?>
                             <tr>
                              <td colspan="3"></td>
@@ -440,6 +445,136 @@ if(!isset($page_name))
 		</div>
 	</div>
 </div>
+
+ <div class="row" style= "margin-top:2em">
+  <div class="col-md-12">
+  <div class="widget-head">
+    <h4 class="pull-left"><i class="icon-reorder"></i>Receipts</h4>
+    <div class=" pull-right">
+    <!-- <a href="<?php echo site_url();?>/accounts/print_receipt/<?php echo $visit_id;?>" target="_blank" class="btn btn-sm btn-primary pull-right" >Print Receipt A5</a> -->
+    <!-- <a href="<?php echo site_url();?>/accounts/print_receipt_new/<?php echo $visit_id;?>" target="_blank" style="margin-top:5px; margin-right:4px;" class="btn btn-sm btn-primary pull-right" style="margin-right:10px;" >Print Receipt</a> -->
+    </div>
+    <div class="clearfix"></div>
+  </div> 
+  <table class="table table-hover table-bordered col-md-12">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Time</th>
+      <th>Method</th>
+      <th>Amount</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+     <?php
+      $payments_rs = $this->accounts_model->payments($visit_id);
+      $total_payments = 0;
+      $total_amount = ($total + $debit_note_amount) - $credit_note_amount;
+      if(count($payments_rs) > 0){
+        $x=0;
+        
+        foreach ($payments_rs as $key_items):
+          $x++;
+          $payment_method = $key_items->payment_method;
+          
+          $time = $key_items->time;
+          $payment_type = $key_items->payment_type;
+          $payment_id = $key_items->payment_id;
+          $payment_status = $key_items->payment_status;
+          if($payment_type == 1)
+          {
+            if($page_name == "administration")
+            {
+              $amount_paid = $key_items->amount_paid;
+              $amount_paidd = number_format($amount_paid,2);
+              ?>
+              <tr>
+                <td><?php echo $x;?></td>
+                <td><?php echo $time;?></td>
+                <td><?php echo $payment_method;?></td>
+                <td><?php echo $amount_paidd;?></td>
+                <?php
+                if($payment_status == 0)
+                {
+                ?>
+                <td><a href='<?php echo site_url();?>/administration/increase_receipt/<?php echo $payment_id;?>' class="btn btn-sm btn-success" onclick="return confirm(\'Do you want to increase this receipt entry ?\');">Restore Receipt Entry</a></td>
+                <?php
+                }
+                else
+                {
+                ?>
+                <td><a href='<?php echo site_url();?>/administration/reduce_receipt/<?php echo $payment_id;?>' class="btn btn-sm btn-danger" onclick="return confirm(\'Do you want to delete this receipt entry ?\');">Delete Receipt Entry</a></td>
+                <?php
+                }
+                ?>
+              </tr>
+              <?php
+              $total_payments =  $total_payments + $amount_paid;
+            }
+            else
+            {
+              if($payment_status == 1){
+                $amount_paid = $key_items->amount_paid;
+                $amount_paidd = number_format($amount_paid,2);
+                ?>
+                <tr>
+                  <td><?php echo $x;?></td>
+                  <td><?php echo $time;?></td>
+                  <td><?php echo $payment_method;?></td>
+                  <td><?php echo $amount_paidd;?></td>
+                </tr>
+                <?php
+                $total_payments =  $total_payments + $amount_paid;
+              }
+
+            }
+            
+            
+          }
+         
+
+        endforeach;
+          $payment = $this->accounts_model->total_payments($visit_id);
+
+          if($page_name == "administration")
+          {
+           ?>
+           <tr>
+            <td colspan="3"><strong>Total payments (before deductions): </strong></td>
+            <td><strong> <?php echo number_format($total_payments,2);?></strong></td>
+          </tr>
+          <tr>
+            
+            <td colspan="3"><strong>Total payments (after deductions): </strong></td>
+            <td><strong> <?php echo number_format($payment,2);?></strong></td>
+          </tr>
+          <?php
+          }
+          else
+          {
+             ?>
+              <tr>
+                <td colspan="3"><strong>Total payments: </strong></td>
+                <td><strong> <?php echo number_format($payment,2);?></strong></td>
+              </tr>
+            <?php 
+          }
+        }else{
+          ?>
+          <tr>
+            <td colspan="4"> No payments made yet</td>
+          </tr>
+          <?php
+        }
+        ?>
+    </tbody>
+  </table>
+ 
+  </div>
+
+</div>
+
 <script type="text/javascript">
 	
 

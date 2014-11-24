@@ -157,13 +157,28 @@ class Reception extends auth
 			//terminated visits
 			if($visits == 1)
 			{
-				$where .= ' AND visit.close_card = '.$visits;
+				if($page_name == 'nurse' || $page_name == 'doctor')
+				{
+					$where .= ' ';
+				}
+				else
+				{
+					$where .= ' AND visit.close_card = '.$visits;	
+				}
+				
 			}
 			
 			//ongoing visits
 			else
 			{
-				$where .= ' AND visit.close_card = 0';
+				if($page_name == 'nurse' || $page_name == 'doctor')
+				{
+					$where .= ' ';
+				}
+				else
+				{
+					$where .= ' AND visit.close_card = 0';	
+				}
 				
 				//visits of the current day
 				if($visits == 0)
@@ -273,6 +288,10 @@ class Reception extends auth
 		else if($page_name == 'dental')
 		{
 			$data['sidebar'] = 'dental_sidebar';
+		}
+		else if($page_name == 'ultra_sound')
+		{
+			$data['sidebar'] = 'ultra_sound_sidebar';
 		}
 		
 		else

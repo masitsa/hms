@@ -1,7 +1,7 @@
 <?php 
 	echo form_open("reception/register_other_patient", array("class" => "form-horizontal"));
 	form_hidden('visit_type_id', 3);
-	if(isset($$dependant_parent))
+	if(isset($dependant_parent))
 	{
 		form_hidden('dependant_id', $dependant_parent);
 	}

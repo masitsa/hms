@@ -244,7 +244,7 @@
 					</td>
 
 					<td><a href="'.site_url().'/accounts/print_receipt_new/'.$visit_id.'" target="_blank" class="btn btn-sm btn-info">Receipt</a></td>
-					<td><a href="'.site_url().'/accounts/print_invoice/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice </a></td>
+					<td><a href="'.site_url().'/accounts/print_invoice_new/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice </a></td>
 					<td><a href="'.site_url().'/accounts/payments/'.$visit_id.'" class="btn btn-sm btn-primary" >Payments</a></td>
 					<td><a href="'.site_url().'/reception/end_visit/'.$visit_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'End this visit?\');">End Visit</a></td>
 					';
@@ -294,19 +294,19 @@
 					';
 					if($page_name == 'accounts')
 					{
-						$pink = 14;
+						$pink = 15;
 					}
 					if($page_name == 'administration')
 					{
-						$pink = 14;
+						$pink = 15;
 					}
 					else if($page_name == 'laboratory')
 					{
-						$pink = 11;
+						$pink = 12;
 					}
 					else
 					{
-						$pink = 11;
+						$pink = 12;
 					}
 					$v_data['patient_type'] = $visit_type_id;
 				$result .=

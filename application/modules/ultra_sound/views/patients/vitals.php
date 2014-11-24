@@ -22,8 +22,6 @@
                         <div class="padd">
                               <!-- vitals from java script -->
                                 <div id="vitals"></div>
-
-
                                 <!-- end of vitals data -->
                         </div>
 
@@ -60,34 +58,6 @@
             </div>
         </div>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-
-              <!-- Widget -->
-              <div class="widget boxed">
-                    <!-- Widget head -->
-                    <div class="widget-head">
-                      <h4 class="pull-left"><i class="icon-reorder"></i>Previous Vitals</h4>
-                      <div class="widget-icons pull-right">
-                        <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        <a href="#" class="wclose"><i class="icon-remove"></i></a>
-                      </div>
-                      <div class="clearfix"></div>
-                    </div>             
-
-                <!-- Widget content -->
-                    <div class="widget-content">
-                        <div class="padd">
-                             <div id="previous_vitals"></div>
-                        </div>
-                    </div>
-            </div>
-        </div>
-    </div>
     </div>
 </div>
 <div class="row">
@@ -351,7 +321,7 @@ function load_vitals(vitals_id, visit_id){
                 obj.innerHTML = XMLHttpRequestObject.responseText;
                 
                 if((vitals_id == 8) || (vitals_id == 9)){
-                    calculate_bmi(visit_id);
+                    calculate_bmi(vitals_id, visit_id);
                 }
                 
                 if((vitals_id == 3) || (vitals_id == 4)){
@@ -418,34 +388,19 @@ function getXMLHTTP() {
             
         return xmlhttp;
     }
-    function save_vital(visit_id){
+    function save_vital(visit_id, vital_id){
         
-      
-
         var config_url = $('#config_url').val();
-        var data_url = config_url+"/nurse/save_vitals/"+visit_id;
-       
-        var vital5_systolic = $('#vital5').val();
-        var vital6_diastolic = $('#vital6').val();
-        var vital8_weight = $('#vital8').val();
-        var vital9_height = $('#vital9').val();
-        var vital4_hip = $('#vital4').val();
-        var vital3_waist = $('#vital3').val();
-        var vital1_temperature = $('#vital1').val();
-        var vital7_pulse = $('#vital7').val();
-        var vital2_respiration = $('#vital2').val();
-        var vital11_oxygen = $('#vital11').val();
-        var vital10_pain = $('#vital10').val();
-         
+        var data_url = config_url+"/nurse/save_vitals/"+vital_id+"/"+visit_id;
+        //window.alert(data_url);
+         var patient_vital = $('#vital'+vital_id).val();//document.getElementById("vital"+vital_id).value;
         $.ajax({
         type:'POST',
         url: data_url,
-        data:{systolic: vital5_systolic, diastolic : vital6_diastolic, weight: vital8_weight, height : vital9_height,hip : vital4_hip,waist : vital3_waist, temperature : vital1_temperature,pulse : vital7_pulse,respiration: vital2_respiration,oxygen: vital11_oxygen, pain: vital10_pain},
+        data:{vital: patient_vital},
         dataType: 'text',
         success:function(data){
-         //get_medication(visit_id);
-         alert("You have successfully entered the vitals");
-          previous_vitals(visit_id);
+        load_vitals(vital_id, visit_id);
         //obj.innerHTML = XMLHttpRequestObject.responseText;
         },
         error: function(xhr, status, error) {
@@ -457,7 +412,7 @@ function getXMLHTTP() {
         
     }
 
-    function calculate_bmi(visit_id){
+    function calculate_bmi(vitals_id, visit_id){
     
         var XMLHttpRequestObject = false;
             
@@ -470,7 +425,7 @@ function getXMLHTTP() {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
         var config_url = $('#config_url').val();
-        var url = config_url+"/nurse/calculate_bmi/"+visit_id;window.alert(url);
+        var url = config_url+"/nurse/calculate_bmi/"+vitals_id+"/"+visit_id;//window.alert(url);
 
         if(XMLHttpRequestObject) {
             
@@ -538,7 +493,7 @@ function display_procedure(visit_id){
     
     var config_url = $('#config_url').val();
     var url = config_url+"/nurse/view_procedure/"+visit_id;
-    
+  
     if(XMLHttpRequestObject) {
                 
         XMLHttpRequestObject.open("GET", url);
@@ -742,7 +697,7 @@ function save_surgery(visit_id){
     var month = document.getElementById("month").value;
     var config_url = $('#config_url').val();
     var url = config_url+"/nurse/surgeries/"+date+"/"+description+"/"+month+"/"+visit_id;
-    window.alert(url);
+ 
     if(XMLHttpRequestObject) {
                 
         XMLHttpRequestObject.open("GET", url);
