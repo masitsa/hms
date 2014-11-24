@@ -23,24 +23,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 
 <!DOCTYPE html>
 <html lang="en">
-	<style type="text/css">
-		.receipt_spacing{letter-spacing:0px; font-size: 12px;}
-		.center-align{margin:0 auto; text-align:center;}
-		
-		.receipt_bottom_border{border-bottom: #888888 medium solid;}
-		.row .col-md-12 table {
-			border:solid #000 !important;
-			border-width:1px 0 0 1px !important;
-			font-size:10px;
-		}
-		.row .col-md-12 th, .row .col-md-12 td {
-			border:solid #000 !important;
-			border-width:0 1px 1px 0 !important;
-		}
-		
-		.row .col-md-12 .title-item{float:left;width: 130px; font-weight:bold; text-align:right; padding-right: 20px;}
-		.title-img{float:left; padding-left:30px;}
-	</style>
+
     <head>
         <title>SUMC | Receipt</title>
         <!-- For mobile content -->
@@ -49,9 +32,31 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!-- Bootstrap -->
         <link href="<?php echo base_url();?>assets/bluish/style/bootstrap.css" rel="stylesheet" media="all">
+        <style type="text/css">
+        .receipt_spacing{letter-spacing:0px; font-size: 12px;}
+        .center-align{margin:0 auto; text-align:center;}
+        
+        .receipt_bottom_border{border-bottom: #888888 medium solid;}
+        .row .col-md-12 table {
+            border:solid #000 !important;
+            border-width:1px 0 0 1px !important;
+            font-size:10px;
+        }
+        .row .col-md-12 th, .row .col-md-12 td {
+            border:solid #000 !important;
+            border-width:0 1px 1px 0 !important;
+        }
+        .table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td
+        {
+             padding: 2px;
+        }
+        
+        .row .col-md-12 .title-item{float:left;width: 130px; font-weight:bold; text-align:right; padding-right: 20px;}
+        .title-img{float:left; padding-left:30px;}
+    </style>
     </head>
     <body class="receipt_spacing">
-    	<div class="row">
+    	<div class="row" style=" min-height: 50px;">
         	<img src="<?php echo base_url();?>images/strathmore.gif" class="title-img"/>
         	<div class="col-md-12 center-align receipt_bottom_border">
             	<strong>
@@ -64,7 +69,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
             </div>
         </div>
         
-    	<div class="row receipt_bottom_border">
+    	<div class="row" >
         	<div class="col-md-12 center-align">
             	<strong>RECEIPT</strong>
             </div>
@@ -90,13 +95,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
                     </div>
                 </div>
                 
-            	<div class="row">
-                	<div class="col-md-12">
-                    	<div class="title-item">Receipt Date:</div> 
-                        
-                    	<?php echo $visit_date; ?>
-                    </div>
-                </div>
+            	
             </div>
             
         	<div class="col-md-6 pull-right">
@@ -200,7 +199,8 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
     					foreach ($payments_rs as $key_items):
     						$x++;
                             $payment_type = $key_items->payment_type;
-                            if($payment_type == 1)
+                             $payment_status = $key_items->payment_status;
+                            if($payment_type == 1 && $payment_status == 1)
                             {
     							$payment_method = $key_items->payment_method;
     							$amount_paid = $key_items->amount_paid;

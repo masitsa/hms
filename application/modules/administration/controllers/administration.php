@@ -9,6 +9,7 @@ class Administration extends auth
 		parent:: __construct();
 		$this->load->model('reception/reception_model');
 		$this->load->model('reception/strathmore_population');
+		$this->load->model('accounts/accounts_model');
 		$this->load->model('reports_model');
 		$this->load->model('administration_model');
 		$this->load->model('database');
@@ -423,5 +424,49 @@ class Administration extends auth
 		}
 		
 	}
+	public function reduce_receipt($payment_id)
+	{
+		$personnel_id = $this->accounts_model->get_payment_peronnel($payment_id);
+
+		if($this->session->userdata("personnel_id") == $personnel_id)
+		{
+		   $this->session->set_userdata("error_message","Seems you are not allowed to do this action. Please ask an administrator for assistance");
+			redirect('reception/general_queue/administration');
+		}
+		else
+		{
+
+			$data = array('payment_status' => 0, 'modified_by'=> $this->session->userdata("personnel_id"),'modified_on'=>date("Y-m-d"));
+			
+			$this->db->where('payment_id', $payment_id);
+			$this->db->update('payments', $data);
+			$this->session->set_userdata("success_message","You have successfully removed the receipt value");
+			redirect('reception/general_queue/administration');
+
+		}
+	}
+	public function increase_receipt($payment_id)
+	{
+		$personnel_id = $this->accounts_model->get_payment_peronnel($payment_id);
+
+		if($this->session->userdata("personnel_id") == $personnel_id)
+		{
+		   $this->session->set_userdata("error_message","Seems you are not allowed to do this action. Please ask an administrator for assistance");
+			redirect('reception/general_queue/administration');
+		}
+		else
+		{
+
+			$data = array('payment_status' => 1, 'modified_by'=> $this->session->userdata("personnel_id"),'modified_on'=>date("Y-m-d"));
+			
+			$this->db->where('payment_id', $payment_id);
+			$this->db->update('payments', $data);
+			$this->session->set_userdata("success_message","You have successfully restored the receipt value ");
+			redirect('reception/general_queue/administration');
+
+		}
+	}
+
 }
+
 ?>

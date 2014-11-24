@@ -97,6 +97,7 @@
                                             foreach ($payments_rs as $key_items):
                                               $x++;
                                               $payment_method = $key_items->payment_method;
+
                                               $amount_paid = $key_items->amount_paid;
                                               $time = $key_items->time;
                                               $payment_type = $key_items->payment_type;
@@ -156,7 +157,9 @@
                                                 foreach ($payments_rs as $key_items):
                                                   $x++;
                                                       $payment_type = $key_items->payment_type;
-                                                      if($payment_type == 1)
+                                                      $payment_status = $key_items->payment_status;
+                                              
+                                                      if($payment_type == 1 && $payment_status == 2)
                                                       {
                                                         $payment_method = $key_items->payment_method;
                                                         $amount_paid = $key_items->amount_paid;
@@ -327,9 +330,10 @@
                                           
                                           $time = $key_items->time;
                                           $payment_type = $key_items->payment_type;
-                                          
-                                          if($payment_type == 1)
+                                          $payment_status = $key_items->payment_status;
+                                          if($payment_type == 1 && $payment_status == 1)
                                           {
+                                          
                                             $amount_paid = $key_items->amount_paid;
                                             $amount_paidd = number_format($amount_paid,2);
                                             ?>

@@ -17,8 +17,12 @@ $doctor = $this->accounts_model->get_att_doctor($visit_id);
 
 //served by
 $served_by = $this->accounts_model->get_personnel($this->session->userdata('personnel_id'));
-$credit_note_amount = $this->accounts_model->get_sum_credit_notes($visit_id);
-$debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
+
+
+
+$title = 'Medical Checkup Form';
+$heading = 'Checkup';
+$number = 'SUMC/MED/00'.$visit_id;
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +46,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
 		.title-img{float:left; padding-left:30px;}
 	</style>
     <head>
-        <title>SUMC | Invoice</title>
+        <title>SUMC | <?php echo $title;?></title>
         <!-- For mobile content -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- IE Support -->
@@ -65,7 +69,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
         
       <div class="row receipt_bottom_border" >
         	<div class="col-md-12 center-align">
-            	<strong>INVOICE</strong>
+            	<strong><?php echo $title;?></strong>
             </div>
         </div>
         
@@ -94,9 +98,9 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
         	<div class="col-md-6 pull-right">
             	<div class="row">
                 	<div class="col-md-12">
-                    	<div class="title-item">Invoice Number:</div>
+                    	<div class="title-item">Checkup Number:</div>
                         
-                    	<?php echo 'INV/00'.$visit_id; ?>
+                    	<?php echo $number; ?>
                     </div>
                 </div>
             	
@@ -112,7 +116,7 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
         
     	<div class="row receipt_bottom_border">
         	<div class="col-md-12 center-align">
-            	<strong>BILLED ITEMS</strong>
+            	<strong>Present Illness</strong>
             </div>
         </div>
         
@@ -252,7 +256,140 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
                               </table>
             </div>
         </div>
-        
+        <?php
+        $exam_categories = $this->nurse_model->medical_exam_categories();
+
+		if($exam_categories->num_rows() > 0)
+		{
+			$exam_results = $exam_categories->result();
+			
+			foreach ($exam_results as $exam_res)
+			{
+				$mec_name = $exam_res->mec_name;
+				$mec_id = $exam_res->mec_id;
+				
+				$illnesses = $this->nurse_model->get_illness($visit_id, $mec_id);
+				
+				if($illnesses->num_rows() > 0)
+				{
+					$illnesses_row = $illnesses->row();
+					$mec_result= $illnesses_row->infor;
+				}
+				
+				else
+				{
+					$mec_result= '';
+				}
+				
+				if($mec_name=="Family History")
+				{
+					// $this->fpdf->SetFont('Times','B',11);
+					// $this->fpdf->Cell(0, $pageH, $mec_name, 'B', 1, 'C');
+					$this->doctor_model->get_family_history($visit_id);
+
+				}
+				
+				else if(($mec_name=="Present Illness")||($mec_name=="Past Illness")) 
+				{
+					$this->fpdf->SetFont('Times','B',11);
+					$this->fpdf->Cell(0, $pageH, $mec_name, 0, 1, 'C');
+					$this->fpdf->ln(2);
+					
+					$this->fpdf->SetFont('Times','',11);
+					$this->fpdf->MultiCell(0, $mulit_height, $mec_result, 1, 'L');
+					$this->fpdf->ln(2);
+				}
+				
+				else if(($mec_name=="Physiological History")||($mec_name=="General Physical Examination")||($mec_name=="Head Physical Examination")||($mec_name=="Neck Physical Examination")||($mec_name=="Cardiovascular System Physical Examination")||($mec_name=="Respiratory System Physical Examination")||($mec_name=="Abdomen Physical Examination")||($mec_name=="Nervous System Physical Examination")) 
+				{	
+					$this->fpdf->SetFont('Times','B',11);
+					$this->fpdf->Cell($width, $pageH, $mec_name, 'B', 1, 'C');
+					
+					$this->fpdf->SetFont('Times','',11);
+					$this->fpdf->MultiCell(0, $mulit_height, $mec_result, 1, 'L');
+					
+					$category_items = $this->nurse_model->mec_med($mec_id);
+					
+					if($category_items->num_rows() > 0)
+					{
+						$ab=0;
+						$category_items_result = $category_items->result();
+						
+						foreach($category_items_result as $cat_res)
+						{
+							$item_format_id = $cat_res->item_format_id;
+							$ab++;
+							
+							$cat_items = $this->nurse_model->cat_items($item_format_id, $mec_id);
+							
+							if($cat_items->num_rows() > 0)
+							{
+								$cat_items_result = $cat_items->result();
+								
+								foreach($cat_items_result as $items_res)
+								{
+									$cat_item_name = $items_res->cat_item_name;
+									$cat_items_id1 = $items_res->cat_items_id;
+									
+									$this->fpdf->SetFont('Times','B',11);
+									$this->fpdf->Cell(0, $pageH, $cat_item_name, 'B', 1, 'C');
+									
+									$items_cat = $this->nurse_model->get_cat_items($item_format_id, $mec_id);
+									
+									if($items_cat->num_rows() > 0)
+									{
+										$items_result = $items_cat->result();
+										
+										foreach($items_result as $res)
+										{
+											$cat_item_name = $res->cat_item_name;
+											$cat_items_id = $res->cat_items_id;
+											$item_format_id1 = $res->item_format_id;
+											$format_name = $res->format_name;
+											$format_id = $res->format_id;
+											
+											if($cat_items_id == $cat_items_id1)
+											{
+												if($item_format_id1 == $item_format_id)
+												{
+													$results = $this->nurse_model->cat_items2($cat_items_id, $format_id,$visit_id);
+													if($results->num_rows() > 0)
+													{
+														$this->fpdf->Image(base_url().'images/checked_checkbox.jpg', null, null, 3, 3);
+													} 
+												
+													else 
+													{ 
+														$this->fpdf->Image(base_url().'images/unchecked_checkbox.jpg', null, null, 3, 3);
+													}
+												}
+											}	
+										}
+									}
+									
+									else
+									{
+										$this->fpdf->Cell(0, $pageH, 'There are no items', 'B', 1, 'C');
+									}
+								}
+							}
+							
+							else
+							{
+								$this->fpdf->Cell(0, $pageH, 'There are no category item results', 'B', 1, 'C');
+							}
+						}
+					}
+					
+					else
+					{
+						$this->fpdf->Cell(0, $pageH, 'There are no category items', 'B', 1, 'C');
+					}
+				} 
+			}
+		}
+
+        ?>
     	<div class="row" style="font-style:italic; font-size:11px;">
         	<div class="col-md-8 pull-left">
             <div class="col-md-4 pull-left">

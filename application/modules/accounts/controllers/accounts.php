@@ -487,6 +487,8 @@ class Accounts extends auth
 		$data['patient'] = $patient;
 		$this->load->view('receipt', $data);
 	}
+
+	
 	
 
 	public function bulk_close_visits($page)

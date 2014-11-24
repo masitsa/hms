@@ -1321,7 +1321,7 @@ class Reception_model extends CI_Model
 		{
 			//housekeeping
 			$table = "patients";
-			$where = "patient_national_id = ".$strath_no;
+			$where = "patient_national_id = '$strath_no'";
 			$items = "*";
 			$order = "patients.patient_id";
 			
@@ -1331,7 +1331,7 @@ class Reception_model extends CI_Model
 		{
 			// sbs
 			$table = "patients";
-			$where = "strath_no = ".$strath_no;
+			$where = "strath_no = '$strath_no'";
 			$items = "*";
 			$order = "patients.patient_id";
 			

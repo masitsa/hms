@@ -53,6 +53,7 @@
                                         <thead> 
                                             <th> </th>
                                             <th>Procedure</th>
+                                            <th>Patient Type</th>
                                             <th>Cost</th>
                                         </thead>
                             
@@ -66,6 +67,7 @@
                                         $procedure_id = $rs10->service_charge_id;
                                         $proced = $rs10->service_charge_name;
                                         $visit_type = $rs10->visit_type_id;
+                                        $visit_type_name = $rs10->visit_type_name;
                                         
                                         $stud = $rs10->service_charge_amount;
                                         
@@ -75,6 +77,7 @@
                                             
                                             <td> <?php $suck=1; ?>                
                                             <a href="#" onClick="procedures(<?php echo $procedure_id?>,<?php echo $visit_id?>,<?php echo $suck; ?>)"><?php echo $proced?> </a></td>
+                                            <td><?php echo $visit_type_name;?></td>
                                             <td><?php echo $stud?></td>
                                         </tr>
                                         <?php endforeach;?>

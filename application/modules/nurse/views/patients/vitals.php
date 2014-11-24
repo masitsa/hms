@@ -351,7 +351,7 @@ function load_vitals(vitals_id, visit_id){
                 obj.innerHTML = XMLHttpRequestObject.responseText;
                 
                 if((vitals_id == 8) || (vitals_id == 9)){
-                    calculate_bmi(vitals_id, visit_id);
+                    calculate_bmi(visit_id);
                 }
                 
                 if((vitals_id == 3) || (vitals_id == 4)){
@@ -418,19 +418,34 @@ function getXMLHTTP() {
             
         return xmlhttp;
     }
-    function save_vital(visit_id, vital_id){
+    function save_vital(visit_id){
         
+      
+
         var config_url = $('#config_url').val();
-        var data_url = config_url+"/nurse/save_vitals/"+vital_id+"/"+visit_id;
-        //window.alert(data_url);
-         var patient_vital = $('#vital'+vital_id).val();//document.getElementById("vital"+vital_id).value;
+        var data_url = config_url+"/nurse/save_vitals/"+visit_id;
+       
+        var vital5_systolic = $('#vital5').val();
+        var vital6_diastolic = $('#vital6').val();
+        var vital8_weight = $('#vital8').val();
+        var vital9_height = $('#vital9').val();
+        var vital4_hip = $('#vital4').val();
+        var vital3_waist = $('#vital3').val();
+        var vital1_temperature = $('#vital1').val();
+        var vital7_pulse = $('#vital7').val();
+        var vital2_respiration = $('#vital2').val();
+        var vital11_oxygen = $('#vital11').val();
+        var vital10_pain = $('#vital10').val();
+         
         $.ajax({
         type:'POST',
         url: data_url,
-        data:{vital: patient_vital},
+        data:{systolic: vital5_systolic, diastolic : vital6_diastolic, weight: vital8_weight, height : vital9_height,hip : vital4_hip,waist : vital3_waist, temperature : vital1_temperature,pulse : vital7_pulse,respiration: vital2_respiration,oxygen: vital11_oxygen, pain: vital10_pain},
         dataType: 'text',
         success:function(data){
-        load_vitals(vital_id, visit_id);
+         //get_medication(visit_id);
+         alert("You have successfully entered the vitals");
+          previous_vitals(visit_id);
         //obj.innerHTML = XMLHttpRequestObject.responseText;
         },
         error: function(xhr, status, error) {
@@ -442,7 +457,7 @@ function getXMLHTTP() {
         
     }
 
-    function calculate_bmi(vitals_id, visit_id){
+    function calculate_bmi(visit_id){
     
         var XMLHttpRequestObject = false;
             
@@ -455,7 +470,7 @@ function getXMLHTTP() {
             XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
         }
         var config_url = $('#config_url').val();
-        var url = config_url+"/nurse/calculate_bmi/"+vitals_id+"/"+visit_id;//window.alert(url);
+        var url = config_url+"/nurse/calculate_bmi/"+visit_id;window.alert(url);
 
         if(XMLHttpRequestObject) {
             

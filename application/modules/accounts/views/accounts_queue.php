@@ -234,7 +234,7 @@
 							<td>'.$balance.'</td>
 							
 							<td><a href="'.site_url().'/accounts/print_receipt_new/'.$visit_id.'" target="_blank" class="btn btn-sm btn-info">Receipt</a></td>
-							<td><a href="'.site_url().'/accounts/print_invoice/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice </a></td>';
+							<td><a href="'.site_url().'/accounts/print_invoice_new/'.$visit_id.'" target="_blank" class="btn btn-sm btn-success">Invoice </a></td>';
 							if($type_links == 3){
 
 							}else{

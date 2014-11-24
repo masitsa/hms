@@ -230,28 +230,76 @@ class Nurse extends auth
 		$this->load->view('show_loaded_vitals',$data);	
 	}
 
-	public function save_vitals($vital_id,$visit_id)
+	public function save_vitals($visit_id)
 	{
-		$vital=$this->input->post('vital');
-		//  check if the data exists in the table
-		$table = "visit_vital";
-		$where ="visit_id = $visit_id and vital_id = $vital_id";
-		$total_rows = $this->reception_model->count_items($table, $where);
 		
-		if($total_rows > 0){
-			// do an update to the data there
-			// $visit_data = array('vital_id'=>$vital_id,'visit_vitals_time'=>'$time','visit_id'=>$visit_id,'visit_vital_value'=>$vital);
-			// $this->db->where(array("visit_id"=>$visit_id,"vital_id"=>$vital_id));
-			// $this->db->update('visit_vital', $visit_data);
-			$time = date('h:i:s');
-			$visit_data = array('vital_id'=>$vital_id,'visit_vitals_time'=>'$time','visit_id'=>$visit_id,'visit_vital_value'=>$vital);
-			$this->db->insert('visit_vital', $visit_data);
-		}else{
-			// do an insert
-			$time = date('h:i:s');
-			$visit_data = array('vital_id'=>$vital_id,'visit_vitals_time'=>'$time','visit_id'=>$visit_id,'visit_vital_value'=>$vital);
-			$this->db->insert('visit_vital', $visit_data);
-		}
+
+
+		// revampped one
+		//  check the visit counter value 
+		$counter = $this->nurse_model->check_visit_counter($visit_id);
+		// end of checking the visit counter value
+		$systolic =$this->input->post('systolic');
+		// first insert
+		$time = date('h:i:s');
+		$visit_data = array('vital_id'=>5,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$systolic,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		//  fisrt insert
+
+		$diastolic =$this->input->post('diastolic');
+
+		//  second insert
+		$visit_data = array('vital_id'=>6,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$diastolic,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+		$weight =$this->input->post('weight');
+		//  second insert
+		$visit_data = array('vital_id'=>8,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$weight,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+		$height =$this->input->post('height');
+		//  second insert
+		$visit_data = array('vital_id'=>9,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$height,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+		$hip =$this->input->post('hip');
+		//  second insert
+		$visit_data = array('vital_id'=>4,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$hip,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+		$waist =$this->input->post('waist');
+		//  second insert
+		$visit_data = array('vital_id'=>3,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$waist,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+		$temperature =$this->input->post('temperature');
+		//  second insert
+		$visit_data = array('vital_id'=>1,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$temperature,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+		$pulse =$this->input->post('pulse');
+		//  second insert
+		$visit_data = array('vital_id'=>7,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$pulse,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+		$respiration =$this->input->post('respiration');
+		//  second insert
+		$visit_data = array('vital_id'=>2,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$respiration,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		
+		$oxygen =$this->input->post('oxygen');
+		//  second insert
+		$visit_data = array('vital_id'=>11,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$oxygen,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+		$pain =$this->input->post('pain');
+		//  second insert
+		$visit_data = array('vital_id'=>10,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$pain,'visit_counter'=>$counter);
+		$this->db->insert('visit_vital', $visit_data);
+		// end of second insert
+
+		
+		// end of revamped one
 	}
 	public function save_nurse_notes($visit_id)
 	{
@@ -392,8 +440,8 @@ class Nurse extends auth
 		$this->load->view('show_previous_vitals',$data);	
 	}
 
-	function calculate_bmi($vitals_id,$visit_id){
-		$data = array('vitals_id'=>$vitals_id,'visit_id'=>$visit_id);
+	function calculate_bmi($visit_id){
+		$data = array('visit_id'=>$visit_id);
 		$this->load->view('calculate_bmi',$data);
 	}
 	function calculate_hwr($vitals_id,$visit_id){
@@ -412,7 +460,7 @@ class Nurse extends auth
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			$search = ' AND service_charge_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$search = ' AND service_charge.service_charge_name LIKE \'%'.$this->input->post('search_item').'%\'';
 			$this->session->set_userdata('procedure_search', $search);
 		}
 		
@@ -454,9 +502,9 @@ class Nurse extends auth
 		  }
 		}
 		
-		$order = 'service_charge_name';
+		$order = 'service_charge.service_charge_name';
 		
-		$where = 'service_id = 3 AND visit_type_id = '.$visit_t;
+		$where = 'service_charge.service_id = 3 AND service_charge.visit_type_id = visit_type.visit_type_id  AND service_charge.visit_type_id = '.$visit_t;
 		$procedure_search = $this->session->userdata('procedure_search');
 		
 		if(!empty($procedure_search))
@@ -464,7 +512,7 @@ class Nurse extends auth
 			$where .= $procedure_search;
 		}
 		
-		$table = 'service_charge';
+		$table = 'service_charge,visit_type';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/nurse/procedures/'.$visit_id;

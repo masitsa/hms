@@ -12,6 +12,7 @@
                 <li><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-home"></i> Control Panel</a></li>
                 <li><a href="<?php echo site_url();?>/nurse/nurse_queue"><i class="icon-sitemap"></i> Nurse Queue</a></li>
                 <li><a href="<?php echo site_url();?>/reception/general_queue/nurse"><i class="icon-home"></i> General Queue</a></li>
+                <li><a href="<?php echo site_url();?>/reception/visit_list/1/nurse"><i class="icon-home"></i> Visit History</a></li>
 
             </ul>
 

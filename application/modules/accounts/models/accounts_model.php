@@ -78,7 +78,8 @@ class Accounts_model extends CI_Model
 	          foreach ($payments_rs as $key_items):
 	            $x++;
 	                $payment_type = $key_items->payment_type;
-	                if($payment_type == 1)
+	                $payment_status = $key_items->payment_status;
+	                if($payment_type == 1 && $payment_status ==1)
 	                {
 	                  $payment_method = $key_items->payment_method;
 	                  $amount_paid = $key_items->amount_paid;
@@ -342,6 +343,38 @@ class Accounts_model extends CI_Model
 			return 0;
 		}
 
+	}
+
+	public function  get_payment_peronnel($payment_id)
+	{
+		$table = "payments";
+		$where = "payment_id =". $payment_id;
+		$items = "payment_created_by";
+		$order = "payments.payment_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		if(count($result) > 0)
+		{
+
+			foreach ($result as $key):
+				# code...
+				$payment_created_by = $key->payment_created_by;
+
+				if(!is_numeric($payment_created_by))
+				{
+					return 0;
+				}
+				else
+				{
+					return $payment_created_by;
+				}
+			endforeach;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 	public function receipt_payment($visit_id){
 		$amount = $this->input->post('amount_paid');
