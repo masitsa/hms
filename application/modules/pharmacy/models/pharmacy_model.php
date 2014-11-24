@@ -626,7 +626,7 @@ class Pharmacy_model extends CI_Model
 			$drug_id = $this->db->insert_id();
 			
 			$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
-			$markdown = $markup + 20;//round(($markup * 0.9), 0);
+			$markdown = $markup;//round(($markup * 0.9), 0);
 			
 			$service_data = array(
 				'drug_id'=>$drug_id,
@@ -634,7 +634,7 @@ class Pharmacy_model extends CI_Model
 				'service_id'=>4,
 				'visit_type_id'=>0,
 				'service_charge_status'=>1,
-				'service_charge_name'=>$this->input->post('drugs_name'),
+				'service_charge_name'=>$this->input->post('drugs_name')
 			);
 			$this->db->insert('service_charge', $service_data);
 			
@@ -678,7 +678,7 @@ class Pharmacy_model extends CI_Model
 			$drug_id = $drugs_id;
 			
 			$markup = round(($this->input->post('drugs_unitprice') * 1.33), 0);
-			$markdown = $markup + 20;//round(($markup * 0.9), 0);
+			$markdown = $markup;//round(($markup * 0.9), 0);
 			
 			$service_data = array(
 				'drug_id'=>$drug_id,

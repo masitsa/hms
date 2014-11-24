@@ -105,7 +105,84 @@ class Reports extends auth
 		$v_data['page'] = $page;
 		$v_data['search'] = $visit_search;
 		$v_data['total_patients'] = $config['total_rows'];
-		$v_data['total_revenue'] = $this->reports_model->get_total_revenue($where, $table);
+		$v_data['total_services_revenue'] = $this->reports_model->get_total_services_revenue($where, $table);
+		
+		//total students debt
+		$where2 = $where.' AND visit.visit_type = 1';
+		$total_students_debt = $this->reports_model->get_total_services_revenue($where2, $table);
+		//students debit notes
+		$where2 = $where.' AND payments.payment_type = 2 AND visit.visit_type = 1';
+		$student_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		//students credit notes
+		$where2 = $where.' AND payments.payment_type = 3 AND visit.visit_type = 1';
+		$student_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		$v_data['total_students_debt'] = ($total_students_debt + $student_debit_notes) - $student_credit_notes;
+		
+		//total staff debt
+		$where2 = $where.' AND visit.visit_type = 2';
+		$total_staff_debt = $this->reports_model->get_total_services_revenue($where2, $table);
+		//students debit notes
+		$where2 = $where.' AND payments.payment_type = 2 AND visit.visit_type = 2';
+		$staff_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		//students credit notes
+		$where2 = $where.' AND payments.payment_type = 3 AND visit.visit_type = 2';
+		$staff_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		$v_data['total_staff_debt'] = ($total_staff_debt + $staff_debit_notes) - $staff_credit_notes;
+		
+		//total other debt
+		$where2 = $where.' AND visit.visit_type = 3';
+		$total_other_debt = $this->reports_model->get_total_services_revenue($where2, $table);
+		//students debit notes
+		$where2 = $where.' AND payments.payment_type = 2 AND visit.visit_type = 3';
+		$other_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		//students credit notes
+		$where2 = $where.' AND payments.payment_type = 3 AND visit.visit_type = 3';
+		$other_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		$v_data['total_other_debt'] = ($total_other_debt + $other_debit_notes) - $other_credit_notes;
+		
+		//total insurance debt
+		$where2 = $where.' AND visit.visit_type = 4';
+		$total_insurance_debt = $this->reports_model->get_total_services_revenue($where2, $table);
+		//students debit notes
+		$where2 = $where.' AND payments.payment_type = 2 AND visit.visit_type = 4';
+		$insurance_debit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		//students credit notes
+		$where2 = $where.' AND payments.payment_type = 3 AND visit.visit_type = 4';
+		$insurance_credit_notes = $this->reports_model->get_total_cash_collection($where2, $table);
+		$v_data['total_insurance_debt'] = ($total_insurance_debt + $insurance_debit_notes) - $insurance_credit_notes;
+		
+		//all normal payments
+		$where2 = $where.' AND payments.payment_type = 1';
+		$v_data['normal_payments'] = $this->reports_model->get_normal_payments($where2, $table);
+		$v_data['payment_methods'] = $this->reports_model->get_payment_methods($where2, $table);
+		
+		//normal payments
+		$where2 = $where.' AND payments.payment_type = 1';
+		$v_data['total_cash_collection'] = $this->reports_model->get_total_cash_collection($where2, $table);
+		
+		//debit notes
+		$where2 = $where.' AND payments.payment_type = 2';
+		$v_data['debit_notes'] = $this->reports_model->get_total_cash_collection($where2, $table);
+		
+		//credit notes
+		$where2 = $where.' AND payments.payment_type = 3';
+		$v_data['credit_notes'] = $this->reports_model->get_total_cash_collection($where2, $table);
+		
+		//count student visits
+		$where2 = $where.' AND visit.visit_type = 1';
+		$v_data['students'] = $this->reception_model->count_items($table, $where2);
+		
+		//count staff visits
+		$where2 = $where.' AND visit.visit_type = 2';
+		$v_data['staff'] = $this->reception_model->count_items($table, $where2);
+		
+		//count other visits
+		$where2 = $where.' AND visit.visit_type = 3';
+		$v_data['other'] = $this->reception_model->count_items($table, $where2);
+		
+		//count insurance visits
+		$where2 = $where.' AND visit.visit_type = 4';
+		$v_data['insurance'] = $this->reception_model->count_items($table, $where2);
 		
 		$data['title'] = $this->session->userdata('page_title');
 		$v_data['title'] = $this->session->userdata('page_title');

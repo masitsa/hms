@@ -39,7 +39,7 @@ class Accounts extends auth
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/accounts/accounts_queue/';
+		$config['base_url'] = site_url().'/accounts/accounts_queue';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 3;
 		$config['per_page'] = 20;
@@ -290,7 +290,7 @@ class Accounts extends auth
 		}
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/accounts/accounts_unclosed_queue/';
+		$config['base_url'] = site_url().'/accounts/accounts_closed_visits';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -487,9 +487,6 @@ class Accounts extends auth
 		$data['patient'] = $patient;
 		$this->load->view('receipt', $data);
 	}
-
-	
-	
 
 	public function bulk_close_visits($page)
 	{

@@ -44,20 +44,20 @@
 						  <th>Patient</th>
 						  <th>Category</th>
 						  <th>Doctor</th>
-						  <th>School/faculty/department</th>
-						  <th>Staff/Student/ID No.</th>
-						  <th>Payment method</th>
+						  <th>School/ Faculty/ Department</th>
+						  <th>Staff/ Student/ID No.</th>
 						  <th>Cash</th>
 				';
 				
 			foreach($services_query->result() as $service)
 			{
-				$result .= '<th>'.$service->service_name.'</th>';
+				//$result .= '<th>'.$service->service_name.'</th>';
 			}
 				
 			$result .= '
 			
-						  <th>Total</th>
+						  <th>Invoice Total</th>
+						  <th>Balance</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -134,11 +134,11 @@
 					$visit_charge = $this->reports_model->get_all_visit_charges($visit_id, $service_id);
 					$total_invoiced += $visit_charge;
 					
-					$charges .= '<td>'.$visit_charge.'</td>';
+					//$charges .= '<td>'.$visit_charge.'</td>';
 				}
 				
 				//display all debtors
-				if($debtors == 'true' && (($charges - $total_invoiced) > 0))
+				if($debtors == 'true' && (($cash - $total_invoiced) > 0))
 				{
 					$result .= 
 						'
@@ -150,12 +150,12 @@
 								<td>'.$doctor.'</td>
 								<td>'.$faculty.'</td>
 								<td>'.$strath_no.'</td>
-								<td></td>
 								<td>'.$cash.'</td>
 						'.$charges;
 						
 					$result .= '
 								<td>'.$total_invoiced.'</td>
+								<td>'.($cash - $total_invoiced).'</td>
 							</tr> 
 					';
 				}
@@ -173,12 +173,12 @@
 								<td>'.$doctor.'</td>
 								<td>'.$faculty.'</td>
 								<td>'.$strath_no.'</td>
-								<td></td>
 								<td>'.$cash.'</td>
 						'.$charges;
 						
 					$result .= '
 								<td>'.$total_invoiced.'</td>
+								<td>'.($total_invoiced - $cash).'</td>
 							</tr> 
 					';
 				}
