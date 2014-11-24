@@ -443,7 +443,7 @@ class Nurse_model extends CI_Model
 			return FALSE;
 		}
 	}
-	public function delete_condition($family_id, $patient_id, $disease_id)
+	public function delete_family_disease($family_id, $patient_id, $disease_id)
 	{
 		$data = array(
 			'family_id'=>$family_id,

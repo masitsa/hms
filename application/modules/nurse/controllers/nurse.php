@@ -321,6 +321,18 @@ class Nurse extends auth
 			$this->db->update('nurse_notes', $visit_data);
 			
 		}
+
+		//  enter into the nurse notes trail
+		$trail_data = array(
+        		"patient_id" => $patient_id,
+        		"nurse_notes" => $notes,
+        		"added_by" => $this->session->userdata("personnel_id"),
+        		"visit_id" => $visit_id,
+        		"created" => date("Y-m-d")
+	    		);
+
+		$this->db->insert('nurse_patient_notes', $trail_data);
+		// end of things to do with the trail
 	}
 	
 	public function dental_vitals($visit_id)
@@ -885,6 +897,18 @@ class Nurse extends auth
 			$this->db->where('patient_id',$patient_id);
 			$this->db->update('doctor_notes', $visit_data);
 		}
+
+		//  enter into the nurse notes trail
+		$trail_data = array(
+        		"patient_id" => $patient_id,
+        		"doctor_notes" => $notes,
+        		"added_by" => $this->session->userdata("personnel_id"),
+        		"visit_id" => $visit_id,
+        		"created" => date("Y-m-d")
+	    		);
+
+		$this->db->insert('doctor_patient_notes', $trail_data);
+		// end of things to do with the trail
 
 	}
 	public function nurse_notes($visit_id){

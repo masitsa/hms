@@ -9,6 +9,7 @@ class Doctor extends auth
 		parent:: __construct();
 		$this->load->model('nurse/nurse_model');
 		$this->load->model('reception/reception_model');
+		$this->load->model('accounts/accounts_model');
 		$this->load->model('doctor_model');
 		$this->load->model('database');
 		$this->load->model('medical_admin/medical_admin_model');
@@ -172,7 +173,13 @@ class Doctor extends auth
 	
 	public function print_checkup($visit_id)
 	{
-		$this->doctor_model->print_checkup($visit_id);
+		//$this->doctor_model->print_checkup($visit_id);
+
+		$data = array('visit_id'=>$visit_id);
+		
+		$patient = $this->reception_model->patient_names2(NULL, $visit_id);
+		$data['patient'] = $patient;
+		$this->load->view('medical_checkup', $data);
 	}
 	public function search_visit_patients($module = NULL)
 	{
