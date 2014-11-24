@@ -1981,7 +1981,7 @@ class Pharmacy extends auth
 	
 	public function sort_drugs()
 	{
-		$this->db->where('drugs_id > 1341');
+		//$this->db->where('drugs_id > 1341');
 		$query = $this->db->get('drugs');
 		
 		foreach($query->result() as $res)
@@ -1990,7 +1990,7 @@ class Pharmacy extends auth
 			$price = $res->drugs_unitprice;
 			$drugs_name = $res->drugs_name;
 			$markup = round(($price * 1.33), 0);
-			$markdown = $markup + 20;//round(($markup * 0.9), 0);
+			$markdown = $markup;//round(($markup * 0.9), 0);
 			
 			$service_data = array(
 				'drug_id'=>$drug_id,
