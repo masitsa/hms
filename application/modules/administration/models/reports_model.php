@@ -272,7 +272,7 @@ class Reports_model extends CI_Model
 	*	Retrieve total revenue
 	*
 	*/
-	public function get_total_revenue($where, $table)
+	public function get_total_services_revenue($where, $table)
 	{
 		//invoiced
 		$this->db->from($table.', visit_charge, service_charge');
@@ -293,6 +293,15 @@ class Reports_model extends CI_Model
 			$total_invoiced = 0;
 		}
 		
+		return $total_invoiced;
+	}
+	
+	/*
+	*	Retrieve total revenue
+	*
+	*/
+	public function get_total_cash_collection($where, $table)
+	{
 		//payments
 		$table_search = $this->session->userdata('all_transactions_tables');
 		if(!empty($table_search))
@@ -319,7 +328,39 @@ class Reports_model extends CI_Model
 			$total_paid = 0;
 		}
 		
-		return $total_invoiced - $total_paid;
+		return $total_paid;
+	}
+	
+	/*
+	*	Retrieve total revenue
+	*
+	*/
+	public function get_normal_payments($where, $table)
+	{
+		//payments
+		$table_search = $this->session->userdata('all_transactions_tables');
+		if(!empty($table_search))
+		{
+			$this->db->from($table);
+		}
+		
+		else
+		{
+			$this->db->from($table.', payments');
+		}
+		$this->db->select('*');
+		$this->db->where($where.' AND visit.visit_id = payments.visit_id');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	public function get_payment_methods()
+	{
+		$this->db->select('*');
+		$query = $this->db->get('payment_method');
+		
+		return $query;
 	}
 	
 	/*

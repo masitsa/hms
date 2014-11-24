@@ -7,6 +7,7 @@ img.control_panel_img{height: 100px;}
 .float_left{float: left;}
 .float_right{float: right;}
 .thumbnail .caption{height: 90px; background-color:#f3f3f3;}
+.today-datas h5{font-weight: bold; text-align:center;}
 
 *{
 	border-radius: 0 !important;
