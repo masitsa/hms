@@ -121,11 +121,21 @@ class Reports_model extends CI_Model
 		{
 			$date = date('Y-m-d');
 		}
+		
+		$table = 'visit_charge, service_charge';
+		
 		$where = 'visit_charge_timestamp LIKE \''.$date.'%\' AND visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = '.$service_id;
+		
+		$visit_search = $this->session->userdata('all_departments_search');
+		if(!empty($visit_search))
+		{
+			$where = 'visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = '.$service_id.' AND visit.visit_id = visit_charge.visit_id'. $visit_search;
+			$table .= ', visit';
+		}
 		
 		$this->db->select('SUM(visit_charge_units*visit_charge_amount) AS service_total');
 		$this->db->where($where);
-		$query = $this->db->get('visit_charge, service_charge');
+		$query = $this->db->get($table);
 		
 		$result = $query->row();
 		$total = $result->service_total;;

@@ -283,5 +283,55 @@ class Reports extends auth
 			$this->all_reports();
 		}
 	}
+	
+	public function department_reports()
+	{
+		//get all service types
+		$v_data['services_result'] = $this->reports_model->get_all_service_types();
+		$v_data['type'] = $this->reception_model->get_types();
+		
+		$data['title'] = 'Department Reports';
+		$v_data['title'] = 'Department Reports';
+		
+		$data['content'] = $this->load->view('reports/department_reports', $v_data, true);
+		
+		
+		$data['sidebar'] = 'admin_sidebar';
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function search_departments()
+	{
+		$visit_date_from = $this->input->post('visit_date_from');
+		$visit_date_to = $this->input->post('visit_date_to');
+		
+		if(!empty($visit_date_from) && !empty($visit_date_to))
+		{
+			$visit_date = ' AND visit.visit_date BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
+		}
+		
+		else if(!empty($visit_date_from))
+		{
+			$visit_date = ' AND visit.visit_date = \''.$visit_date_from.'\'';
+		}
+		
+		else if(!empty($visit_date_to))
+		{
+			$visit_date = ' AND visit.visit_date = \''.$visit_date_to.'\'';
+		}
+		
+		else
+		{
+			$visit_date = '';
+		}
+		
+		$search = $visit_date;
+		
+		$this->session->set_userdata('all_departments_search', $search);
+		
+		$this->department_reports();
+	}
 }
 ?>

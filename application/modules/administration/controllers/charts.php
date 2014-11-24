@@ -245,7 +245,7 @@ class Charts extends auth
 	
 	function service_type_totals()
 	{	
-		//get all patient types
+		//get all service types
 		$services_result = $this->reports_model->get_all_service_types();
 		
 		//initialize required variables
