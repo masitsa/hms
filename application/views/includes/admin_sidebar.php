@@ -21,6 +21,8 @@
                         <li><a href="<?php echo site_url();?>/administration/reports/all_reports">All Transactions</a></li>
                         <li><a href="<?php echo site_url();?>/administration/reports/cash_report">Cash Report</a></li>
                         <li><a href="<?php echo site_url();?>/administration/reports/debtors_report">Debtors Report</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/reports/department_reports">Department Report</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/reports/doctor_reports">Doctor Report</a></li>
                     </ul>
                 </li>
 
