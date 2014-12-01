@@ -70,61 +70,29 @@
 			                            </select>
 	                            	</div>
 	                            </div>
-	                       <div  id="patient_type_div" style="display:none;">
-	                        	<div class="form-group">
-						            <label class="col-lg-4 control-label">Patient Type: </label>
-						            
-						            <div class="col-lg-8">
-						            	 <select name="patient_type_id" id="patient_type_id"  onChange='insurance_company("patient_type","insured");getCity("<?php echo site_url();?>/reception/load_charges/"+this.value);' class="form-control">
-						                    <option value="">--- Select Patient Type---</option>
-						                	<?php
-												if(count($type) > 0){
-						                    		foreach($type as $row):
-														$type_name = $row->visit_type_name;
-														$type_id= $row->visit_type_id;
-														
-														if($type_id == set_value('patient_type'))
-														{
-															echo "<option value='".$type_id."' selected='selected'>".$type_name."</option>";
-														}
-														
-														else
-														{
-															echo "<option value='".$type_id."'>".$type_name."</option>";
-														}
-													endforeach;
-												}
-											?>
-						                    </select>
-           								 
-           							</div>
-						        </div>
-						        <div class="form-group">
-						        	<div id="insured_company">
-										<label class="col-lg-4 control-label">Insurance Name: </label>
-										
-										<div class="col-lg-8">
-											<select name="patient_insurance_id" class="form-control">
-													<option value="">--- Select Insurance Company---</option>
-														<?php
+					        <div id="insured_company">
+					        	 <div class="form-group">
+									<label class="col-lg-4 control-label">Insurance Name: </label>
+									
+									<div class="col-lg-8">
+										<select name="patient_insurance_id" class="form-control">
+												<option value="">--- Select Insurance Company---</option>
+													<?php
 
-														if(count($patient_insurance) > 0){	
-														foreach($patient_insurance as $row):
-																$company_name = $row->company_name;
-																$insurance_company_name = $row->insurance_company_name;
-																$patient_insurance_id = $row->patient_insurance_id;
-														echo "<option value=".$patient_insurance_id.">".$company_name." - ".$insurance_company_name."</option>";
-														endforeach;	} ?>
-										  </select>
-										  <br>
-										</div>
+													if(count($patient_insurance) > 0){	
+													foreach($patient_insurance as $row):
+															$company_name = $row->company_name;
+															$insurance_company_name = $row->insurance_company_name;
+															$patient_insurance_id = $row->patient_insurance_id;
+													echo "<option value=".$patient_insurance_id.">".$company_name." - ".$insurance_company_name."</option>";
+													endforeach;	} ?>
+									  </select>
+									  <br>
 									</div>
 								</div>
-
-
-	                        </div>
+							</div>
 				        	<div  id="department_type" style="display:none;">
-					        <div class="form-group">
+					        	<div class="form-group">
 						            <label class="col-lg-4 control-label">Doctor: </label>
                                     
 						            <div class="col-lg-8">
@@ -153,75 +121,26 @@
 			                            </select>
 	                            	</div>
 	                            </div>
-						     	<div class="form-group">
-						            <label class="col-lg-4 control-label">Patient Type: </label>
-						            
-						            <div class="col-lg-8">
-						            	 <select name="patient_type" id="patient_type"  onChange='getCity("<?php echo site_url();?>/reception/load_charges/"+this.value);' class="form-control">
-						                    <option value="">--- Select Patient Type---</option>
-						                	<?php
-												if(count($type) > 0){
-						                    		foreach($type as $row):
-														$type_name = $row->visit_type_name;
-														$type_id= $row->visit_type_id;
-														
-														if($type_id == set_value('patient_type'))
-														{
-															echo "<option value='".$type_id."' selected='selected'>".$type_name."</option>";
-														}
-														
-														else
-														{
-															echo "<option value='".$type_id."'>".$type_name."</option>";
-														}
-													endforeach;
-												}
-											?>
-						                    </select>
-           								 
-           							</div>
-						        </div>
-						        <div  id="insured_company">
-									<div class="form-group">
-										<label class="col-lg-4 control-label">Insurance Company: </label>
-										
-										<div class="col-lg-8">
-											<select name="patient_insurance_id" class="form-control">
-													<option value="">--- Select Insurance Company---</option>
-														<?php
-
-														if(count($patient_insurance) > 0){	
-														foreach($patient_insurance as $row):
-																$insurance_company_name = $row->insurance_company_name;
-																$patient_insurance_id = $row->insurance_company_id;
-															echo "<option value=".$patient_insurance_id.">".$insurance_company_name."</option>";
-														endforeach;	} ?>
-										  </select>
-										  <br>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-lg-4 control-label">Insurance Number: </label>
-										
-										<div class="col-lg-8">
-											<input type="text" name="insurance_id" value="<?php echo set_value('insurance_id')?>" class="form-control"/>
-										</div>
-									</div>
-								</div>
-						 	 <div class="form-group">
-					            <label class="col-lg-4 control-label">Consultation Type: </label>
-					            
-					            <div class="col-lg-8">
-					            	<div id="citydiv"> 
-					            	<div id="checker"  onclick="checks('patient_type');" > 
-					            		<select name="service_charge_name" class="form-control">
-											<option value='0'>Loading..</option>
-								        </select>
-								     </div>
-                            	</div>
-					            </div>
-					        </div>
+	                            <div id="consultation" style="display:none">
+							        <div class="form-group">
+							            <label class="col-lg-4 control-label">Consultation Type: </label>
+							            
+							            <div class="col-lg-8">
+							            	<div id="citydiv"> 
+							            	<div id="checker"  > 
+							            		<select name="service_charge_name" class="form-control">
+													<option value='0'>Loading..</option>
+										        </select>
+										     </div>
+		                            	</div>
+							            </div>
+							        </div>
+						       </div>
+						 	
 					       </div>
+					       <input type="hidden" name="patient_type_id" value="<?php echo $patient_type_id;?>">
+					    
+
 				        </div>
 
 				     </div>
@@ -338,6 +257,10 @@
          
  <script type="text/javascript" src="<?php echo base_url("js/script.js");?>"></script>
  <script type="text/javascript" charset="utf-8">
+ 	$(document).ready(function(){
+      do_patient_type_function(<?php echo $patient_type_id;?>);
+      
+  	});
 	 function check_date(){
 	     var datess=document.getElementById("datepicker").value;
 	     if(datess){
@@ -441,5 +364,25 @@
 			$('#insured_company').css('display', 'none');
 		}
 	});
+
+	function do_patient_type_function(patient_type_id)
+	{
+		if(patient_type_id == '4')
+		{
+			$('#insured_company').css('display', 'block');
+			$('#consultation').css('display', 'block');
+		}
+		else
+		{
+			$('#insured_company').css('display', 'none');
+			$('#consultation').css('display', 'block');
+		}
+		var config_url = $('#config_url').val();
+		var data_url = config_url+"/reception/load_charges/"+patient_type_id;
+		
+		getCity(data_url);
+	}
+
+	
 </script>
 

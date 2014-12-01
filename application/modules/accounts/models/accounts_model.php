@@ -376,7 +376,7 @@ class Accounts_model extends CI_Model
 			return 0;
 		}
 	}
-	public function receipt_payment($visit_id){
+	public function receipt_payment($visit_id,$personnel_id = NULL){
 		$amount = $this->input->post('amount_paid');
 		$payment_method=$this->input->post('payment_method');
 		$type_payment=$this->input->post('type_payment');
@@ -411,7 +411,7 @@ class Accounts_model extends CI_Model
 			$transaction_code = '';
 		}
 		
-		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"),'payment_type'=>$type_payment,'transaction_code'=>$transaction_code,'payment_service_id'=>$service_id,'payment_created'=>date("Y-m-d"),'payment_created_by'=>$this->session->userdata("personnel_id"));
+		$data = array('visit_id' => $visit_id,'payment_method_id'=>$payment_method,'amount_paid'=>$amount,'personnel_id'=>$this->session->userdata("personnel_id"),'payment_type'=>$type_payment,'transaction_code'=>$transaction_code,'payment_service_id'=>$service_id,'payment_created'=>date("Y-m-d"),'payment_created_by'=>$this->session->userdata("personnel_id"),'approved_by'=>$personnel_id,'date_approved'=>date('Y-m-d'));
 		if($this->db->insert('payments', $data))
 		{
 			return $this->db->insert_id();
@@ -420,6 +420,32 @@ class Accounts_model extends CI_Model
 			return FALSE;
 		}
 
+	}
+	public function check_admin_person($username,$password)
+	{
+		$password = md5($password);
+		$table = "personnel,personnel_department";
+		$where = "personnel.personnel_username = '$username' AND personnel.personnel_password = '$password'  AND personnel.personnel_id = personnel_department.personnel_id AND personnel_department.department_id = 3";
+		$items = "personnel.personnel_id";
+		$order = "personnel.personnel_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		
+		if(count($result) > 0)
+		{
+
+			foreach ($result as $row2):
+				$personnel_id = $row2->personnel_id;
+			endforeach;
+
+			return $personnel_id;	
+		}
+		else{
+			return FALSE;
+		}
+		
+		
 	}
 	public function add_billing($visit_id)
 	{

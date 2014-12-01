@@ -417,17 +417,44 @@ class Accounts extends auth
 		{
 			// debit note
 			$this->form_validation->set_rules('service_id', 'Amount', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 		}
 		else if($type_payment == 3)
 		{
 			$this->form_validation->set_rules('service_id', 'Amount', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
 		}
 
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
+			
+			if($type_payment == 3 || $type_payment == 2)
+			{
+				$username=$this->input->post('username');
+				$password=$this->input->post('password');
 
-			$this->accounts_model->receipt_payment($visit_id);
+				// check if the username and password is for an administrator
+				$checker_response = $this->accounts_model->check_admin_person($username,$password);
+				// end of checker function
+				if($checker_response == FALSE)
+				{
+					
+					$this->session->set_userdata("error_message","Seems like you dont have the priviledges to effect this event. Please contact your administrator.");
+				}
+				else
+				{
+					$this->accounts_model->receipt_payment($visit_id,$checker_response);
+				}
+			}
+			else
+			{
+				$this->accounts_model->receipt_payment($visit_id);
+			}
+			
+			
 			redirect('accounts/payments/'.$visit_id.'/'.$close_page);
 		}
 		else

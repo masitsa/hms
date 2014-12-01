@@ -642,9 +642,10 @@ class Reception extends auth
 		$patient_type = $patient['patient_type'];
 		$patient_othernames = $patient['patient_othernames'];
 		$patient_surname = $patient['patient_surname'];
+		$patient_type_id = $patient['visit_type_id'];
 		
 		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span>';
-
+		$v_data['patient_type_id'] = $patient_type_id;
 		$data['content'] = $this->load->view('initiate_visit', $v_data, true);
 		
 		$data['title'] = 'Start Visit';
@@ -663,8 +664,8 @@ class Reception extends auth
 				//if nurse visit doctor must be selected
 				$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
 				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
-				$this->form_validation->set_rules('patient_type', 'Patient Type', 'required|is_natural_no_zero');
-				$patient_type = $this->input->post("patient_type"); 
+				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
+				$patient_type = $this->input->post("patient_type_id"); 
 			}
 
 			else 

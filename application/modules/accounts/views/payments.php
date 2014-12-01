@@ -20,22 +20,24 @@
               <div class="widget-content">
                     <div class="padd">
                       <div class="row">
-                      <?php
-                          $error = $this->session->userdata('error_message');
-                          $success = $this->session->userdata('success_message');
-                          
-                          if(!empty($error))
-                          {
-                            echo '<div class="alert alert-danger">'.$error.'</div>';
-                            $this->session->unset_userdata('error_message');
-                          }
-                          
-                          if(!empty($success))
-                          {
-                            echo '<div class="alert alert-success">'.$success.'</div>';
-                            $this->session->unset_userdata('success_message');
-                          }
-                       ?>
+                        <div class="col-md-12">
+                        <?php
+                            $error = $this->session->userdata('error_message');
+                            $success = $this->session->userdata('success_message');
+                            
+                            if(!empty($error))
+                            {
+                              echo '<div class="alert alert-danger">'.$error.'</div>';
+                              $this->session->unset_userdata('error_message');
+                            }
+                            
+                            if(!empty($success))
+                            {
+                              echo '<div class="alert alert-success">'.$success.'</div>';
+                              $this->session->unset_userdata('success_message');
+                            }
+                         ?>
+                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-12">
@@ -449,7 +451,7 @@
                                                       </div>
                                                   </div>
                                                   <div id="insuarance_div" class="form-group" style="display:none;" >
-                                                      <label class="col-lg-4 control-label"> Insuarance Number: </label>
+                                                      <label class="col-lg-4 control-label"> Insurance Number: </label>
                                                       <div class="col-lg-8">
                                                         <input type="text" class="form-control" name="insuarance_number" placeholder="">
                                                       </div>
@@ -490,6 +492,20 @@
                                                               }
                                                           ?>
                                                             </select>
+                                                      </div>
+                                                  </div>
+                                                  <div id="username_div" class="form-group" style="display:none;" >
+                                                      <label class="col-lg-4 control-label"> Username: </label>
+                                                      
+                                                      <div class="col-lg-8">
+                                                        <input type="text" class="form-control" name="username" placeholder="">
+                                                      </div>
+                                                  </div>
+                                                  <div id="password_div" class="form-group" style="display:none;" >
+                                                      <label class="col-lg-4 control-label"> Password: </label>
+                                                      
+                                                      <div class="col-lg-8">
+                                                        <input type="password" class="form-control" name="password" placeholder="">
                                                       </div>
                                                   </div>
                                                     <div class="center-align">
@@ -605,13 +621,19 @@
   function getservices(id){
 
         var myTarget1 = document.getElementById("service_div");
+        var myTarget2 = document.getElementById("username_div");
+        var myTarget3 = document.getElementById("password_div");
         if(id == 1)
         {
           myTarget1.style.display = 'none';
+          myTarget2.style.display = 'none';
+          myTarget3.style.display = 'none';
         }
         else
         {
           myTarget1.style.display = 'block';
+          myTarget2.style.display = 'block';
+          myTarget3.style.display = 'block';
         }
         
   }
