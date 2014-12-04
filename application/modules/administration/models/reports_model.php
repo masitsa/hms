@@ -129,7 +129,7 @@ class Reports_model extends CI_Model
 		$visit_search = $this->session->userdata('all_departments_search');
 		if(!empty($visit_search))
 		{
-			$where = 'visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = '.$service_id.' AND visit.visit_id = visit_charge.visit_id'. $visit_search;
+			$where = 'visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = '.$service_id.' AND visit.visit_id = visit_charge.visit_id '. $visit_search;
 			$table .= ', visit';
 		}
 		
