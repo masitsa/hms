@@ -37,11 +37,11 @@
 
     </div>
  <?php } ?>
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-12">
        <div class="alert alert-danger">The process of keying in patient vitals has been changed from auto saving to a manual button saving. Please find a button named  <a hred="#" class="btn btn-sm btn-success" >Save Vitals</a> to save the keyed in vitals. The next row will display the vitals you have keyed in. ~ development team </div>
     </div>
-</div>
+</div> -->
 <div class="row">
     <div class="col-md-12">
 

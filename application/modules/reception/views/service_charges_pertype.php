@@ -7,7 +7,7 @@
 <?php } 
 	else { 
 		?>
-			<option value='0'>Select Consultaion Charge </option>
+			<option value='0'>Select Consultation Charge </option>
 	<?php } ?>
 <?php foreach($service_charge AS $key) { ?>
 <option value="<?php echo  $key->service_charge_id;?>"><?php echo $key->service_charge_name;?></option>
