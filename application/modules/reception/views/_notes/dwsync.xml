@@ -4,9 +4,9 @@
 <file name="add_patient.php" server="192.168.170.16/sumc/" local="130588858041583298" remote="130614723000000000" Dst="0" />
 <file name="initiate_lab.php" server="192.168.170.16/sumc/" local="130555080999414119" remote="130614723000000000" Dst="0" />
 <file name="initiate_pharmacy.php" server="192.168.170.16/sumc/" local="130555080999434120" remote="130614723000000000" Dst="0" />
-<file name="initiate_visit.php" server="192.168.170.16/sumc/" local="130603767672068943" remote="130614723000000000" Dst="0" />
+<file name="initiate_visit.php" server="192.168.170.16/sumc/" local="130621555165543841" remote="130621624200000000" Dst="0" />
 <file name="ongoing_visit.php" server="192.168.170.16/sumc/" local="130612895525470575" remote="130614723000000000" Dst="0" />
-<file name="service_charges_pertype.php" server="192.168.170.16/sumc/" local="130555081000744195" remote="130614723000000000" Dst="0" />
+<file name="service_charges_pertype.php" server="192.168.170.16/sumc/" local="130621555165563842" remote="130621624200000000" Dst="0" />
 <file name="show_schedule.php" server="192.168.170.16/sumc/" local="130555081000754196" remote="130614723000000000" Dst="0" />
 <file name="reception_dashboard.php" server="192.168.170.16/sumc/" local="130564556278577116" remote="130614723000000000" Dst="0" />
 <file name="dependants.php" server="192.168.170.16/sumc/" local="130555080999224108" remote="130614723000000000" Dst="0" />

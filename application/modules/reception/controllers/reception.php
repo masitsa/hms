@@ -1633,7 +1633,7 @@ class Reception extends auth
 		
 		if(!empty($staff_no))
 		{
-			$staff_no = ' AND patients.dependant_id LIKE '.$staff_no.' ';
+			$staff_no = ' AND patients.dependant_id LIKE \''.$staff_no.'\' ';
 		}
 		else
 		{
@@ -1642,7 +1642,7 @@ class Reception extends auth
 		
 		if(!empty($registration_date))
 		{
-			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.' ';
+			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.'\' ';
 		}
 		else
 		{

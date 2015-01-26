@@ -44,6 +44,7 @@
                         <li><a href="<?php echo site_url();?>/reception/visit_list/1">Visit History</a></li>
                     </ul>
                 </li>
+                <li class="current"><a href="<?php echo site_url();?>/administration/export_charges"><i class="icon-list"></i> Charge List</a></li>
 
             </ul>
 

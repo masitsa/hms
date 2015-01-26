@@ -26,7 +26,7 @@ class Administration extends auth
 		$this->load->view('auth/template_sidebar', $data);
 	}
 
-	public function services($page_name = NULL)
+	public function services()
 	{
 		// this is it
 		$where = 'service_id > 0';
@@ -37,19 +37,11 @@ class Administration extends auth
 			$where .= $service_search;
 		}
 		
-		if($page_name == NULL)
-		{
-			$segment = 3;
-		}
-		
-		else
-		{
-			$segment = 4;
-		}
+		$segment = 3;
 		$table = 'service';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/administration/services/'.$page_name;
+		$config['base_url'] = site_url().'/administration/services';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -100,10 +92,10 @@ class Administration extends auth
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
 	}
-	public function service_charges($service_id,$page_name = NULL)
+	public function service_charges($service_id)
 	{
 		// this is it
-		$where = 'service.service_id = service_charge.service_id AND service_charge.service_charge_status = 1 AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
+		$where = 'service_charge.service_charge_status = 1 AND service.service_id = service_charge.service_id AND service_charge.service_charge_status = 1 AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
 		$service_charge_search = $this->session->userdata('service_charge_search');
 		
 		if(!empty($service_charge_search))
@@ -111,19 +103,11 @@ class Administration extends auth
 			$where .= $service_charge_search;
 		}
 		
-		if($page_name == NULL)
-		{
-			$segment = 3;
-		}
-		
-		else
-		{
-			$segment = 4;
-		}
+		$segment = 4;
 		$table = 'service,service_charge,visit_type';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/administration/service_charges/'.$service_id.'/'.$page_name;
+		$config['base_url'] = site_url().'/administration/service_charges/'.$service_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -221,7 +205,7 @@ class Administration extends auth
 		$data['title'] = 'Add Service Charge';
 		$v_data['title'] = 'Add Service Charge';
 		$v_data['type'] = $this->reception_model->get_types();
-		$v_data['service_charge_id'] = $service_charge_id;
+		$v_data['service_charge_id'] = NULL;
 		$v_data['service_name'] = $this->administration_model->get_service_names($service_id);
 		$data['content'] = $this->load->view('add_service_charge',$v_data,TRUE);
 		$data['sidebar'] = 'admin_sidebar';
@@ -466,7 +450,11 @@ class Administration extends auth
 
 		}
 	}
-
+	
+	public function export_charges()
+	{
+		$this->administration_model->export_charges();
+	}
 }
 
 ?>

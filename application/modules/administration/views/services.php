@@ -2,8 +2,8 @@
  <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">
-		 <a href="<?php echo site_url()?>/administration/new_service" class="btn btn-sm btn-success">Add a New Service </a>
-
+		 <a href="<?php echo site_url()?>/administration/new_service" class="btn btn-sm btn-primary">Add a New Service </a>
+		 <a href="<?php echo site_url()?>/administration/export_charges" class="btn btn-sm btn-success">Export Charges</a>
 		</div>
 	</div>
 </div>
