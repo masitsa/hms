@@ -351,10 +351,6 @@
 		 	myTarget2.style.display = 'block';
 
 		}
-		else if(myTarget == 12)
-		{
-			
-		}
 		else{
 	 	 	myTarget2.style.display = 'none';
 	 	 	myTarget3.style.display = 'block';	

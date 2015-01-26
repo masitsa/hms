@@ -129,7 +129,7 @@ class Reports_model extends CI_Model
 		$visit_search = $this->session->userdata('all_departments_search');
 		if(!empty($visit_search))
 		{
-			$where = 'visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = '.$service_id.' AND visit.visit_id = visit_charge.visit_id '. $visit_search;
+			$where = 'visit_charge.service_charge_id = service_charge.service_charge_id AND service_charge.service_id = '.$service_id.' AND visit.visit_id = visit_charge.visit_id'. $visit_search;
 			$table .= ', visit';
 		}
 		
@@ -481,8 +481,6 @@ class Reports_model extends CI_Model
 				// end of total debit and credit notes amount
 
 
-
-
 				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
 				$visit_type = $patient['visit_type'];
 				$patient_type = $patient['patient_type'];
@@ -490,7 +488,6 @@ class Reports_model extends CI_Model
 				$patient_surname = $patient['patient_surname'];
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
 				$gender = $patient['gender'];
-				$faculty = $patient['faculty'];
 				
 				//creators and editors
 				$personnel_query = $this->personnel_model->get_all_personnel();
@@ -543,7 +540,7 @@ class Reports_model extends CI_Model
 					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
 					$report[$row_count][3] = $visit_type;
 					$report[$row_count][4] = $doctor;
-					$report[$row_count][5] = $faculty;
+					$report[$row_count][5] = '';
 					$report[$row_count][6] = $strath_no;
 					$report[$row_count][7] = '';
 					$report[$row_count][8] = $payments_value;
@@ -582,7 +579,7 @@ class Reports_model extends CI_Model
 					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
 					$report[$row_count][3] = $visit_type;
 					$report[$row_count][4] = $doctor;
-					$report[$row_count][5] = $faculty;
+					$report[$row_count][5] = '';
 					$report[$row_count][6] = $strath_no;
 					$report[$row_count][7] = '';
 					$report[$row_count][8] = $payments_value;

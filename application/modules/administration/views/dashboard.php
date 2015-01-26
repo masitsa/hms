@@ -1,4 +1,3 @@
-<input type="hidden" id="airline_id" value="<?php echo $this->session->userdata('airline_id');?>"/>
 <!-- Today status. jQuery Sparkline plugin used. -->
 <?php echo $this->load->view('dashboard/summary', '', TRUE);?>
 <!-- Today status ends -->

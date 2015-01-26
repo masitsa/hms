@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
 <file name="administration.php" server="192.168.170.16/sumc/development/" local="130612895523480491" remote="130612911000000000" Dst="0" />
-<file name="charts.php" server="192.168.170.16/sumc/development/" local="130613027191420286" remote="130612933200000000" Dst="0" />
-<file name="reports.php" server="192.168.170.16/sumc/development/" local="130613046331725452" remote="130612936200000000" Dst="0" />
-<file name="administration.php" server="192.168.170.16/sumc/" local="130621590144411443" remote="130621479600000000" Dst="0" />
-<file name="charts.php" server="192.168.170.16/sumc/" local="130613027191420286" remote="130614722400000000" Dst="0" />
-<file name="reports.php" server="192.168.170.16/sumc/" local="130613046331725452" remote="130614722400000000" Dst="0" />
+<file name="charts.php" server="192.168.170.16/sumc/development/" local="130564026910618040" remote="130612911000000000" Dst="0" />
+<file name="reports.php" server="192.168.170.16/sumc/development/" local="130613011411057026" remote="130612911000000000" Dst="0" />
+<file name="administration.php" server="192.168.170.16/sumc/" local="130565556057895612" remote="130565463000000000" Dst="0" />
+<file name="charts.php" server="192.168.170.16/sumc/" local="130564026910618040" remote="130564638000000000" Dst="0" />
+<file name="reports.php" server="192.168.170.16/sumc/" local="130588852531648148" remote="130588744200000000" Dst="0" />
 <file name="personnel.php" server="192.168.170.16/sumc/development/" local="130565531495320713" remote="130612911000000000" Dst="0" />
-<file name="personnel.php" server="192.168.170.16/sumc/" local="130565531495320713" remote="130614722400000000" Dst="0" />
+<file name="personnel.php" server="192.168.170.16/sumc/" local="130565531495320713" remote="130565463000000000" Dst="0" />
 </dwsync>

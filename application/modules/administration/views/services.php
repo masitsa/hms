@@ -1,9 +1,9 @@
-<?php echo $this->load->view('search/service_search', '', TRUE);?>
+
  <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">
-		 <a href="<?php echo site_url()?>/administration/new_service" class="btn btn-sm btn-primary">Add a New Service </a>
-		 <a href="<?php echo site_url()?>/administration/export_charges" class="btn btn-sm btn-success">Export Charges</a>
+		 <a href="<?php echo site_url()?>/administration/new_service" class="btn btn-sm btn-success">Add a New Service </a>
+
 		</div>
 	</div>
 </div>
@@ -27,11 +27,11 @@
           <div class="padd">
           
 <?php
-		$search = $this->session->userdata('service_search');
+		$search = $this->session->userdata('visit_search');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/administration/close_service_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -47,7 +47,7 @@
 						<tr>
 						  <th>#</th>
 						  <th>Service Name</th>
-						  <th colspan="4">Actions</th>
+						  <th colspan="2">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -58,20 +58,7 @@
 				
 				$service_id = $row->service_id;
 				$service_name = $row->service_name;
-				$service_status = $row->service_status;
 				
-				//create deactivated status display
-				if($service_status == 0)
-				{
-					$status = '<span class="label label-important">Deactivated</span>';
-					$button = '<a href="'.site_url().'/administration/activate_service/'.$service_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you want to activate '.$service_name.'?\');">Activate</a>';
-				}
-				//create activated status display
-				else if($service_status == 1)
-				{
-					$status = '<span class="label label-success">Active</span>';
-					$button = '<a class="btn btn-danger" href="'.site_url().'/administration/deactivate_service/'.$service_id.'" onclick="return confirm(\'Do you want to deactivate '.$service_name.'?\');">Deactivate</a>';
-				}
 				$count++;
 				$result .= 
 					'
@@ -79,10 +66,7 @@
 							<td>'.$count.'</td>
 							<td>'.$service_name.'</td>
 							<td><a href="'.site_url().'/administration/service_charges/'.$service_id.'" class="btn btn-sm btn-success">Service Charges</a></td>
-							<td>'.$status.'</td>
-							<td><a href="'.site_url().'/administration/edit_service/'.$service_id.'" class="btn btn-sm btn-warning"> Edit </a></td>
-							
-							<td>'.$button.'</td>
+							<td><a href="'.site_url().'/administration/edit_service/'.$service_id.'" class="btn btn-sm btn-info"> Edit </a></td>
 						</tr> 
 					';
 			}

@@ -1445,7 +1445,7 @@ class Reception extends auth
 		$segment = 3;
 		
 		$dependant_search = $this->session->userdata('patient_dependants_search');
-		$where = 'patients.visit_type_id = 2 AND patients.dependant_id is not null AND patients.dependant_id = staff.Staff_Number  AND patients.patient_delete = 0';
+		$where = 'patients.visit_type_id = 2 AND patients.dependant_id > 0 AND patients.dependant_id = staff.Staff_Number  AND patients.patient_delete = 0';
 		
 		if(!empty($dependant_search))
 		{
@@ -1644,7 +1644,7 @@ class Reception extends auth
 		
 		if(!empty($staff_no))
 		{
-			$staff_no = ' AND patients.dependant_id LIKE \''.$staff_no.'\' ';
+			$staff_no = ' AND patients.dependant_id LIKE '.$staff_no.' ';
 		}
 		else
 		{
@@ -1653,7 +1653,7 @@ class Reception extends auth
 		
 		if(!empty($registration_date))
 		{
-			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.'\' ';
+			$registration_date = ' AND patients.patient_date LIKE \''.$registration_date.' ';
 		}
 		else
 		{
