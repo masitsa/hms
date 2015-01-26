@@ -42,7 +42,7 @@ class Accounts extends auth
 		$config['base_url'] = site_url().'/accounts/accounts_queue';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = 3;
-		$config['per_page'] = 20;
+		$config['per_page'] = 40;
 		$config['num_links'] = 5;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
@@ -293,7 +293,7 @@ class Accounts extends auth
 		$config['base_url'] = site_url().'/accounts/accounts_closed_visits';
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
-		$config['per_page'] = 20;
+		$config['per_page'] = 40;
 		$config['num_links'] = 5;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';

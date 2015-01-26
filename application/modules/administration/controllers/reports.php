@@ -292,7 +292,17 @@ class Reports extends auth
 		$v_data['type'] = $this->reception_model->get_types();
 		
 		$data['title'] = 'Department Reports';
-		$v_data['title'] = 'Department Reports';
+		
+		$visit_search = $this->session->userdata('all_departments_search');
+		if(!empty($visit_search))
+		{
+			$v_data['title'] = 'Department Reports for today';
+		}
+		
+		else
+		{
+			$v_data['title'] = 'Department Reports for today';
+		}
 		
 		$data['content'] = $this->load->view('reports/department_reports', $v_data, true);
 		
