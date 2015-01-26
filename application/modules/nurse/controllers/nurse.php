@@ -162,8 +162,9 @@ class Nurse extends auth
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
 		$gender = $patient['gender'];
+		$visit_date = date('jS F Y',strtotime($this->accounts_model->get_visit_date($visit_id)));
 		
-		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
+		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span> Visit Date: <span style="font-weight: normal;">'.$visit_date.'</span>';
 		$v_data['module'] = $module;
 		$v_data['mike'] = $mike;
 		$v_data['visit_id'] = $visit_id;

@@ -46,7 +46,7 @@ if($num_rows > 0){
 		<table align='center'>
 			<tr>
 				<td>
-					<textarea rows='10' cols='80' class='form-control col-md-6'  id='objective_findings' onKeyUp='save_symptoms(".$visit_id.")'>".$visit_objective_findings."asasas</textarea>
+					<textarea rows='10' cols='80' class='form-control col-md-6'  id='objective_findings' onKeyUp='save_symptoms(".$visit_id.")'>".$visit_objective_findings."</textarea>
 				</td>
 			</tr>
 		</table>

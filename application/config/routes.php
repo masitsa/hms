@@ -63,3 +63,7 @@ $route['reception/register-dependant-patient/(:num)'] = 'reception/register_depe
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
+
+
+// $route['administration/activate-service-charge/(:num)/(:num2)'] = 'administration/activate_service_charge/$1/$2';
+// $route['administration/deactivate-service-charge/(:num)/(:num2)'] = 'administration/deactivate_service_charge/$1/$2';

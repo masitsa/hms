@@ -10,11 +10,12 @@ class Reports extends auth
 		$this->load->model('reception/reception_model');
 		$this->load->model('reports_model');
 		$this->load->model('database');
+		$this->load->model('accounts/accounts_model');
 	}
 	
 	public function cash_report()
 	{
-		$search = ' AND payments.visit_id = visit.visit_id';
+		$search = ' AND payments.visit_id = visit.visit_id AND payments.payment_type = 1';
 		$table = ', payments';
 		$this->session->set_userdata('all_transactions_search', $search);
 		$this->session->set_userdata('all_transactions_tables', $table);
@@ -49,7 +50,7 @@ class Reports extends auth
 	
 	public function all_transactions()
 	{
-		$where = 'visit.patient_id = patients.patient_id';
+		$where = 'visit.patient_id = patients.patient_id ';
 		$table = 'visit, patients';
 		$visit_search = $this->session->userdata('all_transactions_search');
 		$table_search = $this->session->userdata('all_transactions_tables');

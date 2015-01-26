@@ -70,10 +70,16 @@
 			                            </select>
 	                            	</div>
 	                            </div>
+                             <div class="form-group">
+                             	<label class="col-lg-4 control-label">Visit type: </label>
+								<div class="col-lg-8">
+									<input type="radio" name="visit_type" value="<?php echo $patient_type_id;?>" checked="checked" onclick=""><?php echo $patient_type;?>
+                                    <input type="radio" name="visit_type" value="4" onclick="do_patient_type_function(4)"> Insurance
+								</div>
+                             </div>
 					        <div id="insured_company">
 					        	 <div class="form-group">
 									<label class="col-lg-4 control-label">Insurance Name: </label>
-									
 									<div class="col-lg-8">
 										<select name="patient_insurance_id" class="form-control">
 												<option value="">--- Select Insurance Company---</option>
@@ -344,6 +350,10 @@
 		{
 		 	myTarget2.style.display = 'block';
 
+		}
+		else if(myTarget == 12)
+		{
+			
 		}
 		else{
 	 	 	myTarget2.style.display = 'none';

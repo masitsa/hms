@@ -37,7 +37,7 @@
                                         	<input type="submit" class="btn btn-info pull-right" value="Search" name="search"/>
                                             
                                         <div class="input-group">
-                                            <input type="text" class="form-control col-md-6" name="search_item" placeholder="Search for a procedure">
+                                            <input type="text" class="form-control col-md-6" name="search_item" placeholder="Search for a symptom">
                                         </div>
                                     </div>
                                         

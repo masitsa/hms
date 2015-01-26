@@ -56,7 +56,7 @@
                                     <td><?php echo number_format($total_cash_collection, 2);?></td>
                                 </tr>
                                 <tr>
-                                    <th>Debt</th>
+                                    <th>Credit</th>
                                     <td><?php echo number_format(($total_services_revenue - $total_cash_collection), 2);?></td>
                                 </tr>
                                 <tr>
@@ -123,7 +123,7 @@
                     <!-- End Cash Breakdown -->
                     
                     <div class="col-md-3">
-                        <h5>Debt Breakdown</h5>
+                        <h5>Credit Breakdown</h5>
                         <table class="table table-striped table-hover table-condensed">
                             <tbody>
                                 <tr>

@@ -1,3 +1,6 @@
+<!-- search -->
+<?php echo $this->load->view('search/service_charge_search', '', TRUE);?>
+<!-- end search -->
 <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">
@@ -27,11 +30,11 @@
           <div class="padd">
           
 <?php
-		$search = $this->session->userdata('visit_search');
+		$search = $this->session->userdata('service_charge_search');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/administration/close_service_charge_search/'.$service_id.'" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		
@@ -49,7 +52,7 @@
 						  <th>Visit Type</th>
 						  <th>Service Charge Name</th>
 						  <th>Service Charge Amount</th>
-						  <th colspan="2">Actions</th>
+						  <th colspan="3">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -62,7 +65,20 @@
 				$service_charge_name = $row->service_charge_name;
 				$visit_type_name = $row->visit_type_name;
 				$service_charge_amount = $row->service_charge_amount;
+				$service_charge_status = $row->service_charge_status;
 				
+				//create deactivated status display
+				if($service_charge_status == 0)
+				{
+					$status = '<span class="label label-important">Deactivated</span>';
+					$button = '<a href="'.site_url().'/administration/activate_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-info" onclick="return confirm(\'Do you want to activate '.$service_charge_name.'?\');">Activate</a>';
+				}
+				//create activated status display
+				else if($service_charge_status == 1)
+				{
+					$status = '<span class="label label-success">Active</span>';
+					$button = '<a class="btn btn-danger" href="'.site_url().'/administration/deactivate_service_charge/'.$service_id.'/'.$service_charge_id.'" onclick="return confirm(\'Do you want to deactivate '.$service_charge_name.'?\');">Deactivate</a>';
+				}
 				$count++;
 				$result .= 
 					'
@@ -71,7 +87,9 @@
 							<td>'.$visit_type_name.'</td>
 							<td>'.$service_charge_name.'</td>
 							<td>'.$service_charge_amount.'</td>
+							<td>'.$status.'</td>
 							<td><a href="'.site_url().'/administration/edit_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-info"> Edit </a></td>
+							<td>'.$button.'</td>
 						</tr> 
 					';
 			}
