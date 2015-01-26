@@ -118,7 +118,10 @@
                 </div>
             <?php echo form_close();
             
-            }else{
+            }
+			
+			else
+			{
             ?>
             <?php echo form_open('administration/service_charge_add/'.$service_id, array('class' => 'form-horizontal'));?>
                  <div class="row">

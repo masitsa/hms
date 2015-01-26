@@ -29,7 +29,7 @@ class Administration extends auth
 	public function services($page_name = NULL)
 	{
 		// this is it
-		$where = 'service_id > 0';
+		$where = 'service_delete = 0';
 		$service_search = $this->session->userdata('service_search');
 		
 		if(!empty($service_search))
@@ -100,10 +100,10 @@ class Administration extends auth
 		$this->load->view('auth/template_sidebar', $data);
 		// end of it
 	}
-	public function service_charges($service_id,$page_name = NULL)
+	public function service_charges($service_id,$page_name = 'page')
 	{
 		// this is it
-		$where = 'service.service_id = service_charge.service_id AND service_charge.service_charge_status = 1 AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
+		$where = 'service_charge_delete = 0 AND service.service_id = service_charge.service_id AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
 		$service_charge_search = $this->session->userdata('service_charge_search');
 		
 		if(!empty($service_charge_search))
@@ -111,9 +111,9 @@ class Administration extends auth
 			$where .= $service_charge_search;
 		}
 		
-		if($page_name == NULL)
+		if($page_name == 'page')
 		{
-			$segment = 3;
+			$segment = 5;
 		}
 		
 		else
@@ -213,7 +213,7 @@ class Administration extends auth
 		redirect('administration/import_data');
 	}
 	
-	public function add_service_charge($service_id)
+	public function add_service_charge($service_id, $service_charge_id = NULL)
 	{
 		$v_data = array('service_id'=>$service_id);
 		$v_data['service_id'] = $service_id;
@@ -241,17 +241,17 @@ class Administration extends auth
 		}
 		else
 		{
-				$result = $this->administration_model->submit_service_charges($service_id);
-				if($result == FALSE)
-				{
-					$this->session->set_userdata("error_message","Seems like there is a duplicate of this service charge. Please try again");
-					$this->add_service_charge($service_id);
-				}
-				else
-				{
-					$this->session->set_userdata("success_message","Successfully created a service charge");
-					$this->add_service_charge($service_id);
-				}
+			$result = $this->administration_model->submit_service_charges($service_id);
+			if($result == FALSE)
+			{
+				$this->session->set_userdata("error_message","Seems like there is a duplicate of this service charge. Please try again");
+				$this->add_service_charge($service_id);
+			}
+			else
+			{
+				$this->session->set_userdata("success_message","Successfully created a service charge");
+				$this->add_service_charge($service_id);
+			}
 		}
 
 	}
@@ -466,7 +466,34 @@ class Administration extends auth
 
 		}
 	}
-
+	
+	public function delete_service($service_id)
+	{
+		if($this->administration_model->delete_service($service_id))
+		{
+			$this->session->set_userdata('service_success_message', 'The service has been deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('service_error_message', 'The service could not be deleted');
+		}
+		redirect('administration/services');
+	}
+	
+	public function delete_service_charge($service_id, $service_charge_id)
+	{
+		if($this->administration_model->delete_service_charge($service_charge_id))
+		{
+			$this->session->set_userdata('service_charge_success_message', 'The charge has been deleted successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('service_charge_error_message', 'The charge could not be deleted');
+		}
+		redirect('administration/service_charges/'.$service_id);
+	}
 }
 
 ?>

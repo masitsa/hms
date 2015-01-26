@@ -27,6 +27,24 @@
           <div class="padd">
           
 <?php
+		$error = $this->session->userdata('service_charge_error_message');
+		$success = $this->session->userdata('service_charge_success_message');
+		
+		if(!empty($success))
+		{
+			echo '
+				<div class="alert alert-success">'.$success.'</div>
+			';
+			$this->session->unset_userdata('service_charge_success_message');
+		}
+		
+		if(!empty($error))
+		{
+			echo '
+				<div class="alert alert-danger">'.$error.'</div>
+			';
+			$this->session->unset_userdata('service_charge_error_message');
+		}
 		$search = $this->session->userdata('visit_search');
 		
 		if(!empty($search))
@@ -36,6 +54,7 @@
 		$result = '';
 		
 		//if users exist display them
+		//echo $query->num_rows();
 		if ($query->num_rows() > 0)
 		{
 			$count = $page;
@@ -49,7 +68,7 @@
 						  <th>Visit Type</th>
 						  <th>Service Charge Name</th>
 						  <th>Service Charge Amount</th>
-						  <th colspan="2">Actions</th>
+						  <th colspan="3">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -57,7 +76,6 @@
 			
 			foreach ($query->result() as $row)
 			{
-				
 				$service_charge_id = $row->service_charge_id;
 				$service_charge_name = $row->service_charge_name;
 				$visit_type_name = $row->visit_type_name;
@@ -72,6 +90,7 @@
 							<td>'.$service_charge_name.'</td>
 							<td>'.$service_charge_amount.'</td>
 							<td><a href="'.site_url().'/administration/edit_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-info"> Edit </a></td>
+							<td><a href="'.site_url().'/administration/delete_service_charge/'.$service_id.'/'.$service_charge_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this charge?\'"> Delete </a></td>
 						</tr> 
 					';
 			}
@@ -85,7 +104,7 @@
 		
 		else
 		{
-			$result .= "There are no patients";
+			$result .= "There are no service charges";
 		}
 		
 		echo $result;
