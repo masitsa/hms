@@ -382,7 +382,7 @@ class Reports_model extends CI_Model
 		$this->load->library('excel');
 		
 		//get all transactions
-		$where = 'visit.patient_id = patients.patient_id';
+		$where = 'visit.patient_id = patients.patient_id  ';
 		$table = 'visit, patients';
 		$visit_search = $this->session->userdata('all_transactions_search');
 		$table_search = $this->session->userdata('all_transactions_tables');
@@ -422,7 +422,10 @@ class Reports_model extends CI_Model
 			$report[$row_count][6] = 'Staff/Student/ID No.';
 			$report[$row_count][7] = 'Payment method';
 			$report[$row_count][8] = 'Cash';
-			$current_column = 9;
+			$current_column1  = 9 ;
+			$current_column2 = 10;
+			$current_column = 11;
+			$current_column3 = 12;
 			
 			//get & display all services
 			$services_query = $this->get_all_active_services();
@@ -431,9 +434,14 @@ class Reports_model extends CI_Model
 			{
 				$report[$row_count][$current_column] = $service->service_name;
 				$current_column++;
+				$current_column1++;
+				$current_column2++;
+				$current_column3++;
 			}
-			
-			$report[$row_count][$current_column] = 'Total';
+			$report[$row_count][$current_column1] = 'Credit Note Total';
+			$report[$row_count][$current_column2] = 'Debit Note Total';
+			$report[$row_count][$current_column] = 'Invoice Total';
+			$report[$row_count][$current_column3] = 'Balance';
 			
 			//display all patient data in the leftmost columns
 			foreach($visits_query->result() as $row)
@@ -458,6 +466,23 @@ class Reports_model extends CI_Model
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
 				
+
+				// this is to check for any credit note or debit notes
+				$payments_value = $this->accounts_model->total_payments($visit_id);
+
+				$invoice_total = $this->accounts_model->total_invoice($visit_id);
+
+				$balance = $this->accounts_model->balance($payments_value,$invoice_total);
+				// end of the debit and credit notes
+
+				// total of debit and credit notes amounts
+				$credit_note_amount = $this->accounts_model->get_sum_credit_notes($visit_id);
+				$debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
+				// end of total debit and credit notes amount
+
+
+
+
 				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
 				$visit_type = $patient['visit_type'];
 				$patient_type = $patient['patient_type'];
@@ -465,6 +490,7 @@ class Reports_model extends CI_Model
 				$patient_surname = $patient['patient_surname'];
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
 				$gender = $patient['gender'];
+				$faculty = $patient['faculty'];
 				
 				//creators and editors
 				$personnel_query = $this->personnel_model->get_all_personnel();
@@ -508,7 +534,8 @@ class Reports_model extends CI_Model
 				
 				//display all debtors
 				$debtors = $this->session->userdata('debtors');
-				if($debtors == 'true' && (($cash - $total_invoiced2) > 0))
+				// if($debtors == 'true' && (($cash - $total_invoiced2) > 0))
+				if($debtors == 'true' && ($balance > 0))
 				{
 					//display the patient data
 					$report[$row_count][0] = $count;
@@ -516,11 +543,14 @@ class Reports_model extends CI_Model
 					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
 					$report[$row_count][3] = $visit_type;
 					$report[$row_count][4] = $doctor;
-					$report[$row_count][5] = '';
+					$report[$row_count][5] = $faculty;
 					$report[$row_count][6] = $strath_no;
 					$report[$row_count][7] = '';
-					$report[$row_count][8] = $cash;
-					$current_column = 9;
+					$report[$row_count][8] = $payments_value;
+					$current_column1  = 9 ;
+					$current_column2 = 10;
+					$current_column = 11;
+					$current_column3 = 12;
 					
 					//display services charged to patient
 					foreach($services_query->result() as $service)
@@ -531,10 +561,16 @@ class Reports_model extends CI_Model
 						
 						$report[$row_count][$current_column] = $visit_charge;
 						$current_column++;
+						$current_column1++;
+						$current_column2++;
+						$current_column3++;
 					}
 				
 					//display total for the current visit
+					$report[$row_count][$current_column1] = $credit_note_amount;
+					$report[$row_count][$current_column2] = $debit_note_amount;
 					$report[$row_count][$current_column] = $total_invoiced;
+					$report[$row_count][$current_column3] = $balance;
 				}
 				
 				//display cash & all transactions
@@ -546,11 +582,14 @@ class Reports_model extends CI_Model
 					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
 					$report[$row_count][3] = $visit_type;
 					$report[$row_count][4] = $doctor;
-					$report[$row_count][5] = '';
+					$report[$row_count][5] = $faculty;
 					$report[$row_count][6] = $strath_no;
 					$report[$row_count][7] = '';
-					$report[$row_count][8] = $cash;
-					$current_column = 9;
+					$report[$row_count][8] = $payments_value;
+					$current_column1  = 9 ;
+					$current_column2 = 10;
+					$current_column = 11;
+					$current_column3 = 12;
 					
 					//display services charged to patient
 					foreach($services_query->result() as $service)
@@ -561,10 +600,16 @@ class Reports_model extends CI_Model
 						
 						$report[$row_count][$current_column] = $visit_charge;
 						$current_column++;
+						$current_column1++;
+						$current_column2++;
+						$current_column3++;
 					}
 				
 					//display total for the current visit
-					$report[$row_count][$current_column] = $total_invoiced;
+					$report[$row_count][$current_column1] = $credit_note_amount;
+					$report[$row_count][$current_column2] = $debit_note_amount;
+					$report[$row_count][$current_column] = $invoice_total;
+					$report[$row_count][$current_column3] = $balance;
 				}
 			}
 		}

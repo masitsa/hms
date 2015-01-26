@@ -82,7 +82,6 @@ class Reception_model extends CI_Model
 		$query = $this->db->get();
 		
 		return $query;
-
 	}
 	
 	/*
@@ -530,7 +529,7 @@ class Reception_model extends CI_Model
 				$visit_type = 0;
 			}
 			
-			if($check_id < 3 && $dependant_id != NULL)
+			if($check_id < 3 && $dependant_id < 1)
 			{
 				$patient_data = $this->get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id, $patient_id);
 				$visit_type = $patient_data['visit_type'];
@@ -557,7 +556,7 @@ class Reception_model extends CI_Model
 				}
 				else
 				{
-					$visit_type = 'Staff dependant';
+					$visit_type = 'General';
 				}
 				
 				$patient_othernames = $row->patient_othernames;
@@ -597,7 +596,6 @@ class Reception_model extends CI_Model
 		$patient['gender'] = $gender;
 		$patient['patient_number'] = $patient_number;
 		$patient['faculty'] = $faculty;
-		$patient['staff_dependant_no'] = $dependant_id;
 
 		return $patient;
 	}
@@ -608,7 +606,7 @@ class Reception_model extends CI_Model
 		if($check_id == 2)
 		{
 			//dependant
-			if($dependant_id != NULL)
+			if($dependant_id > 0)
 			{
 				$patient_type = $this->reception_model->get_patient_type($visit_type_id, $dependant_id);
 				$visit_type = 'Dependant';
@@ -633,10 +631,7 @@ class Reception_model extends CI_Model
 					$patient_surname = $row->patient_surname;
 					$patient_date_of_birth = $row->patient_date_of_birth;
 					$gender_id = $row->gender_id;
-					// get parent faculty 
-					$faculty = $this->get_staff_faculty_details($dependant_id);
-					// end of parent faculty
-					
+					$faculty = '';
 					if($gender_id == 1)
 					{
 						$gender = 'M';
@@ -784,23 +779,6 @@ class Reception_model extends CI_Model
 		$patient['faculty'] = $faculty;
 
 		return $patient;
-	}
-	public function get_staff_faculty_details($strath_no)
-	{
-		$this->db->from('staff');
-		$this->db->select('department');
-		$this->db->where('Staff_Number = \''.$strath_no.'\'');
-		$query = $this->db->get();
-		if($query->num_rows() > 0)
-		{
-			$department_result = $query->row();
-			$department = $department_result->department;
-		}
-		else
-		{
-			$department = '';
-		}
-		return $department;
 	}
 	
 	public function get_patient_insurance($patient_id)

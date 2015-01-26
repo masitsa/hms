@@ -174,7 +174,7 @@
 						<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
 						<!--<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>-->
 						<td><a href="'.site_url().'/reception/edit_staff_dependant_patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>
-						<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'/3" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>
+						<!--<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'/3" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>-->
 					</tr> 
 				';
 			}

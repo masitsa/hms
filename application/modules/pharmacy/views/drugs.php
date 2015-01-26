@@ -1,3 +1,73 @@
+<div class="row">
+    <div class="col-md-12">
+        <?php 
+        $validation_error = validation_errors();
+        
+        if(!empty($validation_error))
+        {
+            echo '<div class="alert alert-danger">'.$validation_error.'</div>';
+        }
+        echo form_open('pharmacy/search_drugs/'.$visit_id, array('class'=>'form-inline'));
+        ?>
+        
+        
+         <div class="row" style="margin-bottom:5px;">
+            <div class="center-align col-md-12">
+                <div class="form-group">
+                    <label class="col-lg-12 control-label">Drug Name: </label>
+                    
+                    <div class="col-lg-12">
+                        <input type="text" class="col-lg-12 form-control" name="search_item" placeholder="Drug name">
+                    </div>
+                </div>
+                 <div class="form-group">
+                        <label class="col-lg-12 control-label">Class: </label>
+                        
+                        <div class="col-lg-12">
+                            <select class="form-control" name="class_id">
+                                <?php
+                                    if(count($drug_classes) > 0)
+                                    {
+                                        foreach($drug_classes as $res)
+                                        {
+                                            $class_id = $res->class_id;
+                                            $class_name = $res->class_name;
+                                            
+                                            if($class_id == set_value("class_id"))
+                                            {
+                                                echo '<option value="'.$class_id.'" selected>'.$class_name.'</option>';
+                                            }
+                                            
+                                            else
+                                            {
+                                                echo '<option value="'.$class_id.'">'.$class_name.'</option>';
+                                            }
+                                        }
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            
+        </div>
+            
+            <input type="hidden" value="<?php echo $visit_id?>" name="visit_id">
+        <div class="center-align">
+            <div class="form-group">
+                <?php
+                $search = $this->session->userdata('drugs_search');
+                if(!empty($search))
+                {
+                ?>
+                <a href="<?php echo site_url().'/pharmacy/close_drugs_search/'.$visit_id;?>" class="btn btn-warning">Close Search</a>
+                <?php }?>
+                <input type="submit" class="btn btn-info" value="Search" name="search"/>
+            </div>
+        </div>
+        <?php echo form_close();?>
+    </div>
+</div>
       <div class="row">
         <div class="col-md-12">
               <!-- Widget -->
@@ -15,37 +85,6 @@
                 <!-- Widget content -->
                     <div class="widget-content">
                         <div class="padd">
-                            <div class="row">
-                                <div class="col-md-12">
-                                	<?php 
-									$validation_error = validation_errors();
-									
-									if(!empty($validation_error))
-									{
-										echo '<div class="alert alert-danger">'.$validation_error.'</div>';
-									}
-									echo form_open('pharmacy/search_drugs/'.$visit_id, array('class'=>'form-inline'));
-									?>
-                                    <div class="form-group">
-                                            <?php
-											$search = $this->session->userdata('drugs_search');
-                                            if(!empty($search))
-											{
-											?>
-                                            <a href="<?php echo site_url().'/pharmacy/close_drugs_search/'.$visit_id;?>" class="btn btn-warning pull-right">Close Search</a>
-                                            <?php }?>
-                                        	<input type="submit" class="btn btn-info pull-right" value="Search" name="search"/>
-                                            
-                                        <div class="input-group">
-                                            <input type="text" class="form-control col-md-6" name="search_item" placeholder="Search for a drugs">
-                                        </div>
-                                    </div>
-                                        
-                                        <input type="hidden" value="<?php echo $visit_id?>" name="visit_id">
-                                        
-                                    <?php echo form_close();?>
-                                </div>
-                            </div>
                           
                             <div class="row">
                                 <div class="col-md-12">
@@ -55,6 +94,8 @@
                                             <th>Class</th>
                                             <th>Generic</th>
                                             <th>Brand</th>
+                                            <th>In Stock</th>
+                                            <th>Price</th>
                                         </thead>
                             
                                         <?php 
@@ -67,10 +108,16 @@
 	                                       	$service_charge_id = $rs10->service_charge_id;
 											$drugname = $rs10->service_charge_name;
 											$drugsclass = $rs10->class_name;
+                                            $drugs_id = $rs10->drugs_id;
 											$drugscost = $rs10->service_charge_amount;
 											$generic_name = $rs10->generic_name;
 											$brand_name = $rs10->brand_name;
 											$visit_type_idv = $rs10->visit_type_id;
+                                            $quantity = $rs10->quantity;
+                                            $purchases = $this->pharmacy_model->item_purchases($drugs_id);
+                                            $sales = $this->pharmacy_model->get_drug_units_sold($drugs_id);
+                                            $deductions = $this->pharmacy_model->item_deductions($drugs_id);
+                                            $in_stock = ($quantity + $purchases) - $sales - $deductions;
                                         
                                         ?>
                                        <tr>
@@ -94,6 +141,7 @@
 							         
 							                <td><?php echo $generic_name;?></td>
 							                <td><?php echo $brand_name;?></td>
+                                            <td><?php echo $in_stock;?></td>
 							                <td><?php echo $drugscost;?></td>
 							        	</tr>
                                         <?php endforeach;?>

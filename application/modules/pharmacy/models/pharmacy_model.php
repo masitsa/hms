@@ -188,7 +188,7 @@ class Pharmacy_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from($table);
-		$this->db->select('service_charge.service_charge_id, service_charge.visit_type_id,generic.generic_name, brand.brand_name, service_charge.service_charge_amount, service_charge.drug_id , service_charge.service_charge_name, class.class_name');
+		$this->db->select('service_charge.service_charge_id, service_charge.visit_type_id,generic.generic_name, brand.brand_name, service_charge.service_charge_amount, service_charge.drug_id , service_charge.service_charge_name, class.class_name,drugs.drugs_id,drugs.quantity');
 		$this->db->where($where);
 		$this->db->order_by($order,'asc');
 		$query = $this->db->get('', $per_page, $page);

@@ -96,6 +96,9 @@ class Administration extends auth
 	{
 		// this is it
 		$where = 'service_charge.service_charge_status = 1 AND service.service_id = service_charge.service_id AND service_charge.service_charge_status = 1 AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
+		
+		//$where = 'service.service_id = service_charge.service_id  AND service_charge.visit_type_id = visit_type.visit_type_id AND service_charge.service_id = '.$service_id;
+		
 		$service_charge_search = $this->session->userdata('service_charge_search');
 		
 		if(!empty($service_charge_search))
@@ -110,7 +113,7 @@ class Administration extends auth
 		$config['base_url'] = site_url().'/administration/service_charges/'.$service_id;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
-		$config['per_page'] = 20;
+		$config['per_page'] = 15;
 		$config['num_links'] = 5;
 		
 		$config['full_tag_open'] = '<ul class="pagination pull-right">';
@@ -165,6 +168,30 @@ class Administration extends auth
 		$data['sidebar'] = 'admin_sidebar';
 		$data['title'] = 'Import';
 		$this->load->view('auth/template_sidebar', $data);
+	}
+	public function deactivate_service_charge($service_id,$service_charge_id)
+	{
+		$this->administration_model->deactivate_service_charge($service_charge_id);
+		$this->session->set_userdata('success_message', 'Property type disabled successfully');
+		redirect('administration/service_charges/'.$service_id);
+	}
+	public function activate_service_charge($service_id,$service_charge_id)
+	{
+		$this->administration_model->activate_service_charge($service_charge_id);
+		$this->session->set_userdata('success_message', 'Property type disabled successfully');
+		redirect('administration/service_charges/'.$service_id);
+	}
+	public function deactivate_service($service_id)
+	{
+		$this->administration_model->deactivate_service($service_id);
+		$this->session->set_userdata('success_message', 'Property type disabled successfully');
+		redirect('administration/services/'.$service_id);
+	}
+	public function activate_service($service_id)
+	{
+		$this->administration_model->activate_service($service_id);
+		$this->session->set_userdata('success_message', 'Property type disabled successfully');
+		redirect('administration/services/'.$service_id);
 	}
 	
 	public function bulk_add_all_staff()
@@ -454,6 +481,63 @@ class Administration extends auth
 	public function export_charges()
 	{
 		$this->administration_model->export_charges();
+	}
+	public function service_charge_search($service_id = NULL)
+	{
+		$service_charge_name = $this->input->post('service_charge_name');
+		
+		
+		if(!empty($service_charge_name))
+		{
+			$service_charge_name = ' AND service_charge.service_charge_name LIKE \'%'.mysql_real_escape_string($service_charge_name).'%\' ';
+		}
+		
+		else
+		{
+			$service_charge_name = '';
+		}
+		
+		
+		$search = $service_charge_name;
+		$this->session->set_userdata('service_charge_search', $search);
+		
+		// $this->service_charges($service_id);
+		redirect('administration/service_charges/'.$service_id);		
+		
+	}
+	public function service_search($service_id = NULL)
+	{
+		$service_name = $this->input->post('service_name');
+		
+		
+		if(!empty($service_name))
+		{
+			$service_name = ' AND service.service_name LIKE \'%'.mysql_real_escape_string($service_name).'%\' ';
+		}
+		
+		else
+		{
+			$service_name = '';
+		}
+		
+		
+		$search = $service_name;
+		$this->session->set_userdata('service_search', $search);
+		
+		// $this->service_charges($service_id);
+		redirect('administration/services');		
+		
+	}
+	public function close_service_charge_search($service_id)
+	{
+		$this->session->unset_userdata('service_charge_search');
+		// $this->service_charges($service_id);
+		redirect('administration/service_charges/'.$service_id);	
+	}
+	public function close_service_search()
+	{
+		$this->session->unset_userdata('service_search');
+		redirect('administration/services');
 	}
 }
 

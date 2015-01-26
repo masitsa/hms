@@ -128,14 +128,34 @@ class Pharmacy extends auth
 	}
 	public function search_drugs($visit_id)
 	{
-		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
+		// $this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
+
 		
 		//if form conatins invalid data
-		if ($this->form_validation->run())
-		{
-			$search = ' AND drugs_name LIKE \'%'.$this->input->post('search_item').'%\'';
-			$this->session->set_userdata('drugs_search', $search);
-		}
+		// if ($this->form_validation->run())
+		// {
+			 $search_item = $this->input->post('search_item');
+			 $class_id = $this->input->post('class_id');
+			if(!empty($search_item))
+			{
+				$search = ' AND drugs_name LIKE \'%'.$search_item.'%\'';
+			}
+			else
+			{
+				$search = '';
+			}
+
+			if($class_id != 288)
+			{
+				$class_search = ' AND drugs.class_id LIKE \'%'.$class_id.'%\'';				
+			}
+			else
+			{
+				$class_search = '';
+			}
+			$search_items = $search.$class_search;
+			$this->session->set_userdata('drugs_search', $search_items);
+		// }
 		
 		$this->drugs($visit_id,0);
 	}
@@ -166,8 +186,8 @@ class Pharmacy extends auth
 		}else if($visit_t == 4){
 				$where = 'drugs.drugs_id = service_charge.drug_id AND drugs.generic_id = generic.generic_id AND drugs.brand_id = brand.brand_id AND class.class_id  = drugs.class_id AND service_charge.visit_type_id = 4 ';
 		}else{
-				$where = 'drugs.drugs_id = service_charge.drug_id AND drugs.generic_id = generic.generic_id AND drugs.brand_id = brand.brand_id AND class.class_id  = drugs.class_id AND service_charge.visit_type_id = 0 ';
-		}
+				$where = 'drugs.drugs_id = service_charge.drug_id AND drugs.generic_id = generic.generic_id AND drugs.brand_id = brand.brand_id AND class.class_id  = drugs.class_id AND service_charge.visit_type_id = 0';
+		 }
 		
 		$drugs_search = $this->session->userdata('drugs_search');
 		
@@ -176,7 +196,7 @@ class Pharmacy extends auth
 			$where .= $drugs_search;
 		}
 		
-		$table = 'drugs, service_charge, generic, brand,class';
+		$table = 'drugs, service_charge, generic, brand, class';
 		//pagination
 		$this->load->library('pagination');
 		$config['base_url'] = site_url().'/pharmacy/drugs/'.$visit_id.'/'.$module;
@@ -221,6 +241,8 @@ class Pharmacy extends auth
 		
 		$v_data['visit_id'] = $visit_id;
 		$v_data['module'] = $module;
+		$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
+
 		$data['content'] = $this->load->view('drugs', $v_data, true);
 		
 		$data['title'] = 'Drugs List';

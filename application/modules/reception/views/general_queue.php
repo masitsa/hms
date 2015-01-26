@@ -178,7 +178,7 @@
 					</td>
 
 					<td><a href="'.site_url().'/nurse/patient_card/'.$visit_id.'/a/1" class="btn btn-sm btn-info">Patient Card</a></td>
-					<td><a href="'.site_url().'/doctor/send_to_labs/'.$visit_id.'/1" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
+					<td><a href="'.site_url().'/nurse/send_to_labs/'.$visit_id.'/1" class="btn btn-sm btn-success" onclick="return confirm(\'Send to lab?\');">To Lab</a></td>
 					<td><a href="'.site_url().'/doctor/send_to_pharmacy/'.$visit_id.'/1" class="btn btn-sm btn-primary" onclick="return confirm(\'Send to pharmacy?\');">To Pharmacy</a></td>
 					';
 				}

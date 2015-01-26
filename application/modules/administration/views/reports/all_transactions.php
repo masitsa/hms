@@ -93,8 +93,28 @@
 				$patient_surname = $patient['patient_surname'];
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
 				$gender = $patient['gender'];
+				if($patient['staff_dependant_no'] != NULL)
+				{
+					$strath_no = $patient['staff_dependant_no'];
+				}
+				else
+				{
+					$strath_no = $strath_no;
+				}
+				
 				$faculty = $patient['faculty'];
 				
+
+
+				// this is to check for any credit note or debit notes
+				$payments_value = $this->accounts_model->total_payments($visit_id);
+
+				$invoice_total = $this->accounts_model->total_invoice($visit_id);
+
+				$balance = $this->accounts_model->balance($payments_value,$invoice_total);
+				// end of the debit and credit notes
+
+
 				//creators and editors
 				if($personnel_query->num_rows() > 0)
 				{
@@ -150,12 +170,12 @@
 								<td>'.$doctor.'</td>
 								<td>'.$faculty.'</td>
 								<td>'.$strath_no.'</td>
-								<td>'.$cash.'</td>
+								<td>'.$payments_value.'</td>
 						'.$charges;
 						
 					$result .= '
-								<td>'.$total_invoiced.'</td>
-								<td>'.($cash - $total_invoiced).'</td>
+								<td>'.$invoice_total.'</td>
+								<td>'.($balance).'</td>
 							</tr> 
 					';
 				}
@@ -173,12 +193,12 @@
 								<td>'.$doctor.'</td>
 								<td>'.$faculty.'</td>
 								<td>'.$strath_no.'</td>
-								<td>'.$cash.'</td>
+								<td>'.$payments_value.'</td>
 						'.$charges;
 						
 					$result .= '
-								<td>'.$total_invoiced.'</td>
-								<td>'.($total_invoiced - $cash).'</td>
+								<td>'.$invoice_total.'</td>
+								<td>'.($balance).'</td>
 							</tr> 
 					';
 				}

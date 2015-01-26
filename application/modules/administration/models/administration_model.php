@@ -14,6 +14,66 @@ class Administration_model extends CI_Model
 		
 		return $query;
 	}
+	public function deactivate_service_charge($service_charge_id)
+	{
+		$data = array(
+				'service_charge_status' => 0
+			);
+		$this->db->where('service_charge_id', $service_charge_id);
+		
+		if($this->db->update('service_charge', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function activate_service_charge($service_charge_id)
+	{
+		$data = array(
+				'service_charge_status' => 1
+			);
+		$this->db->where('service_charge_id', $service_charge_id);
+		
+		if($this->db->update('service_charge', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function deactivate_service($service_id)
+	{
+		$data = array(
+				'service_status' => 0
+			);
+		$this->db->where('service_id', $service_id);
+		
+		if($this->db->update('service', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function activate_service($service_id)
+	{
+		$data = array(
+				'service_status' => 1
+			);
+		$this->db->where('service_id', $service_id);
+		
+		if($this->db->update('service', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
 	public function get_all_service_charges($table, $where, $per_page, $page, $order = NULL)
 	{
 		//retrieve all users

@@ -500,7 +500,7 @@ class Reception extends auth
 			//echo $patient_id; die();
 			if($patient_id != FALSE)
 			{
-				$this->get_found_patients($patient_id);
+				$this->get_found_patients($patient_id,3);
 			}
 			
 			else
@@ -511,8 +511,9 @@ class Reception extends auth
 		}
 	}
 	
-	public function get_found_patients($patient_id)
+	public function get_found_patients($patient_id,$place_id)
 	{
+		//  1 for students 2 for staff 3 for others 4 for dependants
 		$this->session->set_userdata('patient_search', ' AND patients.patient_id = '.$patient_id);
 		
 		redirect('reception/all-patients');
@@ -543,7 +544,7 @@ class Reception extends auth
 					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
 					
 				}
-				$this->get_found_patients($patient_id);
+				$this->get_found_patients($patient_id,2);
 				
 			}
 			
@@ -553,7 +554,7 @@ class Reception extends auth
 				{
 					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
 					if($patient_id != FALSE){
-						$this->get_found_patients($patient_id);
+						$this->get_found_patients($patient_id,2);
 					}else{
 						$this->add_patient();
 					}
@@ -563,7 +564,7 @@ class Reception extends auth
 				{
 					$this->add_patient();
 				}
-	
+			
 			}
 			
 			//case of a dependant
@@ -571,6 +572,7 @@ class Reception extends auth
 			{
 				$this->add_patient($this->input->post('staff_number'));
 			}
+			
 		}
 		
 		else
@@ -604,7 +606,7 @@ class Reception extends auth
 				//$this->set_visit($patient_id);
 				$search = ' AND patients.patient_id = '.$patient_id;
 				$this->session->set_userdata('patient_search', $search);
-				$this->get_found_patients($patient_id);
+				$this->get_found_patients($patient_id,1);
 			}
 			
 			else
@@ -612,7 +614,7 @@ class Reception extends auth
 				$patient_id = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
 				if($patient_id != FALSE){
 					// $this->set_visit($patient_id);
-					$this->get_found_patients($patient_id);
+					$this->get_found_patients($patient_id,1);
 				}else{
 					$this->session->set_userdata("error_message","Could not add patient. Please try again");
 					$this->add_patient();
@@ -646,6 +648,7 @@ class Reception extends auth
 		
 		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span>';
 		$v_data['patient_type_id'] = $patient_type_id;
+		$v_data['patient_type'] = $patient_type;
 		$data['content'] = $this->load->view('initiate_visit', $v_data, true);
 		
 		$data['title'] = 'Start Visit';
@@ -1036,6 +1039,9 @@ class Reception extends auth
 		if($page == NULL)
 		{
 			$this->session->unset_userdata('patient_search');
+			$this->session->unset_userdata('patient_staff_search');
+			$this->session->unset_userdata('patient_dependants_search');
+			$this->session->unset_userdata('patient_student_search');
 			redirect('reception/patients');
 		} else if($page == 2)
 		{
@@ -1046,6 +1052,11 @@ class Reception extends auth
 		{
 			$this->session->unset_userdata('patient_student_search');
 			redirect('reception/students');
+		}
+		else if($page == 4)
+		{
+			$this->session->unset_userdata('patient_dependants_search');
+			redirect('reception/staff_dependants');
 		}
 		else
 		{
@@ -1107,7 +1118,7 @@ class Reception extends auth
 			{
 				//initiate visit for the patient
 				$this->session->set_userdata('success_message', 'Patient added successfully');
-				$this->get_found_patients($patient_id);
+				$this->get_found_patients($patient_id,3);
 			}
 			
 			else
@@ -1392,7 +1403,7 @@ class Reception extends auth
 			if($patient_id != FALSE)
 			{
 				$this->session->set_userdata('success_message', 'Patient added successfully');
-				$this->get_found_patients($patient_id);
+				$this->get_found_patients($patient_id,2);
 			}
 			
 			else
@@ -1434,7 +1445,7 @@ class Reception extends auth
 		$segment = 3;
 		
 		$dependant_search = $this->session->userdata('patient_dependants_search');
-		$where = 'patients.visit_type_id = 2 AND patients.dependant_id > 0 AND patients.dependant_id = staff.Staff_Number  AND patients.patient_delete = 0';
+		$where = 'patients.visit_type_id = 2 AND patients.dependant_id is not null AND patients.dependant_id = staff.Staff_Number  AND patients.patient_delete = 0';
 		
 		if(!empty($dependant_search))
 		{
@@ -1723,7 +1734,7 @@ class Reception extends auth
 		
 		if(!empty($registration_date))
 		{
-			$registration_date = ' AND patients.patient_date LIKE '.$registration_date.'';
+			$registration_date = ' AND patients.patient_date LIKE \'%'.$registration_date.'%\'';
 		}
 		
 		//search surname
