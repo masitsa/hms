@@ -9,7 +9,7 @@ class Administration_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('*');
 		$this->db->where($where);
-		$this->db->order_by('service_id','ASC');
+		$this->db->order_by('service_name','ASC');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -20,8 +20,8 @@ class Administration_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('*');
 		$this->db->where($where);
-		$this->db->order_by('service.service_id','ASC');
-		$query = $this->db->get('');
+		$this->db->order_by('service.service_name, service_charge.service_charge_name','ASC');
+		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
 	}
@@ -58,7 +58,7 @@ class Administration_model extends CI_Model
 		}
 		else
 		{
-			$visit_data = array('service_id'=>$service_id,'service_charge_name'=>$service_charge_name,'service_charge_amount'=>$charge,'visit_type_id'=>$patient_type);
+			$visit_data = array('service_id'=>$service_id,'service_charge_name'=>$service_charge_name,'service_charge_amount'=>$charge,'visit_type_id'=>$patient_type, 'service_charge_status'=>1);
 			$this->db->insert('service_charge', $visit_data);
 
 			return TRUE;
@@ -134,8 +134,36 @@ class Administration_model extends CI_Model
 		{
 			return FALSE;	
 		}
+	}
+	
+	public function delete_service($service_id)
+	{
+		$data['service_delete'] = 1;
+		$this->db->where('service_id', $service_id);
+		if($this->db->update('service', $data))
+		{
+			return TRUE;
+		}
 		
-
+		else
+		{
+			return FALSE;
+		}
+	}
+	
+	public function delete_service_charge($service_charge_id)
+	{
+		$data['service_charge_delete'] = 1;
+		$this->db->where('service_charge_id', $service_charge_id);
+		if($this->db->update('service_charge', $data))
+		{
+			return TRUE;
+		}
+		
+		else
+		{
+			return FALSE;
+		}
 	}
 	public function get_all_patient_visit($table, $where, $per_page, $page, $items = '*')
 	{

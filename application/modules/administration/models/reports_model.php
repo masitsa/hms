@@ -208,7 +208,7 @@ class Reports_model extends CI_Model
 		$this->db->from($table);
 		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
 		$this->db->where($where);
-		$this->db->order_by('visit.visit_date','ASC');
+		$this->db->order_by('visit.visit_date, visit.visit_time','DESC');
 		$query = $this->db->get('', $per_page, $page);
 		
 		return $query;
@@ -623,5 +623,20 @@ class Reports_model extends CI_Model
 		//create the excel document
 		$this->excel->addArray ( $report );
 		$this->excel->generateXML ($title);
+	}
+	
+	/*
+	*	Retrieve total revenue
+	*
+	*/
+	public function get_visit_departments($where, $table)
+	{
+		//invoiced
+		$this->db->from($table.', visit_department');
+		$this->db->select('visit_department.*');
+		$this->db->where($where.' AND visit.visit_id = visit_department.visit_id');
+		$query = $this->db->get();
+		
+		return $query;
 	}
 }

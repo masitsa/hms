@@ -90,8 +90,6 @@
 						  <th>Patient Type</th>
 						  <th>Surname</th>
 						  <th>Other Names</th>
-						  <th>Debit</th>
-						  <th>Credit</th>
 						  <th>Action</th>
 						</tr>
 					  </thead>
@@ -180,8 +178,6 @@
 							<td>'.$patient_type.'</td>
 							<td>'.$patient_surname.'</td>
 							<td>'.$patient_othernames.'</td>
-							<td></td>
-							<td></td>
 							<td><a href="'.site_url().'/administration/individual_statement/'.$patient_id.'" class="btn btn-sm btn-success">Statement</a></td>
 						</tr> 
 					';

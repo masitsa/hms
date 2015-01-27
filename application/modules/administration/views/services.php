@@ -27,6 +27,24 @@
           <div class="padd">
           
 <?php
+		$error = $this->session->userdata('service_error_message');
+		$success = $this->session->userdata('service_success_message');
+		
+		if(!empty($success))
+		{
+			echo '
+				<div class="alert alert-success">'.$success.'</div>
+			';
+			$this->session->unset_userdata('service_success_message');
+		}
+		
+		if(!empty($error))
+		{
+			echo '
+				<div class="alert alert-danger">'.$error.'</div>
+			';
+			$this->session->unset_userdata('service_error_message');
+		}
 		$search = $this->session->userdata('visit_search');
 		
 		if(!empty($search))
@@ -47,7 +65,7 @@
 						<tr>
 						  <th>#</th>
 						  <th>Service Name</th>
-						  <th colspan="2">Actions</th>
+						  <th colspan="3">Actions</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -67,6 +85,7 @@
 							<td>'.$service_name.'</td>
 							<td><a href="'.site_url().'/administration/service_charges/'.$service_id.'" class="btn btn-sm btn-success">Service Charges</a></td>
 							<td><a href="'.site_url().'/administration/edit_service/'.$service_id.'" class="btn btn-sm btn-info"> Edit </a></td>
+							<td><a href="'.site_url().'/administration/delete_service/'.$service_id.'" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete this service?\'"> Delete </a></td>
 						</tr> 
 					';
 			}
@@ -80,7 +99,7 @@
 		
 		else
 		{
-			$result .= "There are no patients";
+			$result .= "There are no services";
 		}
 		
 		echo $result;
