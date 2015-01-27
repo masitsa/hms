@@ -399,7 +399,7 @@ class Reports_model extends CI_Model
 		
 		$this->db->where($where);
 		$this->db->order_by('visit_date', 'ASC');
-		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id');
+		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id,patients.dependant_id');
 		$visits_query = $this->db->get($table);
 		
 		$title = 'Transactions Export';
@@ -465,7 +465,15 @@ class Reports_model extends CI_Model
 				$strath_no = $row->strath_no;
 				$visit_type_id = $row->visit_type_id;
 				$visit_type = $row->visit_type;
-				
+				$visit_type = $row->visit_type;
+				if($row->dependant_id != 0)
+				{
+					$strath_no = $row->dependant_id;
+				}
+				else
+				{
+					$strath_no = $strath_no;
+				}
 
 				// this is to check for any credit note or debit notes
 				$payments_value = $this->accounts_model->total_payments($visit_id);
@@ -488,6 +496,7 @@ class Reports_model extends CI_Model
 				$patient_surname = $patient['patient_surname'];
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
 				$gender = $patient['gender'];
+				$faculty = $patient['faculty'];
 				
 				//creators and editors
 				$personnel_query = $this->personnel_model->get_all_personnel();
@@ -540,7 +549,7 @@ class Reports_model extends CI_Model
 					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
 					$report[$row_count][3] = $visit_type;
 					$report[$row_count][4] = $doctor;
-					$report[$row_count][5] = '';
+					$report[$row_count][5] = $faculty;
 					$report[$row_count][6] = $strath_no;
 					$report[$row_count][7] = '';
 					$report[$row_count][8] = $payments_value;
@@ -579,7 +588,7 @@ class Reports_model extends CI_Model
 					$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
 					$report[$row_count][3] = $visit_type;
 					$report[$row_count][4] = $doctor;
-					$report[$row_count][5] = '';
+					$report[$row_count][5] = $faculty;
 					$report[$row_count][6] = $strath_no;
 					$report[$row_count][7] = '';
 					$report[$row_count][8] = $payments_value;

@@ -529,7 +529,7 @@ class Reception_model extends CI_Model
 				$visit_type = 0;
 			}
 			
-			if($check_id < 3 && $dependant_id < 1)
+			if($check_id < 3 && $dependant_id != NULL)
 			{
 				$patient_data = $this->get_strath_patient_data($check_id, $visit_id, $strath_no, $row, $dependant_id, $visit_type_id, $patient_id);
 				$visit_type = $patient_data['visit_type'];
@@ -549,6 +549,14 @@ class Reception_model extends CI_Model
 				if($visit_type == 3)
 				{
 					$visit_type = 'Other';
+				}
+				else if($visit_type == 2)
+				{
+					$visit_type = 'Staff';
+				}
+				else if($visit_type == 1)
+				{
+					$visit_type = 'Student';
 				}
 				else if($visit_type == 4)
 				{
@@ -596,6 +604,7 @@ class Reception_model extends CI_Model
 		$patient['gender'] = $gender;
 		$patient['patient_number'] = $patient_number;
 		$patient['faculty'] = $faculty;
+		$patient['staff_dependant_no'] = $dependant_id;
 
 		return $patient;
 	}
@@ -606,7 +615,7 @@ class Reception_model extends CI_Model
 		if($check_id == 2)
 		{
 			//dependant
-			if($dependant_id > 0)
+			if($dependant_id != 0)
 			{
 				$patient_type = $this->reception_model->get_patient_type($visit_type_id, $dependant_id);
 				$visit_type = 'Dependant';
@@ -622,7 +631,7 @@ class Reception_model extends CI_Model
 					$patient_date_of_birth = $dependants_result->DOB;
 					$relationship = $dependants_result->relation;
 					$gender = $dependants_result->Gender;
-					$faculty = '';
+					$faculty = $this->get_staff_faculty_details($dependant_id);
 				}
 				
 				else if(($row->patient_surname != '0.00') && ($row->patient_othernames != '0.00'))
@@ -631,7 +640,9 @@ class Reception_model extends CI_Model
 					$patient_surname = $row->patient_surname;
 					$patient_date_of_birth = $row->patient_date_of_birth;
 					$gender_id = $row->gender_id;
-					$faculty = '';
+					// get parent faculty 
+					$faculty = $this->get_staff_faculty_details($dependant_id);
+					// end of parent faculty
 					if($gender_id == 1)
 					{
 						$gender = 'M';
@@ -780,7 +791,23 @@ class Reception_model extends CI_Model
 
 		return $patient;
 	}
-	
+	public function get_staff_faculty_details($strath_no)
+	{
+		$this->db->from('staff');
+		$this->db->select('department');
+		$this->db->where('Staff_Number = \''.$strath_no.'\'');
+		$query = $this->db->get();
+		if($query->num_rows() > 0)
+		{
+			$department_result = $query->row();
+			$department = $department_result->department;
+		}
+		else
+		{
+			$department = '';
+		}
+		return $department;
+	}
 	public function get_patient_insurance($patient_id)
 	{
 		$table = "insurance_company";

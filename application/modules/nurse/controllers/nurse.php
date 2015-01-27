@@ -13,6 +13,7 @@ class Nurse extends auth
 		$this->load->model('database');
 		$this->load->model('medical_admin/medical_admin_model');
 		$this->load->model('pharmacy/pharmacy_model');
+		$this->load->model('administration/administration_model');
 	}
 	
 	public function index()
@@ -242,59 +243,59 @@ class Nurse extends auth
 		$systolic =$this->input->post('systolic');
 		// first insert
 		$time = date('h:i:s');
-		$visit_data = array('vital_id'=>5,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$systolic,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>5,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$systolic,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		//  fisrt insert
 
 		$diastolic =$this->input->post('diastolic');
 
 		//  second insert
-		$visit_data = array('vital_id'=>6,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$diastolic,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>6,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$diastolic,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 		$weight =$this->input->post('weight');
 		//  second insert
-		$visit_data = array('vital_id'=>8,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$weight,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>8,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$weight,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 		$height =$this->input->post('height');
 		//  second insert
-		$visit_data = array('vital_id'=>9,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$height,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>9,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$height,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 		$hip =$this->input->post('hip');
 		//  second insert
-		$visit_data = array('vital_id'=>4,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$hip,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>4,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$hip,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 		$waist =$this->input->post('waist');
 		//  second insert
-		$visit_data = array('vital_id'=>3,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$waist,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>3,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$waist,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 		$temperature =$this->input->post('temperature');
 		//  second insert
-		$visit_data = array('vital_id'=>1,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$temperature,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>1,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$temperature,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 		$pulse =$this->input->post('pulse');
 		//  second insert
-		$visit_data = array('vital_id'=>7,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$pulse,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>7,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$pulse,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 		$respiration =$this->input->post('respiration');
 		//  second insert
-		$visit_data = array('vital_id'=>2,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$respiration,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>2,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$respiration,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		
 		$oxygen =$this->input->post('oxygen');
 		//  second insert
-		$visit_data = array('vital_id'=>11,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$oxygen,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>11,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$oxygen,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 		$pain =$this->input->post('pain');
 		//  second insert
-		$visit_data = array('vital_id'=>10,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$pain,'visit_counter'=>$counter);
+		$visit_data = array('vital_id'=>10,'visit_vitals_time'=>$time,'visit_id'=>$visit_id,'visit_vital_value'=>$pain,'visit_counter'=>$counter,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
 		$this->db->insert('visit_vital', $visit_data);
 		// end of second insert
 

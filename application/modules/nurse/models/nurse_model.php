@@ -217,7 +217,7 @@ class Nurse_model extends CI_Model
 		AND visit_vital.visit_id = $visit_id 
 		AND visit.patient_id = (SELECT patient_id FROM visit WHERE visit.visit_id = $visit_id)
 		";
-		$items = "visit_vital.visit_vital_value, vitals.vitals_name, visit_vital.visit_id, visit.visit_date, visit_vital.vital_id,visit_vital.visit_counter,visit_vital.visit_vitals_time";
+		$items = "visit_vital.visit_vital_value, vitals.vitals_name, visit_vital.visit_id, visit.visit_date, visit_vital.vital_id,visit_vital.visit_counter,visit_vital.visit_vitals_time,visit_vital.created_by";
 		$order = "visit_vital.visit_counter";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -233,7 +233,7 @@ class Nurse_model extends CI_Model
 		AND visit_vital.visit_id = $visit_id 
 		AND visit.patient_id = (SELECT patient_id FROM visit WHERE visit.visit_id = $visit_id)
 		";
-		$items = "DISTINCT(visit_vital.visit_counter), visit_vital.visit_vitals_time";
+		$items = "DISTINCT(visit_vital.visit_counter), visit_vital.visit_vitals_time,visit_vital.created_by";
 		$order = "visit_vital.visit_counter";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);

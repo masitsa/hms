@@ -137,5 +137,16 @@ class Administration_model extends CI_Model
 		
 
 	}
+	public function get_all_patient_visit($table, $where, $per_page, $page, $items = '*')
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select($items);
+		$this->db->where($where);
+		$this->db->order_by('visit_date','desc');
+		$query = $this->db->get();
+		
+		return $query;
+	}
 }
 ?>

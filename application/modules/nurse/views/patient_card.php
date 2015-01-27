@@ -97,6 +97,7 @@
                 <?php if($mike == 1){
 
                 }else{?>
+                <li><a href="#previous-vitals" data-toggle="tab">Previous Vitals</a></li>
                 <li><a href="#patient-history" data-toggle="tab">Patient history</a></li>
                 <?php
                 }
@@ -118,6 +119,11 @@
                 if($mike == 1){
 
                 }else{?>
+                 <div class="tab-pane" id="previous-vitals">
+                  
+                  <?php echo $this->load->view("patient_previous_vitals", '', TRUE);?>
+                  
+                </div>
                 <div class="tab-pane" id="patient-history">
                   
                   <?php echo $this->load->view("patient_history", '', TRUE);?>

@@ -466,7 +466,217 @@ class Administration extends auth
 
 		}
 	}
+	public function patient_statement()
+	{
+		$segment = 3;
+		$patient_statement_search = $this->session->userdata('patient_statement_search');
+		// $where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
+		$where = 'patient_delete = 0';
+		if(!empty($patient_statement_search))
+		{
+			$where .= $patient_statement_search;
+		}
+		
+		$table = 'patients';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/administration/patient_statement';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reception_model->get_all_patients($table, $where, $config["per_page"], $page);
+	
+		$data['title'] = 'Patients Statements';
+		$v_data['title'] = ' Patients Statements';
+	
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['delete'] = 1;
+		$v_data['type'] = $this->reception_model->get_types();
+		$data['content'] = $this->load->view('patients', $v_data, true);
+		
+		$data['sidebar'] = 'admin_sidebar';
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	public function search_patient_statement()
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		$strath_no = $this->input->post('strath_no');
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
+		}
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND patients.strath_no  LIKE \'%'.$strath_no.'%\' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['surname']))
+		{
+			$surnames = explode(" ",$_POST['surname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+		}
+		
+		else
+		{
+			$surname = '';
+		}
+		
+		//search other_names
+		if(!empty($_POST['othernames']))
+		{
+			$other_names = explode(" ",$_POST['othernames']);
+			$total = count($other_names);
+			
+			$count = 1;
+			$other_name = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+				}
+				
+				else
+				{
+					$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$other_name .= ') ';
+		}
+		
+		else
+		{
+			$other_name = '';
+		}
+		
+		$search = $visit_type_id.$strath_no.$surname.$other_name;
+		$this->session->set_userdata('patient_statement_search', $search);
+		
+		$this->patient_statement();
+	}
+	public function close_patient_search($page = NULL)
+	{
+		$this->session->unset_userdata('patient_statement_search');
+		redirect('administration/patient_statement');
+		
+	}
+	public function individual_statement($patient_id)
+	{
+		$segment = 3;
+		// $patient_statement_search = $this->session->unsetuserdata('patient_statement_search');
+		// $where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
+		$where = 'visit.patient_id = '.$patient_id;
+		// if(!empty($patient_statement_search))
+		// {
+		// 	$where .= $patient_statement_search;
+		// }
+		
+		$table = 'visit';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/administration/patient_statement';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->administration_model->get_all_patient_visit($table, $where, $config["per_page"], $page);
+	
+		$data['title'] = 'Patients Statements';
+		$v_data['title'] = ' Patients Statements';
+	
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['delete'] = 1;
+		$data['content'] = $this->load->view('individual_statement', $v_data, true);
+		
+		$data['sidebar'] = 'admin_sidebar';
+		
+		$this->load->view('auth/template_sidebar', $data);
 
+	}
+	
 }
 
 ?>

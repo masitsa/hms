@@ -94,6 +94,14 @@
 				$patient_date_of_birth = $patient['patient_date_of_birth'];
 				$gender = $patient['gender'];
 				$faculty = $patient['faculty'];
+				if($patient['staff_dependant_no'] != 0)
+				{
+					$strath_no = $patient['staff_dependant_no'];
+				}
+				else
+				{
+					$strath_no = $strath_no;
+				}
 				
 
 

@@ -6,6 +6,7 @@ $rs = $this->nurse_model->get_previous_vitals($visit_id);
 $distinct_rs = $this->nurse_model->get_distict_vitals($visit_id);
 
 $counter = count($distinct_rs);
+$personnel_query = $this->personnel_model->get_all_personnel();
 if(count($distinct_rs) > 0){
 	echo '
 
@@ -25,6 +26,7 @@ if(count($distinct_rs) > 0){
 				<th>Respiration</th>
 				<th>Oxygen Saturation</th>
 				<th>Pain</th>
+				<th>Created by</th>
 			</tr>
 	';
 	
@@ -33,6 +35,7 @@ if(count($distinct_rs) > 0){
 	foreach ($distinct_rs as $rs2):
 		$visit_counter = $rs2->visit_counter;
 		$visit_time = $rs2->visit_vitals_time;
+		$created_by = $rs2->created_by;
 		$height = 0;
 		$weight = 0;
 		$waist = 0;
@@ -304,7 +307,28 @@ if(count($distinct_rs) > 0){
 		}
 			
 		endforeach;
+				//creators and editors
+				if($personnel_query->num_rows() > 0)
+				{
+					$personnel_result = $personnel_query->result();
+					
+					foreach($personnel_result as $adm)
+					{
+						$personnel_id = $adm->personnel_id;
+						
+						if($personnel_id == $created_by)
+						{
+							$created_by = $adm->personnel_fname;
+						}
+						
+						
+					}
+				}
 				
+				else
+				{
+					$created_by = '-';
+				}	
 
 				echo '
 				<tr>
@@ -322,6 +346,7 @@ if(count($distinct_rs) > 0){
 					<td>'.$respiration.'</td>
 					<td>'.$oxygen.'</td>
 					<td>'.$pain.'</td>
+					<td>'.$created_by.'</td>
 				</tr>
 
 			';
