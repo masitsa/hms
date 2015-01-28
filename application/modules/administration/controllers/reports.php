@@ -220,34 +220,59 @@ class Reports extends auth
 		$visit_date_from = $this->input->post('visit_date_from');
 		$visit_date_to = $this->input->post('visit_date_to');
 		
+		$search_title = 'Showing reports for: ';
+		
 		if(!empty($visit_type_id))
 		{
 			$visit_type_id = ' AND visit.visit_type = '.$visit_type_id.' ';
+			
+			$this->db->where('visit_type_id', $visit_type_id);
+			$query = $this->db->get('visit_type');
+			
+			if($query->num_rows() > 0)
+			{
+				$row = $query->row();
+				$search_title .= $row->visit_type_name.' ';
+			}
 		}
 		
 		if(!empty($strath_no))
 		{
 			$strath_no = ' AND patients.strath_no LIKE \'%'.$strath_no.'%\' ';
+			
+			$search_title .= 'Staff/Student ID no. '.$strath_no;
 		}
 		
 		if(!empty($personnel_id))
 		{
 			$personnel_id = ' AND visit.personnel_id = '.$personnel_id.' ';
+			
+			$this->db->where('personnel_id', $personnel_id);
+			$query = $this->db->get('personnel');
+			
+			if($query->num_rows() > 0)
+			{
+				$row = $query->row();
+				$search_title .= $row->personnel_fname.' '.$row->personnel_onames.' ';
+			}
 		}
 		
 		if(!empty($visit_date_from) && !empty($visit_date_to))
 		{
 			$visit_date = ' AND visit.visit_date BETWEEN \''.$visit_date_from.'\' AND \''.$visit_date_to.'\'';
+			$search_title .= 'Visit date from '.date('jS M Y', strtotime($visit_date_from)).' to '.date('jS M Y', strtotime($visit_date_to)).' ';
 		}
 		
 		else if(!empty($visit_date_from))
 		{
 			$visit_date = ' AND visit.visit_date = \''.$visit_date_from.'\'';
+			$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_from)).' ';
 		}
 		
 		else if(!empty($visit_date_to))
 		{
 			$visit_date = ' AND visit.visit_date = \''.$visit_date_to.'\'';
+			$search_title .= 'Visit date of '.date('jS M Y', strtotime($visit_date_to)).' ';
 		}
 		
 		else
@@ -263,6 +288,7 @@ class Reports extends auth
 			$search .= $visit_search;
 		}
 		$this->session->set_userdata('all_transactions_search', $search);
+		$this->session->set_userdata('search_title', $search_title);
 		
 		$this->all_transactions();
 	}
@@ -276,6 +302,7 @@ class Reports extends auth
 	{
 		$this->session->unset_userdata('all_transactions_search');
 		$this->session->unset_userdata('all_transactions_tables');
+		$this->session->unset_userdata('search_title');
 		
 		$debtors = $this->session->userdata('debtors');
 		

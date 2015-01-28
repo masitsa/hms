@@ -172,7 +172,14 @@
 				if($row->visit_time_out != '0000-00-00 00:00:00')
 				{
 					$visit_time_out = date('H:i a',strtotime($row->visit_time_out));
-					$total_time = date('H:i',(strtotime($row->visit_time_out) - strtotime($row->visit_time)));
+					$seconds = strtotime($row->visit_time_out) - strtotime($row->visit_time);//$row->waiting_time;
+					$days    = floor($seconds / 86400);
+					$hours   = floor(($seconds - ($days * 86400)) / 3600);
+					$minutes = floor(($seconds - ($days * 86400) - ($hours * 3600))/60);
+					$seconds = floor(($seconds - ($days * 86400) - ($hours * 3600) - ($minutes*60)));
+					
+					//$total_time = date('H:i',(strtotime($row->visit_time_out) - strtotime($row->visit_time)));//date('H:i',$row->waiting_time);
+					$total_time = $days.' '.$hours.':'.$minutes.':'.$seconds;
 				}
 				else
 				{
@@ -198,7 +205,7 @@
 				$result .= 
 					'
 						<tr>
-							<td>'.$count.'</td>
+							<td>'.$count.' '.$visit_id.'</td>
 							<td>'.$visit_date.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$visit_type.'</td>

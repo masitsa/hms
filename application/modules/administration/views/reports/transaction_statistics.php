@@ -70,6 +70,11 @@
             		</div>
                     <!-- End Transaction Breakdown -->
                     
+                    <?php 
+					
+					if($title != 'Debtors Report')
+					{
+					?>
                     <div class="col-md-3">
                         <h5>Cash Breakdown</h5>
                         <table class="table table-striped table-hover table-condensed">
@@ -122,6 +127,11 @@
                     </div>
                     <!-- End Cash Breakdown -->
                     
+                    <?php 
+					}
+					if($title != 'Cash Report')
+					{
+					?>
                     <div class="col-md-3">
                         <h5>Debt Breakdown</h5>
                         <table class="table table-striped table-hover table-condensed">
@@ -152,7 +162,9 @@
                         <div class="clearfix"></div>
             		</div>
                     <!-- End debt Breakdown -->
-                    
+                    <?php
+					}
+					?>
                     <div class="col-md-3">
                         <div class="datas-text pull-right">Total Revenue <span class="bold">
                             KSH <?php echo number_format($total_services_revenue, 2);?></span>

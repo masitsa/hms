@@ -37,12 +37,12 @@ class Login extends MX_Controller {
 			{
 				// user password strength does not conform with the strength standards
 
-				redirect('password-change/'.$this->session->userdata('personnel_id').'/user');
+				redirect('change-password/'.$this->session->userdata('personnel_id').'/user');
 			}
 			else if($login_status == 'limit')
 			{
 				// user password has exceeded the limits
-				redirect('password-change/'.$this->session->userdata('personnel_id').'/user');
+				redirect('change-password/'.$this->session->userdata('personnel_id').'/user');
 			}
 			
 			else

@@ -1142,7 +1142,8 @@ class Reception extends auth
 	public function end_visit($visit_id, $page = NULL)
 	{
 		$data = array(
-        	"close_card" => 1
+        	"close_card" => 1,
+        	"visit_time_out" => date('Y-m-d H:i:s')
     	);
 		$table = "visit";
 		$key = $visit_id;

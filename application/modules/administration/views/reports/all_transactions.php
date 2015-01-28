@@ -21,7 +21,7 @@
         <!-- Widget content -->
         <div class="widget-content">
           <div class="padd">
-          
+          <h5 class="center-align"><?php echo $this->session->userdata('search_title');?></h5>
 <?php
 		$result = '<a href="'.site_url().'/administration/reports/export_transactions" class="btn btn-success pull-right">Export</a>';
 		if(!empty($search))
