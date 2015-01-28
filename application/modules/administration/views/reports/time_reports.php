@@ -158,7 +158,7 @@
 						  <th>Category</th>
 						  <th>Start Time</th>
 						  <th>End Time</th>
-						  <th>Total Time</th>
+						  <th>Total Time (Days h:m:s)</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -205,7 +205,7 @@
 				$result .= 
 					'
 						<tr>
-							<td>'.$count.' '.$visit_id.'</td>
+							<td>'.$count.'</td>
 							<td>'.$visit_date.'</td>
 							<td>'.$patient_surname.' '.$patient_othernames.'</td>
 							<td>'.$visit_type.'</td>
