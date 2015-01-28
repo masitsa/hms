@@ -265,7 +265,7 @@ class Nurse_model extends CI_Model
 
 	function visit_charge($visit_id){
 		$table = "visit_charge";
-		$where = "visit_charge.visit_id  = '$visit_id'";
+		$where = "visit_charge.visit_charge_delete = 0 AND visit_charge.visit_id  = '$visit_id'";
 		$items = "*";
 		$order = "visit_id";
 
@@ -306,11 +306,26 @@ class Nurse_model extends CI_Model
 		
 		return $query;
 	}
+	public function get_vaccines_list($table, $where, $per_page, $page, $order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
 
 
 	function submitvisitprocedure($procedure_id,$visit_id,$suck){
 		$visit_data = array('procedure_id'=>$procedure_id,'visit_id'=>$visit_id,'units'=>$suck);
 		$this->db->insert('visit_procedure', $visit_data);
+	}
+	function submitvisitvaccine($vaccine_id,$visit_id,$suck){
+		$visit_data = array('vaccine_id'=>$vaccine_id,'visit_id'=>$visit_id,'units'=>$suck,'created_by'=>$this->session->userdata("personnel_id"),'created'=>date("Y-m-d"));
+		$this->db->insert('visit_vaccine', $visit_data);
 	}
 
 	function get_visit_type($visit_id){
@@ -341,7 +356,7 @@ class Nurse_model extends CI_Model
 
 	function get_visit_procedure_charges($v_id){
 		$table = "visit_charge";
-		$where = "visit_id = $v_id";
+		$where = "visit_charge_delete = 0 AND visit_id = $v_id";
 		$items = "*";
 		$order = "visit_id";
 
@@ -1012,6 +1027,182 @@ class Nurse_model extends CI_Model
 		}
 		return $counter;
 
+	}
+	public function get_vaccine_list($table, $where, $per_page, $page, $order)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order,'asc');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+
+	public function save_vaccine()
+	{
+		$array = array(
+			'vaccine_name'=>$this->input->post('vaccine_name'),
+			'quantity'=>$this->input->post('quantity'),
+			'batch_no'=>$this->input->post('batch_no'),
+			'vaccine_unitprice'=>$this->input->post('vaccine_unitprice'),
+			'vaccine_packsize'=>$this->input->post('vaccine_pack_size'),
+			'vaccine_dose'=>$this->input->post('drug_dose')
+		);
+		if($this->db->insert('vaccines', $array))
+		{
+			//calculate the price of the drug
+			$vaccine_id = $this->db->insert_id();
+			
+			
+			
+			$service_data = array(
+				'vaccine_id'=>$vaccine_id,
+				'service_charge_amount'=>$this->input->post('vaccine_unitprice'),
+				'service_id'=>15,
+				'visit_type_id'=>0,
+				'service_charge_status'=>1,
+				'service_charge_name'=>$this->input->post('vaccine_name')
+			);
+			$this->db->insert('service_charge', $service_data);
+			
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function edit_vaccine($vaccine_id)
+	{
+		$array = array(
+			'vaccine_name'=>$this->input->post('vaccine_name'),
+			'quantity'=>$this->input->post('quantity'),
+			'batch_no'=>$this->input->post('batch_no'),
+			'vaccine_unitprice'=>$this->input->post('vaccine_unitprice'),
+			'vaccine_packsize'=>$this->input->post('vaccine_pack_size'),
+			'vaccine_dose'=>$this->input->post('drug_dose')
+		);
+		
+		$this->db->where('vaccine_id', $vaccine_id);
+		if($this->db->update('vaccines', $array))
+		{
+			//edit service charge
+			
+			
+			
+			$service_data = array(
+				'vaccine_id'=>$vaccine_id,
+				'service_charge_amount'=>$this->input->post('vaccine_unitprice'),
+				'service_id'=>15,
+				'visit_type_id'=>0,
+				'service_charge_status'=>1,
+				'service_charge_name'=>$this->input->post('vaccine_name'),
+			);
+			//check if drug exists
+			$where = array(
+				'vaccine_id'=>$vaccine_id,
+				'visit_type_id'=>0,
+			);
+			$this->db->where($where);
+			$query2 = $this->db->get('service_charge');
+			
+			if($query2->num_rows() > 0)
+			{
+				$this->db->where($where);
+				$this->db->update('service_charge', $service_data);
+			}
+			
+			else
+			{
+				$this->db->insert('service_charge', $service_data);
+			}
+			
+			$purchases_array = array(
+			'expiry_date'=>$this->input->post('expiry_date')
+			);
+			$this->db->where('vaccine_id', $vaccine_id);
+			if($this->db->update('vaccine_purchase', $purchases_array))
+			{
+				return TRUE;
+			}else
+			{
+				return FALSE;
+			}
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function get_vaccine_details($vaccine_id)
+	{
+		$this->db->where('vaccine_id', $vaccine_id);
+		$query = $this->db->get('vaccines');
+		
+		return $query;
+	}
+	
+	public function get_vaccine_purchase_details($vaccine_id)
+	{
+		$table = "vaccine_purchase";
+		$where = "vaccine_id = '$vaccine_id'";
+		$items = "*";
+		$order = "vaccine_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_vaccine_purchases($table, $where, $per_page, $page, $order)
+	{
+		//retrieve all purchases
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order,'DESC');
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	public function purchase_vaccine($vaccine_id)
+	{
+		$array = array(
+			'vaccine_id'=>$vaccine_id,
+			'purchase_quantity'=>$this->input->post('purchase_quantity'),
+			'purchase_pack_size'=>$this->input->post('purchase_pack_size'),
+			'expiry_date'=>$this->input->post('expiry_date')
+		);
+		if($this->db->insert('vaccine_purchase', $array))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	public function edit_vaccine_purchase($purchase_id)
+	{
+		$array = array(
+			'purchase_quantity'=>$this->input->post('purchase_quantity'),
+			'purchase_pack_size'=>$this->input->post('purchase_pack_size'),
+			'expiry_date'=>$this->input->post('expiry_date')
+		);
+		$this->db->where('purchase_id', $purchase_id);
+		if($this->db->update('vaccine_purchase', $array))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function get_purchase_details($purchase_id)
+	{
+		$this->db->where('purchase_id', $purchase_id);
+		$query = $this->db->get('vaccine_purchase');
+		
+		return $query;
 	}
 	
 }

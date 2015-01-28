@@ -1,3 +1,5 @@
+<?php echo $this->load->view('search/service_charge_search', '', TRUE);?>
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">
@@ -45,11 +47,11 @@
 			';
 			$this->session->unset_userdata('service_charge_error_message');
 		}
-		$search = $this->session->userdata('visit_search');
+		$search = $this->session->userdata('service_charge_search');
 		
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/nurse/close_queue_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/administration/close_service_charge_search" class="btn btn-warning">Close Search</a>';
 		}
 		$result = '';
 		

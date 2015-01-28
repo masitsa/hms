@@ -58,6 +58,27 @@
                     </div>
                 </div>
             </div>
+
+             <div class="widget boxed">
+                <!-- Widget head -->
+                <div class="widget-head">
+                  <h4 class="pull-left"><i class="icon-reorder"></i>Vaccines</h4>
+                  <div class="widget-icons pull-right">
+                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>             
+
+            <!-- Widget content -->
+                <div class="widget-content">
+                    <div class="padd">
+                              <!-- visit Procedures from java script -->
+                                <div id="vaccines_to_patients"></div>
+                             <!-- end of visit procedures -->
+                    </div>
+                </div>
+            </div>
         </div>
         </div>
     </div>
@@ -83,6 +104,7 @@
                     <div class="widget-content">
                         <div class="padd">
                              <div id="previous_vitals"></div>
+
                         </div>
                     </div>
             </div>
@@ -313,6 +335,7 @@ $(document).ready(function(){
                  get_medication(visit_id);
                  get_surgeries(visit_id);
                  get_vaccines(visit_id);
+                display_vaccines(visit_id);
                 // nurse_notes(visit_id);
                 // patient_details(visit_id);
             }
@@ -565,6 +588,43 @@ function myPopup3(visit_id) {
 
 
 
+function calculatevaccinetotal(amount, id, procedure_id, v_id){
+       
+    var units = document.getElementById('units'+id).value;  
+
+    grand_vaccine_total(id, units, amount);
+    display_vaccine(v_id);
+}
+
+function grand_vaccine_total(vaccine_id, units, amount){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var url = config_url+"/nurse/vaccine_total/"+vaccine_id+"/"+units+"/"+amount;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
 function calculatetotal(amount, id, procedure_id, v_id){
        
     var units = document.getElementById('units'+id).value;  
@@ -631,6 +691,78 @@ function delete_procedure(id, visit_id){
         XMLHttpRequestObject.send(null);
     }
 }
+function delete_vaccine(id, visit_id){
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+     var config_url = $('#config_url').val();
+    var url = config_url+"/nurse/delete_vaccine/"+id;
+    
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                display_vaccines(visit_id);
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+
+
+
+// start of vaccine
+
+function display_vaccines(visit_id){
+
+    var XMLHttpRequestObject = false;
+        
+    if (window.XMLHttpRequest) {
+    
+        XMLHttpRequestObject = new XMLHttpRequest();
+    } 
+        
+    else if (window.ActiveXObject) {
+        XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    
+    var config_url = $('#config_url').val();
+    var url = config_url+"/nurse/view_vaccines/"+visit_id;
+  
+    if(XMLHttpRequestObject) {
+                
+        XMLHttpRequestObject.open("GET", url);
+                
+        XMLHttpRequestObject.onreadystatechange = function(){
+            
+            if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+
+                document.getElementById("vaccines_to_patients").innerHTML=XMLHttpRequestObject.responseText;
+            }
+        }
+                
+        XMLHttpRequestObject.send(null);
+    }
+}
+
+function myPopup4(visit_id) {
+    var config_url = $('#config_url').val();
+    window.open( config_url+"/nurse/vaccines_list/"+visit_id, "myWindow", "status = 1, height = auto, width = 900, resizable = 0" )
+}
+// end of vaccine
 function save_medication(visit_id){
     var config_url = $('#config_url').val();
     var data_url = config_url+"/nurse/medication/"+visit_id;

@@ -222,6 +222,7 @@ class Reports_model extends CI_Model
 	{
 		//retrieve all users
 		$this->db->from('service');
+		$this->db->where('service_delete = 0');
 		$this->db->order_by('service_name','ASC');
 		$query = $this->db->get();
 		

@@ -237,5 +237,38 @@ class Personnel extends auth
 		}
 		redirect('administration/personnel/edit_personnel/'.$personnel_id);
 	}
+
+	public function deactivate_personnel($personnel_id)
+	{
+		
+		$visit_data = array('authorise'=>1);
+		$this->db->where('personnel_id',$personnel_id);
+		if($this->db->update('personnel', $visit_data))
+		{
+				redirect('administration/personnel');
+		}
+		else
+		{
+				redirect('administration/personnel');
+		}
+		
+	
+		
+	}
+	public function activate_personnel($personnel_id)
+	{
+		
+		$visit_data = array('authorise'=>0);
+		$this->db->where('personnel_id',$personnel_id);
+		if($this->db->update('personnel', $visit_data))
+		{
+				redirect('administration/personnel');
+		}
+		else
+		{
+				redirect('administration/personnel');
+		}
+		
+	}
 }
 ?>

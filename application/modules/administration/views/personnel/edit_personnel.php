@@ -18,7 +18,7 @@ $personnel_kin_onames = $row->personnel_kin_onames;
 $personnel_kin_contact = $row->personnel_kin_contact;
 $personnel_kin_address = $row->personnel_kin_address;
 $kin_relationship_id = $row->kin_relationship_id;
-$job_title_id = $row->job_title_id;
+$job_title_idd = $row->job_title_id;
 $staff_id = $row->personnel_staff_id;
 //echo $gender_id;
 //repopulate data if validation errors occur
@@ -225,7 +225,7 @@ if(!empty($validation_error))
             <label class="col-lg-5 control-label">Job Title: </label>
             
             <div class="col-lg-7">
-            	<select class="form-control" name="civil_status_id">
+            	<select class="form-control" name="job_title_id">
                 	<?php
                     	if($job_titles_query->num_rows() > 0)
 						{
@@ -236,7 +236,7 @@ if(!empty($validation_error))
 								$db_job_title_id = $res->job_title_id;
 								$job_title_name = $res->job_title_name;
 								
-								if($db_job_title_id == $job_title_id)
+								if($db_job_title_id == $job_title_idd)
 								{
 									echo '<option value="'.$db_job_title_id.'" selected>'.$job_title_name.'</option>';
 								}

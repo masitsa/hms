@@ -87,10 +87,10 @@
 
 													if(count($patient_insurance) > 0){	
 													foreach($patient_insurance as $row):
-															$company_name = $row->company_name;
+															// $company_name = $row->company_name;
 															$insurance_company_name = $row->insurance_company_name;
-															$patient_insurance_id = $row->patient_insurance_id;
-													echo "<option value=".$patient_insurance_id.">".$company_name." - ".$insurance_company_name."</option>";
+															$insurance_company_id = $row->insurance_company_id;
+													echo "<option value=".$insurance_company_id."> ".$insurance_company_name."</option>";
 													endforeach;	} ?>
 									  </select>
 									  <br>
@@ -128,6 +128,7 @@
 	                            	</div>
 	                            </div>
 	                            <div id="consultation" style="display:none">
+	                            	
 							        <div class="form-group">
 							            <label class="col-lg-4 control-label">Consultation Type: </label>
 							            
@@ -144,6 +145,63 @@
 						       </div>
 						 	
 					       </div>
+					        	
+                            <div id="counseling_department" style="display:none">
+                            		<div class="form-group">
+							            <label class="col-lg-4 control-label">Counselor: </label>
+	                                    
+							            <div class="col-lg-8">
+							     			 <select name="personnel_id" class="form-control">
+	                                         	<option value="">----Select a Counselor----</option>
+					                        	<?php
+										             $counselors = $this->reception_model->get_counselors();
+											        	
+													if(count($counselors) > 0){
+					                            		foreach($counselors as $row):
+															$fname = $row->personnel_fname;
+															$onames = $row->personnel_onames;
+															$personnel_id = $row->personnel_id;
+															
+															if($personnel_id == set_value('personnel_id'))
+															{
+																echo "<option value='".$personnel_id."' selected='selected'>".$onames." ".$fname."</option>";
+															}
+															
+															else
+															{
+																echo "<option value='".$personnel_id."'>".$onames." ".$fname."</option>";
+															}
+														endforeach;
+													}
+												?>
+				                            </select>
+		                            	</div>
+		                            </div>
+						        <div class="form-group">
+						            <label class="col-lg-4 control-label">Consultation Type: </label>
+						            
+						            <div class="col-lg-8">
+						            	<div id="citydiv"> 
+						            	<div id="checker"  > 
+						            		<select name="service_charge_name" class="form-control">
+												<option value='0'>Select Consultation Charge </option>	
+												<?php
+												$service_charge = $this->reception_model->get_counseling_service_charges_per_type($patient_type_id);
+												foreach($service_charge AS $key) 
+												{ 
+													?>
+													    <option value="<?php echo  $key->service_charge_id;?>"><?php echo $key->service_charge_name;?></option>
+													<?php 
+												} 
+												?>
+											</select>
+									     </div>
+	                            	</div>
+						            </div>
+						        </div>
+					       </div>
+						 	
+					     
 					       <input type="hidden" name="patient_type_id" value="<?php echo $patient_type_id;?>">
 					    
 
@@ -346,14 +404,29 @@
 
 		var myTarget3 = document.getElementById("patient_type_div");
 
+		// counseling department div
+		var myTarget4 = document.getElementById("counseling_department");
+		// end of counseling department div
+
+		
+
 		if(myTarget==7)
 		{
 		 	myTarget2.style.display = 'block';
+		 	myTarget4.style.display = 'none';
+		 	myTarget3.style.display = 'none';	
+		}
+		else if(myTarget==12)
+		{
+		 	myTarget4.style.display = 'block';
+		 	myTarget2.style.display = 'none';
+		 	myTarget3.style.display = 'none';
 
 		}
 		else{
 	 	 	myTarget2.style.display = 'none';
 	 	 	myTarget3.style.display = 'block';	
+	 	 	myTarget4.style.display = 'none';
 		}
 
 	}

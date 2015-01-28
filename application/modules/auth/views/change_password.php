@@ -55,7 +55,18 @@
         
                 <div class="center-align">
                     <button class="btn btn-success btn-lg" type="submit">Change Password</button>
+                    <?php 
+                    if($module == 'user')
+                    {
+
+                    }
+                    else
+                    {
+                    ?>
                      <a href='<?php echo site_url();?>/control-panel/<?php echo $personnel_id;?>' class="btn btn-warning btn-lg" >Back to Control Panel</a>
+                    <?php
+                    }
+                    ?> 
                 </div>
                 <?php echo form_close();?>
                 

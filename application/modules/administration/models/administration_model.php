@@ -176,5 +176,42 @@ class Administration_model extends CI_Model
 		
 		return $query;
 	}
+
+	public function patient_account_balance($patient_id)
+	{
+		//retrieve all users
+		$this->db->from('visit');
+		$this->db->select('*');
+		$this->db->where('patient_id = '.$patient_id);
+		$this->db->order_by('visit_date','desc');
+		$query = $this->db->get();
+
+		$total_invoiced_amount = 0;
+		$total_paid_amount = 0;
+
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				$visit_id = $row->visit_id;
+				$visit_date = $row->visit_date;
+				$visit_date = $row->visit_date;
+				$total_invoice = $this->accounts_model->total_invoice($visit_id);
+				$total_payments = $this->accounts_model->total_payments($visit_id);
+
+				$total_paid_amount = $total_paid_amount + $total_payments;
+				$total_invoiced_amount = $total_invoiced_amount + $total_invoice;
+				
+				$invoice_number =  $visit_id;
+			}
+			$difference = $total_invoiced_amount -$total_paid_amount;
+		}
+		else
+		{
+			$difference = $total_invoiced_amount -$total_paid_amount;
+		}
+
+		return $difference;
+	}
 }
 ?>

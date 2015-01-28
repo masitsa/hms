@@ -1,3 +1,4 @@
+
 <!-- Widget -->
 <div class="widget boxed">
     <!-- Widget head -->
@@ -15,7 +16,6 @@
     <!-- Widget content -->
     <div class="widget-content">
     	<div class="padd">
-			
 			<?php echo form_open("administration/service_charge_search/".$service_id, array("class" => "form-horizontal"));?>
             <div class="row">
                 <div class="col-md-12">

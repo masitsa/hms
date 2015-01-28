@@ -465,6 +465,7 @@ class Nurse extends auth
 		$data = array('visit_id'=>$visit_id);
 		$this->load->view('view_procedure',$data);
 	}
+
 	
 	public function search_procedures($visit_id)
 	{
@@ -478,6 +479,101 @@ class Nurse extends auth
 		}
 		
 		$this->procedures($visit_id);
+	}
+	function view_vaccines($visit_id){
+		$data = array('visit_id'=>$visit_id);
+		$this->load->view('view_vaccine',$data);
+	}
+	
+	
+	public function search_vaccines($visit_id)
+	{
+		$this->form_validation->set_rules('search_item', 'Search', 'trim|required|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			$search = ' AND service_charge.service_charge_name LIKE \'%'.$this->input->post('search_item').'%\'';
+			$this->session->set_userdata('vaccine_search', $search);
+		}
+		
+		$this->procedures($visit_id);
+	}
+
+	function vaccines_list($visit_id)
+	{
+		//check patient visit type
+		$rs = $this->nurse_model->check_visit_type($visit_id);
+		if(count($rs)>0){
+		  foreach ($rs as $rs1) {
+			# code...
+			  $visit_t = $rs1->visit_type;
+		  }
+		}
+		
+		$order = 'service_charge.service_charge_name';
+		
+		$where = 'service_charge.service_id = 15 ';
+		$vaccine_search = $this->session->userdata('vaccine_search');
+		
+		if(!empty($vaccine_search))
+		{
+			$where .= $vaccine_search;
+		}
+		
+		$table = 'service_charge,visit_type';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/vaccines/'.$visit_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 4;
+		$config['per_page'] = 15;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_vaccines_list($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Vaccines List';
+		$v_data['title'] = 'Vaccines List';
+		
+		$v_data['visit_id'] = $visit_id;
+		$data['content'] = $this->load->view('vaccines_list', $v_data, true);
+		
+		$data['title'] = 'Vaccines List';
+		$this->load->view('auth/template_no_sidebar', $data);	
+	}
+
+	function vaccines($vaccine_id,$visit_id,$suck){
+		$data = array('vaccine_id'=>$vaccine_id,'visit_id'=>$visit_id,'suck'=>$suck);
+		$this->load->view('vaccines',$data);	
 	}
 	public function search_diseases($visit_id)
 	{
@@ -497,6 +593,11 @@ class Nurse extends auth
 	{
 		$this->session->unset_userdata('procedure_search');
 		$this->procedures($visit_id);
+	}
+	public function close_vaccine_search($visit_id)
+	{
+		$this->session->unset_userdata('vaccine_search');
+		$this->vaccines($visit_id);
 	}
 
 	public function close_disease_search($visit_id)
@@ -581,8 +682,21 @@ class Nurse extends auth
 	}
 	function delete_procedure($procedure_id)
 	{
+		// $this->db->where(array("visit_charge_id"=>$procedure_id));
+		// $this->db->delete('visit_charge', $visit_data);
+
+		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+
 		$this->db->where(array("visit_charge_id"=>$procedure_id));
-		$this->db->delete('visit_charge', $visit_data);
+		$this->db->update('visit_charge', $visit_data);
+	}
+	function delete_vaccine($vaccine_id)
+	{
+		$visit_data = array('visit_charge_delete'=>1,'deleted_by'=>$this->session->userdata("personnel_id"),'deleted_on'=>date("Y-m-d"),'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+
+		$this->db->where(array("visit_charge_id"=>$vaccine_id));
+		$this->db->update('visit_charge', $visit_data);
+		
 	}
 
 	function add_lifestyle($patient_id){
@@ -636,6 +750,13 @@ class Nurse extends auth
 
 		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
 		$this->db->where(array("visit_charge_id"=>$procedure_id));
+		$this->db->update('visit_charge', $visit_data);
+	}
+	public function vaccine_total($vaccine_id,$units,$amount){
+		
+
+		$visit_data = array('visit_charge_units'=>$units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
+		$this->db->where(array("visit_charge_id"=>$vaccine_id));
 		$this->db->update('visit_charge', $visit_data);
 	}
 
@@ -1337,6 +1458,563 @@ class Nurse extends auth
 		
 		
 	}
+	// vaccine inventory
+	public function inventory()
+	{
+		$segment = 3;
+		$order = 'vaccines.vaccine_name';
+		//$where = 'drugs.brand_id = brand.brand_id AND class.class_id = drugs.class_id AND drugs.generic_id = generic.generic_id AND drugs.drug_type_id = drug_type.drug_type_id AND drugs.drug_administration_route_id = drug_administration_route.drug_administration_route_id AND drugs.drug_dose_unit_id = drug_dose_unit.drug_dose_unit_id AND drugs.drug_consumption_id = drug_consumption.drug_consumption_id';
+		
+		$where = 'vaccines.vaccine_deleted = 0';
+		$vaccine_inventory_search = $this->session->userdata('vaccine_inventory_search');
+		
+		if(!empty($vaccine_inventory_search))
+		{
+			$where .= $vaccine_inventory_search;
+		}
+		
+		$table = 'vaccines';
+		
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/inventory';
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_vaccine_list($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		
+		$data['title'] = 'Vaccine List';
+		$v_data['title'] = 'Vaccine List';
+		$data['sidebar'] = 'nurse_sidebar';
+		$data['content'] = $this->load->view('vaccine_list', $v_data, true);
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	/*
+	*	Add Drug
+	*
+	*/
+	public function add_vaccine()
+	{
+		//form validation rules
+		$this->form_validation->set_rules('vaccine_name', 'Drug Name', 'required|xss_clean');
+		$this->form_validation->set_rules('vaccine_pack_size', 'Pack Size', 'numeric|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
+		$this->form_validation->set_rules('vaccine_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('vaccine_dose', 'Dose', 'numeric|xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->nurse_model->save_vaccine())
+			{
+				$this->session->userdata('success_message', 'Drug has been added successfully');
+				redirect('nurse/inventory');
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to add drug. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Add Vaccine';
+		$v_data['title'] = 'Add Vaccine';
+		$data['sidebar'] = 'nurse_sidebar';
+		$v_data['drug_types'] = $this->pharmacy_model->get_drug_forms();
+		$v_data['drug_brands'] = $this->pharmacy_model->get_drug_brands();
+		$v_data['drug_classes'] = $this->pharmacy_model->get_drug_classes();
+		$v_data['drug_generics'] = $this->pharmacy_model->get_drug_generics();
+		$v_data['drug_dose_units'] = $this->pharmacy_model->get_drug_dose_units();
+		$v_data['admin_routes'] = $this->pharmacy_model->get_admin_route();
+		$v_data['consumption'] = $this->pharmacy_model->get_consumption();
+		$data['content'] = $this->load->view('add_vaccine', $v_data, true);
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
 	
+	/*
+	*	Edit Drug
+	*
+	*/
+	public function edit_vaccine($vaccine_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('vaccine_name', 'Drug Name', 'required|xss_clean');
+		$this->form_validation->set_rules('vaccine_pack_size', 'Pack Size', 'numeric|xss_clean');
+		$this->form_validation->set_rules('quantity', 'Opening Quantity', 'numeric|xss_clean');
+		$this->form_validation->set_rules('vaccine_unitprice', 'Unit Price', 'numeric|xss_clean');
+		$this->form_validation->set_rules('vaccine_dose', 'Dose', 'numeric|xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->nurse_model->edit_vaccine($vaccine_id))
+			{
+				$this->session->userdata('success_message', 'Vaccine has been editted successfully');
+				redirect('nurse/inventory');
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to edit drug. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Edit Vaccine';
+		$v_data['title'] = 'Edit Vaccine';
+		$data['sidebar'] = 'nurse_sidebar';
+		$vaccine_details = $this->nurse_model->get_vaccine_details($vaccine_id);
+		
+		if($vaccine_details->num_rows() > 0)
+		{
+			$v_data['vaccine_details'] = $vaccine_details->row();
+			$v_data['vaccine_id'] = $vaccine_id;
+
+			$data['content'] = $this->load->view('edit_vaccine', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find drug';
+		}
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	public function vaccine_purchases($vaccine_id)
+	{
+		$segment = 4;
+		$order = 'vaccine_purchase.purchase_date';
+		$where = 'vaccine_purchase.vaccine_id = '.$vaccine_id;
+		
+		$vaccine_search = $this->session->userdata('vaccine_purchases_search');
+		
+		if(!empty($vaccine_search))
+		{
+			$where .= $vaccine_search;
+		}
+		
+		$table = 'vaccine_purchase';
+		
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/vaccine_purchases/'.$vaccine_id;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_vaccine_purchases($table, $where, $config["per_page"], $page, $order);
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['vaccine_id'] = $vaccine_id;
+		
+		$data['title'] = 'vaccine List';
+		$v_data['title'] = 'vaccine List';
+		$data['sidebar'] = 'nurse_sidebar';
+		$vaccine_details = $this->nurse_model->get_vaccine_details($vaccine_id);
+		
+		if($vaccine_details->num_rows() > 0)
+		{
+			$row = $vaccine_details->row();
+			$v_data['title'] = $row->vaccine_name.' Purchases';
+			$data['content'] = $this->load->view('vaccine_purchases', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find drug';
+		}
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	public function purchase_vaccine($vaccine_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('purchase_quantity', 'Purchase Quantity', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('purchase_pack_size', 'Pack Size', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('expiry_date', 'Expiry Date', 'xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->nurse_model->purchase_vaccine($vaccine_id))
+			{
+				$this->session->userdata('success_message', 'vaccine has been purchased successfully');
+				redirect('nurse/vaccine_purchases/'.$vaccine_id);
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to purchase vaccine. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Buy vaccine';
+		$data['sidebar'] = 'nurse_sidebar';
+		$vaccine_details = $this->nurse_model->get_vaccine_details($vaccine_id);
+		
+		if($vaccine_details->num_rows() > 0)
+		{
+			$row = $vaccine_details->row();
+			$v_data['title'] = 'Buy '.$row->vaccine_name;
+			$v_data['vaccine_id'] = $vaccine_id;
+			$v_data['container_types'] = $this->pharmacy_model->get_container_types();
+			$data['content'] = $this->load->view('buy_vaccine', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find vaccine';
+		}
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	
+	public function edit_vaccine_purchase($purchase_id, $vaccine_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('purchase_quantity', 'Purchase Quantity', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('purchase_pack_size', 'Pack Size', 'required|numeric|xss_clean');
+		$this->form_validation->set_rules('expiry_date', 'Expiry Date', 'xss_clean');
+		
+		//if form conatins valid data
+		if ($this->form_validation->run())
+		{
+
+			if($this->nurse_model->edit_vaccine_purchase($purchase_id))
+			{
+				$this->session->userdata('success_message', 'vaccine has been purchased successfully');
+				redirect('nurse/vaccine_purchases/'.$vaccine_id);
+			}
+			
+			else
+			{
+				$this->session->userdata('error_message', 'Unable to purchase vaccine. Please try again');
+			}
+		}
+		
+		else
+		{
+			$v_data['validation_errors'] = validation_errors();
+		}
+		
+		//load the interface
+		$data['title'] = 'Edit Purchase';
+		$data['sidebar'] = 'nurse_sidebar';
+		$vaccine_details = $this->nurse_model->get_vaccine_details($vaccine_id);
+		$purchase_details = $this->nurse_model->get_purchase_details($purchase_id);
+		
+		if($vaccine_details->num_rows() > 0)
+		{
+			$row = $vaccine_details->row();
+			$v_data['title'] = 'Edit '.$row->vaccine_name.' Purchase';
+			$v_data['vaccine_id'] = $vaccine_id;
+			$v_data['purchase_details'] = $purchase_details->row();
+			$data['content'] = $this->load->view('edit_vaccine_purchase', $v_data, true);
+		}
+		
+		else
+		{
+			$data['content'] = 'Could not find purchase details';
+		}
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	public function patient_treatment_statement($module = NULL)
+	{
+		$segment = 4;
+		$patient_treatment_statement_search = $this->session->userdata('patient_treatment_statement_search');
+		// $where = '(visit_type_id <> 2 OR visit_type_id <> 1) AND patient_delete = '.$delete;
+		$where = 'patient_delete = 0';
+
+		if(!empty($patient_treatment_statement_search))
+		{
+			$where .= $patient_treatment_statement_search;
+		}
+		
+		$table = 'patients';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/patient_treatment_statement/'.$module;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = $segment;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->reception_model->get_all_patients($table, $where, $config["per_page"], $page);
+	
+		$data['title'] = 'Patients Treatment Statements';
+		$v_data['title'] = ' Patients Treatment Statements';
+	
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$v_data['delete'] = 1;
+		$v_data['module'] = $module;
+		$v_data['type'] = $this->reception_model->get_types();
+		$data['content'] = $this->load->view('patient_treatment/patients_list_statement', $v_data, true);
+
+		if($module == 'doctor')
+		{
+			$data['sidebar'] = 'doctor_sidebar';
+		}
+		else
+		{
+			$data['sidebar'] = 'nurse_sidebar';
+		}
+		
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+	}
+	public function search_patient_treatment_statement($module)
+	{
+		$visit_type_id = $this->input->post('visit_type_id');
+		$strath_no = $this->input->post('strath_no');
+		
+		if(!empty($visit_type_id))
+		{
+			$visit_type_id = ' AND patients.visit_type_id = '.$visit_type_id.' ';
+		}
+		
+		if(!empty($strath_no))
+		{
+			$strath_no = ' AND patients.strath_no  LIKE \'%'.$strath_no.'%\' ';
+		}
+		
+		//search surname
+		if(!empty($_POST['surname']))
+		{
+			$surnames = explode(" ",$_POST['surname']);
+			$total = count($surnames);
+			
+			$count = 1;
+			$surname = ' AND (';
+			for($r = 0; $r < $total; $r++)
+			{
+				if($count == $total)
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\'';
+				}
+				
+				else
+				{
+					$surname .= ' patients.patient_surname LIKE \'%'.mysql_real_escape_string($surnames[$r]).'%\' AND ';
+				}
+				$count++;
+			}
+			$surname .= ') ';
+			}
+			else
+			{
+
+				$surname = '';
+			}
+		
+			//search other_names
+			if(!empty($_POST['othernames']))
+			{
+				$other_names = explode(" ",$_POST['othernames']);
+				$total = count($other_names);
+				
+				$count = 1;
+				$other_name = ' AND (';
+				for($r = 0; $r < $total; $r++)
+				{
+					if($count == $total)
+					{
+						$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\'';
+					}
+					
+					else
+					{
+						$other_name .= ' patients.patient_othernames LIKE \'%'.mysql_real_escape_string($other_names[$r]).'%\' AND ';
+					}
+					$count++;
+				}
+				$other_name .= ') ';
+			}
+			else
+			{
+				$other_name = '';
+			}
+		
+			$search = $visit_type_id.$strath_no.$surname.$other_name;
+			$this->session->set_userdata('patient_treatment_statement_search', $search);
+			
+			$this->patient_treatment_statement($module);
+	}
+	public function treatment_statement($patient_id,$module = NULL)
+	{
+		$segment = 5;		// this is it
+
+		$where = 'visit.patient_id = patients.patient_id AND visit.`patient_id`='.$patient_id;
+		
+		
+		$table = 'visit,patients';
+		//pagination
+		$this->load->library('pagination');
+		$config['base_url'] = site_url().'/nurse/treatment_statement/'.$patient_id.'/'.$module;
+		$config['total_rows'] = $this->reception_model->count_items($table, $where);
+		$config['uri_segment'] = 4;
+		$config['per_page'] = 20;
+		$config['num_links'] = 5;
+		
+		$config['full_tag_open'] = '<ul class="pagination pull-right">';
+		$config['full_tag_close'] = '</ul>';
+		
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+		
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_close'] = '</span>';
+		
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = 'Prev';
+		$config['prev_tag_close'] = '</li>';
+		
+		$config['cur_tag_open'] = '<li class="active"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$this->pagination->initialize($config);
+		
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $v_data["links"] = $this->pagination->create_links();
+		$query = $this->nurse_model->get_all_patient_history($table, $where, $config["per_page"], $page);
+
+		$data['title'] = 'Patient Statement';
+		$v_data['title'] = 'Patient Statement';
+		
+		$v_data['query'] = $query;
+		$v_data['page'] = $page;
+		$data['content'] = $this->load->view('patient_treatment/treatment_statement', $v_data, true);
+
+		if($module == NULL)
+		{
+			$data['sidebar'] = 'nurse_sidebar';	
+		}
+		else if($module == 'doctor')
+		{
+			$data['sidebar'] = 'doctor_sidebar';
+		}
+		else
+		{
+			$data['sidebar'] = 'nurse_sidebar';
+		}
+		
+		
+		$this->load->view('auth/template_sidebar', $data);
+
+	}
 }
 ?>

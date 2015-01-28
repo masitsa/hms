@@ -13,6 +13,7 @@
                 <li><a href="<?php echo site_url();?>/doctor/doctor_queue"><i class="icon-sitemap"></i> Doctor Queue</a></li>
                 <li><a href="<?php echo site_url();?>/reception/general_queue/doctor"><i class="icon-home"></i> General Queue</a></li>
                 <li><a href="<?php echo site_url();?>/reception/visit_list/1/doctor"><i class="icon-home"></i> Visit History</a></li>
+                <li><a href="<?php echo site_url();?>/nurse/patient_treatment_statement/doctor"><i class="icon-home"></i> Patients Treatment</a></li>
             </ul>
 
         </div>

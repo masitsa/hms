@@ -1,4 +1,4 @@
-
+<?php echo $this->load->view('search/service_search', '', TRUE);?>
  <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">

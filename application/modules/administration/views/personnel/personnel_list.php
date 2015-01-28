@@ -82,7 +82,7 @@
 				$personnel_username = $row->personnel_username;
 				$personnel_phone = $row->personnel_phone;
 				$personnel_email = $row->personnel_email;
-				
+				$authorise = $row->authorise;
 				$personnel_departments = $this->personnel_model->get_personnel_departments($personnel_id);
 				
 				$departments = '';
@@ -95,6 +95,19 @@
 						
 						$departments .= '<a href="'.site_url().'/administration/personnel/delete_personnel_department/'.$personnel_department_id.'" class="btn btn-sm btn-primary" onclick="return confirm(\'Delete '.$departments_name.' role from '.$personnel_fname.'?\');"><i class="icon-remove"></i></a> '.$departments_name.'<br/>';
 					}
+				}
+
+				if($authorise == 1)
+				{
+					$buttons = '<a href="'.site_url().'/administration/personnel/activate_personnel/'.$personnel_id.'" class="btn btn-sm btn-success"onclick="return confirm(\'Do you want to activate '.$personnel_fname.' account?\');">Activate account</a>';
+				}
+				else if($authorise == 0)
+				{
+					$buttons = '<a href="'.site_url().'/administration/personnel/deactivate_personnel/'.$personnel_id.'" class="btn btn-sm btn-danger"onclick="return confirm(\'Do you want to deactivate '.$personnel_fname.' account?\');">Deactivate account</a>';
+				}
+				else
+				{
+					$buttons = '';
 				}
 				
 				$count++;
@@ -109,7 +122,7 @@
 							<td>'.$departments.'</td>
 							<td><a href="'.site_url().'/administration/personnel/reset_password/'.$personnel_id.'" class="btn btn-sm btn-success" onclick="return confirm(\'Reset password for '.$personnel_fname.'?\');">Reset Password</a></td>
 							<td><a href="'.site_url().'/administration/personnel/edit_personnel/'.$personnel_id.'" class="btn btn-sm btn-info">Edit</a></td>
-							<td><a href="'.site_url().'/administration/personnel/delete_personnel/'.$personnel_id.'" class="btn btn-sm btn-danger"onclick="return confirm(\'Delete '.$personnel_fname.'?\');">Delete</a></td>
+							<td>'.$buttons.'</td>
 						</tr> 
 					';
 			}

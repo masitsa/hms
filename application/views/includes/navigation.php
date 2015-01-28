@@ -34,7 +34,23 @@
         <!-- Dropdown menu -->
         <ul class="dropdown-menu">
             <li><a href="<?php echo site_url();?>/change-password/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-user"></i> Change Password</a></li>
-            <li><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-cogs"></i> Control Panel</a></li>
+            <?php
+            if(!isset($module))
+            {
+                $module = '';
+            }
+           
+            if($module == 'user')
+            {
+
+            }
+            else
+            {
+                ?>
+                  <li><a href="<?php echo site_url();?>/control-panel/<?php echo $this->session->userdata('personnel_id');?>"><i class="icon-cogs"></i> Control Panel</a></li>
+                <?php
+            }
+            ?>
             <li class="divider"></li>
             <li><a href="<?php echo site_url();?>/auth/login/logout_user"><i class="icon-off"></i> Logout</a></li>
         </ul>

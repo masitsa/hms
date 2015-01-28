@@ -594,7 +594,16 @@ class Reception_model extends CI_Model
 				
 			}
 		}
-		
+
+		// calculate patient balance
+		$this->load->model('administration/administration_model');
+
+		$account_balance = $this->administration_model->patient_account_balance($patient_id);
+
+		// end of patient balance
+
+		$patient['patient_id'] = $patient_id;
+		$patient['account_balance'] = $account_balance;
 		$patient['visit_type'] = $visit_type;
 		$patient['patient_type'] = $patient_type;
 		$patient['visit_type_id'] = $check_id;
@@ -845,6 +854,26 @@ class Reception_model extends CI_Model
 		$where = "visit_type_id = $patient_type and service_id = 1 and service_charge_status = 1";
 		$items = "*";
 		$order = "visit_type_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_counseling_service_charges_per_type($patient_type){
+		$table = "service_charge";
+		$where = "visit_type_id = $patient_type and service_id = 11 and service_charge_status = 1";
+		$items = "*";
+		$order = "visit_type_id";
+			//echo $sql;
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	}
+	public function get_counselors(){
+		$table = "personnel";
+		$where = "job_title_id = 8 AND authorise = 0";
+		$items = "*";
+		$order = "personnel_id";
 			//echo $sql;
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
@@ -1238,7 +1267,8 @@ class Reception_model extends CI_Model
 							'gender'=>$gender,
 							'Staff_Number'=>$strath_no,
 							'contact'=>$contact,
-							'house_keeping'=>'1'
+							'house_keeping'=>'1',
+							'department'=>'Housekeeping'
 							);
 						}
 						else
@@ -1250,7 +1280,8 @@ class Reception_model extends CI_Model
 							'gender'=>$gender,
 							'Staff_Number'=>$strath_no,
 							'contact'=>$contact,
-							'sbs'=>'1'
+							'sbs'=>'1',
+							'department'=>'Strathmore Business School'
 							);
 						}
 						if($this->db->insert('staff', $data))

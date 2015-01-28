@@ -31,10 +31,17 @@ class Auth extends MX_Controller
 		
 		$this->load->view("template_no_sidebar", $data2);
 	}
-	public function change_password($personnel_id)
+	public function change_password($personnel_id,$module = NULL)
 	{
 		 $data['personnel_id'] = $this->session->userdata('personnel_id');
-		
+		if($module == 'user')
+		{
+			$data['module'] = 'user';
+		}
+		else
+		{
+			$data['module'] = 'user';
+		}
 		$data2['content'] = $this->load->view('change_password', $data, TRUE);
 		$data2['title'] = 'Change Password';
 		
@@ -57,16 +64,31 @@ class Auth extends MX_Controller
 		else
 		{
 			 $response = $this->login_model->change_user_password($personnel_id);
-			if($response == TRUE)
+			if($response == 1)
 			{
 				$this->session->set_userdata('success_message', 'Personnel password was successfully updated');
-				$this->change_password($personnel_id);
+				redirect('control-panel/'.$this->session->userdata('personnel_id'));
+				// $this->change_password($personnel_id);
 			}
-			
+			else if($response == 'password_invalid')
+			{
+				$this->session->set_userdata('error_message', 'Ensure your password should be 8 characters long, at least one lower case letter and at least one upper case letter, one digit and a symbol');
+				$this->change_password($personnel_id,'user');
+			}
+			else if($response == 'password_match')
+			{
+				$this->session->set_userdata('error_message', 'Password do not match');
+				$this->change_password($personnel_id,'user');
+			}
+			else if($response == 'user_details_invalid')
+			{
+				$this->session->set_userdata('error_message', 'User details is invalid');
+				$this->change_password($personnel_id,'user');
+			}
 			else
 			{
 				$this->session->set_userdata('error_message', 'Unable to update personnel password. Please try again');
-				$this->change_password($personnel_id);
+				$this->change_password($personnel_id,'user');
 			}
 		}
 

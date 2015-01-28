@@ -48,6 +48,8 @@ $route['login'] = 'auth/login/login_user';
 $route['logout'] = 'auth/login/logout_user';
 $route['control-panel/(:num)'] = 'auth/control_panel/$1';
 $route['change-password/(:num)'] = 'auth/change_password/$1';
+$route['change-password/(:num)/(:any)'] = 'auth/change_password/$1/$2';
+
 
 /*
 *	Reception Routes

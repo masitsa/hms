@@ -607,6 +607,42 @@ class Administration extends auth
 			
 			$this->patient_statement();
 	}
+	public function service_search()
+	{
+		$service_name = $this->input->post('service_name');
+		
+		if(!empty($service_name))
+		{
+			$service_name = ' AND service.service_name LIKE \'%'.$service_name.'%\' ';
+		}
+		else
+		{
+			$service_name = '';
+		}
+		
+		$search = $service_name;
+		$this->session->set_userdata('service_search', $search);
+		
+		$this->services();
+	}
+	public function service_charge_search($service_id)
+	{
+		$service_charge_name = $this->input->post('service_charge_name');
+		
+		if(!empty($service_charge_name))
+		{
+			$service_charge_name = ' AND service_charge.service_charge_name LIKE \'%'.$service_charge_name.'%\' ';
+		}
+		else
+		{
+			$service_charge_name = '';
+		}
+		
+		$search = $service_charge_name;
+		$this->session->set_userdata('service_charge_search', $search);
+		
+		$this->service_charges($service_id);
+	}
 
 
 	
@@ -647,7 +683,7 @@ class Administration extends auth
 		redirect('administration/patient_statement');
 		
 	}
-	public function individual_statement($patient_id)
+	public function individual_statement($patient_id,$module = NULL)
 	{
 		$segment = 3;
 		// $patient_statement_search = $this->session->unsetuserdata('patient_statement_search');
@@ -704,8 +740,19 @@ class Administration extends auth
 		$v_data['page'] = $page;
 		$v_data['delete'] = 1;
 		$data['content'] = $this->load->view('individual_statement', $v_data, true);
+		if($module == NULL)
+		{
+			$data['sidebar'] = 'admin_sidebar';	
+		}
+		else if($module == 2)
+		{
+			$data['sidebar'] = 'reception_sidebar';
+		}
+		else
+		{
+			$data['sidebar'] = 'reception_sidebar';
+		}
 		
-		$data['sidebar'] = 'admin_sidebar';
 		
 		$this->load->view('auth/template_sidebar', $data);
 

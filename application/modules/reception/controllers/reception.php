@@ -11,6 +11,7 @@ class Reception extends auth
 		$this->load->model('strathmore_population');
 		$this->load->model('database');
 		$this->load->model('administration/reports_model');
+		$this->load->model('administration/administration_model');
 		$this->load->model('accounts/accounts_model');
 		$this->load->model('nurse/nurse_model');
 	}
@@ -645,8 +646,9 @@ class Reception extends auth
 		$patient_othernames = $patient['patient_othernames'];
 		$patient_surname = $patient['patient_surname'];
 		$patient_type_id = $patient['visit_type_id'];
+		$account_balance = $patient['account_balance'];
 		
-		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span>';
+		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$patient_type.'</span> Account Balance : <span style="font-weight: normal;">'.$account_balance.'</span> <a href="'.site_url().'/administration/individual_statement/'.$primary_key.'/2" class="btn btn-sm btn-primary" target="_blank" style="margin-top: 5px;">Patient Statement</a>';
 		$v_data['patient_type_id'] = $patient_type_id;
 		$v_data['patient_type'] = $patient_type;
 		$data['content'] = $this->load->view('initiate_visit', $v_data, true);
@@ -663,6 +665,14 @@ class Reception extends auth
 		$patient_type = '';
 		if(isset($_POST['department_id'])){
 			if($_POST['department_id'] == 7)
+			{
+				//if nurse visit doctor must be selected
+				$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
+				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
+				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
+				$patient_type = $this->input->post("patient_type_id"); 
+			}
+			else if($_POST['department_id'] == 12)
 			{
 				//if nurse visit doctor must be selected
 				$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
@@ -724,8 +734,8 @@ class Reception extends auth
 				//create visit
 				$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
 				
-				//save consultation charge for nurse visit
-				if($_POST['department_id'] == 7)
+				//save consultation charge for nurse visit and counseling
+				if($_POST['department_id'] == 7 || $_POST['department_id'] == 12)
 				{
 					$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);
 				}
