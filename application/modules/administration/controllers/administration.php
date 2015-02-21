@@ -739,6 +739,7 @@ class Administration extends auth
 		$v_data['query'] = $query;
 		$v_data['page'] = $page;
 		$v_data['delete'] = 1;
+		$v_data['module'] = $module;
 		$data['content'] = $this->load->view('individual_statement', $v_data, true);
 		if($module == NULL)
 		{
@@ -747,6 +748,10 @@ class Administration extends auth
 		else if($module == 2)
 		{
 			$data['sidebar'] = 'reception_sidebar';
+		}
+		else if($module == 3)
+		{
+			$data['sidebar'] = 'accounts_sidebar';
 		}
 		else
 		{

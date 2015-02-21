@@ -123,6 +123,7 @@ class Login_model extends CI_Model
 					// personnel should change his password
 					// $newdata = array('personnel_id'=> $result[0]->personnel_id);
 					$newdata = array(
+					   'login_status'     	=> TRUE,
 	                   'personnel_fname'  	=> $result[0]->personnel_fname,
 	                   'first_name'     	=> $result[0]->personnel_fname,
 	                   'personnel_email'	=> $result[0]->personnel_email,
@@ -162,6 +163,7 @@ class Login_model extends CI_Model
 					{
 						// this user should be asked to change the password
 						$newdata = array(
+							'login_status'     	=> TRUE,
 		                   'personnel_fname'  	=> $result[0]->personnel_fname,
 		                   'first_name'     	=> $result[0]->personnel_fname,
 		                   'personnel_email'	=> $result[0]->personnel_email,
@@ -179,6 +181,7 @@ class Login_model extends CI_Model
 			else
 			{
 				$newdata = array(
+					'login_status'     	=> TRUE,
                    'personnel_fname'  	=> $result[0]->personnel_fname,
                    'first_name'     	=> $result[0]->personnel_fname,
                    'personnel_email'	=> $result[0]->personnel_email,
@@ -187,7 +190,7 @@ class Login_model extends CI_Model
 
 				$this->session->set_userdata($newdata);
 
-				return 'try_again';
+				return 0;
 			}
 			
 				

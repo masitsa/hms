@@ -167,7 +167,7 @@ var config_url = '<?php echo site_url();?>';
         XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
     }
     var url = "<?php echo site_url();?>/laboratory/test_lab/"+visit_id+"/"+id;
-    
+    // window.alert(url);
     if(XMLHttpRequestObject) {
                 
         XMLHttpRequestObject.open("GET", url);

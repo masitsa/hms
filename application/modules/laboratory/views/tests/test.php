@@ -28,7 +28,7 @@
 				              </ul>
 				              <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
 				                <div class="tab-pane active" id="tests-pane">
-					                <div class="row">
+				                	<div class="row">
 										<div class="center-align">
 											<?php
 									        	if(($visit == 2)||(($visit == 3))||(($visit == 1))||(($visit == 4))){
@@ -38,7 +38,21 @@
 											?>
 										</div>
 									</div>
-				                  <div id="test_results"></div>
+				                	<div class="row">
+									    <div class="col-md-12">
+									       <div class="alert alert-danger">NOTE: Ensure that you bill for the tests you are going to do for the patient. Please click <a hred="#" class="btn btn-sm btn-success" >Charge for lab test</a> to add the test charge to the invoice and/or  <a hred="#" class="btn btn-sm btn-danger" >Remove lab test charge</a> to remove this charge from the invoice. Click <a class='btn btn-info' href='' >Remove from list</a> When you want to remove this test from the tests being done ~ development team </div>
+									    </div>
+									</div>
+				                	<!-- laboratory technicial should choose what test should be done to the patient -->
+									 <div class="row">
+									 	<div class="col-md-12">
+				                            <div id="lab_table"></div>
+				                        </div>
+									 </div>
+									<!-- bill for thr test asap -->
+					              
+
+				                  	<div id="test_results"></div>
 				                </div>
 				                 <div class="tab-pane" id="visit_trail">
 				                  <?php echo $this->load->view("nurse/patients/visit_trail", '', TRUE);?>
@@ -59,7 +73,36 @@
   <script type="text/javascript">
 	  $(document).ready(function(){
 	       get_test_results(100, <?php echo $visit_id?>);
+		   get_lab_table(<?php echo $visit_id;?>);
 	  });
+	 function get_lab_table(visit_id){
+        var XMLHttpRequestObject = false;
+            
+        if (window.XMLHttpRequest) {
+        
+            XMLHttpRequestObject = new XMLHttpRequest();
+        } 
+            
+        else if (window.ActiveXObject) {
+            XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var url = "<?php echo site_url();?>/laboratory/confirm_lab_test_charge/"+visit_id;
+		
+        if(XMLHttpRequestObject) {
+                    
+            XMLHttpRequestObject.open("GET", url);
+                    
+            XMLHttpRequestObject.onreadystatechange = function(){
+                
+                if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
+                    
+                    document.getElementById("lab_table").innerHTML = XMLHttpRequestObject.responseText;
+                }
+            }
+            
+            XMLHttpRequestObject.send(null);
+        }
+    }
   	function open_window_lab(test, visit_id){
 	  var config_url = $('#config_url').val();
 	  window.open(config_url+"/laboratory/laboratory_list/"+test+"/"+visit_id,"Popup","height=1200, width=800, , scrollbars=yes, "+ "directories=yes,location=yes,menubar=yes," + "resizable=no status=no,history=no top = 50 left = 100");
@@ -85,7 +128,7 @@
 	  else if ((page == 75) || (page == 100)){
 	    url = config_url+"/laboratory/test1/"+visit_id;
 	  }
-	 // alert(url);
+	// alert(url);
 	  if(XMLHttpRequestObject) {
 	    if((page == 75) || (page == 85)){
 	      var obj = window.opener.document.getElementById("test_results");
@@ -160,8 +203,8 @@
 		
 		var config_url = $('#config_url').val();
 		var res = document.getElementById("laboratory_result"+id).value;
-        var data_url = config_url+"/laboratory/save_result/"+id+"/"+res;
-   
+        var data_url = config_url+"/laboratory/save_result/"+id+"/"+res+"/"+visit_id;
+   	 // window.alert(data_url);
          var result_space = $('#result_space'+id).val();//document.getElementById("vital"+vital_id).value;
          	
         $.ajax({

@@ -67,7 +67,7 @@ if(!empty($coming_from)){
 		";
 		foreach ($lab_rs as $key):
 			
-			$visit_charge_id = $key->visit_charge_id;
+			$visit_charge_id = $key->visit_lab_test_id;
 		
 			$format_rs = $this->lab_model->get_lab_visit_result($visit_charge_id);
 			$num_format = count($format_rs);

@@ -290,6 +290,10 @@ class Reception extends auth
 		{
 			$data['sidebar'] = 'dental_sidebar';
 		}
+		else if($page_name == 'physiotherapy')
+		{
+			$data['sidebar'] = 'physiotherapy_sidebar';
+		}
 		else if($page_name == 'ultra_sound')
 		{
 			$data['sidebar'] = 'ultra_sound_sidebar';
@@ -516,8 +520,11 @@ class Reception extends auth
 	{
 		//  1 for students 2 for staff 3 for others 4 for dependants
 		$this->session->set_userdata('patient_search', ' AND patients.patient_id = '.$patient_id);
-		
+	
 		redirect('reception/all-patients');
+		
+
+		
 	}
 	
 	public function search_staff()
@@ -545,7 +552,20 @@ class Reception extends auth
 					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
 					
 				}
-				$this->get_found_patients($patient_id,2);
+				// $this->get_found_patients($patient_id,2);
+				if(!empty($patient_id))
+				{
+					$staff_search = ' AND patients.patient_id = '.$patient_id;
+				}
+				else
+				{
+					$staff_search = '';
+				}
+
+				$search = $staff_search;
+				$this->session->set_userdata('patient_staff_search', $search);
+				
+				$this->staff();
 				
 			}
 			
@@ -555,7 +575,21 @@ class Reception extends auth
 				{
 					$patient_id = $this->reception_model->insert_into_patients($this->input->post('staff_number'),2);
 					if($patient_id != FALSE){
-						$this->get_found_patients($patient_id,2);
+						// $this->get_found_patients($patient_id,2);
+						if(!empty($patient_id))
+						{
+							$staff_search = ' AND patients.patient_id = '.$patient_id;
+						}
+						else
+						{
+							$staff_search = '';
+						}
+
+						$search = $staff_search;
+						$this->session->set_userdata('patient_staff_search', $search);
+						
+						$this->staff();
+
 					}else{
 						$this->add_patient();
 					}
@@ -605,9 +639,25 @@ class Reception extends auth
 					$patient_id = $this->reception_model->insert_into_patients($this->input->post('student_number'),1);	
 				}
 				//$this->set_visit($patient_id);
-				$search = ' AND patients.patient_id = '.$patient_id;
-				$this->session->set_userdata('patient_search', $search);
-				$this->get_found_patients($patient_id,1);
+				// $search = ' AND patients.patient_id = '.$patient_id;
+				// $this->session->set_userdata('patient_search', $search);
+				// $this->get_found_patients($patient_id,1);
+
+				
+				if(!empty($patient_id))
+				{
+					$student_search = ' AND patients.patient_id = '.$patient_id;
+				}
+				else
+				{
+					$student_search = '';
+				}
+
+				$search = $student_search;
+				$this->session->set_userdata('patient_student_search', $search);
+				
+				$this->students();
+
 			}
 			
 			else
@@ -615,7 +665,20 @@ class Reception extends auth
 				$patient_id = $this->strathmore_population->get_ams_student($this->input->post('student_number'));
 				if($patient_id != FALSE){
 					// $this->set_visit($patient_id);
-					$this->get_found_patients($patient_id,1);
+					if(!empty($patient_id))
+					{
+						$student_search = ' AND patients.patient_id = '.$patient_id;
+					}
+					else
+					{
+						$student_search = '';
+					}
+
+					$search = $student_search;
+					$this->session->set_userdata('patient_student_search', $search);
+					
+					$this->students();
+
 				}else{
 					$this->session->set_userdata("error_message","Could not add patient. Please try again");
 					$this->add_patient();
@@ -626,8 +689,11 @@ class Reception extends auth
 		
 		else
 		{
-			redirect('reception/all-patients');
+			// redirect('reception/all-patients');
+			$this->session->set_userdata("error_message","Please enter a student number and try again");
+			$this->add_patient();
 		}
+
 	}
 	/*
 	*	Add a visit
@@ -663,6 +729,7 @@ class Reception extends auth
 		$this->form_validation->set_rules('visit_date', 'Visit Date', 'required');
 		$this->form_validation->set_rules('department_id', 'Department', 'required|is_natural_no_zero');
 		$patient_type = '';
+		//var_dump()
 		if(isset($_POST['department_id'])){
 			if($_POST['department_id'] == 7)
 			{
@@ -671,20 +738,28 @@ class Reception extends auth
 				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
 				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
 				$patient_type = $this->input->post("patient_type_id"); 
+
+				$service_charge_id = $this->input->post("service_charge_name");
+				$doctor_id = $this->input->post('personnel_id');
 			}
 			else if($_POST['department_id'] == 12)
 			{
 				//if nurse visit doctor must be selected
-				$this->form_validation->set_rules('personnel_id', 'Doctor', 'required|is_natural_no_zero');
-				$this->form_validation->set_rules('service_charge_name', 'Consultation Type', 'required|is_natural_no_zero');
+				$this->form_validation->set_rules('personnel_id2', 'Doctor', 'required|is_natural_no_zero');
+				$this->form_validation->set_rules('service_charge_name2', 'Consultation Type', 'required|is_natural_no_zero');
 				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
 				$patient_type = $this->input->post("patient_type_id"); 
+
+				$service_charge_id = $this->input->post("service_charge_name2");
+				$doctor_id = $this->input->post('personnel_id2');
 			}
 
 			else 
 			{
 				$this->form_validation->set_rules('patient_type_id', 'Patient Type', 'required|is_natural_no_zero');
 				$patient_type = $this->input->post("patient_type_id"); 
+				$service_charge_id = 0;
+				$doctor_id = 0;
 			}
 		}
 		
@@ -699,11 +774,11 @@ class Reception extends auth
 		}
 		else
 		{
-			$service_charge_id = $this->input->post("service_charge_name");
+
 			$patient_insurance_id = $this->input->post("patient_insurance_id");
 			$patient_insurance_number = $this->input->post("insurance_id");
 
-			$doctor_id = $this->input->post('personnel_id');
+			
 			//$visit_type = $this->get_visit_type($type_name);
 			$visit_date = $this->input->post("visit_date");
 			$timepicker_start = $this->input->post("timepicker_start");
@@ -720,7 +795,6 @@ class Reception extends auth
 				$close_card=2;		
 			}
 			//  check if the student exisit for that day and the close card 0;
-
 			$check_visits = $this->reception_model->check_patient_exist($patient_id,$visit_date);
 			$check_count = count($check_visits);
 
@@ -731,13 +805,18 @@ class Reception extends auth
 			}
 			else
 			{
-				//create visit
-				$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
+				
+					//create visit
+					$visit_id = $this->reception_model->create_visit($visit_date, $patient_id, $doctor_id, $patient_insurance_id, $patient_insurance_number, $patient_type, $timepicker_start, $timepicker_end, $appointment_id, $close_card);
+				
+				
 				
 				//save consultation charge for nurse visit and counseling
 				if($_POST['department_id'] == 7 || $_POST['department_id'] == 12)
 				{
-					$this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);
+					
+					 $this->reception_model->save_visit_consultation_charge($visit_id, $service_charge_id);	
+					
 				}
 				
 				//set visit department if not appointment

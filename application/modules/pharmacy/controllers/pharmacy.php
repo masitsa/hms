@@ -135,25 +135,19 @@ class Pharmacy extends auth
 		// if ($this->form_validation->run())
 		// {
 			 $search_item = $this->input->post('search_item');
-			 $class_id = $this->input->post('class_id');
+			 $generic_name = $this->input->post('generic_name');
 			if(!empty($search_item))
 			{
-				$search = ' AND drugs_name LIKE \'%'.$search_item.'%\'';
+				$search_item = ' AND drugs.drugs_name LIKE \'%'.$this->input->post('search_item').'%\'';
 			}
-			else
+			if(!empty($generic_name))
 			{
-				$search = '';
+				$generic_name = ' AND generic.generic_name LIKE \'%'.$this->input->post('generic_name').'%\'';
 			}
+			
 
-			if($class_id != 288)
-			{
-				$class_search = ' AND drugs.class_id LIKE \'%'.$class_id.'%\'';				
-			}
-			else
-			{
-				$class_search = '';
-			}
-			$search_items = $search.$class_search;
+			
+			$search_items = $search_item.$generic_name;
 			$this->session->set_userdata('drugs_search', $search_items);
 		// }
 		

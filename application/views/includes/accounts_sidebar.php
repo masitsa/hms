@@ -16,6 +16,16 @@
                 <li><a href="<?php echo site_url();?>/reception/general_queue/accounts"><i class="icon-home"></i> General Queue</a></li>
 
                 <!-- Menu with sub menu -->
+                <li class="has_submenu">
+                    <a href="#">
+                        <i class="icon-th"></i> Reports
+                    </a>
+                    <ul>
+                        <li><a href="<?php echo site_url();?>/administration/reports/all_reports/accounts">All Transactions</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/reports/cash_report/accounts">Cash Report</a></li>
+                        <li><a href="<?php echo site_url();?>/administration/reports/debtors_report/accounts">Debtors Report</a></li>
+                    </ul>
+                </li>
 
             </ul>
 

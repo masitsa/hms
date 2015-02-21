@@ -16,6 +16,7 @@
     <!-- Widget content -->
     <div class="widget-content">
     	<div class="padd">
+
 			<?php
             echo form_open("administration/reports/search_time", array("class" => "form-horizontal"));
             ?>
@@ -146,8 +147,8 @@
 		{
 			$count = $page;
 			$total_time = 0;
-			
-			$result = 
+			$result = '<a href="'.site_url().'/administration/reports/export_time_report" class="btn btn-success pull-right">Export</a>';
+			$result .= 
 				'
 					<table class="table table-hover table-bordered table-striped table-responsive col-md-12">
 					  <thead>

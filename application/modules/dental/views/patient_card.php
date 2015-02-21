@@ -73,6 +73,9 @@ if($mike == 0){
 				}
 			?>
           </div>
+      <?php echo $this->load->view("nurse/allergies_brief", '', TRUE);?>
+        
+       <div class="clearfix"></div>
 
 			<div class="tabbable" style="margin-bottom: 18px;">
               <ul class="nav nav-tabs">
@@ -80,6 +83,7 @@ if($mike == 0){
                 <?php if($mike == 1){
 
                 }else{?>
+                <li><a href="#previous-vitals" data-toggle="tab">Vital Trend</a></li>
                 <li><a href="#patient-history" data-toggle="tab">Patient history</a></li>
                 <?php
                 }
@@ -90,16 +94,21 @@ if($mike == 0){
               </ul>
               <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
                 <div class="tab-pane active" id="vitals-pane">
-                  <?php echo $this->load->view("patients/vitals", '', TRUE);?>
+                  <?php echo $this->load->view("nurse/patients/vitals", '', TRUE);?>
                 </div>
                
                 <?php
                 if($mike == 1){
 
                 }else{?>
+                 <div class="tab-pane" id="previous-vitals">
+                  
+                  <?php echo $this->load->view("nurse/patient_previous_vitals", '', TRUE);?>
+                  
+                </div>
                 <div class="tab-pane" id="patient-history">
                   
-                  <?php echo $this->load->view("patient_history", '', TRUE);?>
+                  <?php echo $this->load->view("nurse/patient_history", '', TRUE);?>
                   
                 </div>
                 <?php
@@ -119,7 +128,7 @@ if($mike == 0){
 
                  <div class="tab-pane" id="visit_trail">
                   
-                  <?php echo $this->load->view("patients/visit_trail", '', TRUE);?>
+                  <?php echo $this->load->view("nurse/patients/visit_trail", '', TRUE);?>
                   
                 </div>
                 

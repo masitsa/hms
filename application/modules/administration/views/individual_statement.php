@@ -36,9 +36,16 @@
 			$this->session->unset_userdata('success_message');
 		}
 				
-		
-		
-		$result = '<a href="'.site_url().'/administration/patient_statement" class="btn btn-success">Back to Statements</a>';
+		$result =  '';
+		if($module > 0)
+		{
+
+		}
+		else
+		{
+			$result = '<a href="'.site_url().'/administration/patient_statement" class="btn btn-success">Back to Statements</a>';
+	
+		}
 		
 		
 		

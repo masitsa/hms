@@ -21,33 +21,12 @@
                     </div>
                 </div>
                  <div class="form-group">
-                        <label class="col-lg-12 control-label">Class: </label>
-                        
-                        <div class="col-lg-12">
-                            <select class="form-control" name="class_id">
-                                <?php
-                                    if(count($drug_classes) > 0)
-                                    {
-                                        foreach($drug_classes as $res)
-                                        {
-                                            $class_id = $res->class_id;
-                                            $class_name = $res->class_name;
-                                            
-                                            if($class_id == set_value("class_id"))
-                                            {
-                                                echo '<option value="'.$class_id.'" selected>'.$class_name.'</option>';
-                                            }
-                                            
-                                            else
-                                            {
-                                                echo '<option value="'.$class_id.'">'.$class_name.'</option>';
-                                            }
-                                        }
-                                    }
-                                ?>
-                            </select>
-                        </div>
+                    <label class="col-lg-12 control-label">Generic Name: </label>
+                    
+                    <div class="col-lg-12">
+                        <input type="text" class="col-lg-12 form-control" name="generic_name" placeholder="Generic name">
                     </div>
+                </div>
             </div>
             
         </div>

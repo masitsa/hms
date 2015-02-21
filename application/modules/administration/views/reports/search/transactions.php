@@ -16,7 +16,7 @@
     <div class="widget-content">
     	<div class="padd">
 			<?php
-            echo form_open("administration/reports/search_transactions", array("class" => "form-horizontal"));
+            echo form_open("administration/reports/search_transactions/".$module, array("class" => "form-horizontal"));
             ?>
             <div class="row">
                 <div class="col-md-6">

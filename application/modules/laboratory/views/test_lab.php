@@ -7,13 +7,13 @@ if ($this->session->userdata('nurse_lab') <> NULL){
 	$nurse_lab = $this->session->userdata('nurse_lab');
 }
 
-$rs2 = $this->lab_model->get_lab_visit2($visit_id);
- $num_rows2 = count($rs2);
-if($num_rows2 > 0){
-	foreach ($rs2 as $key):
-		 $lab_visit = $key->lab_visit;
-	endforeach;
-}
+// $rs2 = $this->lab_model->get_lab_visit2($visit_id);
+//  $num_rows2 = count($rs2);
+// if($num_rows2 > 0){
+// 	foreach ($rs2 as $key):
+// 		 $lab_visit = $key->lab_visit;
+// 	endforeach;
+// }
 if(!empty($service_charge_id)){
 	
 	 $lab_test_id_array = $this->lab_model->get_lab_test_id($service_charge_id);
@@ -42,7 +42,8 @@ if(!empty($service_charge_id)){
 		}
 		else{
 
-			$this->lab_model->save_lab_visit($visit_id, $service_charge_id);
+			$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
+			// $this->lab_model->save_lab_visit($visit_id, $service_charge_id);
 		}
 	}
 	
@@ -57,7 +58,7 @@ if(!empty($service_charge_id)){
 		}
 		else{
 			
-			$this->lab_model->save_lab_visit($visit_id, $service_charge_id);
+			$this->lab_model->save_lab_visit_trail($visit_id, $service_charge_id);
 		}
 		
 		foreach ($get_lab_visit_rs as $key2 ): 		
@@ -67,7 +68,7 @@ if(!empty($service_charge_id)){
 		endforeach;
 	}
 }
-$rs = $this->lab_model->get_lab_test($visit_id);
+$rs = $this->lab_model->get_lab_visit2($visit_id);
 $num_rows = count($rs);
 
 echo "
@@ -76,7 +77,6 @@ echo "
 	<thead>
 		<th>No.</th>
     	<th>Test</th>
-		<th>Class</th>
 		<th>Cost</th>
 	</thead>
 	<tbody>
@@ -86,22 +86,21 @@ $total = 0;
 $s=0;
 foreach ($rs as $key6):
 	
-	$visit_charge_id = $key6->lab_visit_id;
-	$test = $key6->lab_test_name;
-	$price = $key6->lab_test_price;
-	$class = $key6->class_name;
+	$visit_charge_id = $key6->visit_lab_test_id;
+	$test = $key6->service_charge_name;
+	$price = $key6->service_charge_amount;
+	$service_charge_id = $key6->service_charge_id;
 	$total = $total + $price;
 	$s++;
 	echo "
 		<tr>
         	<td>".($s)."</td>
 			<td>".$test."</td>
-			<td>".$class."</td>
 			<td>".$price."</td>
 			<td>
 				<div class='btn-toolbar'>
 					<div class='btn-group'>
-						<a class='btn' href='#' onclick='delete_cost(".$visit_charge_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
+						<a class='btn' href='#' onclick='delete_cost(".$service_charge_id.", ".$visit_id.")'><i class='icon-remove'></i></a>
 					</div>
 				</div>
 			</td>
@@ -109,7 +108,7 @@ foreach ($rs as $key6):
 	";
 
 endforeach;
-
+$lab_visit = 0;
 echo "
 	<tr bgcolor='#0099FF'>
 		<td></td>

@@ -1,4 +1,4 @@
-<select name="service_charge_name" class="form-control">
+<select name="service_charge_name2" class="form-control">
 <?php 
 	if(count($service_charge) == 0) 
 		{

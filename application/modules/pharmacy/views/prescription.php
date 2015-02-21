@@ -514,6 +514,7 @@ $p = 0;
                                 if($module == 1)
                                 {
                                 	?>
+                                	 <th>S. Units:</th>
                                 	 <th>Unit Price:</th>
                                 	  <th>Total:</th>
                                 	  <th>Units given:</th>
@@ -535,6 +536,7 @@ $p = 0;
                                 <th>Delete </th>
                                
                                 <th></th>
+                                 <th></th>
                             </tr>
                            <?php 
                            $rs = $this->pharmacy_model->select_prescription($visit_id);
@@ -560,6 +562,15 @@ $p = 0;
                                 $visit_charge_id = $key_rs->visit_charge_id;
                                 $number_of_days = $key_rs->number_of_days;
                                 $units_given = $key_rs->units_given;
+                                $checker_id = $key_rs->checker_id;
+
+
+                                // checking for the stocks in drugs
+                                  $purchases = $this->pharmacy_model->item_purchases($checker_id);
+	                                $sales = $this->pharmacy_model->get_drug_units_sold($checker_id);
+	                                $deductions = $this->pharmacy_model->item_deductions($checker_id);
+	                                $in_stock = ($quantity + $purchases) - $sales - $deductions;
+                                // end of checking stocks
                                 
                                 $substitution = "<select name='substitution".$id."' class='form-control'>";
                                 if($sub == "No"){
@@ -690,10 +701,12 @@ $p = 0;
                             <tr>
                                 <td><?php echo $s; ?></td>
                                 <td><?php echo $medicine;?></td>
+                               
                                 <?php
                                 if($module == 1)
                                 {
                                 	?>
+                                		<td><?php echo $in_stock;?></td>
                                 		<td><?php echo $charge;?></td>
                                 		<td><?php echo $amoun;?></td>
                                 		<td><input type="text" name="units_given<?php echo $id?>" class='form-control' id="units_given<?php echo $id?>" required="required" placeholder="units given" value="<?php echo $sum_units; ?>"  /></td>

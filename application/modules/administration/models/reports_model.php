@@ -627,6 +627,115 @@ class Reports_model extends CI_Model
 	}
 	
 	/*
+	*	Export Time report
+	*
+	*/
+	function export_time_report()
+	{
+		$this->load->library('excel');
+		
+		//get all transactions
+		$where = 'visit.patient_id = patients.patient_id AND visit.close_card = 1';
+		$table = 'visit, patients';
+		$visit_search = $this->session->userdata('time_reports_search');
+		$table_search = $this->session->userdata('time_reports_tables');
+		
+		if(!empty($visit_search))
+		{
+			$where .= $visit_search;
+		
+			if(!empty($table_search))
+			{
+				$table .= $table_search;
+			}
+		}
+		
+		$this->db->where($where);
+		$this->db->order_by('visit_date', 'ASC');
+		$this->db->select('visit.*, patients.visit_type_id, patients.visit_type_id, patients.patient_othernames, patients.patient_surname, patients.dependant_id, patients.strath_no,patients.patient_national_id,patients.dependant_id');
+		$visits_query = $this->db->get($table);
+		
+		$title = 'Time report Export';
+		
+		if($visits_query->num_rows() > 0)
+		{
+			$count = 0;
+			/*
+				-----------------------------------------------------------------------------------------
+				Document Header
+				-----------------------------------------------------------------------------------------
+			*/
+
+			$row_count = 0;
+			$report[$row_count][0] = '#';
+			$report[$row_count][1] = 'Visit Date';
+			$report[$row_count][2] = 'Patient';
+			$report[$row_count][3] = 'Category';
+			$report[$row_count][4] = 'Start Time';
+			$report[$row_count][5] = 'End time';
+			$report[$row_count][6] = 'Total Time (Days h:m:s)';
+			//get & display all services
+			
+			//display all patient data in the leftmost columns
+			foreach($visits_query->result() as $row)
+			{
+				$row_count++;
+				$total_invoiced = 0;
+				$visit_date = date('jS M Y',strtotime($row->visit_date));
+				$visit_time = date('H:i a',strtotime($row->visit_time));
+				if($row->visit_time_out != '0000-00-00 00:00:00')
+				{
+					$visit_time_out = date('H:i a',strtotime($row->visit_time_out));
+					$seconds = strtotime($row->visit_time_out) - strtotime($row->visit_time);//$row->waiting_time;
+					$days    = floor($seconds / 86400);
+					$hours   = floor(($seconds - ($days * 86400)) / 3600);
+					$minutes = floor(($seconds - ($days * 86400) - ($hours * 3600))/60);
+					$seconds = floor(($seconds - ($days * 86400) - ($hours * 3600) - ($minutes*60)));
+					
+					//$total_time = date('H:i',(strtotime($row->visit_time_out) - strtotime($row->visit_time)));//date('H:i',$row->waiting_time);
+					$total_time = $days.' '.$hours.':'.$minutes.':'.$seconds;
+				}
+				else
+				{
+					$visit_time_out = '-';
+					$total_time = '-';
+				}
+					
+				$visit_id = $row->visit_id;
+				$patient_id = $row->patient_id;
+				$visit_type_id = $row->visit_type_id;
+				$visit_type = $row->visit_type;
+				
+				$patient = $this->reception_model->patient_names2($patient_id, $visit_id);
+				$visit_type = $patient['visit_type'];
+				$patient_type = $patient['patient_type'];
+				$patient_othernames = $patient['patient_othernames'];
+				$patient_surname = $patient['patient_surname'];
+				$patient_date_of_birth = $patient['patient_date_of_birth'];
+				$gender = $patient['gender'];
+				$faculty = $patient['faculty'];
+				$count++;
+				
+				//display the patient data
+				$report[$row_count][0] = $count;
+				$report[$row_count][1] = $visit_date;
+				$report[$row_count][2] = $patient_surname.' '.$patient_othernames;
+				$report[$row_count][3] = $visit_type;
+				$report[$row_count][4] = $visit_time;
+				$report[$row_count][5] = $visit_time_out;
+				$report[$row_count][6] = $total_time;
+					
+				
+				
+			}
+		}
+		
+		//create the excel document
+		$this->excel->addArray ( $report );
+		$this->excel->generateXML ($title);
+	}
+	
+	/*
 	*	Retrieve total revenue
 	*
 	*/
