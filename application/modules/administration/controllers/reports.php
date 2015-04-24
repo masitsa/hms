@@ -125,7 +125,7 @@ class Reports extends auth
 		$v_data['search'] = $visit_search;
 		$v_data['total_patients'] = $config['total_rows'];
 		$v_data['total_services_revenue'] = $this->reports_model->get_total_services_revenue($where, $table);
-		
+		$v_data['total_payments'] = $this->reports_model->get_total_cash_collection($where, $table);
 		//total students debt
 		$where2 = $where.' AND visit.visit_type = 1';
 		$total_students_debt = $this->reports_model->get_total_services_revenue($where2, $table);

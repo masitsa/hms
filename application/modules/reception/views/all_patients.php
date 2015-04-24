@@ -69,6 +69,7 @@
 						  <th>Patient Type</th>
 						  <th>Surname</th>
 						  <th>Other Names</th>
+						  <th>Contact details</th>
 						  <th>Date Created</th>
 						  <th>Last Visit</th>
 						  <th colspan="5">Actions</th>
@@ -114,6 +115,7 @@
 				$created = $row->patient_date;
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
+				$patient_phone1 = $row->patient_phone1;
 				if($last_visit != NULL)
 				{
 					$last_visit = date('jS M Y',strtotime($last_visit));
@@ -196,13 +198,14 @@
 						<tr>
 							<td>'.$count.'</td>
 							<td>'.$patient_type.'</td>
-							<td>'.$patient_surname.'</td>
+							<td>'.$patient_surname.' </td>
 							<td>'.$patient_othernames.'</td>
+							<td>'.$patient_phone1.'</td>
 							<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
 							<td>'.$last_visit.'</td>
 							<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
 							<td><a href="'.site_url().'/reception/edit_patient/'.$patient_id.'" class="btn btn-sm btn-warning">Edit</a></td>
-							<!--<td><a href="'.site_url().'/reception/add_other_dependant/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>-->
+							<td><a href="'.site_url().'/reception/change_patient_type/'.$patient_id.'" class="btn btn-sm btn-primary">Change patient type</a></td>
 							<!--<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'/1" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>-->
 						</tr> 
 					';

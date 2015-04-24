@@ -718,12 +718,16 @@ class Nurse_model extends CI_Model
 	
 
 
-	function get_nurse_notes($patient_id){
-		$table = "nurse_notes";
-		$where = "patient_id = ".$patient_id;
-		$items = "*";
-		$order = "note_id";
+	function get_nurse_notes($patient_id,$visit_id){
+		// $table = "nurse_notes";
+		// $where = "patient_id = ".$patient_id;
+		// $items = "*";
+		// $order = "note_id";
 		
+		$table = "nurse_patient_notes";
+		$where = "visit_id = ".$visit_id." AND patient_id = ".$patient_id;
+		$items = "*";
+		$order = "nurse_notes_id";
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
 		
 		return $result;

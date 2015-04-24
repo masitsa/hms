@@ -47,6 +47,7 @@
 						  <th>School/ Faculty/ Department</th>
 						  <th>Staff/ Student/ID No.</th>
 						  <th>Cash</th>
+						  
 				';
 				
 			foreach($services_query->result() as $service)
@@ -155,6 +156,8 @@
 					
 					//$charges .= '<td>'.$visit_charge.'</td>';
 				}
+
+				// payment value ///
 				
 				//display all debtors
 				if($debtors == 'true' && (($cash - $total_invoiced) > 0))

@@ -54,7 +54,7 @@ class Pharmacy extends auth
 		//if form conatins invalid data
 		if ($this->form_validation->run())
 		{
-			$this->pharmacy_model->save_prescription($visit_id);
+			$this->pharmacy_model->save_prescription($visit_id,$module);
 			if($module == 1){
 				redirect('pharmacy/prescription1/'.$visit_id."/1");
 			}else{
@@ -69,9 +69,11 @@ class Pharmacy extends auth
 		$patient_surname = $patient['patient_surname'];
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
 		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
 		
-		$patient = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
+		$v_data['patient'] = 'Visit Date: <span style="font-weight: normal;"> '.$visit_date.' </span> Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
 		
 		$v_data = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'prescription_id'=>$prescription_id,'module'=>$module,'patient'=>$patient);
 		$data['content'] = $this->load->view('prescription', $v_data, true);
@@ -109,6 +111,44 @@ class Pharmacy extends auth
 		else
 		{
 			if($this->pharmacy_model->update_prescription($visit_id, $visit_charge_id, $prescription_id))
+			{
+				$this->session->set_userdata('success_message', 'Prescription updated successfully');
+			}
+
+			else
+			{
+				$this->session->set_userdata('error_message', 'Could not update the prescription. Please try again');
+			}
+		
+		}
+		if($module == 1){
+			redirect('pharmacy/prescription1/'.$visit_id.'/1');
+			
+		}else{
+			redirect('pharmacy/prescription/'.$visit_id);
+		}
+	}
+	public function dispense_prescription($visit_id, $visit_charge_id, $prescription_id,$module = NULL){
+		$this->form_validation->set_rules('substitution'.$prescription_id, 'Substitution', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('x'.$prescription_id, 'Times Per Day', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('duration'.$prescription_id, 'Duration', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('consumption'.$prescription_id, 'Consumption', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('quantity'.$prescription_id, 'Quantity', 'trim|required|xss_clean');
+
+		if($module == 1)
+		{
+			$this->form_validation->set_rules('units_given'.$prescription_id, 'Units Given', 'trim|required|xss_clean');	
+		}
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->session->set_userdata('error_message', validation_errors());
+		}
+
+		else
+		{
+			if($this->pharmacy_model->dispense_drug($visit_id, $visit_charge_id, $prescription_id))
 			{
 				$this->session->set_userdata('success_message', 'Prescription updated successfully');
 			}
@@ -189,13 +229,28 @@ class Pharmacy extends auth
 		{
 			$where .= $drugs_search;
 		}
-		
+		if($module != 1)
+		{
+			$segment = 4;
+		}
+		else
+		{
+			$segment = 5;
+		}
 		$table = 'drugs, service_charge, generic, brand, class';
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/pharmacy/drugs/'.$visit_id.'/'.$module;
+		if($module != 1)
+		{
+			$config['base_url'] = site_url().'/pharmacy/drugs/'.$visit_id;
+		}
+		else
+		{
+			$config['base_url'] = site_url().'/pharmacy/drugs/'.$visit_id.'/'.$module;
+		}
+		
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
-		$config['uri_segment'] = 5;
+		$config['uri_segment'] = $segment;
 		$config['per_page'] = 15;
 		$config['num_links'] = 5;
 		
@@ -223,7 +278,7 @@ class Pharmacy extends auth
 		$config['num_tag_close'] = '</li>';
 		$this->pagination->initialize($config);
 		
-		$page = ($this->uri->segment(5)) ? $this->uri->segment(5) : 0;
+		$page = ($this->uri->segment($segment)) ? $this->uri->segment($segment) : 0;
         $v_data["links"] = $this->pagination->create_links();
 		$query = $this->pharmacy_model->get_drugs($table, $where, $config["per_page"], $page, $order);
 		

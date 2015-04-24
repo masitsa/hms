@@ -57,6 +57,7 @@ $route['change-password/(:num)/(:any)'] = 'auth/change_password/$1/$2';
 $route['reception/all-patients'] = 'reception/patients';
 $route['reception/all-patients/(:num)'] = 'reception/patients/$1';
 $route['reception/add-patient'] = 'reception/add_patient';
+$route['reception/to-others/(:num)/(:num)'] = 'reception/change_patient_to_others/$1/$2';
 $route['reception/register-other-patient'] = 'reception/register_other_patient';
 $route['reception/register-dependant-patient/(:num)'] = 'reception/register_dependant_patient/$1';
 

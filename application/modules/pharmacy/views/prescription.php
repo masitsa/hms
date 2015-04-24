@@ -697,7 +697,17 @@ $p = 0;
 
 
                             ?>
-                            <?php echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));?>
+                            <?php
+                            	if($module == 1)
+                            	{
+                            		// pharmacy
+                            		 echo form_open('pharmacy/dispense_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
+                            	}
+                            	else
+                            	{
+                            		 echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
+                            	}
+                            ?>
                             <tr>
                                 <td><?php echo $s; ?></td>
                                 <td><?php echo $medicine;?></td>
@@ -734,7 +744,20 @@ $p = 0;
                                      </div>
                                  </td>
                                  <td>
-                                    <input name="update" type="submit" value="Update" class="btn btn-sm btn-warning" />
+                                  <?php
+	                            	if($module == 1)
+	                            	{
+	                            		?>
+	                                    <input name="update" type="submit" value="Update & dispense" class="btn btn-sm btn-warning" />
+	                                    <?php
+                                	}
+                                	else
+                                	{
+                                		?>
+	                                    <input name="update" type="submit" value="Update" class="btn btn-sm btn-warning" />
+	                                    <?php
+                                	}
+                                    ?>
                                     <input type="hidden" name="hidden_id" value="<?php echo $id?>" />
                                     <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
                                  </td>

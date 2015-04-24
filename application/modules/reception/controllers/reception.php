@@ -1458,7 +1458,16 @@ class Reception extends auth
 				$this->session->set_userdata('error_message', 'Unable to update patient type. Please try again');
 			}
 			
-			redirect('reception/visit_list/0');
+			if($this->input->post('visit_type_id') == 1)
+			{
+				// this is a student
+				redirect('reception/students');
+			}
+			else
+			{
+				redirect('reception/staff');
+			}
+			
 		}
 		
 		$v_data['patient'] = $this->reception_model->patient_names2($patient_id);
@@ -1467,6 +1476,24 @@ class Reception extends auth
 		$data['title'] = 'Change Patient Type';
 		
 		$this->load->view('auth/template_sidebar', $data);
+	}
+
+	public function change_patient_to_others($patient_id,$visit_type_idd)
+	{
+		
+		if($this->reception_model->change_patient_type_to_others($patient_id,$visit_type_idd))
+		{
+			$this->session->set_userdata('success_message', 'Patient type updated successfully');
+		}
+		
+		else
+		{
+			$this->session->set_userdata('error_message', 'Unable to update patient type. Please try again');
+		}
+		
+		redirect('reception/all-patients');
+		
+		
 	}
 	
 	public function staff_sbs()

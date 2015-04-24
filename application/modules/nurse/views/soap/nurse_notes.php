@@ -2,7 +2,7 @@
 
 $patient_id = $this->nurse_model->get_patient_id($visit_id);
 
-$get_medical_rs = $this->nurse_model->get_nurse_notes($patient_id);
+$get_medical_rs = $this->nurse_model->get_nurse_notes($patient_id,$visit_id);
 $num_rows = count($get_medical_rs);
 //echo $num_rows;
 echo '<div class="row">

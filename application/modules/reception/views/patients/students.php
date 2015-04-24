@@ -157,6 +157,8 @@
 						<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
 						<td>'.$last_visit.'</td>
 						<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
+						<td><a href="'.site_url().'/reception/to-others/'.$patient_id.'/1" class="btn btn-sm btn-primary">Change to others</a></td>
+
 						<!--<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>-->
 						<!--<td><a href="'.site_url().'edit-patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>-->
 						<!--<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'/4" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>-->

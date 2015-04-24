@@ -47,6 +47,8 @@
                     <div class="col-md-3">
 						<?php
                         	$total_services_revenue = ($total_services_revenue + $debit_notes) - $credit_notes;
+                            $total_searched_revenue = ($total_payments + $debit_notes) - $credit_notes;
+
                         ?>
                         <h5>Revenue Type</h5>
                         <table class="table table-striped table-hover table-condensed">
