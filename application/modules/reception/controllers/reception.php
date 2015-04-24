@@ -765,7 +765,7 @@ class Reception extends auth
 		
 		if($patient_type==4){
 			$this->form_validation->set_rules('patient_insurance_id', 'Insurance Company', 'required');
-			$this->form_validation->set_rules('insurance_id', 'Insurance Number', 'required');
+			$this->form_validation->set_rules('insurance_number', 'Insurance Number', 'required');
 		}
 		
 		if ($this->form_validation->run() == FALSE)
@@ -776,7 +776,7 @@ class Reception extends auth
 		{
 
 			$patient_insurance_id = $this->input->post("patient_insurance_id");
-			$patient_insurance_number = $this->input->post("insurance_id");
+			$patient_insurance_number = $this->input->post("insurance_number");
 
 			
 			//$visit_type = $this->get_visit_type($type_name);
@@ -2114,6 +2114,81 @@ class Reception extends auth
 		$v_data['genders'] = $this->reception_model->get_gender();
 		$v_data['patient'] = $this->reception_model->get_patient_data($patient_id);
 		$data['content'] = $this->load->view('patients/edit_other_patient', $v_data, true);
+		
+		$data['title'] = 'Edit Patients';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+
+	/*
+	*	Edit other patient
+	*
+	*/
+	public function edit_staff($patient_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('phone_number', 'Primary Phone', 'trim|xss_clean');
+		// $this->form_validation->set_rules('patient_phone2', 'Other Phone', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->reception_model->edit_staff_patient($patient_id))
+			{
+				$this->session->set_userdata("success_message","Patient edited successfully");
+				//redirect('reception/patients');
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add patient. Please try again");
+			}
+		}
+		
+		$v_data['relationships'] = $this->reception_model->get_relationship();
+		$v_data['religions'] = $this->reception_model->get_religion();
+		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
+		$v_data['titles'] = $this->reception_model->get_title();
+		$v_data['genders'] = $this->reception_model->get_gender();
+		$v_data['patient'] = $this->reception_model->get_patient_staff_data($patient_id);
+		$data['content'] = $this->load->view('patients/edit_staff', $v_data, true);
+		
+		$data['title'] = 'Edit Patients';
+		$data['sidebar'] = 'reception_sidebar';
+		$this->load->view('auth/template_sidebar', $data);	
+	}
+	/*
+	*	Edit other patient
+	*
+	*/
+	public function edit_student($patient_id)
+	{
+		//form validation rules
+		$this->form_validation->set_rules('phone_number', 'Primary Phone', 'trim|xss_clean');
+		// $this->form_validation->set_rules('patient_phone2', 'Other Phone', 'trim|xss_clean');
+		
+		//if form conatins invalid data
+		if ($this->form_validation->run())
+		{
+			if($this->reception_model->edit_student_patient($patient_id))
+			{
+				$this->session->set_userdata("success_message","Patient edited successfully");
+				//redirect('reception/patients');
+			}
+			
+			else
+			{
+				$this->session->set_userdata("error_message","Could not add patient. Please try again");
+			}
+		}
+		
+		$v_data['relationships'] = $this->reception_model->get_relationship();
+		$v_data['religions'] = $this->reception_model->get_religion();
+		$v_data['civil_statuses'] = $this->reception_model->get_civil_status();
+		$v_data['titles'] = $this->reception_model->get_title();
+		$v_data['genders'] = $this->reception_model->get_gender();
+		$v_data['patient'] = $this->reception_model->get_patient_student_data($patient_id);
+		$data['content'] = $this->load->view('patients/edit_student', $v_data, true);
 		
 		$data['title'] = 'Edit Patients';
 		$data['sidebar'] = 'reception_sidebar';

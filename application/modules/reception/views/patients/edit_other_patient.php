@@ -315,7 +315,7 @@ if(!empty($validation_error))
             <label class="col-lg-4 control-label">Next of Kin Other Names: </label>
             
             <div class="col-lg-8">
-            	<input type="text" class="form-control" name="patient_kin_othernames" placeholder="Kin Other Names" value="<?php echo $patient_kin_sname;?>">
+            	<input type="text" class="form-control" name="patient_kin_othernames" placeholder="Kin Other Names" value="<?php echo $patient_kin_othernames;?>">
             </div>
         </div>
         <div class="form-group">

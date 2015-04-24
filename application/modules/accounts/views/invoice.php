@@ -222,14 +222,14 @@ $debit_note_amount = $this->accounts_model->get_sum_debit_notes($visit_id);
             	Served by: <?php echo $served_by;?> 
             </div>
             <div class="col-md-4 pull-left">
-              Signature by: ...................................................
+              Signature by: .....................................
             </div>
             <div class="col-md-4 pull-left">
-              Patient Signature : ..............................................
+              Patient Signature : ................................
             </div>
           </div>
         	<div class="col-md-4 pull-right">
-            	<?php echo $today; ?> Thank you
+            	<?php echo $visit_date; ?> Thank you
             </div>
         </div>
     </body>
