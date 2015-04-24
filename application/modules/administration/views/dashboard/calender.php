@@ -52,8 +52,8 @@ $(document).ready(function() {
 			data_array.title = data_title;
 			data_array.start = data_start;
 			data_array.end = data_end;
-			data_array.backgroundColor = data_backgroundColor;
-			data_array.borderColor = data_borderColor;
+			//data_array.backgroundColor = data_backgroundColor;
+			//data_array.borderColor = data_borderColor;
 			data_array.allDay = data_allDay;
 			data_array.url = data_url;
 			//console.log(data_array);
