@@ -514,6 +514,7 @@ $p = 0;
                                 if($module == 1)
                                 {
                                 	?>
+                                	 <th>S. Units:</th>
                                 	 <th>Unit Price:</th>
                                 	  <th>Total:</th>
                                 	  <th>Units given:</th>
@@ -535,6 +536,7 @@ $p = 0;
                                 <th>Delete </th>
                                
                                 <th></th>
+                                 <th></th>
                             </tr>
                            <?php 
                            $rs = $this->pharmacy_model->select_prescription($visit_id);
@@ -560,6 +562,15 @@ $p = 0;
                                 $visit_charge_id = $key_rs->visit_charge_id;
                                 $number_of_days = $key_rs->number_of_days;
                                 $units_given = $key_rs->units_given;
+                                $checker_id = $key_rs->checker_id;
+
+
+                                // checking for the stocks in drugs
+                                  $purchases = $this->pharmacy_model->item_purchases($checker_id);
+	                                $sales = $this->pharmacy_model->get_drug_units_sold($checker_id);
+	                                $deductions = $this->pharmacy_model->item_deductions($checker_id);
+	                                $in_stock = ($quantity + $purchases) - $sales - $deductions;
+                                // end of checking stocks
                                 
                                 $substitution = "<select name='substitution".$id."' class='form-control'>";
                                 if($sub == "No"){
@@ -686,14 +697,26 @@ $p = 0;
 
 
                             ?>
-                            <?php echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));?>
+                            <?php
+                            	if($module == 1)
+                            	{
+                            		// pharmacy
+                            		 echo form_open('pharmacy/dispense_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
+                            	}
+                            	else
+                            	{
+                            		 echo form_open('pharmacy/update_prescription/'.$visit_id.'/'.$visit_charge_id.'/'.$id.'/'.$module, array("class" => "form-horizontal"));
+                            	}
+                            ?>
                             <tr>
                                 <td><?php echo $s; ?></td>
                                 <td><?php echo $medicine;?></td>
+                               
                                 <?php
                                 if($module == 1)
                                 {
                                 	?>
+                                		<td><?php echo $in_stock;?></td>
                                 		<td><?php echo $charge;?></td>
                                 		<td><?php echo $amoun;?></td>
                                 		<td><input type="text" name="units_given<?php echo $id?>" class='form-control' id="units_given<?php echo $id?>" required="required" placeholder="units given" value="<?php echo $sum_units; ?>"  /></td>
@@ -721,7 +744,20 @@ $p = 0;
                                      </div>
                                  </td>
                                  <td>
-                                    <input name="update" type="submit" value="Update" class="btn btn-sm btn-warning" />
+                                  <?php
+	                            	if($module == 1)
+	                            	{
+	                            		?>
+	                                    <input name="update" type="submit" value="Update & dispense" class="btn btn-sm btn-warning" />
+	                                    <?php
+                                	}
+                                	else
+                                	{
+                                		?>
+	                                    <input name="update" type="submit" value="Update" class="btn btn-sm btn-warning" />
+	                                    <?php
+                                	}
+                                    ?>
                                     <input type="hidden" name="hidden_id" value="<?php echo $id?>" />
                                     <input type="hidden" name="v_id" value="<?php echo $visit_id;?>"/>
                                  </td>

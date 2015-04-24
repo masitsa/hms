@@ -253,17 +253,44 @@ class Laboratory extends auth
 
 	}
 
-	public function delete_cost($visit_charge_id, $visit_id)
+	public function delete_cost($service_charge_id, $visit_id)
 	{
-		$this->lab_model->delete_cost($visit_charge_id);
+		$this->lab_model->delete_visit_lab_test($service_charge_id,$visit_id);
 		
 		//$this->laboratory_list(0, $visit_id);
 		$this->test_lab($visit_id);
+	}
+	public function remove_cost($visit_charge_id, $visit_id)
+	{
+		$this->lab_model->delete_cost($visit_charge_id);
+
+		redirect("laboratory/test/".$visit_id);
+	}
+	public function add_lab_cost($service_charge_id,$visit_id)
+	{
+		if($this->lab_model->save_lab_visit($visit_id,$service_charge_id))
+		{
+			redirect("laboratory/test/".$visit_id);
+		}
+		else
+		{
+			redirect("laboratory/test/".$visit_id);
+		}
 	}
 
 	public function test_lab($visit_id, $service_charge_id=NULL){
 		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
 		$this->load->view('test_lab', $data);
+	}
+	public function remove_lab_test($service_charge_id,$visit_id)
+	{
+		$this->lab_model->delete_visit_lab_test($service_charge_id,$visit_id);
+		redirect("laboratory/test/".$visit_id);
+	}
+
+	public function confirm_lab_test_charge($visit_id, $service_charge_id=NULL){
+		$data = array('service_charge_id' => $service_charge_id, 'visit_id' => $visit_id);
+		$this->load->view('confirm_test_lab', $data);
 	}
 
 	public function save_result($id,$result,$visit_id)
@@ -470,7 +497,7 @@ class Laboratory extends auth
 		 $next_name ="";  $test_format=""; $lab_test_name=""; $fill="";
 		if($num_lab_visit > 0){
 			foreach ($lab_rs as $key_lab){
-				$visit_charge_id = $key_lab->visit_charge_id;
+				$visit_charge_id = $key_lab->visit_lab_test_id;
 				
 				$rsy2 = $this->lab_model->get_test_comment($visit_charge_id);
 				$num_rowsy2 = count($rsy2);

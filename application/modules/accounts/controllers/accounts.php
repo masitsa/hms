@@ -286,7 +286,7 @@ class Accounts extends auth
 		if(!empty($visit_search))
 		{
 			$where .= $visit_search;
-			$segment = 4;
+			$segment = 3;
 		}
 		//pagination
 		$this->load->library('pagination');
@@ -368,7 +368,10 @@ class Accounts extends auth
 		$patient_type = $patient['patient_type'];
 		$patient_othernames = $patient['patient_othernames'];
 		$patient_surname = $patient['patient_surname'];
-		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
+		$account_balance = $patient['account_balance'];
+		$primary_key = $patient['patient_id'];
+
+		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span> Account Balance : <span style="font-weight: normal;">'.$account_balance.'</span> <a href="'.site_url().'/administration/individual_statement/'.$primary_key.'/3" class="btn btn-sm btn-primary" target="_blank" style="margin-top: 5px;">Patient Statement</a>';
 		$v_data['close_page'] = $close_page;
 		$data['content'] = $this->load->view('payments', $v_data, true);
 		

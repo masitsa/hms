@@ -71,15 +71,25 @@ class Pharmacy_model extends CI_Model
 
 	function select_prescription($visit_id)
 	{		
-		$table = "pres, drugs, drug_times, drug_duration, drug_consumption, visit_charge, service_charge";
+		// $table = "pres, drugs, drug_times, drug_duration, drug_consumption, visit_charge, service_charge";
+		// $where = "service_charge.service_charge_id = pres.service_charge_id 
+		// 				AND service_charge.drug_id = drugs.drugs_id
+		// 				AND pres.drug_times_id = drug_times.drug_times_id 
+		// 				AND pres.drug_duration_id = drug_duration.drug_duration_id
+		// 				AND pres.drug_consumption_id = drug_consumption.drug_consumption_id
+		// 				AND pres.visit_charge_id = visit_charge.visit_charge_id
+		// 				 AND visit_charge.visit_id = ". $visit_id;
+		// $items = "drugs.drugs_id AS checker_id,visit_charge.visit_charge_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
+		// $order = "`drugs`.drugs_id";
+
+		$table = "pres, drugs, drug_times, drug_duration, drug_consumption, service_charge";
 		$where = "service_charge.service_charge_id = pres.service_charge_id 
 						AND service_charge.drug_id = drugs.drugs_id
 						AND pres.drug_times_id = drug_times.drug_times_id 
 						AND pres.drug_duration_id = drug_duration.drug_duration_id
 						AND pres.drug_consumption_id = drug_consumption.drug_consumption_id
-						AND pres.visit_charge_id = visit_charge.visit_charge_id
-						 AND visit_charge.visit_id = ". $visit_id;
-		$items = "visit_charge.visit_charge_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
+						 AND pres.visit_id = ". $visit_id;
+		$items = "drugs.drugs_id AS checker_id, service_charge.service_charge_name AS drugs_name,service_charge.service_charge_amount  AS drugs_charge , drug_duration.drug_duration_name, pres.prescription_substitution, pres.prescription_id,pres.units_given, pres.visit_charge_id,pres.prescription_startdate, pres.prescription_finishdate, drug_times.drug_times_name, pres.prescription_startdate, pres.prescription_finishdate, pres.service_charge_id AS drugs_id, pres.prescription_substitution, drug_duration.drug_duration_name, pres.prescription_quantity, drug_consumption.drug_consumption_name, pres.number_of_days";
 		$order = "`drugs`.drugs_id";
 
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -196,7 +206,7 @@ class Pharmacy_model extends CI_Model
 		return $query;
 	}
 	
-	public function save_prescription($visit_id)
+	public function save_prescription($visit_id,$module)
 	{
 		$varpassed_value = $_POST['passed_value'];
 		if(isset($_POST['substitution'])){
@@ -212,21 +222,26 @@ class Pharmacy_model extends CI_Model
 		$time = date("H:i:s");
 		$service_charge_id = $this->input->post('service_charge_id');
 		//  insert into visit charge 
-		$amount_rs  = $this->get_service_charge_amount($service_charge_id);
 
-		foreach ($amount_rs as $key_amount):
-			# code...
-			$visit_charge_amount = $key_amount->service_charge_amount;
-		endforeach;
-		$visit_charge_qty = $this->input->post('quantity');
-
-		$array = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$visit_charge_amount,'date'=>$date,'time'=>$time,'visit_charge_qty'=>$visit_charge_qty,'created_by'=>$this->session->userdata("personnel_id"));
-		if($this->db->insert('visit_charge', $array))
+		if($module != NULL)
 		{
-			$visit_charge_id = $this->db->insert_id();
-		}
-		else{
-			return FALSE;
+			$amount_rs  = $this->get_service_charge_amount($service_charge_id);
+
+			foreach ($amount_rs as $key_amount):
+				# code...
+				$visit_charge_amount = $key_amount->service_charge_amount;
+			endforeach;
+
+			$visit_charge_qty = $this->input->post('quantity');
+
+			$array = array('visit_id'=>$visit_id,'service_charge_id'=>$service_charge_id,'visit_charge_amount'=>$visit_charge_amount,'date'=>$date,'time'=>$time,'visit_charge_qty'=>$visit_charge_qty,'created_by'=>$this->session->userdata("personnel_id"));
+			if($this->db->insert('visit_charge', $array))
+			{
+				$visit_charge_id = $this->db->insert_id();
+			}
+			else{
+				return FALSE;
+			}
 		}
 
 		$rs = $this->get_visit_charge_id($visit_id, $date, $time);
@@ -238,7 +253,8 @@ class Pharmacy_model extends CI_Model
 			'prescription_startdate'=>$date,
 			'prescription_finishdate'=>$this->input->post('finishdate'),
 			'drug_times_id'=>$this->input->post('x'),
-			'visit_charge_id'=>$visit_charge_id,
+			// 'visit_charge_id'=>$visit_charge_id,
+			'visit_id'=>$visit_id,
 			'drug_duration_id'=>$this->input->post('duration'),
 			'drug_consumption_id'=>$this->input->post('consumption'),
 			'prescription_quantity'=>$this->input->post('quantity'),
@@ -265,19 +281,6 @@ class Pharmacy_model extends CI_Model
 		}
 		$date = date("Y-m-d"); 
 		$time = date("H:i:s");
-		
-		$visit_charge_qty = $this->input->post('quantity'.$prescription_id);
-		$visit_charge_units = $this->input->post('units_given'.$prescription_id);
-
-		$array = array('visit_charge_qty'=>$visit_charge_qty,'visit_charge_units'=>$visit_charge_units,'modified_by'=>$this->session->userdata("personnel_id"),'date_modified'=>date("Y-m-d"));
-		$this->db->where('visit_charge_id', $visit_charge_id);
-		if($this->db->update('visit_charge', $array))
-		{
-			//$visit_charge_id = $this->db->insert_id();
-		}
-		else{
-			return FALSE;
-		}
 
 		$data2 = array(
 			'prescription_substitution'=>$varsubstitution,
@@ -286,6 +289,137 @@ class Pharmacy_model extends CI_Model
 			'drug_duration_id'=>$this->input->post('duration'.$prescription_id),
 			'drug_consumption_id'=>$this->input->post('consumption'.$prescription_id),
 			'units_given'=>$this->input->post('units_given'.$prescription_id),
+			'prescription_quantity'=>$this->input->post('quantity'.$prescription_id)
+		);
+		
+		$this->db->where('prescription_id', $prescription_id);
+		if($this->db->update('pres', $data2))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function get_prescribed_drug($prescription_id,$visit_id)
+	{
+		$table = "pres,service_charge";
+		$where = "pres.visit_id = ".$visit_id." AND service_charge.service_charge_id = pres.service_charge_id AND pres.prescription_id = ".$prescription_id;
+		$items = "*";
+		$order = "pres.prescription_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+	}
+	public function check_id_drugs_invoiced($service_charge_id,$visit_id)
+	{
+		$table = "visit_charge";
+		$where = "visit_id = ".$visit_id." AND service_charge_id = ".$service_charge_id;
+		$items = "*";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+
+		return $result;
+	}
+	public function dispense_drug($visit_id, $visit_charge_id, $prescription_id)
+	{
+		//$varpassed_value = $_POST['passed_value'];
+		$varsubstitution = $_POST['substitution'.$prescription_id];
+		
+		if(empty($varsubstitution)){
+			$varsubstitution = "No";
+		}
+		$date = date("Y-m-d"); 
+		$time = date("H:i:s");
+		
+		$visit_charge_qty = $this->input->post('quantity'.$prescription_id);
+		$visit_charge_units = $this->input->post('units_given'.$prescription_id);
+
+		// check if this drug 
+		$result = $this->get_prescribed_drug($prescription_id,$visit_id);
+		$num_rows = count($result);
+		if($num_rows > 0){
+			foreach($result as $key):
+				$service_charge_id = $key->service_charge_id;
+				$prescription_quantity = $key->prescription_quantity;
+				$visit_id = $key->visit_id;
+				$drug_consumption_id = $key->drug_consumption_id;
+				$drug_times_id = $key->drug_times_id;
+				$drug_duration_id = $key->drug_duration_id;
+				$service_charge_amount = $key->service_charge_amount;
+			endforeach;
+
+			// check if the drug exisit in the table of visit charge
+			$check = $this->check_id_drugs_invoiced($service_charge_id,$visit_id);
+			// end of checking
+			$check_num_rows = count($check);
+
+			if($check_num_rows > 0){
+				foreach($check as $key2):
+				$visit_charge_id = $key2->visit_charge_id;
+				endforeach;
+				// if it exisit then update
+				$array = array('visit_charge_qty'=>$visit_charge_qty,
+							'visit_charge_units'=>$visit_charge_units,
+							'created_by'=>$this->session->userdata("personnel_id"),
+							'modified_by'=>$this->session->userdata("personnel_id"),
+							'visit_id'=>$visit_id,
+							'date_modified'=>date("Y-m-d")
+							);
+				$this->db->where('visit_charge_id',$visit_charge_id);
+				if($this->db->update('visit_charge', $array))
+				{
+					// $visit_charge_id = $this->db->insert_id();
+					return TRUE;
+				}
+				else{
+					return FALSE;
+				}
+			}
+			else
+			{
+				// else insert
+				$array = array(
+							'service_charge_id'=>$service_charge_id,
+							'visit_charge_qty'=>$visit_charge_qty,
+							'visit_charge_amount'=>$service_charge_amount,
+							'visit_charge_units'=>$visit_charge_units,
+							'created_by'=>$this->session->userdata("personnel_id"),
+							'modified_by'=>$this->session->userdata("personnel_id"),
+							'visit_id'=>$visit_id,
+							'date_modified'=>date("Y-m-d")
+							);
+			
+				if($this->db->insert('visit_charge', $array))
+				{
+					$visit_charge_id = $this->db->insert_id();
+				}
+				else{
+					return FALSE;
+				}
+			}
+
+
+
+			
+		}
+		else
+		{
+			
+		}
+
+			
+
+		$data2 = array(
+			'prescription_substitution'=>$varsubstitution,
+			'prescription_finishdate'=>$this->input->post('finishdate'.$prescription_id),
+			'drug_times_id'=>$this->input->post('x'.$prescription_id),
+			'drug_duration_id'=>$this->input->post('duration'.$prescription_id),
+			'drug_consumption_id'=>$this->input->post('consumption'.$prescription_id),
+			'units_given'=>$this->input->post('units_given'.$prescription_id),
+			'visit_charge_id'=>$visit_charge_id,
 			'prescription_quantity'=>$this->input->post('quantity'.$prescription_id)
 		);
 		

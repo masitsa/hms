@@ -26,7 +26,7 @@
 		$result = '<a href="'.site_url().'/administration/reports/export_transactions" class="btn btn-success pull-right">Export</a>';
 		if(!empty($search))
 		{
-			echo '<a href="'.site_url().'/administration/reports/close_search" class="btn btn-warning">Close Search</a>';
+			echo '<a href="'.site_url().'/administration/reports/close_search/'.$module.'" class="btn btn-warning">Close Search</a>';
 		}
 		
 		//if users exist display them
@@ -47,6 +47,7 @@
 						  <th>School/ Faculty/ Department</th>
 						  <th>Staff/ Student/ID No.</th>
 						  <th>Cash</th>
+						  
 				';
 				
 			foreach($services_query->result() as $service)
@@ -155,6 +156,8 @@
 					
 					//$charges .= '<td>'.$visit_charge.'</td>';
 				}
+
+				// payment value ///
 				
 				//display all debtors
 				if($debtors == 'true' && (($cash - $total_invoiced) > 0))

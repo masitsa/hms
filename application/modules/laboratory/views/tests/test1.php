@@ -67,7 +67,14 @@ if(!empty($coming_from)){
 		";
 		foreach ($lab_rs as $key):
 			
-			$visit_charge_id = $key->visit_charge_id;
+			$visit_charge_id = $key->visit_lab_test_id;
+
+			// get invoiced charge for this test
+				// parameters
+					$service_charge_id = $key->service_charge_id;
+				// defined parameters
+					 $actual_visit_charge = $this->lab_model->check_visit_charge_lab_test($service_charge_id,$visit_id);
+			// end of geting the actual charge id
 		
 			$format_rs = $this->lab_model->get_lab_visit_result($visit_charge_id);
 			$num_format = count($format_rs);

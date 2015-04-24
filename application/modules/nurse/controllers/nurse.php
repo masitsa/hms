@@ -162,9 +162,11 @@ class Nurse extends auth
 		$patient_surname = $patient['patient_surname'];
 		$patient_date_of_birth = $patient['patient_date_of_birth'];
 		$age = $this->reception_model->calculate_age($patient_date_of_birth);
+		$visit_date = $this->reception_model->get_visit_date($visit_id);
 		$gender = $patient['gender'];
+		$visit_date = date('jS M Y',strtotime($visit_date));
 		
-		$v_data['patient'] = 'Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
+		$v_data['patient'] = 'Visit Date: <span style="font-weight: normal;"> '.$visit_date.' </span> Surname: <span style="font-weight: normal;">'.$patient_surname.'</span> Othernames: <span style="font-weight: normal;">'.$patient_othernames.'</span> Age: <span style="font-weight: normal;">'.$age.'</span> Gender: <span style="font-weight: normal;">'.$gender.'</span> Patient Type: <span style="font-weight: normal;">'.$visit_type.'</span>';
 		$v_data['module'] = $module;
 		$v_data['mike'] = $mike;
 		$v_data['visit_id'] = $visit_id;
@@ -306,7 +308,7 @@ class Nurse extends auth
 	{
 		$notes=$this->input->post('notes');
 		$patient_id = $this->nurse_model->get_patient_id($visit_id);
-		$rs = $this->nurse_model->get_nurse_notes($patient_id);
+		$rs = $this->nurse_model->get_nurse_notes($patient_id,$visit_id);
 		$num_nurse_notes = count($rs);
 		$visit_data = array(
         		"patient_id" => $patient_id,

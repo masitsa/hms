@@ -248,7 +248,7 @@ class Accounts_model extends CI_Model
 	{
 		$table = "visit_charge, service_charge,service";
 		$where = "service_charge.service_id = service.service_id AND visit_charge.visit_charge_delete = 0 AND visit_charge.service_charge_id = service_charge.service_charge_id AND visit_charge.visit_id =". $visit_id;
-		$items = "service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, service_charge.service_id,visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by";
+		$items = "service.service_id,service.service_name,service_charge.service_charge_name,visit_charge.service_charge_id,visit_charge.visit_charge_units, visit_charge.visit_charge_amount, service_charge.service_id,visit_charge.visit_charge_timestamp,visit_charge.visit_charge_id,visit_charge.created_by";
 		$order = "visit_charge.service_charge_id";
 		
 		$result = $this->database->select_entries_where($table, $where, $items, $order);
@@ -269,6 +269,49 @@ class Accounts_model extends CI_Model
 		return $result;
 
 	}
+
+	public function total_debit_note_per_service($service_id,$visit_id){
+		$table = "payments,payment_method";
+		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.payment_type = 2 AND payments.payment_service_id = ".$service_id." AND payments.visit_id =". $visit_id;
+		$items = "SUM(amount_paid) AS total_debit";
+		$order = "payments.payment_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		$total_debit = 0;
+		 if(count($result) > 0){
+		 	foreach ($result as $key_items):
+		 		$total_debit = $key_items->total_debit;
+		    endforeach;
+		 }
+		 else
+		 {
+		 	$total_debit = 0;
+		 }
+		 return $total_debit;
+	}
+
+	public function total_credit_note_per_service($service_id,$visit_id){
+
+		$table = "payments,payment_method";
+		$where = "payment_method.payment_method_id = payments.payment_method_id AND payments.payment_type = 3 AND payments.payment_service_id = ".$service_id." AND payments.visit_id =". $visit_id;
+		$items = "SUM(amount_paid) AS total_credit";
+		$order = "payments.payment_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		$total_credit = 0;
+		 if(count($result) > 0){
+		 	foreach ($result as $key_items):
+		 		$total_credit = $key_items->total_credit;
+		    endforeach;
+		 }
+		 else
+		 {
+		 	$total_credit = 0;
+		 }
+		 return $total_credit;
+	}
+
+
 
 	public function payments($visit_id){
 		$table = "payments,payment_method";

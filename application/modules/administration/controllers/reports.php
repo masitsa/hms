@@ -13,7 +13,7 @@ class Reports extends auth
 		$this->load->model('accounts/accounts_model');
 	}
 	
-	public function cash_report()
+	public function cash_report($module = NULL)
 	{
 		$search = ' AND payments.visit_id = visit.visit_id AND payments.payment_type = 1';
 		$table = ', payments';
@@ -23,10 +23,10 @@ class Reports extends auth
 		$this->session->set_userdata('debtors', 'false');
 		$this->session->set_userdata('page_title', 'Cash Report');
 		
-		$this->all_transactions();
+		$this->all_transactions($module);
 	}
 	
-	public function all_reports()
+	public function all_reports($module = NULL)
 	{
 		$this->session->unset_userdata('all_transactions_search');
 		$this->session->unset_userdata('all_transactions_tables');
@@ -34,7 +34,7 @@ class Reports extends auth
 		$this->session->set_userdata('debtors', 'false2');
 		$this->session->set_userdata('page_title', 'All Transactions');
 		
-		$this->all_transactions();
+		$this->all_transactions($module);
 	}
 	
 	public function time_reports()
@@ -47,7 +47,7 @@ class Reports extends auth
 		$this->all_time_reports();
 	}
 	
-	public function debtors_report()
+	public function debtors_report($module = NULL)
 	{
 		$this->session->unset_userdata('all_transactions_search');
 		$this->session->unset_userdata('all_transactions_tables');
@@ -55,10 +55,10 @@ class Reports extends auth
 		
 		$this->session->set_userdata('debtors', 'true');
 		
-		$this->all_transactions();
+		$this->all_transactions($module);
 	}
 	
-	public function all_transactions()
+	public function all_transactions($module = NULL)
 	{
 		$where = 'visit.patient_id = patients.patient_id ';
 		$table = 'visit, patients';
@@ -74,11 +74,19 @@ class Reports extends auth
 				$table .= $table_search;
 			}
 		}
-		$segment = 4;
+		if($module == NULL)
+		{
+			$segment = 4;
+		}
+		else
+		{
+			$segment = 5;	
+		}
+		
 		
 		//pagination
 		$this->load->library('pagination');
-		$config['base_url'] = site_url().'/administration/reports/all_transactions';
+		$config['base_url'] = site_url().'/administration/reports/all_transactions/'.$module;
 		$config['total_rows'] = $this->reception_model->count_items($table, $where);
 		$config['uri_segment'] = $segment;
 		$config['per_page'] = 20;
@@ -117,7 +125,7 @@ class Reports extends auth
 		$v_data['search'] = $visit_search;
 		$v_data['total_patients'] = $config['total_rows'];
 		$v_data['total_services_revenue'] = $this->reports_model->get_total_services_revenue($where, $table);
-		
+		$v_data['total_payments'] = $this->reports_model->get_total_cash_collection($where, $table);
 		//total students debt
 		$where2 = $where.' AND visit.visit_type = 1';
 		$total_students_debt = $this->reports_model->get_total_services_revenue($where2, $table);
@@ -202,17 +210,30 @@ class Reports extends auth
 		$v_data['services_query'] = $this->reports_model->get_all_active_services();
 		$v_data['type'] = $this->reception_model->get_types();
 		$v_data['doctors'] = $this->reception_model->get_doctor();
+		$v_data['module'] = $module;
 		
 		$data['content'] = $this->load->view('reports/all_transactions', $v_data, true);
 		
+		if($module == "accounts")
+		{
+			$data['sidebar'] = 'accounts_sidebar';
+
+		}
+		else if($module == NULL)
+		{
+			$data['sidebar'] = 'admin_sidebar';
+		}
+		else
+		{
+			$data['sidebar'] = 'accounts_sidebar';
+		}
 		
-		$data['sidebar'] = 'admin_sidebar';
 		
 		
 		$this->load->view('auth/template_sidebar', $data);
 	}
 	
-	public function search_transactions()
+	public function search_transactions($module = NULL)
 	{
 		$visit_type_id = $this->input->post('visit_type_id');
 		$strath_no = $this->input->post('strath_no');
@@ -290,12 +311,16 @@ class Reports extends auth
 		$this->session->set_userdata('all_transactions_search', $search);
 		$this->session->set_userdata('search_title', $search_title);
 		
-		$this->all_transactions();
+		$this->all_transactions($module);
 	}
 	
 	public function export_transactions()
 	{
 		$this->reports_model->export_transactions();
+	}
+	public function export_time_report()
+	{
+		$this->reports_model->export_time_report();
 	}
 	
 	public function close_search()

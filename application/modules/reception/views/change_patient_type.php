@@ -1,11 +1,16 @@
 <div class="row">
     <div class="col-md-12">
+              <a href="<?php echo site_url();?>/reception/all-patients" class="btn btn-sm btn-primary pull-left">Back to patients lists</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
 
       <!-- Widget -->
       <div class="widget boxed">
         <!-- Widget head -->
         <div class="widget-head">
-          <h4 class="pull-left"><i class="icon-reorder"></i>Change patient type for <?php echo $patient;?></h4>
+          <h4 class="pull-left"><i class="icon-reorder"></i>Change patient type for <?php echo $patient['patient_surname']." ".$patient['patient_othernames'];?></h4>
           <div class="widget-icons pull-right">
             <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
             <a href="#" class="wclose"><i class="icon-remove"></i></a>

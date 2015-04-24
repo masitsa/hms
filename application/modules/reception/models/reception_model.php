@@ -1183,7 +1183,168 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
+	public function get_visit_date($visit_id)
+	{
+		$table = "visit";
+		$where = "visit_id = ".$visit_id;
+		$items = "visit_date";
+		$order = "visit_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		$num_rows = count($result);
+		if($num_rows > 0){
+			foreach($result as $key):
+				$visit_date = $key->visit_date;
+			endforeach;
+			return $visit_date;
+		}
+		else
+		{
+			return "None";
+		}
+	}
+	public function change_patient_type_to_others($patient_id,$visit_type_idd)
+	{
+		
+		//  get the details
+
+		if($visit_type_idd == 1)
+		{
+			// get student details from students table
+			$student_rs = $this->get_student_details($patient_id);
+			$num_rows = count($student_rs);
+			
+			if($num_rows > 0){
+				foreach($student_rs as $key):
+					$student_number = $key->student_Number;
+					$Surname = $key->Surname;
+					$Other_names = $key->Other_names;
+					$DOB = $key->DOB;
+					$contact = $key->contact;
+					$gender = $key->gender;
+					$GUARDIAN_NAME = $key->GUARDIAN_NAME;
+				endforeach;
+
+				if($gender == "Male")
+				{
+					$gender_id = 1;
+				}
+				else
+				{
+					$gender_id = 2;
+				}
+				
+				$data = array
+				(
+					"visit_type_id" => 3,
+					"strath_no" => $student_number,
+					"patient_surname" => $Surname,
+					"patient_othernames" => $Other_names,
+					"patient_date_of_birth" => $DOB,
+					"patient_phone1" => $contact,
+					"gender_id" => $gender_id,
+					"patient_kin_sname" => $GUARDIAN_NAME,
+					"modified_by " => $this->session->userdata('personnel_id')
+
+
+				);
+				
+				$this->db->where('patient_id', $patient_id);
+				if($this->db->update('patients', $data))
+				{
+					return TRUE;
+				}
+				
+				else
+				{
+					return FALSE;
+				}
+			}else{
+				return FALSE;
+			}
+			
+
+		}
+		else
+		{
+			// get student details from students table
+			$staff_rs = $this->get_staff_details($patient_id);
+			$num_rows = count($staff_rs);
+			
+			if($num_rows > 0){
+				foreach($staff_rs as $key):
+					$Staff_Number = $key->Staff_Number;
+					$Surname = $key->Surname;
+					$Other_names = $key->Other_names;
+					$DOB = $key->DOB;
+					$contact = $key->contact;
+					$gender = $key->gender;
+				endforeach;
+
+				if($gender == "M")
+				{
+					$gender_id = 1;
+				}
+				else
+				{
+					$gender_id = 2;
+				}
+				
+				$data = array
+				(
+					"visit_type_id" => 3,
+					"strath_no" => $Staff_Number,
+					"patient_surname" => $Surname,
+					"patient_othernames" => $Other_names,
+					"patient_date_of_birth" => $DOB,
+					"patient_phone1" => $contact,
+					"gender_id" => $gender_id,
+					"modified_by " => $this->session->userdata('personnel_id')
+
+
+				);
+				
+				$this->db->where('patient_id', $patient_id);
+				if($this->db->update('patients', $data))
+				{
+					return TRUE;
+				}
+				
+				else
+				{
+					return FALSE;
+				}
+			}else{
+				return FALSE;
+			}
+		}
+
+	}
+
+	public function get_student_details($patient_id)
+	{
+		$table = "patients,student";
+		$where = "patients.patient_id = ".$patient_id." AND patients.strath_no = student.student_Number";
+		$items = "student.Surname,student.Other_names,student.DOB,student.contact,student.gender,student.GUARDIAN_NAME,student.student_Number";
+		$order = "student.student_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
 	
+	}
+	public function get_staff_details($patient_id)
+	{
+		$table = "patients,staff";
+		$where = "patients.patient_id = ".$patient_id." AND patients.strath_no = staff.Staff_Number";
+		$items = "staff.Surname,staff.Other_names,staff.DOB,staff.contact,staff.gender,staff.Staff_Number";
+		$order = "staff.staff_id";
+		
+		$result = $this->database->select_entries_where($table, $where, $items, $order);
+		
+		return $result;
+	
+	}
 	public function change_patient_type($patient_id)
 	{
 	

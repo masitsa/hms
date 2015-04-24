@@ -39,6 +39,8 @@ $visit__rs1 = $this->nurse_model->get_visit_procedure_charges($visit_id);
 
 
 echo "
+	<div class='navbar-inner'><p style='text-align:center; color:#0e0efe;'><input type='button' class='btn btn-primary' value='Add Procedure' onclick='myPopup3(".$visit_id.")'/></p></div>
+
 	<table align='center' class='table table-striped table-hover table-condensed'>
 	<tr>
 		<th></th>

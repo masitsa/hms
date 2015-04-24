@@ -10,7 +10,7 @@ class Strathmore_population extends CI_Model
 	*/
 
 	public function get_ams_student($student_id = NULL){
-        $conn = oci_connect('AMS_QUERIES','Sh!iuD_6eiqu_8ch','//192.168.170.52:1521/orcl');
+        $conn = oci_connect('AMS_QUERIES','Oo_Hecha1_rohm3','//192.168.170.171:1522/ACADEMIC');
 		if (!$conn) {
 			$e = oci_error();
 			trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
@@ -23,7 +23,7 @@ class Strathmore_population extends CI_Model
 			
 			else
 			{
-				$sql = "SELECT * FROM GAOWNER.VIEW_STUDENT_DETAILS WHERE STUDENT_NO='$student_id'";
+				$sql = 'SELECT * FROM GAOWNER.VIEW_STUDENT_DETAILS WHERE STUDENT_NO LIKE \'%'.$student_id.'%\'';
 			}
 		
 			$rs4 = oci_parse($conn, $sql);
@@ -169,7 +169,7 @@ class Strathmore_population extends CI_Model
 		if($staff_number != NULL)
 		{
 			
-			 $sql1 = "select 
+			 $sql1 = 'select 
 			`hs_hr_employee`.`emp_number` AS `staff_system_id`,
 			`hs_hr_employee`.`employee_id` AS `staff_no`,
 			`hs_hr_employee`.`emp_lastname` AS `emp_lastname`,
@@ -182,7 +182,7 @@ class Strathmore_population extends CI_Model
 			`ohrm_subunit`.`name` AS `department`,
 			`ohrm_nationality`.`name` AS `nationality`,
 			`hs_hr_employee`.`emp_work_email` AS `emp_work_email`
-			 from ((`hs_hr_employee` join `ohrm_subunit` on((`ohrm_subunit`.`id` = `hs_hr_employee`.`work_station`))) join `ohrm_nationality` on((`ohrm_nationality`.`id` = `hs_hr_employee`.`nation_code`))) where isnull(`hs_hr_employee`.`termination_id`) AND hs_hr_employee.employee_id = '$staff_number' ORDER BY hs_hr_employee.emp_number ASC";
+			 from ((`hs_hr_employee` join `ohrm_subunit` on((`ohrm_subunit`.`id` = `hs_hr_employee`.`work_station`))) join `ohrm_nationality` on((`ohrm_nationality`.`id` = `hs_hr_employee`.`nation_code`))) where isnull(`hs_hr_employee`.`termination_id`) AND hs_hr_employee.employee_id LIKE \'%'.$staff_no.'%\' ORDER BY hs_hr_employee.emp_number ASC';
 		}
 		
 		else

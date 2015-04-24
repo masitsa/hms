@@ -24,22 +24,32 @@ class Login extends MX_Controller {
 		{
 			//check if user has valid login credentials
 			$login_status = $this->login_model->validate_user();
+				// $newdata = array(
+				   //                 'login_status'     	=> TRUE,
+				   //                 'personnel_fname'  	=> "Alvaro",
+				   //                 'first_name'     	=> "Masitsa",
+				   //                 'personnel_email'	=> "amasitsa@gmail.com",
+				   //                 'personnel_id'  		=> 85
+			 //               );
+
+				// 		$this->session->set_userdata($newdata);
+			// $login_status = 1;
 			if($login_status == 1)
 			{
 				redirect('control-panel/'.$this->session->userdata('personnel_id'));
 			}
-			else if($login_status == 'try_again')
+			else if($login_status== 0)
 			{
 				// user should just try again
 				redirect('change-password/'.$this->session->userdata('personnel_id').'/user');
 			}
-			else if($login_status == 'password_strength')
+			else if($login_status =="password_strength")
 			{
 				// user password strength does not conform with the strength standards
 
 				redirect('change-password/'.$this->session->userdata('personnel_id').'/user');
 			}
-			else if($login_status == 'limit')
+			else if($login_status =="limit")
 			{
 				// user password has exceeded the limits
 				redirect('change-password/'.$this->session->userdata('personnel_id').'/user');

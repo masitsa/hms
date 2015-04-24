@@ -424,14 +424,15 @@ function get_test_results(page, visit_id){
   }
   var config_url = $('#config_url').val();
   if((page == 1) || (page == 65) || (page == 85)){
-    
+  // request from the lab
     url = config_url+"/laboratory/test/"+visit_id;
   }
   
   else if ((page == 75) || (page == 100)){
+    // this is for the doctor and the nurse
     url = config_url+"/laboratory/test2/"+visit_id;
   }
-  //alert(url);
+  // alert(url);
   if(XMLHttpRequestObject) {
     if((page == 75) || (page == 85)){
       var obj = window.opener.document.getElementById("test_results");

@@ -127,22 +127,26 @@
 			                            </select>
 	                            	</div>
 	                            </div>
-	                            <div id="consultation" style="display:none">
 	                            	
-							        <div class="form-group">
-							            <label class="col-lg-4 control-label">Consultation Type: </label>
-							            
-							            <div class="col-lg-8">
-							            	<div id="citydiv"> 
-							            	<div id="checker"  > 
-							            		<select name="service_charge_name" class="form-control">
-													<option value='0'>Loading..</option>
-										        </select>
-										     </div>
-		                            	</div>
-							            </div>
-							        </div>
-						       </div>
+						        <div class="form-group">
+						            <label class="col-lg-4 control-label">Consultation Type: </label>
+						            
+						            <div class="col-lg-8">
+						            	<select name="service_charge_name" class="form-control">
+											<option value='0'>Select Consultation Charge </option>	
+											<?php
+											$service_charge = $this->reception_model->get_service_charges_per_type($patient_type_id);
+											foreach($service_charge AS $key) 
+											{ 
+												?>
+												    <option value="<?php echo  $key->service_charge_id;?>"><?php echo $key->service_charge_name;?></option>
+												<?php 
+											} 
+											?>
+										</select>
+						            </div>
+						        </div>
+						    
 						 	
 					       </div>
 					        	
@@ -151,7 +155,7 @@
 							            <label class="col-lg-4 control-label">Counselor: </label>
 	                                    
 							            <div class="col-lg-8">
-							     			 <select name="personnel_id" class="form-control">
+							     			 <select name="personnel_id2" class="form-control">
 	                                         	<option value="">----Select a Counselor----</option>
 					                        	<?php
 										             $counselors = $this->reception_model->get_counselors();
@@ -181,9 +185,7 @@
 						            <label class="col-lg-4 control-label">Consultation Type: </label>
 						            
 						            <div class="col-lg-8">
-						            	<div id="citydiv"> 
-						            	<div id="checker"  > 
-						            		<select name="service_charge_name" class="form-control">
+						            		<select name="service_charge_name2" class="form-control">
 												<option value='0'>Select Consultation Charge </option>	
 												<?php
 												$service_charge = $this->reception_model->get_counseling_service_charges_per_type($patient_type_id);
@@ -195,9 +197,8 @@
 												} 
 												?>
 											</select>
-									     </div>
-	                            	</div>
-						            </div>
+									</div>
+	                            	
 						        </div>
 					       </div>
 						 	
@@ -226,8 +227,8 @@
 				        <div class="widget-content">
          				  <div class="padd">
 				     			
-				        	<div class="form-group">
-				            <label class="col-lg-4 control-label">Visit Date: </label>
+				        <div class="form-group">
+				            <label class="col-lg-4 control-label">Date posted: </label>
 				            
 				            <div class="col-lg-8">
 				            	<div id="datetimepicker1" class="input-append">
@@ -449,17 +450,17 @@
 		if(patient_type_id == '4')
 		{
 			$('#insured_company').css('display', 'block');
-			$('#consultation').css('display', 'block');
+			// $('#consultation').css('display', 'block');
 		}
 		else
 		{
 			$('#insured_company').css('display', 'none');
-			$('#consultation').css('display', 'block');
+			// $('#consultation').css('display', 'block');
 		}
 		var config_url = $('#config_url').val();
-		var data_url = config_url+"/reception/load_charges/"+patient_type_id;
+		// var data_url = config_url+"/reception/load_charges/"+patient_type_id;
 		
-		getCity(data_url);
+		// getCity(data_url);
 	}
 
 	
