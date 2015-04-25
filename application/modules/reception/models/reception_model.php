@@ -283,7 +283,43 @@ class Reception_model extends CI_Model
 			return FALSE;
 		}
 	}
-
+	/*
+	*	Edit other patient
+	*
+	*/
+	public function edit_staff_patient($patient_id)
+	{
+		$data = array(
+			'patient_phone1'=>$this->input->post('phone_number'),
+			'patient_phone2'=>$this->input->post('patient_phone2')
+		);
+		
+		$this->db->where('patient_id', $patient_id);
+		if($this->db->update('patients', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	public function edit_student_patient($patient_id)
+	{
+		$data = array(
+			'patient_phone1'=>$this->input->post('phone_number'),
+			'patient_phone2'=>$this->input->post('patient_phone2')
+		);
+		
+		$this->db->where('patient_id', $patient_id);
+		if($this->db->update('patients', $data))
+		{
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
+	}
+	 
 	function edit_staff_dependant_patient($patient_id)
 	{
 		$data = array(
@@ -953,6 +989,36 @@ class Reception_model extends CI_Model
 		$this->db->from('patients');
 		$this->db->select('*');
 		$this->db->where('patient_id = '.$patient_id);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+
+	/*
+	*	Retrieve a single patient's details
+	*	@param int $patient_id
+	*
+	*/
+	public function get_patient_staff_data($patient_id)
+	{
+		$this->db->from('patients,staff');
+		$this->db->select('*');
+		$this->db->where('patients.strath_no = staff.Staff_Number AND patient_id = '.$patient_id);
+		$query = $this->db->get();
+		
+		return $query;
+	}
+
+	/*
+	*	Retrieve a single patient's details
+	*	@param int $patient_id
+	*
+	*/
+	public function get_patient_student_data($patient_id)
+	{
+		$this->db->from('patients,student');
+		$this->db->select('*');
+		$this->db->where('patients.strath_no = student.student_Number AND patient_id = '.$patient_id);
 		$query = $this->db->get();
 		
 		return $query;

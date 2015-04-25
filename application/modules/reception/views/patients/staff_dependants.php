@@ -59,8 +59,8 @@
 					  <th>Staff Number</th>
 					  <th>Surname</th>
 					  <th>Other Names</th>
-					  <th>Date Created</th>
 					  <th>Last Visit</th>
+					  <th>Balance</th>
 					  <th colspan="5">Actions</th>
 					</tr>
 				  </thead>
@@ -85,12 +85,12 @@
 				$staff_system_id = $row->staff_system_id;
 				$dependant_id = $row->dependant_id;
 
-				// $staff_number = $row->Staff_Number;
-
-				// $patient_othernames = $row->other_names;
-				// $patient_surname = $row->surname;
-				// $patient_date_of_birth = $row->DOB;
-				// $gender = $row->Gender;
+				$patient = $this->reception_model->patient_names2($patient_id);
+				$patient_type = $patient['patient_type'];
+				$patient_othernames = $patient['patient_othernames'];
+				$patient_surname = $patient['patient_surname'];
+				$patient_type_id = $patient['visit_type_id'];
+				$account_balance = $patient['account_balance'];
 				
 
 				if(!empty($patient_search))
@@ -169,11 +169,12 @@
 						<td>'.$dependant_id.'</td>
 						<td>'.$patient_surname.'</td>
 						<td>'.$patient_othernames.'</td>
-						<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
 						<td>'.$last_visit.'</td>
+						<td>  '.number_format($account_balance,0).'</td>
 						<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
+						<td><a href="'.site_url().'/reception/edit_staff_dependant_patient/'.$patient_id.'" class="btn btn-sm btn-warning">Edit </a></td>
+						<td><a href="'.site_url().'/administration/individual_statement/'.$patient_id.'/2" class="btn btn-sm btn-danger" target="_blank">Patient Statement</a></td>
 						<!--<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>-->
-						<td><a href="'.site_url().'/reception/edit_staff_dependant_patient/'.$patient_id.'" class="btn btn-sm btn-default">Edit</a></td>
 						<!--<td><a href="'.site_url().'/reception/delete_patient/'.$patient_id.'/3" class="btn btn-sm btn-danger" onclick="return confirm(\'Do you really want to delete ?\');">Delete</a></td>-->
 					</tr> 
 				';

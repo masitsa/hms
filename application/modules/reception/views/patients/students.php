@@ -56,9 +56,10 @@
 					  <th>#</th>
 					  <th>Student Number</th>
 					  <th>Surname</th>
-					  <th>Other Names</th>
-					  <th>Date Created</th>
+					  <th>Other Names</th> 
+					  <th>Phone number</th>
 					  <th>Last Visit</th>
+					  <th>Balance</th>
 					  <th colspan="4">Actions</th>
 					</tr>
 				  </thead>
@@ -77,7 +78,14 @@
 				$created = $row->patient_date;
 				$last_modified = $row->last_modified;
 				$last_visit = $row->last_visit;
-				
+				$patient_phone1 = $row->patient_phone1;
+
+				$patient = $this->reception_model->patient_names2($patient_id);
+				$patient_type = $patient['patient_type'];
+				$patient_othernames = $patient['patient_othernames'];
+				$patient_surname = $patient['patient_surname'];
+				$patient_type_id = $patient['visit_type_id'];
+				$account_balance = $patient['account_balance'];
 				if(!empty($patient_search))
 				{
 					$student_number = $row->student_Number;
@@ -154,9 +162,12 @@
 						<td>'.$student_number.'</td>
 						<td>'.$patient_surname.'</td>
 						<td>'.$patient_othernames.'</td>
-						<td>'.date('jS M Y H:i a',strtotime($created)).'</td>
+						<td>'.$patient_phone1.'</td>
 						<td>'.$last_visit.'</td>
+						<td>  '.number_format($account_balance,0).'</td>
 						<td><a href="'.site_url().'/reception/set_visit/'.$patient_id.'" class="btn btn-sm btn-success">Visit</a></td>
+						<td><a href="'.site_url().'/reception/edit_student/'.$patient_id.'" class="btn btn-sm btn-warning">Edit </a></td>
+						<td><a href="'.site_url().'/administration/individual_statement/'.$patient_id.'/2" class="btn btn-sm btn-danger" target="_blank">Patient Statement</a></td>
 						<td><a href="'.site_url().'/reception/to-others/'.$patient_id.'/1" class="btn btn-sm btn-primary">Change to others</a></td>
 
 						<!--<td><a href="'.site_url().'/reception/dependants/'.$patient_id.'" class="btn btn-sm btn-primary">Dependants</a></td>-->
