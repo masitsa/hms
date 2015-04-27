@@ -398,6 +398,18 @@ $(document).ready(function(){
   });
 
   $(function() {
+    $('#datetimepicker4').datetimepicker({
+      pickTime: false
+    });
+  });
+
+  $(function() {
+    $('#datetimepicker5').datetimepicker({
+      pickTime: false
+    });
+  });
+
+  $(function() {
     $('#datetimepicker_other_patient').datetimepicker({
       pickTime: false
     });

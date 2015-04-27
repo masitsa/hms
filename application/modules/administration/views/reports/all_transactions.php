@@ -173,7 +173,7 @@
 								<td>'.$faculty.'</td>
 								<td>'.$strath_no.'</td>
 								<td>'.$payments_value.'</td>
-						'.$charges;
+								'.$charges;
 						
 					$result .= '
 								<td>'.$invoice_total.'</td>
@@ -203,6 +203,11 @@
 								<td>'.($balance).'</td>
 							</tr> 
 					';
+				}
+				
+				if($count == 2)
+				{
+					//var_dump($result);die();
 				}
 			}
 			

@@ -344,6 +344,18 @@ class Reports_model extends CI_Model
 		
 		return $total_invoiced;
 	}
+	/*
+	*	Retrieve total visits
+	*
+	*/
+	public function get_total_visits($where, $table)
+	{
+		$this->db->from($table);
+		$this->db->where($where);
+		$total = $this->db->count_all_results();
+		
+		return $total;
+	}
 	
 	/*
 	*	Retrieve total revenue
@@ -352,8 +364,8 @@ class Reports_model extends CI_Model
 	public function get_total_cash_collection($where, $table)
 	{
 		//payments
-		$table_search = $this->session->userdata('all_transactions_tables');
-		if(!empty($table_search))
+		$table_search = $_SESSION['all_transactions_tables'];
+		if(!empty($table_search) && ($table_search != ', debtor_invoice_item'))
 		{
 			$this->db->from($table);
 		}
@@ -387,8 +399,8 @@ class Reports_model extends CI_Model
 	public function get_normal_payments($where, $table)
 	{
 		//payments
-		$table_search = $this->session->userdata('all_transactions_tables');
-		if(!empty($table_search))
+		$table_search = $_SESSION['all_transactions_tables'];
+		if(!empty($table_search) && ($table_search != ', debtor_invoice_item'))
 		{
 			$this->db->from($table);
 		}
@@ -412,6 +424,16 @@ class Reports_model extends CI_Model
 		return $query;
 	}
 	
+	function export_debt_transactions($debtor_invoice_id)
+	{
+		$where = ' AND visit.visit_id = debtor_invoice_item.visit_id AND debtor_invoice_item.debtor_invoice_id = '.$debtor_invoice_id;
+		$table = ', debtor_invoice_item';
+		$_SESSION['all_transactions_search'] = $where;
+		$_SESSION['all_transactions_tables'] = $table;
+		
+		$this->export_transactions();
+	}
+	
 	/*
 	*	Export Transactions
 	*
@@ -421,10 +443,10 @@ class Reports_model extends CI_Model
 		$this->load->library('excel');
 		
 		//get all transactions
-		$where = 'visit.patient_id = patients.patient_id  ';
+		$where = 'visit.patient_id = patients.patient_id ';
 		$table = 'visit, patients';
-		$visit_search = $this->session->userdata('all_transactions_search');
-		$table_search = $this->session->userdata('all_transactions_tables');
+		$visit_search = $_SESSION['all_transactions_search'];
+		$table_search = $_SESSION['all_transactions_tables'];
 		
 		if(!empty($visit_search))
 		{
@@ -814,6 +836,155 @@ class Reports_model extends CI_Model
 		$this->db->select('visit_department.*');
 		$this->db->where($where.' AND visit.visit_id = visit_department.visit_id');
 		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	public function get_bill_to()
+	{
+		//invoiced
+		$this->db->from('bill_to');
+		$this->db->select('*');
+		$this->db->order_by('bill_to_name');
+		$query = $this->db->get();
+		
+		return $query;
+	}
+	
+	/*
+	*	Retrieve debtors_invoices
+	*	@param string $table
+	* 	@param string $where
+	*	@param int $per_page
+	* 	@param int $page
+	*
+	*/
+	public function get_all_debtors_invoices($table, $where, $per_page, $page, $order, $order_method)
+	{
+		//retrieve all users
+		$this->db->from($table);
+		$this->db->select('*');
+		$this->db->where($where);
+		$this->db->order_by($order, $order_method);
+		$query = $this->db->get('', $per_page, $page);
+		
+		return $query;
+	}
+	
+	public function add_debtor_invoice($bill_to_id)
+	{
+		$data = array(
+			'debtor_invoice_created'=>date('Y-m-d H:i:s'),
+			'debtor_invoice_created_by'=>$this->session->userdata('personnel_id'),
+			'batch_no'=>$this->create_batch_number(),
+			'bill_to_id'=>$bill_to_id,
+			'debtor_invoice_modified_by'=>$this->session->userdata('personnel_id'),
+			'date_from' => $this->input->post('invoice_date_from'),
+			'date_to' => $this->input->post('invoice_date_to')
+		);
+		
+		if($this->db->insert('debtor_invoice', $data))
+		{
+			$debtor_invoice_id = $this->db->insert_id();
+			
+			if($debtor_invoice_id > 0)
+			{
+				//get all invoices within the selected dates
+				$this->db->where(
+					array(
+						'bill_to_id' => $bill_to_id,
+						'visit_date >= ' => $this->input->post('invoice_date_from'),
+						'visit_date <= ' => $this->input->post('invoice_date_to')
+					)
+				);
+				$this->db->select('visit_id');
+				$query = $this->db->get('visit');
+				
+				if($query->num_rows() > 0)
+				{
+					$invoice_data['debtor_invoice_id'] = $debtor_invoice_id;
+					
+					foreach($query->result() as $res)
+					{
+						$visit_id = $res->visit_id;
+						
+						$invoice_data['visit_id'] = $visit_id;
+						
+						if($this->db->insert('debtor_invoice_item', $invoice_data))
+						{
+						}
+						
+						else
+						{
+							$this->session->set_userdata('error_message', 'Unable to add details for visit ID '.$visit_id);
+						}
+					}
+					$this->session->set_userdata('success_message', 'Batch added successfully');
+					return TRUE;
+				}
+				
+				else
+				{
+					$this->session->set_userdata('error_message', 'The selected date range does not contain any invoices');
+					return FALSE;
+				}
+			}
+			
+			else
+			{
+				$this->session->set_userdata('error_message', 'The selected date range does not contain any invoices');
+				return FALSE;
+			}
+		}
+		else{
+			return FALSE;
+		}
+	}
+	
+	/*
+	*	Create batch number
+	*
+	*/
+	public function create_batch_number()
+	{
+		//select product code
+		$this->db->from('debtor_invoice');
+		$this->db->where("batch_no LIKE 'BAT".date('y')."/%'");
+		$this->db->select('MAX(batch_no) AS number');
+		$query = $this->db->get();
+		$preffix = "BAT".date('y').'/';
+		
+		if($query->num_rows() > 0)
+		{
+			$result = $query->result();
+			$number =  $result[0]->number;
+			$real_number = str_replace($preffix, "", $number);
+			$real_number++;//go to the next number
+			$number = $preffix.sprintf('%06d', $real_number);
+		}
+		else{//start generating receipt numbers
+			$number = $preffix.sprintf('%06d', 1);
+		}
+		
+		return $number;
+	}
+	
+	public function calculate_debt_total($debtor_invoice_id, $where, $table)
+	{
+		$where .= ' AND debtor_invoice.debtor_invoice_id = '.$debtor_invoice_id;
+		
+		$total_services_revenue = $this->reports_model->get_total_services_revenue($where, $table);
+		
+		$where2 = $where.' AND payments.payment_type = 1';
+		$total_cash_collection = $this->reports_model->get_total_cash_collection($where2, $table);
+		
+		return $total_services_revenue - $total_cash_collection;
+	}
+	
+	public function get_debtor_invoice($where, $table)
+	{
+		$this->db->where($where);
+		$query = $this->db->get($table);
 		
 		return $query;
 	}
